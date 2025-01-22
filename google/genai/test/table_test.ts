@@ -20,6 +20,51 @@ function getGoogle3Path() {
   return currentDir.substring(0, lastIndex + 'google3/'.length);
 }
 
+function assertResponsesEqual(
+    actual: any, expected: any,
+    options?: {ignoreKeys?: string[];}) {
+  const {ignoreKeys = []} = options || {};
+
+  function deepEqual(a: any, b: any): boolean {
+    if (typeof a !== typeof b) {
+      console.debug('Invalid type: ')
+      console.debug('typeof a: ', typeof a);
+      console.debug('typeof b: ', typeof b);
+      return false;
+    }
+
+    if (typeof a === 'object') {
+      const aKeys = Object.keys(a).filter(key => !ignoreKeys.includes(key));
+      const bKeys = Object.keys(b).filter(key => !ignoreKeys.includes(key));
+
+      if (aKeys.length !== bKeys.length) {
+        console.debug('Unequal keys: ')
+        console.debug('aKeys length: ', aKeys.length);
+        console.debug('bKeys length: ', bKeys.length);
+        return false;
+      }
+
+      for (const key of aKeys) {
+        if (!deepEqual(a[key], b[key])) {
+          console.debug('Unequal values: ')
+          console.debug(`a[${key}]: `, a[key]);
+          console.debug(`b[${key}]: `, b[key]);
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    return a === b;
+  }
+
+  if (!deepEqual(actual, expected)) {
+    throw new Error(`Assertion failed: ${JSON.stringify(actual)} !== ${
+        JSON.stringify(expected)}`);
+  }
+}
+
 const fs = require('fs');
 const path = require('path');
 const assert = require('assert/strict');
@@ -145,9 +190,15 @@ async function runTestTable(
           const expectedResponseCamelCase =
               JSON.parse(snakeToCamel(JSON.stringify(expectedResponse)));
 
-          // TODO (b/388478808): get this assertion to pass
-          // assert.deepStrictEqual(responseCamelCase,
-          // expectedResponseCamelCase);
+          // TODO: b/388478808 - Remove ignoreKeys once unique data types are
+          // converted properly in assertResponsesEqual().
+          assertResponsesEqual(responseCamelCase, expectedResponseCamelCase, {
+            ignoreKeys: [
+              'sizeBytes', 'expirationTime', 'tokensInfo', 'candidates',
+              'usageMetadata', 'generatedImages', 'startTime',
+              'tuningDataStats', 'supervisedTuningSpec'
+            ]
+          });
         }
 
       } else {
