@@ -1,0 +1,3 @@
+releaseType: nodejs
+handleGHRelease: true
+bumpMinorPreMajor: true
