@@ -912,8 +912,6 @@ export class GenerateContentResponse {
 
 /** Class for configuring optional parameters for the embed_content method. */
 export interface EmbedContentConfig {
-  /** Used to override HTTP request options. */
-  httpOptions?: Record<string, any>;
   /** Type of task for which the embedding will be used.
    */
   taskType?: string;
@@ -993,8 +991,6 @@ export class EmbedContentResponse {
 
 /** Class that represents the config for generating an image. */
 export interface GenerateImageConfig {
-  /** Used to override HTTP request options. */
-  httpOptions?: Record<string, any>;
   /** Cloud Storage URI used to store the generated images.
    */
   outputGcsUri?: string;
@@ -1123,8 +1119,6 @@ export interface GenerationConfig {
 
 /** Config for the count_tokens method. */
 export interface CountTokensConfig {
-  /** Used to override HTTP request options. */
-  httpOptions?: Record<string, any>;
   /** Instructions for the model to steer it toward better performance.
    */
   systemInstruction?: ContentUnion;
@@ -1158,10 +1152,7 @@ export class CountTokensResponse {
 }
 
 /** Optional parameters for computing tokens. */
-export interface ComputeTokensConfig {
-  /** Used to override HTTP request options. */
-  httpOptions?: Record<string, any>;
-}
+export interface ComputeTokensConfig {}
 
 /** Parameters for computing tokens. */
 export interface ComputeTokensParameters {
@@ -1192,10 +1183,7 @@ export class ComputeTokensResponse {
 }
 
 /** Optional parameters for tunings.get method. */
-export interface GetTuningJobConfig {
-  /** Used to override HTTP request options. */
-  httpOptions?: Record<string, any>;
-}
+export interface GetTuningJobConfig {}
 
 /** Parameters for the get method. */
 export interface GetTuningJobParameters {
@@ -1471,8 +1459,6 @@ export class ListTuningJobsResponse {
 
 /** Class for configuring optional cached content creation parameters. */
 export interface CreateCachedContentConfig {
-  /** Used to override HTTP request options. */
-  httpOptions?: Record<string, any>;
   /** The TTL for this resource. The expiration time is computed: now + TTL. */
   ttl?: string;
   /** Timestamp of when this resource is considered expired. */
@@ -1536,10 +1522,7 @@ export interface CachedContent {
 }
 
 /** Optional parameters for caches.get method. */
-export interface GetCachedContentConfig {
-  /** Used to override HTTP request options. */
-  httpOptions?: Record<string, any>;
-}
+export interface GetCachedContentConfig {}
 
 /** Parameters for caches.get method. */
 export interface GetCachedContentParameters {
@@ -1552,10 +1535,7 @@ export interface GetCachedContentParameters {
 }
 
 /** Optional parameters for caches.delete method. */
-export interface DeleteCachedContentConfig {
-  /** Used to override HTTP request options. */
-  httpOptions?: Record<string, any>;
-}
+export interface DeleteCachedContentConfig {}
 
 /** Parameters for caches.delete method. */
 export interface DeleteCachedContentParameters {
@@ -1572,8 +1552,6 @@ export class DeleteCachedContentResponse {}
 
 /** Optional parameters for caches.update method. */
 export interface UpdateCachedContentConfig {
-  /** Used to override HTTP request options. */
-  httpOptions?: Record<string, any>;
   /** The TTL for this resource. The expiration time is computed: now + TTL. */
   ttl?: string;
   /** Timestamp of when this resource is considered expired. */
@@ -1611,8 +1589,6 @@ export class ListCachedContentsResponse {
 
 /** Used to override the default configuration. */
 export interface ListFilesConfig {
-  /** Used to override HTTP request options. */
-  httpOptions?: Record<string, any>;
   pageSize?: number;
   pageToken?: string;
 }
@@ -1674,10 +1650,7 @@ export class ListFilesResponse {
 }
 
 /** Used to override the default configuration. */
-export interface GetFileConfig {
-  /** Used to override HTTP request options. */
-  httpOptions?: Record<string, any>;
-}
+export interface GetFileConfig {}
 
 /** Generates the parameters for the get method. */
 export interface GetFileParameters {
@@ -1741,8 +1714,6 @@ export interface ReplayFile {
 
 /** Used to override the default configuration. */
 export interface UploadFileConfig {
-  /** Used to override HTTP request options. */
-  httpOptions?: Record<string, any>;
   /** The name of the file in the destination (e.g., 'files/sample-image'. If not provided one will be generated. */
   name?: string;
   /** mime_type: The MIME type of the file. If not provided, it will be inferred from the file extension. */
@@ -1764,8 +1735,6 @@ export interface DownloadFileConfig {
   <https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/imagen-api>`_.
    */
 export interface UpscaleImageConfig {
-  /** Used to override HTTP request options. */
-  httpOptions?: Record<string, any>;
   /** Whether to include a reason for filtered-out images in the
       response. */
   includeRaiReason?: boolean;

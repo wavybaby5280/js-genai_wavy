@@ -1513,11 +1513,6 @@ function embedContentConfigToMldev(
 ): Record<string, any> {
   let toObject: Record<string, any> = {};
 
-  let fromHttpOptions = common.getValueByPath(fromObject, ['httpOptions']);
-  if (fromHttpOptions !== undefined) {
-    common.setValueByPath(toObject, ['httpOptions'], fromHttpOptions);
-  }
-
   let fromTaskType = common.getValueByPath(fromObject, ['taskType']);
   if (fromTaskType !== undefined) {
     common.setValueByPath(
@@ -1560,11 +1555,6 @@ function embedContentConfigToVertex(
   parentObject?: any,
 ): Record<string, any> {
   let toObject: Record<string, any> = {};
-
-  let fromHttpOptions = common.getValueByPath(fromObject, ['httpOptions']);
-  if (fromHttpOptions !== undefined) {
-    common.setValueByPath(toObject, ['httpOptions'], fromHttpOptions);
-  }
 
   let fromTaskType = common.getValueByPath(fromObject, ['taskType']);
   if (fromTaskType !== undefined) {
@@ -1702,11 +1692,6 @@ function generateImageConfigToMldev(
 ): Record<string, any> {
   let toObject: Record<string, any> = {};
 
-  let fromHttpOptions = common.getValueByPath(fromObject, ['httpOptions']);
-  if (fromHttpOptions !== undefined) {
-    common.setValueByPath(toObject, ['httpOptions'], fromHttpOptions);
-  }
-
   if (common.getValueByPath(fromObject, ['outputGcsUri']) !== undefined) {
     throw new Error('outputGcsUri parameter is not supported in Google AI.');
   }
@@ -1843,11 +1828,6 @@ function generateImageConfigToVertex(
   parentObject?: any,
 ): Record<string, any> {
   let toObject: Record<string, any> = {};
-
-  let fromHttpOptions = common.getValueByPath(fromObject, ['httpOptions']);
-  if (fromHttpOptions !== undefined) {
-    common.setValueByPath(toObject, ['httpOptions'], fromHttpOptions);
-  }
 
   let fromOutputGcsUri = common.getValueByPath(fromObject, ['outputGcsUri']);
   if (fromOutputGcsUri !== undefined) {
@@ -2063,11 +2043,6 @@ function countTokensConfigToMldev(
 ): Record<string, any> {
   let toObject: Record<string, any> = {};
 
-  let fromHttpOptions = common.getValueByPath(fromObject, ['httpOptions']);
-  if (fromHttpOptions !== undefined) {
-    common.setValueByPath(toObject, ['httpOptions'], fromHttpOptions);
-  }
-
   let fromSystemInstruction = common.getValueByPath(fromObject, [
     'systemInstruction',
   ]);
@@ -2109,11 +2084,6 @@ function countTokensConfigToVertex(
   parentObject?: any,
 ): Record<string, any> {
   let toObject: Record<string, any> = {};
-
-  let fromHttpOptions = common.getValueByPath(fromObject, ['httpOptions']);
-  if (fromHttpOptions !== undefined) {
-    common.setValueByPath(toObject, ['httpOptions'], fromHttpOptions);
-  }
 
   let fromSystemInstruction = common.getValueByPath(fromObject, [
     'systemInstruction',
@@ -2239,36 +2209,6 @@ function countTokensParametersToVertex(
   return toObject;
 }
 
-function computeTokensConfigToMldev(
-  apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
-): Record<string, any> {
-  let toObject: Record<string, any> = {};
-
-  let fromHttpOptions = common.getValueByPath(fromObject, ['httpOptions']);
-  if (fromHttpOptions !== undefined) {
-    common.setValueByPath(toObject, ['httpOptions'], fromHttpOptions);
-  }
-
-  return toObject;
-}
-
-function computeTokensConfigToVertex(
-  apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
-): Record<string, any> {
-  let toObject: Record<string, any> = {};
-
-  let fromHttpOptions = common.getValueByPath(fromObject, ['httpOptions']);
-  if (fromHttpOptions !== undefined) {
-    common.setValueByPath(toObject, ['httpOptions'], fromHttpOptions);
-  }
-
-  return toObject;
-}
-
 function computeTokensParametersToMldev(
   apiClient: ApiClient,
   fromObject: any,
@@ -2287,15 +2227,6 @@ function computeTokensParametersToMldev(
 
   if (common.getValueByPath(fromObject, ['contents']) !== undefined) {
     throw new Error('contents parameter is not supported in Google AI.');
-  }
-
-  let fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig !== undefined) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      computeTokensConfigToMldev(apiClient, fromConfig, toObject),
-    );
   }
 
   return toObject;
@@ -2328,15 +2259,6 @@ function computeTokensParametersToVertex(
           return contentToVertex(apiClient, item, toObject);
         }),
       ),
-    );
-  }
-
-  let fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig !== undefined) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      computeTokensConfigToVertex(apiClient, fromConfig, toObject),
     );
   }
 

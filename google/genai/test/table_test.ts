@@ -115,6 +115,15 @@ async function runTestTable(
       );
       continue;
     }
+    // TODO(b/384972928): Remove this once http options in the method levelare
+    // supported in nodejs.
+    if (testName.includes('http_options_in_method')) {
+      console.log(
+          `   === Skipping item: ${
+              testName} because nodejs does not support http options in the method`,
+      );
+      continue;
+    }
     console.log(`   === Calling method: ${testName}`);
     const parameters = Object.values(testTableItem.parameters!);
     try {

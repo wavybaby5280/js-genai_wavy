@@ -12,36 +12,6 @@ import {BaseModule} from './_common';
 import * as types from './types';
 import * as t from './_transformers';
 
-function getTuningJobConfigToMldev(
-  apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
-): Record<string, any> {
-  let toObject: Record<string, any> = {};
-
-  let fromHttpOptions = common.getValueByPath(fromObject, ['httpOptions']);
-  if (fromHttpOptions !== undefined) {
-    common.setValueByPath(toObject, ['httpOptions'], fromHttpOptions);
-  }
-
-  return toObject;
-}
-
-function getTuningJobConfigToVertex(
-  apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
-): Record<string, any> {
-  let toObject: Record<string, any> = {};
-
-  let fromHttpOptions = common.getValueByPath(fromObject, ['httpOptions']);
-  if (fromHttpOptions !== undefined) {
-    common.setValueByPath(toObject, ['httpOptions'], fromHttpOptions);
-  }
-
-  return toObject;
-}
-
 function getTuningJobParametersToMldev(
   apiClient: ApiClient,
   fromObject: any,
@@ -52,15 +22,6 @@ function getTuningJobParametersToMldev(
   let fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined) {
     common.setValueByPath(toObject, ['_url', 'name'], fromName);
-  }
-
-  let fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig !== undefined) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      getTuningJobConfigToMldev(apiClient, fromConfig, toObject),
-    );
   }
 
   return toObject;
@@ -76,15 +37,6 @@ function getTuningJobParametersToVertex(
   let fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined) {
     common.setValueByPath(toObject, ['_url', 'name'], fromName);
-  }
-
-  let fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig !== undefined) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      getTuningJobConfigToVertex(apiClient, fromConfig, toObject),
-    );
   }
 
   return toObject;

@@ -821,11 +821,6 @@ function createCachedContentConfigToMldev(
 ): Record<string, any> {
   let toObject: Record<string, any> = {};
 
-  let fromHttpOptions = common.getValueByPath(fromObject, ['httpOptions']);
-  if (fromHttpOptions !== undefined) {
-    common.setValueByPath(toObject, ['httpOptions'], fromHttpOptions);
-  }
-
   let fromTtl = common.getValueByPath(fromObject, ['ttl']);
   if (fromTtl !== undefined) {
     common.setValueByPath(parentObject, ['ttl'], fromTtl);
@@ -899,11 +894,6 @@ function createCachedContentConfigToVertex(
   parentObject?: any,
 ): Record<string, any> {
   let toObject: Record<string, any> = {};
-
-  let fromHttpOptions = common.getValueByPath(fromObject, ['httpOptions']);
-  if (fromHttpOptions !== undefined) {
-    common.setValueByPath(toObject, ['httpOptions'], fromHttpOptions);
-  }
 
   let fromTtl = common.getValueByPath(fromObject, ['ttl']);
   if (fromTtl !== undefined) {
@@ -1028,36 +1018,6 @@ function createCachedContentParametersToVertex(
   return toObject;
 }
 
-function getCachedContentConfigToMldev(
-  apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
-): Record<string, any> {
-  let toObject: Record<string, any> = {};
-
-  let fromHttpOptions = common.getValueByPath(fromObject, ['httpOptions']);
-  if (fromHttpOptions !== undefined) {
-    common.setValueByPath(toObject, ['httpOptions'], fromHttpOptions);
-  }
-
-  return toObject;
-}
-
-function getCachedContentConfigToVertex(
-  apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
-): Record<string, any> {
-  let toObject: Record<string, any> = {};
-
-  let fromHttpOptions = common.getValueByPath(fromObject, ['httpOptions']);
-  if (fromHttpOptions !== undefined) {
-    common.setValueByPath(toObject, ['httpOptions'], fromHttpOptions);
-  }
-
-  return toObject;
-}
-
 function getCachedContentParametersToMldev(
   apiClient: ApiClient,
   fromObject: any,
@@ -1071,15 +1031,6 @@ function getCachedContentParametersToMldev(
       toObject,
       ['_url', 'name'],
       t.tCachedContentName(apiClient, fromName),
-    );
-  }
-
-  let fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig !== undefined) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      getCachedContentConfigToMldev(apiClient, fromConfig, toObject),
     );
   }
 
@@ -1102,45 +1053,6 @@ function getCachedContentParametersToVertex(
     );
   }
 
-  let fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig !== undefined) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      getCachedContentConfigToVertex(apiClient, fromConfig, toObject),
-    );
-  }
-
-  return toObject;
-}
-
-function deleteCachedContentConfigToMldev(
-  apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
-): Record<string, any> {
-  let toObject: Record<string, any> = {};
-
-  let fromHttpOptions = common.getValueByPath(fromObject, ['httpOptions']);
-  if (fromHttpOptions !== undefined) {
-    common.setValueByPath(toObject, ['httpOptions'], fromHttpOptions);
-  }
-
-  return toObject;
-}
-
-function deleteCachedContentConfigToVertex(
-  apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
-): Record<string, any> {
-  let toObject: Record<string, any> = {};
-
-  let fromHttpOptions = common.getValueByPath(fromObject, ['httpOptions']);
-  if (fromHttpOptions !== undefined) {
-    common.setValueByPath(toObject, ['httpOptions'], fromHttpOptions);
-  }
-
   return toObject;
 }
 
@@ -1157,15 +1069,6 @@ function deleteCachedContentParametersToMldev(
       toObject,
       ['_url', 'name'],
       t.tCachedContentName(apiClient, fromName),
-    );
-  }
-
-  let fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig !== undefined) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      deleteCachedContentConfigToMldev(apiClient, fromConfig, toObject),
     );
   }
 
@@ -1188,15 +1091,6 @@ function deleteCachedContentParametersToVertex(
     );
   }
 
-  let fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig !== undefined) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      deleteCachedContentConfigToVertex(apiClient, fromConfig, toObject),
-    );
-  }
-
   return toObject;
 }
 
@@ -1206,11 +1100,6 @@ function updateCachedContentConfigToMldev(
   parentObject?: any,
 ): Record<string, any> {
   let toObject: Record<string, any> = {};
-
-  let fromHttpOptions = common.getValueByPath(fromObject, ['httpOptions']);
-  if (fromHttpOptions !== undefined) {
-    common.setValueByPath(toObject, ['httpOptions'], fromHttpOptions);
-  }
 
   let fromTtl = common.getValueByPath(fromObject, ['ttl']);
   if (fromTtl !== undefined) {
@@ -1231,11 +1120,6 @@ function updateCachedContentConfigToVertex(
   parentObject?: any,
 ): Record<string, any> {
   let toObject: Record<string, any> = {};
-
-  let fromHttpOptions = common.getValueByPath(fromObject, ['httpOptions']);
-  if (fromHttpOptions !== undefined) {
-    common.setValueByPath(toObject, ['httpOptions'], fromHttpOptions);
-  }
 
   let fromTtl = common.getValueByPath(fromObject, ['ttl']);
   if (fromTtl !== undefined) {

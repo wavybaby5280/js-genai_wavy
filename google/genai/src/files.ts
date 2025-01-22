@@ -19,11 +19,6 @@ function listFilesConfigToMldev(
 ): Record<string, any> {
   let toObject: Record<string, any> = {};
 
-  let fromHttpOptions = common.getValueByPath(fromObject, ['httpOptions']);
-  if (fromHttpOptions !== undefined) {
-    common.setValueByPath(toObject, ['httpOptions'], fromHttpOptions);
-  }
-
   let fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
   if (fromPageSize !== undefined) {
     common.setValueByPath(parentObject, ['_query', 'pageSize'], fromPageSize);
@@ -43,11 +38,6 @@ function listFilesConfigToVertex(
   parentObject?: any,
 ): Record<string, any> {
   let toObject: Record<string, any> = {};
-
-  let fromHttpOptions = common.getValueByPath(fromObject, ['httpOptions']);
-  if (fromHttpOptions !== undefined) {
-    common.setValueByPath(toObject, ['httpOptions'], fromHttpOptions);
-  }
 
   let fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
   if (fromPageSize !== undefined) {
@@ -95,36 +85,6 @@ function listFilesParametersToVertex(
   return toObject;
 }
 
-function getFileConfigToMldev(
-  apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
-): Record<string, any> {
-  let toObject: Record<string, any> = {};
-
-  let fromHttpOptions = common.getValueByPath(fromObject, ['httpOptions']);
-  if (fromHttpOptions !== undefined) {
-    common.setValueByPath(toObject, ['httpOptions'], fromHttpOptions);
-  }
-
-  return toObject;
-}
-
-function getFileConfigToVertex(
-  apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
-): Record<string, any> {
-  let toObject: Record<string, any> = {};
-
-  let fromHttpOptions = common.getValueByPath(fromObject, ['httpOptions']);
-  if (fromHttpOptions !== undefined) {
-    common.setValueByPath(toObject, ['httpOptions'], fromHttpOptions);
-  }
-
-  return toObject;
-}
-
 function getFileParametersToMldev(
   apiClient: ApiClient,
   fromObject: any,
@@ -141,15 +101,6 @@ function getFileParametersToMldev(
     );
   }
 
-  let fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig !== undefined) {
-    common.setValueByPath(
-      toObject,
-      ['config'],
-      getFileConfigToMldev(apiClient, fromConfig, toObject),
-    );
-  }
-
   return toObject;
 }
 
@@ -162,10 +113,6 @@ function getFileParametersToVertex(
 
   if (common.getValueByPath(fromObject, ['name']) !== undefined) {
     throw new Error('name parameter is not supported in Vertex AI.');
-  }
-
-  if (common.getValueByPath(fromObject, ['config']) !== undefined) {
-    throw new Error('config parameter is not supported in Vertex AI.');
   }
 
   return toObject;
