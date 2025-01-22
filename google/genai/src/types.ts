@@ -171,6 +171,12 @@ export enum FileState {
   FAILED = 'FAILED',
 }
 
+export enum FileSource {
+  SOURCE_UNSPECIFIED = 'SOURCE_UNSPECIFIED',
+  UPLOADED = 'UPLOADED',
+  GENERATED = 'GENERATED',
+}
+
 export enum MaskReferenceMode {
   MASK_MODE_DEFAULT = 'MASK_MODE_DEFAULT',
   MASK_MODE_USER_PROVIDED = 'MASK_MODE_USER_PROVIDED',
@@ -1647,8 +1653,12 @@ export interface File {
   sha256Hash?: string;
   /** Output only. The URI of the `File`. */
   uri?: string;
+  /** Output only. The URI of the `File`, only set for downloadable (generated) files. */
+  downloadUri?: string;
   /** Output only. Processing state of the File. */
   state?: FileState;
+  /** Output only. The source of the `File`. */
+  source?: FileSource;
   /** Output only. Metadata for a video. */
   videoMetadata?: Record<string, any>;
   /** Output only. Error status if File processing failed. */
@@ -1739,6 +1749,12 @@ export interface UploadFileConfig {
   mimeType?: string;
   /** Optional display name of the file. */
   displayName?: string;
+}
+
+/** Used to override the default configuration. */
+export interface DownloadFileConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: Record<string, any>;
 }
 
 /** Configuration for upscaling an image.
