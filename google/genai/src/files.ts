@@ -260,19 +260,9 @@ function fileFromMldev(
     common.setValueByPath(toObject, ['uri'], fromUri);
   }
 
-  let fromDownloadUri = common.getValueByPath(fromObject, ['downloadUri']);
-  if (fromDownloadUri !== undefined) {
-    common.setValueByPath(toObject, ['downloadUri'], fromDownloadUri);
-  }
-
   let fromState = common.getValueByPath(fromObject, ['state']);
   if (fromState !== undefined) {
     common.setValueByPath(toObject, ['state'], fromState);
-  }
-
-  let fromSource = common.getValueByPath(fromObject, ['source']);
-  if (fromSource !== undefined) {
-    common.setValueByPath(toObject, ['source'], fromSource);
   }
 
   let fromVideoMetadata = common.getValueByPath(fromObject, ['videoMetadata']);
