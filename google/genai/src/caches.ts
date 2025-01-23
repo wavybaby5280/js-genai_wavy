@@ -10,6 +10,7 @@ import {ApiClient} from './_api_client';
 import * as common from './_common';
 import {BaseModule} from './_common';
 import * as t from './_transformers';
+import {PagedItem, Pager} from './pagers';
 import * as types from './types';
 
 function partToMldev(
@@ -1646,9 +1647,14 @@ export class Caches extends BaseModule {
     }
   }
 
-  list = (
+  list = async (
     config?: types.ListCachedContentsConfig,
-  ): Promise<types.ListCachedContentsResponse> => {
-    return this._list(config);
+  ): Promise<Pager<types.CachedContent>> => {
+    return new Pager<types.CachedContent>(
+      PagedItem.PAGED_ITEM_CACHED_CONTENTS,
+      this._list,
+      await this._list(config),
+      config,
+    );
   };
 }
