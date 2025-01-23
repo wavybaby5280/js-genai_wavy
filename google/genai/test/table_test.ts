@@ -27,6 +27,11 @@ function assertResponsesEqual(
 
   function deepEqual(a: any, b: any): boolean {
     if (typeof a !== typeof b) {
+      // Possible that the type is bytes, which is represented in NodeJS as a
+      // string.
+      if (typeof a === 'string' && typeof b === 'number') {
+        return a === b.toString();
+      }
       console.debug('Invalid type: ')
       console.debug('typeof a: ', typeof a);
       console.debug('typeof b: ', typeof b);
@@ -45,6 +50,11 @@ function assertResponsesEqual(
       }
 
       for (const key of aKeys) {
+        // TODO: b/388478808 - Update to support proper string to byte
+        // conversion and comparison.
+        if (key == 'data' || key == 'imageBytes') {
+          return true;
+        }
         if (!deepEqual(a[key], b[key])) {
           console.debug('Unequal values: ')
           console.debug(`a[${key}]: `, a[key]);
@@ -54,6 +64,10 @@ function assertResponsesEqual(
       }
 
       return true;
+    }
+
+    if (Date.parse(a)) {
+      return Date.parse(a) === Date.parse(b);
     }
 
     return a === b;
@@ -193,11 +207,8 @@ async function runTestTable(
           // TODO: b/388478808 - Remove ignoreKeys once unique data types are
           // converted properly in assertResponsesEqual().
           assertResponsesEqual(responseCamelCase, expectedResponseCamelCase, {
-            ignoreKeys: [
-              'sizeBytes', 'expirationTime', 'tokensInfo', 'candidates',
-              'usageMetadata', 'generatedImages', 'startTime',
-              'tuningDataStats', 'supervisedTuningSpec'
-            ]
+            ignoreKeys:
+                ['tokensInfo', 'usageMetadata']
           });
         }
 
