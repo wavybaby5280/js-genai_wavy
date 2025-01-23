@@ -1511,7 +1511,7 @@ export interface CachedContent {
   displayName?: string;
   /** The name of the publisher model to use for cached content. */
   model?: string;
-  /** Creatation time of the cache entry. */
+  /** Creation time of the cache entry. */
   createTime?: string;
   /** When the cache entry was last updated in UTC time. */
   updateTime?: string;
