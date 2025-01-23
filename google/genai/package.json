@@ -18,6 +18,8 @@
     "@types/jasmine": "^5.1.2",
     "@types/node": "^20.9.0",
     "@types/ws": "^8.5.13",
+    "eslint": "^8.57.0",
+    "globals": "^15.14.0",
     "gts": "^5.2.0",
     "jasmine": "^5.5.0",
     "jasmine-reporters": "^2.4.0",
@@ -27,7 +29,8 @@
     "linkinator": "^4.0.0",
     "nyc": "^15.1.0",
     "prettier": "3.3.3",
-    "typescript": "~5.2.0"
+    "typescript": "~5.2.0",
+    "typescript-eslint": "^8.21.0"
   },
   "dependencies": {
     "google-auth-library": "^9.14.2",

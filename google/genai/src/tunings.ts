@@ -17,9 +17,9 @@ function getTuningJobParametersToMldev(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  let toObject: Record<string, any> = {};
+  const toObject: Record<string, any> = {};
 
-  let fromName = common.getValueByPath(fromObject, ['name']);
+  const fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined) {
     common.setValueByPath(toObject, ['_url', 'name'], fromName);
   }
@@ -32,9 +32,9 @@ function getTuningJobParametersToVertex(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  let toObject: Record<string, any> = {};
+  const toObject: Record<string, any> = {};
 
-  let fromName = common.getValueByPath(fromObject, ['name']);
+  const fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined) {
     common.setValueByPath(toObject, ['_url', 'name'], fromName);
   }
@@ -47,19 +47,19 @@ function listTuningJobsConfigToMldev(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  let toObject: Record<string, any> = {};
+  const toObject: Record<string, any> = {};
 
-  let fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
+  const fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
   if (fromPageSize !== undefined) {
     common.setValueByPath(parentObject, ['_query', 'pageSize'], fromPageSize);
   }
 
-  let fromPageToken = common.getValueByPath(fromObject, ['pageToken']);
+  const fromPageToken = common.getValueByPath(fromObject, ['pageToken']);
   if (fromPageToken !== undefined) {
     common.setValueByPath(parentObject, ['_query', 'pageToken'], fromPageToken);
   }
 
-  let fromFilter = common.getValueByPath(fromObject, ['filter']);
+  const fromFilter = common.getValueByPath(fromObject, ['filter']);
   if (fromFilter !== undefined) {
     common.setValueByPath(parentObject, ['_query', 'filter'], fromFilter);
   }
@@ -72,19 +72,19 @@ function listTuningJobsConfigToVertex(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  let toObject: Record<string, any> = {};
+  const toObject: Record<string, any> = {};
 
-  let fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
+  const fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
   if (fromPageSize !== undefined) {
     common.setValueByPath(parentObject, ['_query', 'pageSize'], fromPageSize);
   }
 
-  let fromPageToken = common.getValueByPath(fromObject, ['pageToken']);
+  const fromPageToken = common.getValueByPath(fromObject, ['pageToken']);
   if (fromPageToken !== undefined) {
     common.setValueByPath(parentObject, ['_query', 'pageToken'], fromPageToken);
   }
 
-  let fromFilter = common.getValueByPath(fromObject, ['filter']);
+  const fromFilter = common.getValueByPath(fromObject, ['filter']);
   if (fromFilter !== undefined) {
     common.setValueByPath(parentObject, ['_query', 'filter'], fromFilter);
   }
@@ -97,9 +97,9 @@ function listTuningJobsParametersToMldev(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  let toObject: Record<string, any> = {};
+  const toObject: Record<string, any> = {};
 
-  let fromConfig = common.getValueByPath(fromObject, ['config']);
+  const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig !== undefined) {
     common.setValueByPath(
       toObject,
@@ -116,9 +116,9 @@ function listTuningJobsParametersToVertex(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  let toObject: Record<string, any> = {};
+  const toObject: Record<string, any> = {};
 
-  let fromConfig = common.getValueByPath(fromObject, ['config']);
+  const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig !== undefined) {
     common.setValueByPath(
       toObject,
@@ -135,14 +135,14 @@ function tunedModelFromMldev(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  let toObject: Record<string, any> = {};
+  const toObject: Record<string, any> = {};
 
-  let fromModel = common.getValueByPath(fromObject, ['name']);
+  const fromModel = common.getValueByPath(fromObject, ['name']);
   if (fromModel !== undefined) {
     common.setValueByPath(toObject, ['model'], fromModel);
   }
 
-  let fromEndpoint = common.getValueByPath(fromObject, ['name']);
+  const fromEndpoint = common.getValueByPath(fromObject, ['name']);
   if (fromEndpoint !== undefined) {
     common.setValueByPath(toObject, ['endpoint'], fromEndpoint);
   }
@@ -155,14 +155,14 @@ function tunedModelFromVertex(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  let toObject: Record<string, any> = {};
+  const toObject: Record<string, any> = {};
 
-  let fromModel = common.getValueByPath(fromObject, ['model']);
+  const fromModel = common.getValueByPath(fromObject, ['model']);
   if (fromModel !== undefined) {
     common.setValueByPath(toObject, ['model'], fromModel);
   }
 
-  let fromEndpoint = common.getValueByPath(fromObject, ['endpoint']);
+  const fromEndpoint = common.getValueByPath(fromObject, ['endpoint']);
   if (fromEndpoint !== undefined) {
     common.setValueByPath(toObject, ['endpoint'], fromEndpoint);
   }
@@ -175,14 +175,14 @@ function tuningJobFromMldev(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  let toObject: Record<string, any> = {};
+  const toObject: Record<string, any> = {};
 
-  let fromName = common.getValueByPath(fromObject, ['name']);
+  const fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined) {
     common.setValueByPath(toObject, ['name'], fromName);
   }
 
-  let fromState = common.getValueByPath(fromObject, ['state']);
+  const fromState = common.getValueByPath(fromObject, ['state']);
   if (fromState !== undefined) {
     common.setValueByPath(
       toObject,
@@ -191,12 +191,12 @@ function tuningJobFromMldev(
     );
   }
 
-  let fromCreateTime = common.getValueByPath(fromObject, ['createTime']);
+  const fromCreateTime = common.getValueByPath(fromObject, ['createTime']);
   if (fromCreateTime !== undefined) {
     common.setValueByPath(toObject, ['createTime'], fromCreateTime);
   }
 
-  let fromStartTime = common.getValueByPath(fromObject, [
+  const fromStartTime = common.getValueByPath(fromObject, [
     'tuningTask',
     'startTime',
   ]);
@@ -204,7 +204,7 @@ function tuningJobFromMldev(
     common.setValueByPath(toObject, ['startTime'], fromStartTime);
   }
 
-  let fromEndTime = common.getValueByPath(fromObject, [
+  const fromEndTime = common.getValueByPath(fromObject, [
     'tuningTask',
     'completeTime',
   ]);
@@ -212,22 +212,22 @@ function tuningJobFromMldev(
     common.setValueByPath(toObject, ['endTime'], fromEndTime);
   }
 
-  let fromUpdateTime = common.getValueByPath(fromObject, ['updateTime']);
+  const fromUpdateTime = common.getValueByPath(fromObject, ['updateTime']);
   if (fromUpdateTime !== undefined) {
     common.setValueByPath(toObject, ['updateTime'], fromUpdateTime);
   }
 
-  let fromDescription = common.getValueByPath(fromObject, ['description']);
+  const fromDescription = common.getValueByPath(fromObject, ['description']);
   if (fromDescription !== undefined) {
     common.setValueByPath(toObject, ['description'], fromDescription);
   }
 
-  let fromBaseModel = common.getValueByPath(fromObject, ['baseModel']);
+  const fromBaseModel = common.getValueByPath(fromObject, ['baseModel']);
   if (fromBaseModel !== undefined) {
     common.setValueByPath(toObject, ['baseModel'], fromBaseModel);
   }
 
-  let fromTunedModel = common.getValueByPath(fromObject, ['_self']);
+  const fromTunedModel = common.getValueByPath(fromObject, ['_self']);
   if (fromTunedModel !== undefined) {
     common.setValueByPath(
       toObject,
@@ -236,17 +236,17 @@ function tuningJobFromMldev(
     );
   }
 
-  let fromExperiment = common.getValueByPath(fromObject, ['experiment']);
+  const fromExperiment = common.getValueByPath(fromObject, ['experiment']);
   if (fromExperiment !== undefined) {
     common.setValueByPath(toObject, ['experiment'], fromExperiment);
   }
 
-  let fromLabels = common.getValueByPath(fromObject, ['labels']);
+  const fromLabels = common.getValueByPath(fromObject, ['labels']);
   if (fromLabels !== undefined) {
     common.setValueByPath(toObject, ['labels'], fromLabels);
   }
 
-  let fromTunedModelDisplayName = common.getValueByPath(fromObject, [
+  const fromTunedModelDisplayName = common.getValueByPath(fromObject, [
     'tunedModelDisplayName',
   ]);
   if (fromTunedModelDisplayName !== undefined) {
@@ -265,14 +265,14 @@ function tuningJobFromVertex(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  let toObject: Record<string, any> = {};
+  const toObject: Record<string, any> = {};
 
-  let fromName = common.getValueByPath(fromObject, ['name']);
+  const fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined) {
     common.setValueByPath(toObject, ['name'], fromName);
   }
 
-  let fromState = common.getValueByPath(fromObject, ['state']);
+  const fromState = common.getValueByPath(fromObject, ['state']);
   if (fromState !== undefined) {
     common.setValueByPath(
       toObject,
@@ -281,42 +281,42 @@ function tuningJobFromVertex(
     );
   }
 
-  let fromCreateTime = common.getValueByPath(fromObject, ['createTime']);
+  const fromCreateTime = common.getValueByPath(fromObject, ['createTime']);
   if (fromCreateTime !== undefined) {
     common.setValueByPath(toObject, ['createTime'], fromCreateTime);
   }
 
-  let fromStartTime = common.getValueByPath(fromObject, ['startTime']);
+  const fromStartTime = common.getValueByPath(fromObject, ['startTime']);
   if (fromStartTime !== undefined) {
     common.setValueByPath(toObject, ['startTime'], fromStartTime);
   }
 
-  let fromEndTime = common.getValueByPath(fromObject, ['endTime']);
+  const fromEndTime = common.getValueByPath(fromObject, ['endTime']);
   if (fromEndTime !== undefined) {
     common.setValueByPath(toObject, ['endTime'], fromEndTime);
   }
 
-  let fromUpdateTime = common.getValueByPath(fromObject, ['updateTime']);
+  const fromUpdateTime = common.getValueByPath(fromObject, ['updateTime']);
   if (fromUpdateTime !== undefined) {
     common.setValueByPath(toObject, ['updateTime'], fromUpdateTime);
   }
 
-  let fromError = common.getValueByPath(fromObject, ['error']);
+  const fromError = common.getValueByPath(fromObject, ['error']);
   if (fromError !== undefined) {
     common.setValueByPath(toObject, ['error'], fromError);
   }
 
-  let fromDescription = common.getValueByPath(fromObject, ['description']);
+  const fromDescription = common.getValueByPath(fromObject, ['description']);
   if (fromDescription !== undefined) {
     common.setValueByPath(toObject, ['description'], fromDescription);
   }
 
-  let fromBaseModel = common.getValueByPath(fromObject, ['baseModel']);
+  const fromBaseModel = common.getValueByPath(fromObject, ['baseModel']);
   if (fromBaseModel !== undefined) {
     common.setValueByPath(toObject, ['baseModel'], fromBaseModel);
   }
 
-  let fromTunedModel = common.getValueByPath(fromObject, ['tunedModel']);
+  const fromTunedModel = common.getValueByPath(fromObject, ['tunedModel']);
   if (fromTunedModel !== undefined) {
     common.setValueByPath(
       toObject,
@@ -325,7 +325,7 @@ function tuningJobFromVertex(
     );
   }
 
-  let fromSupervisedTuningSpec = common.getValueByPath(fromObject, [
+  const fromSupervisedTuningSpec = common.getValueByPath(fromObject, [
     'supervisedTuningSpec',
   ]);
   if (fromSupervisedTuningSpec !== undefined) {
@@ -336,28 +336,28 @@ function tuningJobFromVertex(
     );
   }
 
-  let fromTuningDataStats = common.getValueByPath(fromObject, [
+  const fromTuningDataStats = common.getValueByPath(fromObject, [
     'tuningDataStats',
   ]);
   if (fromTuningDataStats !== undefined) {
     common.setValueByPath(toObject, ['tuningDataStats'], fromTuningDataStats);
   }
 
-  let fromEncryptionSpec = common.getValueByPath(fromObject, [
+  const fromEncryptionSpec = common.getValueByPath(fromObject, [
     'encryptionSpec',
   ]);
   if (fromEncryptionSpec !== undefined) {
     common.setValueByPath(toObject, ['encryptionSpec'], fromEncryptionSpec);
   }
 
-  let fromDistillationSpec = common.getValueByPath(fromObject, [
+  const fromDistillationSpec = common.getValueByPath(fromObject, [
     'distillationSpec',
   ]);
   if (fromDistillationSpec !== undefined) {
     common.setValueByPath(toObject, ['distillationSpec'], fromDistillationSpec);
   }
 
-  let fromPartnerModelTuningSpec = common.getValueByPath(fromObject, [
+  const fromPartnerModelTuningSpec = common.getValueByPath(fromObject, [
     'partnerModelTuningSpec',
   ]);
   if (fromPartnerModelTuningSpec !== undefined) {
@@ -368,22 +368,22 @@ function tuningJobFromVertex(
     );
   }
 
-  let fromPipelineJob = common.getValueByPath(fromObject, ['pipelineJob']);
+  const fromPipelineJob = common.getValueByPath(fromObject, ['pipelineJob']);
   if (fromPipelineJob !== undefined) {
     common.setValueByPath(toObject, ['pipelineJob'], fromPipelineJob);
   }
 
-  let fromExperiment = common.getValueByPath(fromObject, ['experiment']);
+  const fromExperiment = common.getValueByPath(fromObject, ['experiment']);
   if (fromExperiment !== undefined) {
     common.setValueByPath(toObject, ['experiment'], fromExperiment);
   }
 
-  let fromLabels = common.getValueByPath(fromObject, ['labels']);
+  const fromLabels = common.getValueByPath(fromObject, ['labels']);
   if (fromLabels !== undefined) {
     common.setValueByPath(toObject, ['labels'], fromLabels);
   }
 
-  let fromTunedModelDisplayName = common.getValueByPath(fromObject, [
+  const fromTunedModelDisplayName = common.getValueByPath(fromObject, [
     'tunedModelDisplayName',
   ]);
   if (fromTunedModelDisplayName !== undefined) {
@@ -402,14 +402,14 @@ function listTuningJobsResponseFromMldev(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  let toObject: Record<string, any> = {};
+  const toObject: Record<string, any> = {};
 
-  let fromNextPageToken = common.getValueByPath(fromObject, ['nextPageToken']);
+  const fromNextPageToken = common.getValueByPath(fromObject, ['nextPageToken']);
   if (fromNextPageToken !== undefined) {
     common.setValueByPath(toObject, ['nextPageToken'], fromNextPageToken);
   }
 
-  let fromTuningJobs = common.getValueByPath(fromObject, ['tunedModels']);
+  const fromTuningJobs = common.getValueByPath(fromObject, ['tunedModels']);
   if (fromTuningJobs !== undefined) {
     common.setValueByPath(
       toObject,
@@ -428,14 +428,14 @@ function listTuningJobsResponseFromVertex(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  let toObject: Record<string, any> = {};
+  const toObject: Record<string, any> = {};
 
-  let fromNextPageToken = common.getValueByPath(fromObject, ['nextPageToken']);
+  const fromNextPageToken = common.getValueByPath(fromObject, ['nextPageToken']);
   if (fromNextPageToken !== undefined) {
     common.setValueByPath(toObject, ['nextPageToken'], fromNextPageToken);
   }
 
-  let fromTuningJobs = common.getValueByPath(fromObject, ['tuningJobs']);
+  const fromTuningJobs = common.getValueByPath(fromObject, ['tuningJobs']);
   if (fromTuningJobs !== undefined) {
     common.setValueByPath(
       toObject,
@@ -461,7 +461,7 @@ export class Tunings extends BaseModule {
     let response: Promise<types.TuningJob>;
     let path: string = '';
     let body: Record<string, any> = {};
-    let kwargs: Record<string, any> = {};
+    const kwargs: Record<string, any> = {};
     kwargs['name'] = name;
     kwargs['config'] = config;
     if (this.apiClient.isVertexAI()) {
@@ -495,7 +495,7 @@ export class Tunings extends BaseModule {
     let response: Promise<types.ListTuningJobsResponse>;
     let path: string = '';
     let body: Record<string, any> = {};
-    let kwargs: Record<string, any> = {};
+    const kwargs: Record<string, any> = {};
     kwargs['config'] = config;
     if (this.apiClient.isVertexAI()) {
       body = listTuningJobsParametersToVertex(this.apiClient, kwargs);
