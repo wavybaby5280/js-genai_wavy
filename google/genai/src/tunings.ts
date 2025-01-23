@@ -9,8 +9,8 @@
 import {ApiClient} from './_api_client';
 import * as common from './_common';
 import {BaseModule} from './_common';
-import * as types from './types';
 import * as t from './_transformers';
+import * as types from './types';
 
 function getTuningJobParametersToMldev(
   apiClient: ApiClient,
