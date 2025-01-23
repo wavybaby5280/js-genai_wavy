@@ -17,18 +17,18 @@ function partToMldev(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
   if (common.getValueByPath(fromObject, ['videoMetadata']) !== undefined) {
     throw new Error('videoMetadata parameter is not supported in Google AI.');
   }
 
-  const fromThought = common.getValueByPath(fromObject, ['thought']);
+  let fromThought = common.getValueByPath(fromObject, ['thought']);
   if (fromThought !== undefined) {
     common.setValueByPath(toObject, ['thought'], fromThought);
   }
 
-  const fromCodeExecutionResult = common.getValueByPath(fromObject, [
+  let fromCodeExecutionResult = common.getValueByPath(fromObject, [
     'codeExecutionResult',
   ]);
   if (fromCodeExecutionResult !== undefined) {
@@ -39,36 +39,36 @@ function partToMldev(
     );
   }
 
-  const fromExecutableCode = common.getValueByPath(fromObject, [
+  let fromExecutableCode = common.getValueByPath(fromObject, [
     'executableCode',
   ]);
   if (fromExecutableCode !== undefined) {
     common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
   }
 
-  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
+  let fromFileData = common.getValueByPath(fromObject, ['fileData']);
   if (fromFileData !== undefined) {
     common.setValueByPath(toObject, ['fileData'], fromFileData);
   }
 
-  const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
+  let fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
   if (fromFunctionCall !== undefined) {
     common.setValueByPath(toObject, ['functionCall'], fromFunctionCall);
   }
 
-  const fromFunctionResponse = common.getValueByPath(fromObject, [
+  let fromFunctionResponse = common.getValueByPath(fromObject, [
     'functionResponse',
   ]);
   if (fromFunctionResponse !== undefined) {
     common.setValueByPath(toObject, ['functionResponse'], fromFunctionResponse);
   }
 
-  const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
+  let fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
   if (fromInlineData !== undefined) {
     common.setValueByPath(toObject, ['inlineData'], fromInlineData);
   }
 
-  const fromText = common.getValueByPath(fromObject, ['text']);
+  let fromText = common.getValueByPath(fromObject, ['text']);
   if (fromText !== undefined) {
     common.setValueByPath(toObject, ['text'], fromText);
   }
@@ -81,19 +81,19 @@ function partToVertex(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromVideoMetadata = common.getValueByPath(fromObject, ['videoMetadata']);
+  let fromVideoMetadata = common.getValueByPath(fromObject, ['videoMetadata']);
   if (fromVideoMetadata !== undefined) {
     common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
   }
 
-  const fromThought = common.getValueByPath(fromObject, ['thought']);
+  let fromThought = common.getValueByPath(fromObject, ['thought']);
   if (fromThought !== undefined) {
     common.setValueByPath(toObject, ['thought'], fromThought);
   }
 
-  const fromCodeExecutionResult = common.getValueByPath(fromObject, [
+  let fromCodeExecutionResult = common.getValueByPath(fromObject, [
     'codeExecutionResult',
   ]);
   if (fromCodeExecutionResult !== undefined) {
@@ -104,36 +104,36 @@ function partToVertex(
     );
   }
 
-  const fromExecutableCode = common.getValueByPath(fromObject, [
+  let fromExecutableCode = common.getValueByPath(fromObject, [
     'executableCode',
   ]);
   if (fromExecutableCode !== undefined) {
     common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
   }
 
-  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
+  let fromFileData = common.getValueByPath(fromObject, ['fileData']);
   if (fromFileData !== undefined) {
     common.setValueByPath(toObject, ['fileData'], fromFileData);
   }
 
-  const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
+  let fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
   if (fromFunctionCall !== undefined) {
     common.setValueByPath(toObject, ['functionCall'], fromFunctionCall);
   }
 
-  const fromFunctionResponse = common.getValueByPath(fromObject, [
+  let fromFunctionResponse = common.getValueByPath(fromObject, [
     'functionResponse',
   ]);
   if (fromFunctionResponse !== undefined) {
     common.setValueByPath(toObject, ['functionResponse'], fromFunctionResponse);
   }
 
-  const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
+  let fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
   if (fromInlineData !== undefined) {
     common.setValueByPath(toObject, ['inlineData'], fromInlineData);
   }
 
-  const fromText = common.getValueByPath(fromObject, ['text']);
+  let fromText = common.getValueByPath(fromObject, ['text']);
   if (fromText !== undefined) {
     common.setValueByPath(toObject, ['text'], fromText);
   }
@@ -146,9 +146,9 @@ export function contentToMldev(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromParts = common.getValueByPath(fromObject, ['parts']);
+  let fromParts = common.getValueByPath(fromObject, ['parts']);
   if (fromParts !== undefined) {
     common.setValueByPath(
       toObject,
@@ -159,7 +159,7 @@ export function contentToMldev(
     );
   }
 
-  const fromRole = common.getValueByPath(fromObject, ['role']);
+  let fromRole = common.getValueByPath(fromObject, ['role']);
   if (fromRole !== undefined) {
     common.setValueByPath(toObject, ['role'], fromRole);
   }
@@ -172,9 +172,9 @@ export function contentToVertex(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromParts = common.getValueByPath(fromObject, ['parts']);
+  let fromParts = common.getValueByPath(fromObject, ['parts']);
   if (fromParts !== undefined) {
     common.setValueByPath(
       toObject,
@@ -185,7 +185,7 @@ export function contentToVertex(
     );
   }
 
-  const fromRole = common.getValueByPath(fromObject, ['role']);
+  let fromRole = common.getValueByPath(fromObject, ['role']);
   if (fromRole !== undefined) {
     common.setValueByPath(toObject, ['role'], fromRole);
   }
@@ -198,7 +198,7 @@ function schemaToMldev(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
   if (common.getValueByPath(fromObject, ['minItems']) !== undefined) {
     throw new Error('minItems parameter is not supported in Google AI.');
@@ -262,37 +262,37 @@ function schemaToMldev(
     throw new Error('maxProperties parameter is not supported in Google AI.');
   }
 
-  const fromType = common.getValueByPath(fromObject, ['type']);
+  let fromType = common.getValueByPath(fromObject, ['type']);
   if (fromType !== undefined) {
     common.setValueByPath(toObject, ['type'], fromType);
   }
 
-  const fromDescription = common.getValueByPath(fromObject, ['description']);
+  let fromDescription = common.getValueByPath(fromObject, ['description']);
   if (fromDescription !== undefined) {
     common.setValueByPath(toObject, ['description'], fromDescription);
   }
 
-  const fromEnum = common.getValueByPath(fromObject, ['enum']);
+  let fromEnum = common.getValueByPath(fromObject, ['enum']);
   if (fromEnum !== undefined) {
     common.setValueByPath(toObject, ['enum'], fromEnum);
   }
 
-  const fromFormat = common.getValueByPath(fromObject, ['format']);
+  let fromFormat = common.getValueByPath(fromObject, ['format']);
   if (fromFormat !== undefined) {
     common.setValueByPath(toObject, ['format'], fromFormat);
   }
 
-  const fromItems = common.getValueByPath(fromObject, ['items']);
+  let fromItems = common.getValueByPath(fromObject, ['items']);
   if (fromItems !== undefined) {
     common.setValueByPath(toObject, ['items'], fromItems);
   }
 
-  const fromProperties = common.getValueByPath(fromObject, ['properties']);
+  let fromProperties = common.getValueByPath(fromObject, ['properties']);
   if (fromProperties !== undefined) {
     common.setValueByPath(toObject, ['properties'], fromProperties);
   }
 
-  const fromRequired = common.getValueByPath(fromObject, ['required']);
+  let fromRequired = common.getValueByPath(fromObject, ['required']);
   if (fromRequired !== undefined) {
     common.setValueByPath(toObject, ['required'], fromRequired);
   }
@@ -305,116 +305,116 @@ function schemaToVertex(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromMinItems = common.getValueByPath(fromObject, ['minItems']);
+  let fromMinItems = common.getValueByPath(fromObject, ['minItems']);
   if (fromMinItems !== undefined) {
     common.setValueByPath(toObject, ['minItems'], fromMinItems);
   }
 
-  const fromExample = common.getValueByPath(fromObject, ['example']);
+  let fromExample = common.getValueByPath(fromObject, ['example']);
   if (fromExample !== undefined) {
     common.setValueByPath(toObject, ['example'], fromExample);
   }
 
-  const fromPropertyOrdering = common.getValueByPath(fromObject, [
+  let fromPropertyOrdering = common.getValueByPath(fromObject, [
     'propertyOrdering',
   ]);
   if (fromPropertyOrdering !== undefined) {
     common.setValueByPath(toObject, ['propertyOrdering'], fromPropertyOrdering);
   }
 
-  const fromPattern = common.getValueByPath(fromObject, ['pattern']);
+  let fromPattern = common.getValueByPath(fromObject, ['pattern']);
   if (fromPattern !== undefined) {
     common.setValueByPath(toObject, ['pattern'], fromPattern);
   }
 
-  const fromMinimum = common.getValueByPath(fromObject, ['minimum']);
+  let fromMinimum = common.getValueByPath(fromObject, ['minimum']);
   if (fromMinimum !== undefined) {
     common.setValueByPath(toObject, ['minimum'], fromMinimum);
   }
 
-  const fromDefault = common.getValueByPath(fromObject, ['default']);
+  let fromDefault = common.getValueByPath(fromObject, ['default']);
   if (fromDefault !== undefined) {
     common.setValueByPath(toObject, ['default'], fromDefault);
   }
 
-  const fromAnyOf = common.getValueByPath(fromObject, ['anyOf']);
+  let fromAnyOf = common.getValueByPath(fromObject, ['anyOf']);
   if (fromAnyOf !== undefined) {
     common.setValueByPath(toObject, ['anyOf'], fromAnyOf);
   }
 
-  const fromMaxLength = common.getValueByPath(fromObject, ['maxLength']);
+  let fromMaxLength = common.getValueByPath(fromObject, ['maxLength']);
   if (fromMaxLength !== undefined) {
     common.setValueByPath(toObject, ['maxLength'], fromMaxLength);
   }
 
-  const fromTitle = common.getValueByPath(fromObject, ['title']);
+  let fromTitle = common.getValueByPath(fromObject, ['title']);
   if (fromTitle !== undefined) {
     common.setValueByPath(toObject, ['title'], fromTitle);
   }
 
-  const fromMinLength = common.getValueByPath(fromObject, ['minLength']);
+  let fromMinLength = common.getValueByPath(fromObject, ['minLength']);
   if (fromMinLength !== undefined) {
     common.setValueByPath(toObject, ['minLength'], fromMinLength);
   }
 
-  const fromMinProperties = common.getValueByPath(fromObject, ['minProperties']);
+  let fromMinProperties = common.getValueByPath(fromObject, ['minProperties']);
   if (fromMinProperties !== undefined) {
     common.setValueByPath(toObject, ['minProperties'], fromMinProperties);
   }
 
-  const fromMaxItems = common.getValueByPath(fromObject, ['maxItems']);
+  let fromMaxItems = common.getValueByPath(fromObject, ['maxItems']);
   if (fromMaxItems !== undefined) {
     common.setValueByPath(toObject, ['maxItems'], fromMaxItems);
   }
 
-  const fromMaximum = common.getValueByPath(fromObject, ['maximum']);
+  let fromMaximum = common.getValueByPath(fromObject, ['maximum']);
   if (fromMaximum !== undefined) {
     common.setValueByPath(toObject, ['maximum'], fromMaximum);
   }
 
-  const fromNullable = common.getValueByPath(fromObject, ['nullable']);
+  let fromNullable = common.getValueByPath(fromObject, ['nullable']);
   if (fromNullable !== undefined) {
     common.setValueByPath(toObject, ['nullable'], fromNullable);
   }
 
-  const fromMaxProperties = common.getValueByPath(fromObject, ['maxProperties']);
+  let fromMaxProperties = common.getValueByPath(fromObject, ['maxProperties']);
   if (fromMaxProperties !== undefined) {
     common.setValueByPath(toObject, ['maxProperties'], fromMaxProperties);
   }
 
-  const fromType = common.getValueByPath(fromObject, ['type']);
+  let fromType = common.getValueByPath(fromObject, ['type']);
   if (fromType !== undefined) {
     common.setValueByPath(toObject, ['type'], fromType);
   }
 
-  const fromDescription = common.getValueByPath(fromObject, ['description']);
+  let fromDescription = common.getValueByPath(fromObject, ['description']);
   if (fromDescription !== undefined) {
     common.setValueByPath(toObject, ['description'], fromDescription);
   }
 
-  const fromEnum = common.getValueByPath(fromObject, ['enum']);
+  let fromEnum = common.getValueByPath(fromObject, ['enum']);
   if (fromEnum !== undefined) {
     common.setValueByPath(toObject, ['enum'], fromEnum);
   }
 
-  const fromFormat = common.getValueByPath(fromObject, ['format']);
+  let fromFormat = common.getValueByPath(fromObject, ['format']);
   if (fromFormat !== undefined) {
     common.setValueByPath(toObject, ['format'], fromFormat);
   }
 
-  const fromItems = common.getValueByPath(fromObject, ['items']);
+  let fromItems = common.getValueByPath(fromObject, ['items']);
   if (fromItems !== undefined) {
     common.setValueByPath(toObject, ['items'], fromItems);
   }
 
-  const fromProperties = common.getValueByPath(fromObject, ['properties']);
+  let fromProperties = common.getValueByPath(fromObject, ['properties']);
   if (fromProperties !== undefined) {
     common.setValueByPath(toObject, ['properties'], fromProperties);
   }
 
-  const fromRequired = common.getValueByPath(fromObject, ['required']);
+  let fromRequired = common.getValueByPath(fromObject, ['required']);
   if (fromRequired !== undefined) {
     common.setValueByPath(toObject, ['required'], fromRequired);
   }
@@ -427,23 +427,23 @@ function functionDeclarationToMldev(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
   if (common.getValueByPath(fromObject, ['response']) !== undefined) {
     throw new Error('response parameter is not supported in Google AI.');
   }
 
-  const fromDescription = common.getValueByPath(fromObject, ['description']);
+  let fromDescription = common.getValueByPath(fromObject, ['description']);
   if (fromDescription !== undefined) {
     common.setValueByPath(toObject, ['description'], fromDescription);
   }
 
-  const fromName = common.getValueByPath(fromObject, ['name']);
+  let fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined) {
     common.setValueByPath(toObject, ['name'], fromName);
   }
 
-  const fromParameters = common.getValueByPath(fromObject, ['parameters']);
+  let fromParameters = common.getValueByPath(fromObject, ['parameters']);
   if (fromParameters !== undefined) {
     common.setValueByPath(toObject, ['parameters'], fromParameters);
   }
@@ -456,9 +456,9 @@ function functionDeclarationToVertex(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromResponse = common.getValueByPath(fromObject, ['response']);
+  let fromResponse = common.getValueByPath(fromObject, ['response']);
   if (fromResponse !== undefined) {
     common.setValueByPath(
       toObject,
@@ -467,17 +467,17 @@ function functionDeclarationToVertex(
     );
   }
 
-  const fromDescription = common.getValueByPath(fromObject, ['description']);
+  let fromDescription = common.getValueByPath(fromObject, ['description']);
   if (fromDescription !== undefined) {
     common.setValueByPath(toObject, ['description'], fromDescription);
   }
 
-  const fromName = common.getValueByPath(fromObject, ['name']);
+  let fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined) {
     common.setValueByPath(toObject, ['name'], fromName);
   }
 
-  const fromParameters = common.getValueByPath(fromObject, ['parameters']);
+  let fromParameters = common.getValueByPath(fromObject, ['parameters']);
   if (fromParameters !== undefined) {
     common.setValueByPath(toObject, ['parameters'], fromParameters);
   }
@@ -490,7 +490,7 @@ function googleSearchToMldev(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
   return toObject;
 }
@@ -500,7 +500,7 @@ function googleSearchToVertex(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
   return toObject;
 }
@@ -510,14 +510,14 @@ function dynamicRetrievalConfigToMldev(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromMode = common.getValueByPath(fromObject, ['mode']);
+  let fromMode = common.getValueByPath(fromObject, ['mode']);
   if (fromMode !== undefined) {
     common.setValueByPath(toObject, ['mode'], fromMode);
   }
 
-  const fromDynamicThreshold = common.getValueByPath(fromObject, [
+  let fromDynamicThreshold = common.getValueByPath(fromObject, [
     'dynamicThreshold',
   ]);
   if (fromDynamicThreshold !== undefined) {
@@ -532,14 +532,14 @@ function dynamicRetrievalConfigToVertex(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromMode = common.getValueByPath(fromObject, ['mode']);
+  let fromMode = common.getValueByPath(fromObject, ['mode']);
   if (fromMode !== undefined) {
     common.setValueByPath(toObject, ['mode'], fromMode);
   }
 
-  const fromDynamicThreshold = common.getValueByPath(fromObject, [
+  let fromDynamicThreshold = common.getValueByPath(fromObject, [
     'dynamicThreshold',
   ]);
   if (fromDynamicThreshold !== undefined) {
@@ -554,9 +554,9 @@ function googleSearchRetrievalToMldev(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromDynamicRetrievalConfig = common.getValueByPath(fromObject, [
+  let fromDynamicRetrievalConfig = common.getValueByPath(fromObject, [
     'dynamicRetrievalConfig',
   ]);
   if (fromDynamicRetrievalConfig !== undefined) {
@@ -579,9 +579,9 @@ function googleSearchRetrievalToVertex(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromDynamicRetrievalConfig = common.getValueByPath(fromObject, [
+  let fromDynamicRetrievalConfig = common.getValueByPath(fromObject, [
     'dynamicRetrievalConfig',
   ]);
   if (fromDynamicRetrievalConfig !== undefined) {
@@ -604,9 +604,9 @@ export function toolToMldev(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromFunctionDeclarations = common.getValueByPath(fromObject, [
+  let fromFunctionDeclarations = common.getValueByPath(fromObject, [
     'functionDeclarations',
   ]);
   if (fromFunctionDeclarations !== undefined) {
@@ -623,7 +623,7 @@ export function toolToMldev(
     throw new Error('retrieval parameter is not supported in Google AI.');
   }
 
-  const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
+  let fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
   if (fromGoogleSearch !== undefined) {
     common.setValueByPath(
       toObject,
@@ -632,7 +632,7 @@ export function toolToMldev(
     );
   }
 
-  const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
+  let fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
     'googleSearchRetrieval',
   ]);
   if (fromGoogleSearchRetrieval !== undefined) {
@@ -647,7 +647,7 @@ export function toolToMldev(
     );
   }
 
-  const fromCodeExecution = common.getValueByPath(fromObject, ['codeExecution']);
+  let fromCodeExecution = common.getValueByPath(fromObject, ['codeExecution']);
   if (fromCodeExecution !== undefined) {
     common.setValueByPath(toObject, ['codeExecution'], fromCodeExecution);
   }
@@ -660,9 +660,9 @@ export function toolToVertex(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromFunctionDeclarations = common.getValueByPath(fromObject, [
+  let fromFunctionDeclarations = common.getValueByPath(fromObject, [
     'functionDeclarations',
   ]);
   if (fromFunctionDeclarations !== undefined) {
@@ -675,12 +675,12 @@ export function toolToVertex(
     );
   }
 
-  const fromRetrieval = common.getValueByPath(fromObject, ['retrieval']);
+  let fromRetrieval = common.getValueByPath(fromObject, ['retrieval']);
   if (fromRetrieval !== undefined) {
     common.setValueByPath(toObject, ['retrieval'], fromRetrieval);
   }
 
-  const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
+  let fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
   if (fromGoogleSearch !== undefined) {
     common.setValueByPath(
       toObject,
@@ -689,7 +689,7 @@ export function toolToVertex(
     );
   }
 
-  const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
+  let fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
     'googleSearchRetrieval',
   ]);
   if (fromGoogleSearchRetrieval !== undefined) {
@@ -704,7 +704,7 @@ export function toolToVertex(
     );
   }
 
-  const fromCodeExecution = common.getValueByPath(fromObject, ['codeExecution']);
+  let fromCodeExecution = common.getValueByPath(fromObject, ['codeExecution']);
   if (fromCodeExecution !== undefined) {
     common.setValueByPath(toObject, ['codeExecution'], fromCodeExecution);
   }
@@ -717,14 +717,14 @@ function functionCallingConfigToMldev(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromMode = common.getValueByPath(fromObject, ['mode']);
+  let fromMode = common.getValueByPath(fromObject, ['mode']);
   if (fromMode !== undefined) {
     common.setValueByPath(toObject, ['mode'], fromMode);
   }
 
-  const fromAllowedFunctionNames = common.getValueByPath(fromObject, [
+  let fromAllowedFunctionNames = common.getValueByPath(fromObject, [
     'allowedFunctionNames',
   ]);
   if (fromAllowedFunctionNames !== undefined) {
@@ -743,14 +743,14 @@ function functionCallingConfigToVertex(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromMode = common.getValueByPath(fromObject, ['mode']);
+  let fromMode = common.getValueByPath(fromObject, ['mode']);
   if (fromMode !== undefined) {
     common.setValueByPath(toObject, ['mode'], fromMode);
   }
 
-  const fromAllowedFunctionNames = common.getValueByPath(fromObject, [
+  let fromAllowedFunctionNames = common.getValueByPath(fromObject, [
     'allowedFunctionNames',
   ]);
   if (fromAllowedFunctionNames !== undefined) {
@@ -769,9 +769,9 @@ function toolConfigToMldev(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromFunctionCallingConfig = common.getValueByPath(fromObject, [
+  let fromFunctionCallingConfig = common.getValueByPath(fromObject, [
     'functionCallingConfig',
   ]);
   if (fromFunctionCallingConfig !== undefined) {
@@ -794,9 +794,9 @@ function toolConfigToVertex(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromFunctionCallingConfig = common.getValueByPath(fromObject, [
+  let fromFunctionCallingConfig = common.getValueByPath(fromObject, [
     'functionCallingConfig',
   ]);
   if (fromFunctionCallingConfig !== undefined) {
@@ -819,24 +819,24 @@ function createCachedContentConfigToMldev(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromTtl = common.getValueByPath(fromObject, ['ttl']);
+  let fromTtl = common.getValueByPath(fromObject, ['ttl']);
   if (fromTtl !== undefined) {
     common.setValueByPath(parentObject, ['ttl'], fromTtl);
   }
 
-  const fromExpireTime = common.getValueByPath(fromObject, ['expireTime']);
+  let fromExpireTime = common.getValueByPath(fromObject, ['expireTime']);
   if (fromExpireTime !== undefined) {
     common.setValueByPath(parentObject, ['expireTime'], fromExpireTime);
   }
 
-  const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
+  let fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
   if (fromDisplayName !== undefined) {
     common.setValueByPath(parentObject, ['displayName'], fromDisplayName);
   }
 
-  const fromContents = common.getValueByPath(fromObject, ['contents']);
+  let fromContents = common.getValueByPath(fromObject, ['contents']);
   if (fromContents !== undefined) {
     common.setValueByPath(
       parentObject,
@@ -850,7 +850,7 @@ function createCachedContentConfigToMldev(
     );
   }
 
-  const fromSystemInstruction = common.getValueByPath(fromObject, [
+  let fromSystemInstruction = common.getValueByPath(fromObject, [
     'systemInstruction',
   ]);
   if (fromSystemInstruction !== undefined) {
@@ -865,7 +865,7 @@ function createCachedContentConfigToMldev(
     );
   }
 
-  const fromTools = common.getValueByPath(fromObject, ['tools']);
+  let fromTools = common.getValueByPath(fromObject, ['tools']);
   if (fromTools !== undefined) {
     common.setValueByPath(
       parentObject,
@@ -876,7 +876,7 @@ function createCachedContentConfigToMldev(
     );
   }
 
-  const fromToolConfig = common.getValueByPath(fromObject, ['toolConfig']);
+  let fromToolConfig = common.getValueByPath(fromObject, ['toolConfig']);
   if (fromToolConfig !== undefined) {
     common.setValueByPath(
       parentObject,
@@ -893,24 +893,24 @@ function createCachedContentConfigToVertex(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromTtl = common.getValueByPath(fromObject, ['ttl']);
+  let fromTtl = common.getValueByPath(fromObject, ['ttl']);
   if (fromTtl !== undefined) {
     common.setValueByPath(parentObject, ['ttl'], fromTtl);
   }
 
-  const fromExpireTime = common.getValueByPath(fromObject, ['expireTime']);
+  let fromExpireTime = common.getValueByPath(fromObject, ['expireTime']);
   if (fromExpireTime !== undefined) {
     common.setValueByPath(parentObject, ['expireTime'], fromExpireTime);
   }
 
-  const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
+  let fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
   if (fromDisplayName !== undefined) {
     common.setValueByPath(parentObject, ['displayName'], fromDisplayName);
   }
 
-  const fromContents = common.getValueByPath(fromObject, ['contents']);
+  let fromContents = common.getValueByPath(fromObject, ['contents']);
   if (fromContents !== undefined) {
     common.setValueByPath(
       parentObject,
@@ -924,7 +924,7 @@ function createCachedContentConfigToVertex(
     );
   }
 
-  const fromSystemInstruction = common.getValueByPath(fromObject, [
+  let fromSystemInstruction = common.getValueByPath(fromObject, [
     'systemInstruction',
   ]);
   if (fromSystemInstruction !== undefined) {
@@ -939,7 +939,7 @@ function createCachedContentConfigToVertex(
     );
   }
 
-  const fromTools = common.getValueByPath(fromObject, ['tools']);
+  let fromTools = common.getValueByPath(fromObject, ['tools']);
   if (fromTools !== undefined) {
     common.setValueByPath(
       parentObject,
@@ -950,7 +950,7 @@ function createCachedContentConfigToVertex(
     );
   }
 
-  const fromToolConfig = common.getValueByPath(fromObject, ['toolConfig']);
+  let fromToolConfig = common.getValueByPath(fromObject, ['toolConfig']);
   if (fromToolConfig !== undefined) {
     common.setValueByPath(
       parentObject,
@@ -967,9 +967,9 @@ function createCachedContentParametersToMldev(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromModel = common.getValueByPath(fromObject, ['model']);
+  let fromModel = common.getValueByPath(fromObject, ['model']);
   if (fromModel !== undefined) {
     common.setValueByPath(
       toObject,
@@ -978,7 +978,7 @@ function createCachedContentParametersToMldev(
     );
   }
 
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
+  let fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig !== undefined) {
     common.setValueByPath(
       toObject,
@@ -995,9 +995,9 @@ function createCachedContentParametersToVertex(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromModel = common.getValueByPath(fromObject, ['model']);
+  let fromModel = common.getValueByPath(fromObject, ['model']);
   if (fromModel !== undefined) {
     common.setValueByPath(
       toObject,
@@ -1006,7 +1006,7 @@ function createCachedContentParametersToVertex(
     );
   }
 
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
+  let fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig !== undefined) {
     common.setValueByPath(
       toObject,
@@ -1023,9 +1023,9 @@ function getCachedContentParametersToMldev(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromName = common.getValueByPath(fromObject, ['name']);
+  let fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined) {
     common.setValueByPath(
       toObject,
@@ -1042,9 +1042,9 @@ function getCachedContentParametersToVertex(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromName = common.getValueByPath(fromObject, ['name']);
+  let fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined) {
     common.setValueByPath(
       toObject,
@@ -1061,9 +1061,9 @@ function deleteCachedContentParametersToMldev(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromName = common.getValueByPath(fromObject, ['name']);
+  let fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined) {
     common.setValueByPath(
       toObject,
@@ -1080,9 +1080,9 @@ function deleteCachedContentParametersToVertex(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromName = common.getValueByPath(fromObject, ['name']);
+  let fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined) {
     common.setValueByPath(
       toObject,
@@ -1099,14 +1099,14 @@ function updateCachedContentConfigToMldev(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromTtl = common.getValueByPath(fromObject, ['ttl']);
+  let fromTtl = common.getValueByPath(fromObject, ['ttl']);
   if (fromTtl !== undefined) {
     common.setValueByPath(parentObject, ['ttl'], fromTtl);
   }
 
-  const fromExpireTime = common.getValueByPath(fromObject, ['expireTime']);
+  let fromExpireTime = common.getValueByPath(fromObject, ['expireTime']);
   if (fromExpireTime !== undefined) {
     common.setValueByPath(parentObject, ['expireTime'], fromExpireTime);
   }
@@ -1119,14 +1119,14 @@ function updateCachedContentConfigToVertex(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromTtl = common.getValueByPath(fromObject, ['ttl']);
+  let fromTtl = common.getValueByPath(fromObject, ['ttl']);
   if (fromTtl !== undefined) {
     common.setValueByPath(parentObject, ['ttl'], fromTtl);
   }
 
-  const fromExpireTime = common.getValueByPath(fromObject, ['expireTime']);
+  let fromExpireTime = common.getValueByPath(fromObject, ['expireTime']);
   if (fromExpireTime !== undefined) {
     common.setValueByPath(parentObject, ['expireTime'], fromExpireTime);
   }
@@ -1139,9 +1139,9 @@ function updateCachedContentParametersToMldev(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromName = common.getValueByPath(fromObject, ['name']);
+  let fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined) {
     common.setValueByPath(
       toObject,
@@ -1150,7 +1150,7 @@ function updateCachedContentParametersToMldev(
     );
   }
 
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
+  let fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig !== undefined) {
     common.setValueByPath(
       toObject,
@@ -1167,9 +1167,9 @@ function updateCachedContentParametersToVertex(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromName = common.getValueByPath(fromObject, ['name']);
+  let fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined) {
     common.setValueByPath(
       toObject,
@@ -1178,7 +1178,7 @@ function updateCachedContentParametersToVertex(
     );
   }
 
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
+  let fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig !== undefined) {
     common.setValueByPath(
       toObject,
@@ -1195,14 +1195,14 @@ function listCachedContentsConfigToMldev(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
+  let fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
   if (fromPageSize !== undefined) {
     common.setValueByPath(parentObject, ['_query', 'pageSize'], fromPageSize);
   }
 
-  const fromPageToken = common.getValueByPath(fromObject, ['pageToken']);
+  let fromPageToken = common.getValueByPath(fromObject, ['pageToken']);
   if (fromPageToken !== undefined) {
     common.setValueByPath(parentObject, ['_query', 'pageToken'], fromPageToken);
   }
@@ -1215,14 +1215,14 @@ function listCachedContentsConfigToVertex(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
+  let fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
   if (fromPageSize !== undefined) {
     common.setValueByPath(parentObject, ['_query', 'pageSize'], fromPageSize);
   }
 
-  const fromPageToken = common.getValueByPath(fromObject, ['pageToken']);
+  let fromPageToken = common.getValueByPath(fromObject, ['pageToken']);
   if (fromPageToken !== undefined) {
     common.setValueByPath(parentObject, ['_query', 'pageToken'], fromPageToken);
   }
@@ -1235,9 +1235,9 @@ function listCachedContentsParametersToMldev(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
+  let fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig !== undefined) {
     common.setValueByPath(
       toObject,
@@ -1254,9 +1254,9 @@ function listCachedContentsParametersToVertex(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromConfig = common.getValueByPath(fromObject, ['config']);
+  let fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig !== undefined) {
     common.setValueByPath(
       toObject,
@@ -1273,39 +1273,39 @@ function cachedContentFromMldev(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromName = common.getValueByPath(fromObject, ['name']);
+  let fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined) {
     common.setValueByPath(toObject, ['name'], fromName);
   }
 
-  const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
+  let fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
   if (fromDisplayName !== undefined) {
     common.setValueByPath(toObject, ['displayName'], fromDisplayName);
   }
 
-  const fromModel = common.getValueByPath(fromObject, ['model']);
+  let fromModel = common.getValueByPath(fromObject, ['model']);
   if (fromModel !== undefined) {
     common.setValueByPath(toObject, ['model'], fromModel);
   }
 
-  const fromCreateTime = common.getValueByPath(fromObject, ['createTime']);
+  let fromCreateTime = common.getValueByPath(fromObject, ['createTime']);
   if (fromCreateTime !== undefined) {
     common.setValueByPath(toObject, ['createTime'], fromCreateTime);
   }
 
-  const fromUpdateTime = common.getValueByPath(fromObject, ['updateTime']);
+  let fromUpdateTime = common.getValueByPath(fromObject, ['updateTime']);
   if (fromUpdateTime !== undefined) {
     common.setValueByPath(toObject, ['updateTime'], fromUpdateTime);
   }
 
-  const fromExpireTime = common.getValueByPath(fromObject, ['expireTime']);
+  let fromExpireTime = common.getValueByPath(fromObject, ['expireTime']);
   if (fromExpireTime !== undefined) {
     common.setValueByPath(toObject, ['expireTime'], fromExpireTime);
   }
 
-  const fromUsageMetadata = common.getValueByPath(fromObject, ['usageMetadata']);
+  let fromUsageMetadata = common.getValueByPath(fromObject, ['usageMetadata']);
   if (fromUsageMetadata !== undefined) {
     common.setValueByPath(toObject, ['usageMetadata'], fromUsageMetadata);
   }
@@ -1318,39 +1318,39 @@ function cachedContentFromVertex(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromName = common.getValueByPath(fromObject, ['name']);
+  let fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined) {
     common.setValueByPath(toObject, ['name'], fromName);
   }
 
-  const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
+  let fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
   if (fromDisplayName !== undefined) {
     common.setValueByPath(toObject, ['displayName'], fromDisplayName);
   }
 
-  const fromModel = common.getValueByPath(fromObject, ['model']);
+  let fromModel = common.getValueByPath(fromObject, ['model']);
   if (fromModel !== undefined) {
     common.setValueByPath(toObject, ['model'], fromModel);
   }
 
-  const fromCreateTime = common.getValueByPath(fromObject, ['createTime']);
+  let fromCreateTime = common.getValueByPath(fromObject, ['createTime']);
   if (fromCreateTime !== undefined) {
     common.setValueByPath(toObject, ['createTime'], fromCreateTime);
   }
 
-  const fromUpdateTime = common.getValueByPath(fromObject, ['updateTime']);
+  let fromUpdateTime = common.getValueByPath(fromObject, ['updateTime']);
   if (fromUpdateTime !== undefined) {
     common.setValueByPath(toObject, ['updateTime'], fromUpdateTime);
   }
 
-  const fromExpireTime = common.getValueByPath(fromObject, ['expireTime']);
+  let fromExpireTime = common.getValueByPath(fromObject, ['expireTime']);
   if (fromExpireTime !== undefined) {
     common.setValueByPath(toObject, ['expireTime'], fromExpireTime);
   }
 
-  const fromUsageMetadata = common.getValueByPath(fromObject, ['usageMetadata']);
+  let fromUsageMetadata = common.getValueByPath(fromObject, ['usageMetadata']);
   if (fromUsageMetadata !== undefined) {
     common.setValueByPath(toObject, ['usageMetadata'], fromUsageMetadata);
   }
@@ -1363,7 +1363,7 @@ function deleteCachedContentResponseFromMldev(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
   return toObject;
 }
@@ -1373,7 +1373,7 @@ function deleteCachedContentResponseFromVertex(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
   return toObject;
 }
@@ -1383,14 +1383,14 @@ function listCachedContentsResponseFromMldev(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromNextPageToken = common.getValueByPath(fromObject, ['nextPageToken']);
+  let fromNextPageToken = common.getValueByPath(fromObject, ['nextPageToken']);
   if (fromNextPageToken !== undefined) {
     common.setValueByPath(toObject, ['nextPageToken'], fromNextPageToken);
   }
 
-  const fromCachedContents = common.getValueByPath(fromObject, [
+  let fromCachedContents = common.getValueByPath(fromObject, [
     'cachedContents',
   ]);
   if (fromCachedContents !== undefined) {
@@ -1411,14 +1411,14 @@ function listCachedContentsResponseFromVertex(
   fromObject: any,
   parentObject?: any,
 ): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  let toObject: Record<string, any> = {};
 
-  const fromNextPageToken = common.getValueByPath(fromObject, ['nextPageToken']);
+  let fromNextPageToken = common.getValueByPath(fromObject, ['nextPageToken']);
   if (fromNextPageToken !== undefined) {
     common.setValueByPath(toObject, ['nextPageToken'], fromNextPageToken);
   }
 
-  const fromCachedContents = common.getValueByPath(fromObject, [
+  let fromCachedContents = common.getValueByPath(fromObject, [
     'cachedContents',
   ]);
   if (fromCachedContents !== undefined) {
@@ -1446,7 +1446,7 @@ export class Caches extends BaseModule {
     let response: Promise<types.CachedContent>;
     let path: string = '';
     let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
+    let kwargs: Record<string, any> = {};
     kwargs['model'] = model;
     kwargs['config'] = config;
     if (this.apiClient.isVertexAI()) {
@@ -1481,7 +1481,7 @@ export class Caches extends BaseModule {
     let response: Promise<types.CachedContent>;
     let path: string = '';
     let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
+    let kwargs: Record<string, any> = {};
     kwargs['name'] = name;
     kwargs['config'] = config;
     if (this.apiClient.isVertexAI()) {
@@ -1516,7 +1516,7 @@ export class Caches extends BaseModule {
     let response: Promise<types.DeleteCachedContentResponse>;
     let path: string = '';
     let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
+    let kwargs: Record<string, any> = {};
     kwargs['name'] = name;
     kwargs['config'] = config;
     if (this.apiClient.isVertexAI()) {
@@ -1571,7 +1571,7 @@ export class Caches extends BaseModule {
     let response: Promise<types.CachedContent>;
     let path: string = '';
     let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
+    let kwargs: Record<string, any> = {};
     kwargs['name'] = name;
     kwargs['config'] = config;
     if (this.apiClient.isVertexAI()) {
@@ -1605,7 +1605,7 @@ export class Caches extends BaseModule {
     let response: Promise<types.ListCachedContentsResponse>;
     let path: string = '';
     let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
+    let kwargs: Record<string, any> = {};
     kwargs['config'] = config;
     if (this.apiClient.isVertexAI()) {
       body = listCachedContentsParametersToVertex(this.apiClient, kwargs);
