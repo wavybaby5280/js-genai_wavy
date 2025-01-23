@@ -15,8 +15,8 @@ const GOOGLE_API_KEY = 'x-goog-api-key';
 const GOOGLE_API_CLIENT_HEADER = 'x-goog-api-client';
 const REQUIRED_VERTEX_AI_SCOPE =
   'https://www.googleapis.com/auth/cloud-platform';
-// TODO: Automate revisions to the SDK library version.
-const LIBRARY_LABEL = 'google-genai-sdk/0.1.0';
+const SDK_VERSION = '0.1.0'; // x-release-please-version
+const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';

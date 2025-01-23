@@ -1,6 +1,6 @@
 {
   "name": "@google/genai",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -8,6 +8,9 @@
     "unit-test": "jasmine dist/test/unit/**/*_test.js",
     "system-test": "jasmine dist/test/system/**/*_test.js",
     "table-test": "jasmine dist/test/table_test.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   },
   "author": "",
   "license": "Apache-2.0",
