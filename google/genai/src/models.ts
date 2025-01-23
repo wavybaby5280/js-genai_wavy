@@ -1685,7 +1685,7 @@ function embedContentParametersToVertex(
   return toObject;
 }
 
-function generateImageConfigToMldev(
+function generateImagesConfigToMldev(
   apiClient: ApiClient,
   fromObject: any,
   parentObject?: any,
@@ -1822,7 +1822,7 @@ function generateImageConfigToMldev(
   return toObject;
 }
 
-function generateImageConfigToVertex(
+function generateImagesConfigToVertex(
   apiClient: ApiClient,
   fromObject: any,
   parentObject?: any,
@@ -1970,7 +1970,7 @@ function generateImageConfigToVertex(
   return toObject;
 }
 
-function generateImageParametersToMldev(
+function generateImagesParametersToMldev(
   apiClient: ApiClient,
   fromObject: any,
   parentObject?: any,
@@ -1996,14 +1996,14 @@ function generateImageParametersToMldev(
     common.setValueByPath(
       toObject,
       ['config'],
-      generateImageConfigToMldev(apiClient, fromConfig, toObject),
+      generateImagesConfigToMldev(apiClient, fromConfig, toObject),
     );
   }
 
   return toObject;
 }
 
-function generateImageParametersToVertex(
+function generateImagesParametersToVertex(
   apiClient: ApiClient,
   fromObject: any,
   parentObject?: any,
@@ -2029,7 +2029,7 @@ function generateImageParametersToVertex(
     common.setValueByPath(
       toObject,
       ['config'],
-      generateImageConfigToVertex(apiClient, fromConfig, toObject),
+      generateImagesConfigToVertex(apiClient, fromConfig, toObject),
     );
   }
 
@@ -2964,7 +2964,7 @@ function generatedImageFromVertex(
   return toObject;
 }
 
-function generateImageResponseFromMldev(
+function generateImagesResponseFromMldev(
   apiClient: ApiClient,
   fromObject: any,
   parentObject?: any,
@@ -2985,7 +2985,7 @@ function generateImageResponseFromMldev(
   return toObject;
 }
 
-function generateImageResponseFromVertex(
+function generateImagesResponseFromVertex(
   apiClient: ApiClient,
   fromObject: any,
   parentObject?: any,
@@ -3222,12 +3222,12 @@ export class Models extends BaseModule {
     }
   }
 
-  async generateImage(
+  async generateImages(
     model: string,
     prompt: string,
-    config?: types.GenerateImageConfig,
-  ): Promise<types.GenerateImageResponse> {
-    let response: Promise<types.GenerateImageResponse>;
+    config?: types.GenerateImagesConfig,
+  ): Promise<types.GenerateImagesResponse> {
+    let response: Promise<types.GenerateImagesResponse>;
     let path: string = '';
     let body: Record<string, any> = {};
     let kwargs: Record<string, any> = {};
@@ -3235,32 +3235,32 @@ export class Models extends BaseModule {
     kwargs['prompt'] = prompt;
     kwargs['config'] = config;
     if (this.apiClient.isVertexAI()) {
-      body = generateImageParametersToVertex(this.apiClient, kwargs);
+      body = generateImagesParametersToVertex(this.apiClient, kwargs);
       path = common.formatMap('{model}:predict', body['_url']);
       delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.post(path, body, types.GenerateImageResponse);
+      response = this.apiClient.post(path, body, types.GenerateImagesResponse);
 
       return response.then((apiResponse) => {
-        const resp = generateImageResponseFromVertex(
+        const resp = generateImagesResponseFromVertex(
           this.apiClient,
           apiResponse,
         );
-        Object.setPrototypeOf(resp, types.GenerateImageResponse.prototype);
-        return resp as types.GenerateImageResponse;
+        Object.setPrototypeOf(resp, types.GenerateImagesResponse.prototype);
+        return resp as types.GenerateImagesResponse;
       });
     } else {
-      body = generateImageParametersToMldev(this.apiClient, kwargs);
+      body = generateImagesParametersToMldev(this.apiClient, kwargs);
       path = common.formatMap('{model}:predict', body['_url']);
       delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.post(path, body, types.GenerateImageResponse);
+      response = this.apiClient.post(path, body, types.GenerateImagesResponse);
 
       return response.then((apiResponse) => {
-        const resp = generateImageResponseFromMldev(
+        const resp = generateImagesResponseFromMldev(
           this.apiClient,
           apiResponse,
         );
-        Object.setPrototypeOf(resp, types.GenerateImageResponse.prototype);
-        return resp as types.GenerateImageResponse;
+        Object.setPrototypeOf(resp, types.GenerateImagesResponse.prototype);
+        return resp as types.GenerateImagesResponse;
       });
     }
   }

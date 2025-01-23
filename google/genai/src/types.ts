@@ -989,8 +989,8 @@ export class EmbedContentResponse {
   metadata?: EmbedContentMetadata;
 }
 
-/** Class that represents the config for generating an image. */
-export interface GenerateImageConfig {
+/** Class that represents the config for generating images. */
+export interface GenerateImagesConfig {
   /** Cloud Storage URI used to store the generated images.
    */
   outputGcsUri?: string;
@@ -1032,25 +1032,25 @@ export interface GenerateImageConfig {
       only).
        */
   outputCompressionQuality?: number;
-  /** Whether to add a watermark to the generated image.
+  /** Whether to add a watermark to the generated images.
    */
   addWatermark?: boolean;
-  /** Aspect ratio of the generated image.
+  /** Aspect ratio of the generated images.
    */
   aspectRatio?: string;
 }
 
-/** Class that represents the parameters for generating an image. */
-export interface GenerateImageParameters {
+/** Class that represents the parameters for generating images. */
+export interface GenerateImagesParameters {
   /** ID of the model to use. For a list of models, see `Google models
     <https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models>`_. */
   model?: string;
-  /** Text prompt that typically describes the image to output.
+  /** Text prompt that typically describes the images to output.
    */
   prompt?: string;
-  /** Configuration for generating an image.
+  /** Configuration for generating images.
    */
-  config?: GenerateImageConfig;
+  config?: GenerateImagesConfig;
 }
 
 /** Class that represents an image. */
@@ -1076,8 +1076,8 @@ export interface GeneratedImage {
   raiFilteredReason?: string;
 }
 
-/** Class that represents the output image response. */
-export class GenerateImageResponse {
+/** Class that represents the output images response. */
+export class GenerateImagesResponse {
   /** List of generated images.
    */
   generatedImages?: GeneratedImage[];
