@@ -1910,7 +1910,7 @@ export interface LiveServerContent {
   modelTurn?: Content;
   /** If true, indicates that the model is done generating. Generation will only start in response to additional client messages. Can be set alongside `content`, indicating that the `content` is the last in the turn. */
   turnComplete?: boolean;
-  /** If true, indicates that a client message has interrupted current model generation. If the client is playing out the content in realtime, this is a good signal to stop and empty the current queue. If the client is playing out the content in realtime, this is a good signal to stop and empty the current playback queue. */
+  /** If true, indicates that a client message has interrupted current model generation. If the client is playing out the content in realtime, this is a good signal to stop and empty the current queue. */
   interrupted?: boolean;
 }
 
@@ -1945,7 +1945,7 @@ export interface LiveServerMessage {
 
 /** Message contains configuration that will apply for the duration of the streaming session. */
 export interface LiveClientSetup {
-  /**
+  /** 
       The fully qualified name of the publisher model or tuned model endpoint to
       use.
        */
