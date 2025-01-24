@@ -5,7 +5,7 @@
  */
 
 import {ApiClient} from './_api_client';
-import {Client, ClientInitOpts} from './client';
+import {Client, ClientInitOptions} from './client';
 import {Live} from './live';
 import {Models} from './models';
 
@@ -13,7 +13,7 @@ const fs = require('fs');
 const http = require('http');
 const {URL} = require('url');
 
-export interface ReplayClientInitOpts extends ClientInitOpts {
+export interface ReplayClientInitOpts extends ClientInitOptions {
   replaysDirectory?: string;
   replayFile?: string;
   replayFileJson?: object;
@@ -34,7 +34,10 @@ export class ReplayAPIClient extends Client {
   }
 
   getReplayFilename(
-      replayFilePath: string, testTableItem: any, testName: string) {
+    replayFilePath: string,
+    testTableItem: any,
+    testName: string,
+  ) {
     const responseFilePath = replayFilePath.replace('_test_table', testName);
     let responseJson: any;
 
@@ -45,7 +48,9 @@ export class ReplayAPIClient extends Client {
     } else {
       const replayId = testTableItem['overrideReplayId'];
       this.replayFile = replayFilePath.replace(
-          '_test_table', `${replayId}.${this.vertexai ? 'vertex' : 'mldev'}`);
+        '_test_table',
+        `${replayId}.${this.vertexai ? 'vertex' : 'mldev'}`,
+      );
     }
     this.replayFileJson = JSON.parse(fs.readFileSync(this.replayFile));
   }
@@ -55,8 +60,8 @@ export class ReplayAPIClient extends Client {
   }
 
   getExpectedResponseFromReplayFile(interactionIndex: number) {
-    return this.replayFileJson.interactions[interactionIndex]
-        ?.response?.sdk_response_segments[0];
+    return this.replayFileJson.interactions[interactionIndex]?.response
+      ?.sdk_response_segments[0];
   }
 
   /**
@@ -67,24 +72,23 @@ export class ReplayAPIClient extends Client {
     const responseJson: any = JSON.parse(fs.readFileSync(this.replayFile));
 
     const responseStatusCode =
-        this.replayFileJson.interactions[interactionIndex]
-            ?.response?.status_code ??
-        200;
+      this.replayFileJson.interactions[interactionIndex]?.response
+        ?.status_code ?? 200;
     const interactionResponse =
-        responseJson.interactions[interactionIndex]?.response;
+      responseJson.interactions[interactionIndex]?.response;
 
     const headers =
-        responseJson.interactions[interactionIndex]?.response?.headers;
+      responseJson.interactions[interactionIndex]?.response?.headers;
 
     if (fetchSpy) {
       const responseBody = JSON.stringify(interactionResponse.body_segments[0]);
-      const fakeResponse = new Response(
-          responseBody, {status: responseStatusCode, headers: headers});
+      const fakeResponse = new Response(responseBody, {
+        status: responseStatusCode,
+        headers: headers,
+      });
 
       fetchSpy.calls.reset();
-      fetchSpy.and.resolveTo(
-          fakeResponse,
-      );
+      fetchSpy.and.resolveTo(fakeResponse);
     }
   }
 }

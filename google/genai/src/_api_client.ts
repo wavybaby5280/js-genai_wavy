@@ -63,13 +63,47 @@ export class ServerError extends Error {
   }
 }
 
+/**
+ * Options for initializing the ApiClient. The ApiClient uses the parameters
+ * for authentication purposes as well as to infer if SDK should send the
+ * request to Vertex AI or Gemini API.
+ */
 export interface ApiClientInitOptions {
+  /**
+   * Optional. The Google Cloud project ID for Vertex AI users.
+   * It is not the numeric project name.
+   * If not provided, SDK will try to resolve it from runtime environment.
+   */
   project?: string;
+  /**
+   * Optional. The Google Cloud project location for Vertex AI users.
+   * If not provided, SDK will try to resolve it from runtime environment.
+   */
   location?: string;
+  /**
+   * The API Key. This is required for Gemini API users.
+   */
   apiKey?: string;
+  /**
+   * Optional. Set to true if you intend to call Vertex AI endpoints.
+   * If unset, default SDK behavior is to call Gemini API.
+   */
   vertexai?: boolean;
+  /**
+   * Optional. The API version for the endpoint.
+   * If unset, SDK will choose a default api version.
+   */
   apiVersion?: string;
+  /**
+   * Optional. These are the authentication options provided by google-auth-library for Vertex AI users.
+   * Complete list of authentication options are documented in the
+   * GoogleAuthOptions interface:
+   * https://github.com/googleapis/google-auth-library-nodejs/blob/main/src/auth/googleauth.ts.
+   */
   googleAuthOptions?: GoogleAuthOptions;
+  /**
+   * Optional. A set of customizable configuration for HTTP requests.
+   */
   httpOptions?: HttpOptions;
 }
 
