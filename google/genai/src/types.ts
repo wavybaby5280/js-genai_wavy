@@ -537,7 +537,7 @@ export interface GenerationConfigRoutingConfig {
   manualMode?: GenerationConfigRoutingConfigManualRoutingMode;
 }
 
-/** Class for configuring optional model parameters.
+/** Optional model configuration parameters.
 
   For more information, see `Content generation parameters
   <https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/content-generation-parameters>`_.
@@ -642,7 +642,7 @@ export interface GenerateContentConfig {
   thinkingConfig?: ThinkingConfig;
 }
 
-/** Class for configuring the content of the request to the model. */
+/** Config for models.generate_content parameters. */
 export interface GenerateContentParameters {
   /** ID of the model to use. For a list of models, see `Google models
     <https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models>`_. */
@@ -681,7 +681,7 @@ export interface Citation {
   uri?: string;
 }
 
-/** Class for citation information when the model quotes another source. */
+/** Citation information when the model quotes another source. */
 export interface CitationMetadata {
   /** Contains citation information when the model directly quotes, at
       length, from another source. Can include traditional websites and code
@@ -808,7 +808,7 @@ export interface SafetyRating {
   severityScore?: number;
 }
 
-/** Class containing a response candidate generated from the model. */
+/** A response candidate generated from the model. */
 export interface Candidate {
   /** Contains the multi-part content of the response.
    */
@@ -922,7 +922,7 @@ export class GenerateContentResponse {
   }
 }
 
-/** Class for configuring optional parameters for the embed_content method. */
+/** Optional parameters for the embed_content method. */
 export interface EmbedContentConfig {
   /** Type of task for which the embedding will be used.
    */
@@ -1001,7 +1001,7 @@ export class EmbedContentResponse {
   metadata?: EmbedContentMetadata;
 }
 
-/** Class that represents the config for generating images. */
+/** The config for generating an images. */
 export interface GenerateImagesConfig {
   /** Cloud Storage URI used to store the generated images.
    */
@@ -1055,7 +1055,7 @@ export interface GenerateImagesConfig {
   enhancePrompt?: boolean;
 }
 
-/** Class that represents the parameters for generating images. */
+/** The parameters for generating images. */
 export interface GenerateImagesParameters {
   /** ID of the model to use. For a list of models, see `Google models
     <https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models>`_. */
@@ -1068,7 +1068,7 @@ export interface GenerateImagesParameters {
   config?: GenerateImagesConfig;
 }
 
-/** Class that represents an image. */
+/** An image. */
 export interface Image {
   /** The Cloud Storage URI of the image. ``Image`` can contain a value
       for this field or the ``image_bytes`` field but not both.
@@ -1082,7 +1082,7 @@ export interface Image {
   mimeType?: string;
 }
 
-/** Class that represents an output image. */
+/** An output image. */
 export interface GeneratedImage {
   /** The output image data.
    */
@@ -1093,7 +1093,7 @@ export interface GeneratedImage {
   raiFilteredReason?: string;
 }
 
-/** Class that represents the output images response. */
+/** The output images response. */
 export class GenerateImagesResponse {
   /** List of generated images.
    */
@@ -1474,7 +1474,7 @@ export class ListTuningJobsResponse {
   tuningJobs?: TuningJob[];
 }
 
-/** Class for configuring optional cached content creation parameters. */
+/** Optional configuration for cached content creation. */
 export interface CreateCachedContentConfig {
   /** The TTL for this resource. The expiration time is computed: now + TTL. */
   ttl?: string;
@@ -1768,7 +1768,7 @@ export interface UpscaleImageParameters {
   config?: UpscaleImageConfig;
 }
 
-/** Class that represents a Raw reference image.
+/** A raw reference image.
 
   A raw reference image represents the base image to edit, provided by the user.
   It can optionally be provided in addition to a mask reference image or
@@ -1796,7 +1796,7 @@ export interface MaskReferenceConfig {
   maskDilation?: number;
 }
 
-/** Class that represents a Mask reference image.
+/** A mask reference image.
 
   This encapsulates either a mask image provided by the user and configs for
   the user provided mask, or only config parameters for the model to generate
@@ -1827,7 +1827,7 @@ export interface ControlReferenceConfig {
   enableControlImageComputation?: boolean;
 }
 
-/** Class that represents a Control reference image.
+/** A control reference image.
 
   The image of the control reference image is either a control image provided
   by the user, or a regular image which the backend will use to generate a
@@ -1854,7 +1854,7 @@ export interface StyleReferenceConfig {
   styleDescription?: string;
 }
 
-/** Class that represents a Style reference image.
+/** A style reference image.
 
   This encapsulates a style reference image provided by the user, and
   additionally optional config parameters for the style reference image.
@@ -1881,7 +1881,7 @@ export interface SubjectReferenceConfig {
   subjectDescription?: string;
 }
 
-/** Class that represents a Subject reference image.
+/** A subject reference image.
 
   This encapsulates a subject reference image provided by the user, and
   additionally optional config parameters for the subject reference image.
@@ -1953,7 +1953,17 @@ export interface LiveClientSetup {
       use.
        */
   model?: string;
-  /** The generation configuration for the session. */
+  /** The generation configuration for the session.
+
+The following fields are supported:
+- `response_logprobs`
+- `response_mime_type`
+- `logprobs`
+- `response_schema`
+- `stop_sequence`
+- `routing_config`
+- `audio_timestamp`
+       */
   generationConfig?: GenerationConfig;
   /** The user provided system instructions for the model.
       Note: only text should be used in parts and content in each part will be
@@ -1978,7 +1988,7 @@ export interface LiveClientContent {
   /** The content appended to the current conversation with the model.
 
       For single-turn queries, this is a single instance. For multi-turn
-      queries, this is a repeated field that contains conversation history +
+      queries, this is a repeated field that contains conversation history and
       latest request.
        */
   turns?: Content[];
@@ -1991,16 +2001,17 @@ export interface LiveClientContent {
 /** User input that is sent in real time.
 
   This is different from `ClientContentUpdate` in a few ways:
-  - Can be sent continuously without interruption the model generation.
-  - If there is a need to mix data interleaved across the
-    `ClientContentUpdate` and the `RealtimeUpdate`, server will attempt to
-    optimize for best response, but there are no guarantees.
-  - End of turn is not explicitly specified, but is rather derived from user
-    activity, e.g. end of speech.
-  - Even before the end of turn, the data will be processed incrementally
-    to optimize for a fast start of the response from the model.
-  - Is always assumed to be the user's input (cannot be used to populate
-    conversation history).
+
+    - Can be sent continuously without interruption to model generation.
+    - If there is a need to mix data interleaved across the
+      `ClientContentUpdate` and the `RealtimeUpdate`, server attempts to
+      optimize for best response, but there are no guarantees.
+    - End of turn is not explicitly specified, but is rather derived from user
+      activity (for example, end of speech).
+    - Even before the end of turn, the data is processed incrementally
+      to optimize for a fast start of the response from the model.
+    - Is always assumed to be the user's input (cannot be used to populate
+      conversation history).
    */
 export interface LiveClientRealtimeInput {
   /** Inlined bytes data for media input. */
@@ -2034,7 +2045,7 @@ export interface LiveClientMessage {
   toolResponse?: LiveClientToolResponse;
 }
 
-/** Config class for the session. */
+/** Session config for the API connection. */
 export interface LiveConnectConfig {
   /** The generation configuration for the session. */
   generationConfig?: GenerationConfig;
