@@ -1050,6 +1050,9 @@ export interface GenerateImagesConfig {
   /** Aspect ratio of the generated images.
    */
   aspectRatio?: string;
+  /** Whether to use the prompt rewriting logic.
+   */
+  enhancePrompt?: boolean;
 }
 
 /** Class that represents the parameters for generating images. */

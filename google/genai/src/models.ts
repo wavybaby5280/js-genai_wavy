@@ -1822,6 +1822,15 @@ function generateImagesConfigToMldev(
     );
   }
 
+  let fromEnhancePrompt = common.getValueByPath(fromObject, ['enhancePrompt']);
+  if (fromEnhancePrompt !== undefined) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'enhancePrompt'],
+      fromEnhancePrompt,
+    );
+  }
+
   return toObject;
 }
 
@@ -1967,6 +1976,15 @@ function generateImagesConfigToVertex(
       parentObject,
       ['parameters', 'aspectRatio'],
       fromAspectRatio,
+    );
+  }
+
+  let fromEnhancePrompt = common.getValueByPath(fromObject, ['enhancePrompt']);
+  if (fromEnhancePrompt !== undefined) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'enhancePrompt'],
+      fromEnhancePrompt,
     );
   }
 
