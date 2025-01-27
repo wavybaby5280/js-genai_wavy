@@ -1374,6 +1374,16 @@ export interface EncryptionSpec {
   kmsKeyName?: string;
 }
 
+/** Tuning spec for Partner models. */
+export interface PartnerModelTuningSpec {
+  /** Hyperparameters for tuning. The accepted hyper_parameters and their valid range of values will differ depending on the base model. */
+  hyperParameters?: Record<string, any>;
+  /** Required. Cloud Storage path to file containing training dataset for tuning. The dataset must be formatted as a JSONL file. */
+  trainingDatasetUri?: string;
+  /** Optional. Cloud Storage path to file containing validation dataset for tuning. The dataset must be formatted as a JSONL file. */
+  validationDatasetUri?: string;
+}
+
 /** Hyperparameters for Distillation. */
 export interface DistillationHyperParameters {
   /** Optional. Adapter size for distillation. */
@@ -1398,16 +1408,6 @@ export interface DistillationSpec {
   trainingDatasetUri?: string;
   /** The resource name of the Tuned teacher model. Format: `projects/{project}/locations/{location}/models/{model}`. */
   tunedTeacherModelSource?: string;
-  /** Optional. Cloud Storage path to file containing validation dataset for tuning. The dataset must be formatted as a JSONL file. */
-  validationDatasetUri?: string;
-}
-
-/** Tuning spec for Partner models. */
-export interface PartnerModelTuningSpec {
-  /** Hyperparameters for tuning. The accepted hyper_parameters and their valid range of values will differ depending on the base model. */
-  hyperParameters?: Record<string, any>;
-  /** Required. Cloud Storage path to file containing training dataset for tuning. The dataset must be formatted as a JSONL file. */
-  trainingDatasetUri?: string;
   /** Optional. Cloud Storage path to file containing validation dataset for tuning. The dataset must be formatted as a JSONL file. */
   validationDatasetUri?: string;
 }
@@ -1440,16 +1440,16 @@ export interface TuningJob {
   tuningDataStats?: TuningDataStats;
   /** Customer-managed encryption key options for a TuningJob. If this is set, then all resources created by the TuningJob will be encrypted with the provided encryption key. */
   encryptionSpec?: EncryptionSpec;
-  /** Tuning Spec for Distillation. */
-  distillationSpec?: DistillationSpec;
   /** Tuning Spec for open sourced and third party Partner models. */
   partnerModelTuningSpec?: PartnerModelTuningSpec;
-  /** Output only. The resource name of the PipelineJob associated with the TuningJob. Format: `projects/{project}/locations/{location}/pipelineJobs/{pipeline_job}`. */
-  pipelineJob?: string;
+  /** Tuning Spec for Distillation. */
+  distillationSpec?: DistillationSpec;
   /** Output only. The Experiment associated with this TuningJob. */
   experiment?: string;
   /** Optional. The labels with user-defined metadata to organize TuningJob and generated resources such as Model and Endpoint. Label keys and values can be no longer than 64 characters (Unicode codepoints), can only contain lowercase letters, numeric characters, underscores and dashes. International characters are allowed. See https://goo.gl/xmQnxf for more information and examples of labels. */
   labels?: Record<string, string>;
+  /** Output only. The resource name of the PipelineJob associated with the TuningJob. Format: `projects/{project}/locations/{location}/pipelineJobs/{pipeline_job}`. */
+  pipelineJob?: string;
   /** Optional. The display name of the TunedModel. The name can be up to 128 characters long and can consist of any UTF-8 characters. */
   tunedModelDisplayName?: string;
 }

@@ -247,6 +247,13 @@ function tuningJobFromMldev(
     );
   }
 
+  let fromDistillationSpec = common.getValueByPath(fromObject, [
+    'distillationSpec',
+  ]);
+  if (fromDistillationSpec !== undefined) {
+    common.setValueByPath(toObject, ['distillationSpec'], fromDistillationSpec);
+  }
+
   let fromExperiment = common.getValueByPath(fromObject, ['experiment']);
   if (fromExperiment !== undefined) {
     common.setValueByPath(toObject, ['experiment'], fromExperiment);
@@ -255,6 +262,11 @@ function tuningJobFromMldev(
   let fromLabels = common.getValueByPath(fromObject, ['labels']);
   if (fromLabels !== undefined) {
     common.setValueByPath(toObject, ['labels'], fromLabels);
+  }
+
+  let fromPipelineJob = common.getValueByPath(fromObject, ['pipelineJob']);
+  if (fromPipelineJob !== undefined) {
+    common.setValueByPath(toObject, ['pipelineJob'], fromPipelineJob);
   }
 
   let fromTunedModelDisplayName = common.getValueByPath(fromObject, [
@@ -361,13 +373,6 @@ function tuningJobFromVertex(
     common.setValueByPath(toObject, ['encryptionSpec'], fromEncryptionSpec);
   }
 
-  let fromDistillationSpec = common.getValueByPath(fromObject, [
-    'distillationSpec',
-  ]);
-  if (fromDistillationSpec !== undefined) {
-    common.setValueByPath(toObject, ['distillationSpec'], fromDistillationSpec);
-  }
-
   let fromPartnerModelTuningSpec = common.getValueByPath(fromObject, [
     'partnerModelTuningSpec',
   ]);
@@ -379,9 +384,11 @@ function tuningJobFromVertex(
     );
   }
 
-  let fromPipelineJob = common.getValueByPath(fromObject, ['pipelineJob']);
-  if (fromPipelineJob !== undefined) {
-    common.setValueByPath(toObject, ['pipelineJob'], fromPipelineJob);
+  let fromDistillationSpec = common.getValueByPath(fromObject, [
+    'distillationSpec',
+  ]);
+  if (fromDistillationSpec !== undefined) {
+    common.setValueByPath(toObject, ['distillationSpec'], fromDistillationSpec);
   }
 
   let fromExperiment = common.getValueByPath(fromObject, ['experiment']);
@@ -392,6 +399,11 @@ function tuningJobFromVertex(
   let fromLabels = common.getValueByPath(fromObject, ['labels']);
   if (fromLabels !== undefined) {
     common.setValueByPath(toObject, ['labels'], fromLabels);
+  }
+
+  let fromPipelineJob = common.getValueByPath(fromObject, ['pipelineJob']);
+  if (fromPipelineJob !== undefined) {
+    common.setValueByPath(toObject, ['pipelineJob'], fromPipelineJob);
   }
 
   let fromTunedModelDisplayName = common.getValueByPath(fromObject, [
