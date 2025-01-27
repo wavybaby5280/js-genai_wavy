@@ -4,6 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+/**
+ * @fileoverview Live client. The live module is experimental.
+ */
+
 import {GoogleAuth, GoogleAuthOptions} from 'google-auth-library';
 
 import {ApiClient} from './_api_client';
@@ -494,6 +498,7 @@ function liveServerMessageFromVertex(
 
 // Live class encapsulates the configuration for live interaction with the
 // Generative Language API. It embeds ApiClient for general API settings.
+// The live module is experimental.
 export class Live {
   private readonly apiClient: ApiClient;
 
@@ -503,6 +508,7 @@ export class Live {
 
   // Establishes a connection to the specified model with the given
   // configuration. It returns a Session object representing the connection.
+  // The live module is experimental.
   async connect(model: string, config: types.LiveConnectConfig):
       Promise<Session> {
     const websocketBaseUrl = this.apiClient.getWebsocketBaseUrl();
@@ -575,6 +581,7 @@ export class Live {
 }
 
 // Session class represents a connection to the API.
+// The live module is experimental.
 export class Session {
   private readonly conn: WebSocket;
   private readonly apiClient: ApiClient;
@@ -677,6 +684,7 @@ export class Session {
   }
 
   // Transmits a message over the established websocket connection.
+  // The live module is experimental.
   send(
       message: types.ContentListUnion|types.LiveClientContent|
       types.LiveClientRealtimeInput|types.LiveClientToolResponse|
@@ -691,6 +699,7 @@ export class Session {
   }
 
   // Reads a LiveServerMessage from the websocket connection.
+  // The live module is experimental.
   async receive(): Promise<types.LiveServerMessage> {
     return new Promise((resolve: any) => {
       this.conn.onmessage = (event: any) => {
@@ -709,6 +718,7 @@ export class Session {
   }
 
   // Close terminates the websocket connection.
+  // The live module is experimental.
   close() {
     this.conn.close()
   }
