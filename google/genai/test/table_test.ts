@@ -20,30 +20,55 @@ function getGoogle3Path() {
   return currentDir.substring(0, lastIndex + 'google3/'.length);
 }
 
-function assertResponsesEqual(
-    actual: any, expected: any,
-    options?: {ignoreKeys?: string[];}) {
+function assertObjectIsEmpty(obj: any) {
+  if (obj === undefined) {
+    return true;
+  }
+  if (typeof obj !== 'object') {
+    return false;
+  }
+  for (const key of Object.keys(obj)) {
+    if (typeof obj[key] === 'object') {
+      if (!assertObjectIsEmpty(obj[key])) {
+        return false;
+      }
+    } else if (obj[key] !== undefined) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function assertMessagesEqual(
+  actual: any,
+  expected: any,
+  options?: {ignoreKeys?: string[]},
+) {
   const {ignoreKeys = []} = options || {};
 
   function deepEqual(a: any, b: any): boolean {
+    if (a === undefined && typeof b === 'object') {
+      return assertObjectIsEmpty(b);
+    }
+
     if (typeof a !== typeof b) {
       // Possible that the type is bytes, which is represented in NodeJS as a
       // string.
       if (typeof a === 'string' && typeof b === 'number') {
         return a === b.toString();
       }
-      console.debug('Invalid type: ')
+      console.debug('Invalid type: ');
       console.debug('typeof a: ', typeof a);
       console.debug('typeof b: ', typeof b);
       return false;
     }
 
     if (typeof a === 'object') {
-      const aKeys = Object.keys(a).filter(key => !ignoreKeys.includes(key));
-      const bKeys = Object.keys(b).filter(key => !ignoreKeys.includes(key));
+      const aKeys = Object.keys(a).filter((key) => !ignoreKeys.includes(key));
+      const bKeys = Object.keys(b).filter((key) => !ignoreKeys.includes(key));
 
       if (aKeys.length !== bKeys.length) {
-        console.debug('Unequal keys: ')
+        console.debug('Unequal keys: ');
         console.debug('aKeys length: ', aKeys.length);
         console.debug('bKeys length: ', bKeys.length);
         return false;
@@ -56,7 +81,7 @@ function assertResponsesEqual(
           return true;
         }
         if (!deepEqual(a[key], b[key])) {
-          console.debug('Unequal values: ')
+          console.debug('Unequal values: ');
           console.debug(`a[${key}]: `, a[key]);
           console.debug(`b[${key}]: `, b[key]);
           return false;
@@ -74,9 +99,113 @@ function assertResponsesEqual(
   }
 
   if (!deepEqual(actual, expected)) {
-    throw new Error(`Assertion failed: ${JSON.stringify(actual)} !== ${
-        JSON.stringify(expected)}`);
+    throw new Error(
+      `Assertion failed: ${JSON.stringify(actual)} !== ${JSON.stringify(
+        expected,
+      )}`,
+    );
   }
+}
+
+function redactVersionNumber(versionNumber: string) {
+  return versionNumber.replace(/v*\d+\.\d+\.\d+/g, '{VERSION_NUMBER}');
+}
+
+function redactLanguageLabel(languageLabel: string) {
+  return languageLabel.replace(/gl-node/g, '{LANGUAGE_LABEL}');
+}
+
+function redactHeader(headerKey: string, headerValue: string) {
+  if (headerKey.toLowerCase() === 'x-goog-api-key') {
+    return '{REDACTED}';
+  } else if (headerKey.toLowerCase() === 'user-agent') {
+    return redactLanguageLabel(redactVersionNumber(headerValue));
+  } else if (headerKey.toLowerCase() === 'x-goog-api-client') {
+    return redactLanguageLabel(redactVersionNumber(headerValue));
+  } else {
+    return headerValue;
+  }
+}
+
+function redactUrl(url: string) {
+  // Redact all the url parts before the resource name, so the test can work
+  // against any project, location, version, or whether it's EasyGCP.
+  url = url.replace(
+    /.*\/projects\/[^/]+\/locations\/[^/]+\//,
+    '{VERTEX_URL_PREFIX}/',
+  );
+  url = url.replace(
+    /.*-aiplatform.googleapis.com\/[^/]+\//,
+    '{VERTEX_URL_PREFIX}/',
+  );
+  url = url.replace(
+    /https:\/\/generativelanguage.googleapis.com\/[^/]+/,
+    '{MLDEV_URL_PREFIX}',
+  );
+  return url;
+}
+
+function normalizeKey(key: string) {
+  if (key === 'content-type') {
+    return 'Content-Type';
+  } else if (key === 'authorization') {
+    return null;
+  } else {
+    return key;
+  }
+}
+
+function normalizeHeaders(headers?: Headers, ignoreAuthorizationHeader = true) {
+  let headersObject: {[key: string]: string} = {};
+  if (headers) {
+    for (const [key, value] of headers) {
+      const normalizedKey = normalizeKey(key);
+      if (normalizedKey === null) {
+        continue;
+      }
+      headersObject[normalizedKey] = redactHeader(normalizedKey, value);
+    }
+  }
+  return headersObject;
+}
+
+function redactProjectAndLocationPath(path: string) {
+  return path.replace(
+    /projects\/[^/]+\/locations\/[^/]+\//,
+    '{PROJECT_AND_LOCATION_PATH}/',
+  );
+}
+
+function normalizeBody(body: string) {
+  try {
+    if (body === undefined) {
+      return body;
+    }
+    let parsedBody = JSON.parse(body);
+    if (typeof parsedBody === 'object' && parsedBody !== null) {
+      for (const key of Object.keys(parsedBody as object)) {
+        let value = (parsedBody as any)[key];
+        if (typeof value === 'string') {
+          (parsedBody as any)[key] = redactProjectAndLocationPath(value);
+        }
+      }
+      parsedBody = [parsedBody];
+    }
+    return parsedBody;
+  } catch (e) {
+    console.log('    === Failed to parse body: ', e);
+    console.log('    === body: ', body);
+    return body;
+  }
+}
+
+function normalizeRequest(request: RequestInit, url: string) {
+  return {
+    method: request.method?.toLowerCase(),
+    url: redactUrl(url),
+    headers: normalizeHeaders(request.headers as Headers),
+    bodySegments: normalizeBody(request.body as string),
+  };
 }
 
 const fs = require('fs');
@@ -99,17 +228,17 @@ function getTestMode() {
 async function walk(dir: string): Promise<string[]> {
   let files = await fs.promises.readdir(dir);
   files = await Promise.all(
-      files.map(async (file: string) => {
-        const filePath = path.join(dir, file);
-        const stats = await fs.promises.stat(filePath);
-        if (stats.isDirectory()) return walk(filePath);
-        else if (stats.isFile()) return filePath;
-      }),
+    files.map(async (file: string) => {
+      const filePath = path.join(dir, file);
+      const stats = await fs.promises.stat(filePath);
+      if (stats.isDirectory()) return walk(filePath);
+      else if (stats.isFile()) return filePath;
+    }),
   );
 
   return files.reduce(
-      (all: string[], folderContents: string[]) => all.concat(folderContents),
-      [],
+    (all: string[], folderContents: string[]) => all.concat(folderContents),
+    [],
   );
 }
 
@@ -129,7 +258,10 @@ async function createReplayClient(vertexai: boolean) {
 }
 
 async function runTestTable(
-    filePath: string, client: ReplayAPIClient, fetchSpy: any) {
+  filePath: string,
+  client: ReplayAPIClient,
+  fetchSpy: any,
+) {
   const data = await fs.promises.readFile(filePath, 'utf8');
   const testTableFile = JSON.parse(data) as types.TestTableFile;
   const parts = testTableFile.testMethod!.split('.');
@@ -138,8 +270,9 @@ async function runTestTable(
   const module: object = (client as any)[moduleName];
   if (!module) {
     console.log(
-        `    === Skipping method: ${testTableFile.testMethod}. Module "${
-            moduleName}" is not supported in NodeJS`,
+      `    === Skipping method: ${testTableFile.testMethod}. Module "${
+        moduleName
+      }" is not supported in NodeJS`,
     );
     return;
   }
@@ -153,7 +286,8 @@ async function runTestTable(
   console.log(`=== Running test table: ${testTableFile.testMethod}`);
   for (const testTableItem of testTableFile.testTable!) {
     const testName = `${moduleName}.${methodName}.${testTableItem.name}.${
-        client.vertexai ? 'vertex' : 'mldev'}`;
+      client.vertexai ? 'vertex' : 'mldev'
+    }`;
     if (testTableItem.exceptionIfMldev && !client.vertexai) {
       // TODO: ybo handle exception.
       console.log(
@@ -174,22 +308,31 @@ async function runTestTable(
       );
       continue;
     }
+
+    const parameters = JSON.parse(
+      snakeToCamel(JSON.stringify(Object.values(testTableItem.parameters!))),
+    );
+
     // TODO(b/384972928): Remove this once http options in the method levelare
     // supported in nodejs.
-    if (testName.includes('http_options_in_method')) {
+    if (JSON.stringify(parameters).includes('httpOptions')) {
       console.log(
-          `   === Skipping item: ${
-              testName} because nodejs does not support http options in the method`,
+        `   ============ Skipping item: ${
+          testName
+        } because nodejs does not support http options in the method`,
       );
       continue;
     }
+
     console.log(`   === Calling method: ${testName}`);
-    const parameters = Object.values(testTableItem.parameters!);
+
     try {
       if (getTestMode() === 'replay') {
         client.getReplayFilename(
-            filePath, testTableItem,
-            `${testTableItem.name}.${client.vertexai ? 'vertex' : 'mldev'}`);
+          filePath,
+          testTableItem,
+          `${testTableItem.name}.${client.vertexai ? 'vertex' : 'mldev'}`,
+        );
 
         const numInteractions = client.getNumInteractions();
 
@@ -199,27 +342,45 @@ async function runTestTable(
 
           const response = await method.apply(client, parameters);
           const expectedResponse = client.getExpectedResponseFromReplayFile(i);
-          const responseCamelCase =
-              JSON.parse(snakeToCamel(JSON.stringify(response)));
-          const expectedResponseCamelCase =
-              JSON.parse(snakeToCamel(JSON.stringify(expectedResponse)));
+          const expectedRequest = client.getExpectedRequestFromReplayFile(i);
+          const responseCamelCase = JSON.parse(
+            snakeToCamel(JSON.stringify(response)),
+          );
+          const expectedResponseCamelCase = JSON.parse(
+            snakeToCamel(JSON.stringify(expectedResponse)),
+          );
+          const expectedRequestCamelCase = JSON.parse(
+            snakeToCamel(JSON.stringify(expectedRequest)),
+          );
+          const requestArgs = fetchSpy.calls.mostRecent();
+          const request = requestArgs.args[1];
+          const url = requestArgs.args[0];
 
           // TODO: b/388478808 - Remove ignoreKeys once unique data types are
           // converted properly in assertResponsesEqual().
-          assertResponsesEqual(responseCamelCase, expectedResponseCamelCase, {
-            ignoreKeys:
-                ['tokensInfo', 'usageMetadata']
+          assertMessagesEqual(responseCamelCase, expectedResponseCamelCase, {
+            ignoreKeys: ['tokensInfo', 'usageMetadata'],
           });
+          assertMessagesEqual(
+            normalizeRequest(request, url),
+            expectedRequestCamelCase,
+          );
         }
-
       } else {
         const response = await method.apply(client, parameters);
         console.log('response: ', response);
       }
       console.log(`      === Success: ${testName}`);
     } catch (e) {
-      console.log(`      === Error: ${e}`);
-      process.exit(1);  // Exit the process.
+      if (e instanceof Error) {
+        console.log(`      === Error: ${e.stack}`);
+      } else {
+        console.log(`      === Error: ${e}`);
+      }
+      console.log(
+        `      === Parameters: ${JSON.stringify(parameters, null, 2)}`,
+      );
+      process.exit(1); // Exit the process.
     }
   }
 }
@@ -227,38 +388,40 @@ async function runTestTable(
 async function main() {
   const google3Path = getGoogle3Path();
   const replayPath =
-      google3Path + '/google/cloud/aiplatform/sdk/genai/replays/tests';
+    google3Path + '/google/cloud/aiplatform/sdk/genai/replays/tests';
 
   const mlDevClient = await createReplayClient(false);
   const vertexClient = await createReplayClient(true);
 
   const testFiles: string[] = [];
   await walk(replayPath)
-      .then(async (files) => {
-        files.filter((file: string) => file.endsWith('/_test_table.json'))
-            .forEach(async (file: string) => {
-              testFiles.push(file);
-            });
-      })
-      .then(async () => {
-        let fetchSpy: any;
-        if (getTestMode() === 'replay') {
-          fetchSpy = spyOn(global, 'fetch');
-          // @ts-ignore TS2345 Argument of type '"fetchToken"' is not assignable
-          // to parameter of type 'keyof ApiClient'.
-          spyOn(vertexClient.apiClient, 'fetchToken')
-              .and.returnValue(Promise.resolve('token'));
-        }
-        for (const file of testFiles) {
-          await runTestTable(file, mlDevClient, fetchSpy);
-          await runTestTable(file, vertexClient, fetchSpy);
-        }
-      })
-      .catch((err) => console.error(err));
+    .then(async (files) => {
+      files
+        .filter((file: string) => file.endsWith('/_test_table.json'))
+        .forEach(async (file: string) => {
+          testFiles.push(file);
+        });
+    })
+    .then(async () => {
+      let fetchSpy: any;
+      if (getTestMode() === 'replay') {
+        fetchSpy = spyOn(global, 'fetch');
+        // @ts-ignore TS2345 Argument of type '"fetchToken"' is not assignable
+        // to parameter of type 'keyof ApiClient'.
+        spyOn(vertexClient.apiClient, 'fetchToken').and.returnValue(
+          Promise.resolve('token'),
+        );
+      }
+      for (const file of testFiles) {
+        await runTestTable(file, mlDevClient, fetchSpy);
+        await runTestTable(file, vertexClient, fetchSpy);
+      }
+    })
+    .catch((err) => console.error(err));
 }
 
 describe('TableTest', () => {
-  jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;  // 30 seconds
+  jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000; // 30 seconds
   it('runs table tests', async () => {
     await main();
   });

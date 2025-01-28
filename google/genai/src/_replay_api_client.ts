@@ -64,6 +64,10 @@ export class ReplayAPIClient extends Client {
       ?.sdk_response_segments[0];
   }
 
+  getExpectedRequestFromReplayFile(interactionIndex: number) {
+    return this.replayFileJson.interactions[interactionIndex]?.request;
+  }
+
   /**
    * Sets the response for the mock endpoint using the replay file when the
    * tests are running in replay mode.

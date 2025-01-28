@@ -13,7 +13,11 @@ export function tModel(apiClient: ApiClient, model: string): string {
   }
 
   if (apiClient.isVertexAI()) {
-    if (model.startsWith('publishers/') || model.startsWith('projects/')) {
+    if (
+      model.startsWith('publishers/') ||
+      model.startsWith('projects/') ||
+      model.startsWith('models/')
+    ) {
       return model;
     } else if (model.indexOf('/') >= 0) {
       const parts = model.split('/', 2);
@@ -38,20 +42,18 @@ export function tCachesModel(apiClient: ApiClient, model: string): string {
 
   if (transformedModel.startsWith('publishers/') && apiClient.isVertexAI()) {
     // vertex caches only support model name start with projects.
-    return `projects/${apiClient.getProject()}/locations/${
-        apiClient.getLocation()}/${transformedModel}`;
+    return `projects/${apiClient.getProject()}/locations/${apiClient.getLocation()}/${transformedModel}`;
   } else if (transformedModel.startsWith('models/') && apiClient.isVertexAI()) {
-    return `projects/${apiClient.getProject()}/locations/${
-        apiClient.getLocation()}/publishers/google/${transformedModel}`;
+    return `projects/${apiClient.getProject()}/locations/${apiClient.getLocation()}/publishers/google/${transformedModel}`;
   } else {
     return transformedModel;
   }
 }
 
 export function tPart(
-    apiClient: ApiClient,
-    origin?: types.PartUnion|null,
-    ): types.Part {
+  apiClient: ApiClient,
+  origin?: types.PartUnion | null,
+): types.Part {
   if (!origin) {
     throw new Error('PartUnion is required');
   }
@@ -65,24 +67,22 @@ export function tPart(
 }
 
 export function tParts(
-    apiClient: ApiClient,
-    origin?: types.PartListUnion|null,
-    ): types.Part[] {
+  apiClient: ApiClient,
+  origin?: types.PartListUnion | null,
+): types.Part[] {
   if (!origin) {
     throw new Error('PartListUnion is required');
   }
   if (Array.isArray(origin)) {
-    return origin.map(
-        (item) => tPart(apiClient, item as types.PartUnion)!,
-    );
+    return origin.map((item) => tPart(apiClient, item as types.PartUnion)!);
   }
   return [tPart(apiClient, origin)!];
 }
 
 export function tContent(
-    apiClient: ApiClient,
-    origin?: types.ContentUnion,
-    ): types.Content {
+  apiClient: ApiClient,
+  origin?: types.ContentUnion,
+): types.Content {
   if (!origin) {
     throw new Error('ContentUnion is required');
   }
@@ -104,7 +104,8 @@ export function tContentsForEmbed(
   }
   if (apiClient.isVertexAI() && Array.isArray(origin)) {
     return origin.map(
-      (item) => tContent(apiClient, item as types.ContentUnion)!.parts![0].text!,
+      (item) =>
+        tContent(apiClient, item as types.ContentUnion)!.parts![0].text!,
     );
   } else if (apiClient.isVertexAI()) {
     return [tContent(apiClient, origin as types.ContentUnion)!.parts![0].text!];
@@ -118,31 +119,31 @@ export function tContentsForEmbed(
 }
 
 export function tContents(
-    apiClient: ApiClient,
-    origin: types.ContentListUnion,
-    ): types.Content[]|null {
+  apiClient: ApiClient,
+  origin: types.ContentListUnion,
+): types.Content[] | null {
   if (!origin) {
     return [];
   }
   if (Array.isArray(origin)) {
     return origin.map(
-        (item) => tContent(apiClient, item as types.ContentUnion)!,
+      (item) => tContent(apiClient, item as types.ContentUnion)!,
     );
   }
   return [tContent(apiClient, origin as types.ContentUnion)!];
 }
 
 export function tSchema(
-    apiClient: ApiClient,
-    schema?: types.Schema|null,
-    ): types.Schema|null|undefined {
+  apiClient: ApiClient,
+  schema?: types.Schema | null,
+): types.Schema | null | undefined {
   return schema;
 }
 
 export function tSpeechConfig(
-    apiClient: ApiClient,
-    speechConfig?: types.SpeechConfigUnion|null,
-    ): types.SpeechConfig|null {
+  apiClient: ApiClient,
+  speechConfig?: types.SpeechConfigUnion | null,
+): types.SpeechConfig | null {
   if (!speechConfig) {
     return null;
   }
@@ -163,16 +164,16 @@ export function tSpeechConfig(
 }
 
 export function tTool(
-    apiClient: ApiClient,
-    tool?: types.Tool|null,
-    ): types.Tool|null|undefined {
+  apiClient: ApiClient,
+  tool?: types.Tool | null,
+): types.Tool | null | undefined {
   return tool;
 }
 
 export function tTools(
-    apiClient: ApiClient,
-    tool?: types.Tool[]|null,
-    ): types.Tool[]|null|undefined {
+  apiClient: ApiClient,
+  tool?: types.Tool[] | null,
+): types.Tool[] | null | undefined {
   return tool;
 }
 
@@ -229,24 +230,23 @@ export function tTools(
  * ```
  */
 function _resourceName(
-    client: ApiClient,
-    resourceName: string,
-    resourcePrefix: string,
-    splitsAfterPrefix: number = 1,
-    ): string {
-  const shouldAppendPrefix = !resourceName.startsWith(`${resourcePrefix}/`) &&
-      resourceName.split('/').length === splitsAfterPrefix;
+  client: ApiClient,
+  resourceName: string,
+  resourcePrefix: string,
+  splitsAfterPrefix: number = 1,
+): string {
+  const shouldAppendPrefix =
+    !resourceName.startsWith(`${resourcePrefix}/`) &&
+    resourceName.split('/').length === splitsAfterPrefix;
   if (client.isVertexAI()) {
     if (resourceName.startsWith('projects/')) {
       return resourceName;
     } else if (resourceName.startsWith('locations/')) {
       return `projects/${client.getProject()}/${resourceName}`;
     } else if (resourceName.startsWith(`${resourcePrefix}/`)) {
-      return `projects/${client.getProject()}/locations/${
-          client.getLocation()}/${resourceName}`;
+      return `projects/${client.getProject()}/locations/${client.getLocation()}/${resourceName}`;
     } else if (shouldAppendPrefix) {
-      return `projects/${client.getProject()}/locations/${
-          client.getLocation()}/${resourcePrefix}/${resourceName}`;
+      return `projects/${client.getProject()}/locations/${client.getLocation()}/${resourcePrefix}/${resourceName}`;
     } else {
       return resourceName;
     }
