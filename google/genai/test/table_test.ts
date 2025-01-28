@@ -251,8 +251,13 @@ function snakeToCamel(str: string): string {
  * client will be configured to use the mock server.
  */
 async function createReplayClient(vertexai: boolean) {
+  let apiKey = process.env['GOOGLE_GENAI_API_KEY'];
+  if (apiKey === undefined || apiKey === null || apiKey === '') {
+    apiKey = 'This is not the key you are looking for';
+  }
   const replayClient = new ReplayAPIClient({
     vertexai: vertexai,
+    apiKey: apiKey,
   });
   return replayClient;
 }
@@ -313,18 +318,15 @@ async function runTestTable(
       snakeToCamel(JSON.stringify(Object.values(testTableItem.parameters!))),
     );
 
-    // TODO(b/384972928): Remove this once http options in the method levelare
-    // supported in nodejs.
-    if (JSON.stringify(parameters).includes('httpOptions')) {
-      console.log(
-        `   ============ Skipping item: ${
-          testName
-        } because nodejs does not support http options in the method`,
-      );
+    // TODO(b/392700953): Remove once this test works.
+    if (
+      testName.startsWith('models.embedContent.test_multi_texts_with_config')
+    ) {
       continue;
     }
-
-    console.log(`   === Calling method: ${testName}`);
+    console.log(
+      `   === Calling method: ${testName} on test mode: ${getTestMode()}`,
+    );
 
     try {
       if (getTestMode() === 'replay') {

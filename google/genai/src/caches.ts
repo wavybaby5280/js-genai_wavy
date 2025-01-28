@@ -1474,7 +1474,12 @@ export class Caches extends BaseModule {
       body = createCachedContentParametersToVertex(this.apiClient, kwargs);
       path = common.formatMap('cachedContents', body['_url']);
       delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.post(path, body, undefined);
+      response = this.apiClient.post(
+        path,
+        body,
+        undefined,
+        config?.httpOptions,
+      );
 
       return response.then((apiResponse) => {
         const resp = cachedContentFromVertex(this.apiClient, apiResponse);
@@ -1485,7 +1490,12 @@ export class Caches extends BaseModule {
       body = createCachedContentParametersToMldev(this.apiClient, kwargs);
       path = common.formatMap('cachedContents', body['_url']);
       delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.post(path, body, undefined);
+      response = this.apiClient.post(
+        path,
+        body,
+        undefined,
+        config?.httpOptions,
+      );
 
       return response.then((apiResponse) => {
         const resp = cachedContentFromMldev(this.apiClient, apiResponse);
@@ -1509,7 +1519,7 @@ export class Caches extends BaseModule {
       body = getCachedContentParametersToVertex(this.apiClient, kwargs);
       path = common.formatMap('{name}', body['_url']);
       delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.get(path, body, undefined);
+      response = this.apiClient.get(path, body, undefined, config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = cachedContentFromVertex(this.apiClient, apiResponse);
@@ -1520,7 +1530,7 @@ export class Caches extends BaseModule {
       body = getCachedContentParametersToMldev(this.apiClient, kwargs);
       path = common.formatMap('{name}', body['_url']);
       delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.get(path, body, undefined);
+      response = this.apiClient.get(path, body, undefined, config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = cachedContentFromMldev(this.apiClient, apiResponse);
@@ -1548,6 +1558,7 @@ export class Caches extends BaseModule {
         path,
         body,
         types.DeleteCachedContentResponse,
+        config?.httpOptions,
       );
 
       return response.then((apiResponse) => {
@@ -1569,6 +1580,7 @@ export class Caches extends BaseModule {
         path,
         body,
         types.DeleteCachedContentResponse,
+        config?.httpOptions,
       );
 
       return response.then((apiResponse) => {
@@ -1599,7 +1611,12 @@ export class Caches extends BaseModule {
       body = updateCachedContentParametersToVertex(this.apiClient, kwargs);
       path = common.formatMap('{name}', body['_url']);
       delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.patch(path, body, undefined);
+      response = this.apiClient.patch(
+        path,
+        body,
+        undefined,
+        config?.httpOptions,
+      );
 
       return response.then((apiResponse) => {
         const resp = cachedContentFromVertex(this.apiClient, apiResponse);
@@ -1610,7 +1627,12 @@ export class Caches extends BaseModule {
       body = updateCachedContentParametersToMldev(this.apiClient, kwargs);
       path = common.formatMap('{name}', body['_url']);
       delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.patch(path, body, undefined);
+      response = this.apiClient.patch(
+        path,
+        body,
+        undefined,
+        config?.httpOptions,
+      );
 
       return response.then((apiResponse) => {
         const resp = cachedContentFromMldev(this.apiClient, apiResponse);
@@ -1636,6 +1658,7 @@ export class Caches extends BaseModule {
         path,
         body,
         types.ListCachedContentsResponse,
+        config?.httpOptions,
       );
 
       return response.then((apiResponse) => {
@@ -1654,6 +1677,7 @@ export class Caches extends BaseModule {
         path,
         body,
         types.ListCachedContentsResponse,
+        config?.httpOptions,
       );
 
       return response.then((apiResponse) => {

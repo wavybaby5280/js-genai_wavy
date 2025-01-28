@@ -543,6 +543,8 @@ export interface GenerationConfigRoutingConfig {
   <https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/content-generation-parameters>`_.
    */
 export interface GenerateContentConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
   /** Instructions for the model to steer it toward better performance.
       For example, "Answer as concisely as possible" or "Don't use technical
       terms in your response".
@@ -924,6 +926,8 @@ export class GenerateContentResponse {
 
 /** Optional parameters for the embed_content method. */
 export interface EmbedContentConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
   /** Type of task for which the embedding will be used.
    */
   taskType?: string;
@@ -1003,6 +1007,8 @@ export class EmbedContentResponse {
 
 /** The config for generating an images. */
 export interface GenerateImagesConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
   /** Cloud Storage URI used to store the generated images.
    */
   outputGcsUri?: string;
@@ -1136,6 +1142,8 @@ export interface GenerationConfig {
 
 /** Config for the count_tokens method. */
 export interface CountTokensConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
   /** Instructions for the model to steer it toward better performance.
    */
   systemInstruction?: ContentUnion;
@@ -1169,7 +1177,10 @@ export class CountTokensResponse {
 }
 
 /** Optional parameters for computing tokens. */
-export interface ComputeTokensConfig {}
+export interface ComputeTokensConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+}
 
 /** Parameters for computing tokens. */
 export interface ComputeTokensParameters {
@@ -1200,7 +1211,10 @@ export class ComputeTokensResponse {
 }
 
 /** Optional parameters for tunings.get method. */
-export interface GetTuningJobConfig {}
+export interface GetTuningJobConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+}
 
 /** Parameters for the get method. */
 export interface GetTuningJobParameters {
@@ -1456,6 +1470,8 @@ export interface TuningJob {
 
 /** Configuration for the list tuning jobs method. */
 export interface ListTuningJobsConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
   pageSize?: number;
   pageToken?: string;
   filter?: string;
@@ -1476,6 +1492,8 @@ export class ListTuningJobsResponse {
 
 /** Optional configuration for cached content creation. */
 export interface CreateCachedContentConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
   /** The TTL for this resource. The expiration time is computed: now + TTL. */
   ttl?: string;
   /** Timestamp of when this resource is considered expired. */
@@ -1539,7 +1557,10 @@ export interface CachedContent {
 }
 
 /** Optional parameters for caches.get method. */
-export interface GetCachedContentConfig {}
+export interface GetCachedContentConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+}
 
 /** Parameters for caches.get method. */
 export interface GetCachedContentParameters {
@@ -1552,7 +1573,10 @@ export interface GetCachedContentParameters {
 }
 
 /** Optional parameters for caches.delete method. */
-export interface DeleteCachedContentConfig {}
+export interface DeleteCachedContentConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+}
 
 /** Parameters for caches.delete method. */
 export interface DeleteCachedContentParameters {
@@ -1569,6 +1593,8 @@ export class DeleteCachedContentResponse {}
 
 /** Optional parameters for caches.update method. */
 export interface UpdateCachedContentConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
   /** The TTL for this resource. The expiration time is computed: now + TTL. */
   ttl?: string;
   /** Timestamp of when this resource is considered expired. */
@@ -1586,6 +1612,8 @@ export interface UpdateCachedContentParameters {
 
 /** Config for caches.list method. */
 export interface ListCachedContentsConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
   pageSize?: number;
   pageToken?: string;
 }
@@ -1606,6 +1634,8 @@ export class ListCachedContentsResponse {
 
 /** Used to override the default configuration. */
 export interface ListFilesConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
   pageSize?: number;
   pageToken?: string;
 }
@@ -1667,7 +1697,10 @@ export class ListFilesResponse {
 }
 
 /** Used to override the default configuration. */
-export interface GetFileConfig {}
+export interface GetFileConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+}
 
 /** Generates the parameters for the get method. */
 export interface GetFileParameters {
@@ -1731,12 +1764,20 @@ export interface ReplayFile {
 
 /** Used to override the default configuration. */
 export interface UploadFileConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
   /** The name of the file in the destination (e.g., 'files/sample-image'. If not provided one will be generated. */
   name?: string;
   /** mime_type: The MIME type of the file. If not provided, it will be inferred from the file extension. */
   mimeType?: string;
   /** Optional display name of the file. */
   displayName?: string;
+}
+
+/** Used to override the default configuration. */
+export interface DownloadFileConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
 }
 
 /** Configuration for upscaling an image.
@@ -1746,6 +1787,8 @@ export interface UploadFileConfig {
   <https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/imagen-api>`_.
    */
 export interface UpscaleImageConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
   /** Whether to include a reason for filtered-out images in the
       response. */
   includeRaiReason?: boolean;

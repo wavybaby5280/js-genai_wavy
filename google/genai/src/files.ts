@@ -312,7 +312,12 @@ export class Files extends BaseModule {
       body = listFilesParametersToVertex(this.apiClient, kwargs);
       path = common.formatMap('None', body['_url']);
       delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.get(path, body, types.ListFilesResponse);
+      response = this.apiClient.get(
+        path,
+        body,
+        types.ListFilesResponse,
+        config?.httpOptions,
+      );
 
       return response.then((apiResponse) => {
         const resp = listFilesResponseFromVertex(this.apiClient, apiResponse);
@@ -323,7 +328,12 @@ export class Files extends BaseModule {
       body = listFilesParametersToMldev(this.apiClient, kwargs);
       path = common.formatMap('files', body['_url']);
       delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.get(path, body, types.ListFilesResponse);
+      response = this.apiClient.get(
+        path,
+        body,
+        types.ListFilesResponse,
+        config?.httpOptions,
+      );
 
       return response.then((apiResponse) => {
         const resp = listFilesResponseFromMldev(this.apiClient, apiResponse);
@@ -344,7 +354,7 @@ export class Files extends BaseModule {
       body = getFileParametersToVertex(this.apiClient, kwargs);
       path = common.formatMap('None', body['_url']);
       delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.get(path, body, undefined);
+      response = this.apiClient.get(path, body, undefined, config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = fileFromVertex(this.apiClient, apiResponse);
@@ -355,7 +365,7 @@ export class Files extends BaseModule {
       body = getFileParametersToMldev(this.apiClient, kwargs);
       path = common.formatMap('files/{file}', body['_url']);
       delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.get(path, body, undefined);
+      response = this.apiClient.get(path, body, undefined, config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = fileFromMldev(this.apiClient, apiResponse);

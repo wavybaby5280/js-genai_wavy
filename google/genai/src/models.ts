@@ -3139,7 +3139,12 @@ export class Models extends BaseModule {
       body = generateContentParametersToVertex(this.apiClient, kwargs);
       path = common.formatMap('{model}:generateContent', body['_url']);
       delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.post(path, body, types.GenerateContentResponse);
+      response = this.apiClient.post(
+        path,
+        body,
+        types.GenerateContentResponse,
+        config?.httpOptions,
+      );
 
       return response.then((apiResponse) => {
         const resp = generateContentResponseFromVertex(
@@ -3153,7 +3158,12 @@ export class Models extends BaseModule {
       body = generateContentParametersToMldev(this.apiClient, kwargs);
       path = common.formatMap('{model}:generateContent', body['_url']);
       delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.post(path, body, types.GenerateContentResponse);
+      response = this.apiClient.post(
+        path,
+        body,
+        types.GenerateContentResponse,
+        config?.httpOptions,
+      );
 
       return response.then((apiResponse) => {
         const resp = generateContentResponseFromMldev(
@@ -3189,6 +3199,7 @@ export class Models extends BaseModule {
         path,
         body,
         types.GenerateContentResponse,
+        config?.httpOptions,
       );
 
       let apiClient = this.apiClient;
@@ -3210,6 +3221,7 @@ export class Models extends BaseModule {
         path,
         body,
         types.GenerateContentResponse,
+        config?.httpOptions,
       );
 
       let apiClient = this.apiClient;
@@ -3239,7 +3251,12 @@ export class Models extends BaseModule {
       body = embedContentParametersToVertex(this.apiClient, kwargs);
       path = common.formatMap('{model}:predict', body['_url']);
       delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.post(path, body, types.EmbedContentResponse);
+      response = this.apiClient.post(
+        path,
+        body,
+        types.EmbedContentResponse,
+        config?.httpOptions,
+      );
 
       return response.then((apiResponse) => {
         const resp = embedContentResponseFromVertex(
@@ -3253,7 +3270,12 @@ export class Models extends BaseModule {
       body = embedContentParametersToMldev(this.apiClient, kwargs);
       path = common.formatMap('{model}:batchEmbedContents', body['_url']);
       delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.post(path, body, types.EmbedContentResponse);
+      response = this.apiClient.post(
+        path,
+        body,
+        types.EmbedContentResponse,
+        config?.httpOptions,
+      );
 
       return response.then((apiResponse) => {
         const resp = embedContentResponseFromMldev(this.apiClient, apiResponse);
@@ -3279,7 +3301,12 @@ export class Models extends BaseModule {
       body = generateImagesParametersToVertex(this.apiClient, kwargs);
       path = common.formatMap('{model}:predict', body['_url']);
       delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.post(path, body, types.GenerateImagesResponse);
+      response = this.apiClient.post(
+        path,
+        body,
+        types.GenerateImagesResponse,
+        config?.httpOptions,
+      );
 
       return response.then((apiResponse) => {
         const resp = generateImagesResponseFromVertex(
@@ -3293,7 +3320,12 @@ export class Models extends BaseModule {
       body = generateImagesParametersToMldev(this.apiClient, kwargs);
       path = common.formatMap('{model}:predict', body['_url']);
       delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.post(path, body, types.GenerateImagesResponse);
+      response = this.apiClient.post(
+        path,
+        body,
+        types.GenerateImagesResponse,
+        config?.httpOptions,
+      );
 
       return response.then((apiResponse) => {
         const resp = generateImagesResponseFromMldev(
@@ -3341,7 +3373,12 @@ export class Models extends BaseModule {
       body = countTokensParametersToVertex(this.apiClient, kwargs);
       path = common.formatMap('{model}:countTokens', body['_url']);
       delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.post(path, body, types.CountTokensResponse);
+      response = this.apiClient.post(
+        path,
+        body,
+        types.CountTokensResponse,
+        config?.httpOptions,
+      );
 
       return response.then((apiResponse) => {
         const resp = countTokensResponseFromVertex(this.apiClient, apiResponse);
@@ -3352,7 +3389,12 @@ export class Models extends BaseModule {
       body = countTokensParametersToMldev(this.apiClient, kwargs);
       path = common.formatMap('{model}:countTokens', body['_url']);
       delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.post(path, body, types.CountTokensResponse);
+      response = this.apiClient.post(
+        path,
+        body,
+        types.CountTokensResponse,
+        config?.httpOptions,
+      );
 
       return response.then((apiResponse) => {
         const resp = countTokensResponseFromMldev(this.apiClient, apiResponse);
@@ -3378,7 +3420,12 @@ export class Models extends BaseModule {
       body = computeTokensParametersToVertex(this.apiClient, kwargs);
       path = common.formatMap('{model}:computeTokens', body['_url']);
       delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.post(path, body, types.ComputeTokensResponse);
+      response = this.apiClient.post(
+        path,
+        body,
+        types.ComputeTokensResponse,
+        config?.httpOptions,
+      );
 
       return response.then((apiResponse) => {
         const resp = computeTokensResponseFromVertex(
@@ -3392,7 +3439,12 @@ export class Models extends BaseModule {
       body = computeTokensParametersToMldev(this.apiClient, kwargs);
       path = common.formatMap('None', body['_url']);
       delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.post(path, body, types.ComputeTokensResponse);
+      response = this.apiClient.post(
+        path,
+        body,
+        types.ComputeTokensResponse,
+        config?.httpOptions,
+      );
 
       return response.then((apiResponse) => {
         const resp = computeTokensResponseFromMldev(
