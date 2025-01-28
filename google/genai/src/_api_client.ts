@@ -5,7 +5,6 @@
  */
 
 import {GoogleAuth, GoogleAuthOptions} from 'google-auth-library';
-import {URL} from 'url';
 
 import * as types from './types';
 import {HttpOptions} from './types';
