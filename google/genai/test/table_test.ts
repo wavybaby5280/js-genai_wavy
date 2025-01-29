@@ -20,6 +20,19 @@ function getGoogle3Path() {
   return currentDir.substring(0, lastIndex + 'google3/'.length);
 }
 
+function websafeEncode(str: string): string {
+  return str.replace(/\+/g, '-').replace(/\//g, '_');
+}
+
+function isBase64Encoded(str: string): boolean {
+  try {
+    const decoded = atob(str);
+    return btoa(decoded) === str;
+  } catch (err) {
+    return false;
+  }
+}
+
 function assertObjectIsEmpty(obj: any) {
   if (obj === undefined) {
     return true;
@@ -55,7 +68,7 @@ function assertMessagesEqual(
       // Possible that the type is bytes, which is represented in NodeJS as a
       // string.
       if (typeof a === 'string' && typeof b === 'number') {
-        return a === b.toString();
+        return deepEqual(a,  b.toString());
       }
       console.debug('Invalid type: ');
       console.debug('typeof a: ', typeof a);
@@ -75,11 +88,11 @@ function assertMessagesEqual(
       }
 
       for (const key of aKeys) {
-        // TODO: b/388478808 - Update to support proper string to byte
-        // conversion and comparison.
-        if (key == 'data' || key == 'imageBytes') {
-          return true;
+        // Could return additional fields in the SDK response.
+        if (key == 'usageMetadata') {
+          continue;
         }
+
         if (!deepEqual(a[key], b[key])) {
           console.debug('Unequal values: ');
           console.debug(`a[${key}]: `, a[key]);
@@ -91,6 +104,19 @@ function assertMessagesEqual(
       return true;
     }
 
+    if (typeof a === 'string' && isBase64Encoded(a)) {
+      const aEncoded = snakeToCamel(websafeEncode(a));
+      const bEncoded = snakeToCamel(websafeEncode(b));
+      if (aEncoded === bEncoded) {
+        return true;
+      } else {
+        console.debug('Unequal base64 encoded strings: ')
+        console.debug(`a: `, aEncoded);
+        console.debug(`b: `, bEncoded);
+        return false;
+      }
+    }
+
     if (Date.parse(a)) {
       return Date.parse(a) === Date.parse(b);
     }
@@ -100,10 +126,7 @@ function assertMessagesEqual(
 
   if (!deepEqual(actual, expected)) {
     throw new Error(
-      `Assertion failed: ${JSON.stringify(actual)} !== ${JSON.stringify(
-        expected,
-      )}`,
-    );
+        'Assertion failed comparing SDK responses. Check the logs for details.');
   }
 }
 
@@ -358,14 +381,10 @@ async function runTestTable(
           const request = requestArgs.args[1];
           const url = requestArgs.args[0];
 
-          // TODO: b/388478808 - Remove ignoreKeys once unique data types are
-          // converted properly in assertResponsesEqual().
-          assertMessagesEqual(responseCamelCase, expectedResponseCamelCase, {
-            ignoreKeys: ['tokensInfo', 'usageMetadata'],
-          });
+          assertMessagesEqual(responseCamelCase, expectedResponseCamelCase);
           assertMessagesEqual(
-            normalizeRequest(request, url),
-            expectedRequestCamelCase,
+              normalizeRequest(request, url),
+              expectedRequestCamelCase,
           );
         }
       } else {
