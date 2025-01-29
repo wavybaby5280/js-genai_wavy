@@ -7,7 +7,8 @@
     "build": "tsc",
     "unit-test": "jasmine dist/test/unit/**/*_test.js",
     "system-test": "jasmine dist/test/system/**/*_test.js",
-    "table-test": "jasmine dist/test/table_test.js"
+    "table-test": "jasmine dist/test/table_test.js",
+    "docs": "typedoc"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -21,12 +22,10 @@
     "gts": "^5.2.0",
     "jasmine": "^5.5.0",
     "jasmine-reporters": "^2.4.0",
-    "jsdoc": "^4.0.0",
-    "jsdoc-fresh": "^3.0.0",
-    "jsdoc-region-tag": "^3.0.0",
     "linkinator": "^4.0.0",
     "nyc": "^15.1.0",
     "prettier": "3.3.3",
+    "typedoc": "^0.27.0",
     "typescript": "~5.2.0"
   },
   "dependencies": {
