@@ -1097,6 +1097,10 @@ export interface GeneratedImage {
       response.
        */
   raiFilteredReason?: string;
+  /** The rewritten prompt used for the image generation if the prompt
+      enhancer is enabled.
+       */
+  enhancedPrompt?: string;
 }
 
 /** The output images response. */

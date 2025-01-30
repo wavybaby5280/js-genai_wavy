@@ -2972,6 +2972,11 @@ function generatedImageFromMldev(
     );
   }
 
+  let fromEnhancedPrompt = common.getValueByPath(fromObject, ['prompt']);
+  if (fromEnhancedPrompt !== undefined) {
+    common.setValueByPath(toObject, ['enhancedPrompt'], fromEnhancedPrompt);
+  }
+
   return toObject;
 }
 
@@ -3000,6 +3005,11 @@ function generatedImageFromVertex(
       ['raiFilteredReason'],
       fromRaiFilteredReason,
     );
+  }
+
+  let fromEnhancedPrompt = common.getValueByPath(fromObject, ['prompt']);
+  if (fromEnhancedPrompt !== undefined) {
+    common.setValueByPath(toObject, ['enhancedPrompt'], fromEnhancedPrompt);
   }
 
   return toObject;
