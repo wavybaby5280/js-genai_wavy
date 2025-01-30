@@ -294,7 +294,12 @@ async function runTestTable(
   const testTableFile = JSON.parse(data) as types.TestTableFile;
   const parts = testTableFile.testMethod!.split('.');
   const moduleName: string = snakeToCamel(parts[0]);
-  const methodName: string = snakeToCamel(parts[1]);
+  let methodName: string = snakeToCamel(parts[1]);
+  // Test the _list method since the replay files expect the list response
+  // instead of the Pager wrapper.
+  if (methodName === 'list') {
+    methodName = '_list';
+  }
   const module: object = (client as any)[moduleName];
   if (!module) {
     console.log(

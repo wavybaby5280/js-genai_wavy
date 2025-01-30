@@ -375,7 +375,12 @@ export class Files extends BaseModule {
     }
   }
 
-  list = (config?: types.ListFilesConfig): Promise<types.ListFilesResponse> => {
-    return this._list(config);
+  list = async (config?: types.ListFilesConfig): Promise<Pager<types.File>> => {
+    return new Pager<types.File>(
+      PagedItem.PAGED_ITEM_FILES,
+      this._list,
+      await this._list(config),
+      config,
+    );
   };
 }

@@ -561,16 +561,21 @@ export class Tunings extends BaseModule {
     }
   }
 
-  get = (
+  get = async (
     name: string,
     config?: types.GetTuningJobConfig,
   ): Promise<types.TuningJob> => {
-    return this._get(name, config);
+    return await this._get(name, config);
   };
 
-  list = (
+  list = async (
     config?: types.ListTuningJobsConfig,
-  ): Promise<types.ListTuningJobsResponse> => {
-    return this._list(config);
+  ): Promise<Pager<types.TuningJob>> => {
+    return new Pager<types.TuningJob>(
+      PagedItem.PAGED_ITEM_TUNING_JOBS,
+      this._list,
+      await this._list(config),
+      config,
+    );
   };
 }

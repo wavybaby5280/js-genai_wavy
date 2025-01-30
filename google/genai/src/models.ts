@@ -3457,11 +3457,11 @@ export class Models extends BaseModule {
     }
   }
 
-  generateContent = (
+  generateContent = async (
     model: string,
     contents: types.ContentListUnion,
     config?: types.GenerateContentConfig,
   ): Promise<types.GenerateContentResponse> => {
-    return this._generateContent(model, contents, config);
+    return await this._generateContent(model, contents, config);
   };
 }
