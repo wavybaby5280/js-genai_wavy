@@ -621,6 +621,8 @@ export interface GenerateContentConfig {
   /** Associates model output to a specific function call.
    */
   toolConfig?: ToolConfig;
+  /** Labels with user-defined metadata to break down billed charges. */
+  labels?: Record<string, string>;
   /** Resource name of a context cache that can be used in subsequent
       requests.
        */

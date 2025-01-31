@@ -1157,6 +1157,10 @@ function generateContentConfigToMldev(
     );
   }
 
+  if (common.getValueByPath(fromObject, ['labels']) !== undefined) {
+    throw new Error('labels parameter is not supported in Gemini API.');
+  }
+
   let fromCachedContent = common.getValueByPath(fromObject, ['cachedContent']);
   if (fromCachedContent !== undefined) {
     common.setValueByPath(
@@ -1362,6 +1366,11 @@ function generateContentConfigToVertex(
       ['toolConfig'],
       toolConfigToVertex(apiClient, fromToolConfig, toObject),
     );
+  }
+
+  let fromLabels = common.getValueByPath(fromObject, ['labels']);
+  if (fromLabels !== undefined) {
+    common.setValueByPath(parentObject, ['labels'], fromLabels);
   }
 
   let fromCachedContent = common.getValueByPath(fromObject, ['cachedContent']);
