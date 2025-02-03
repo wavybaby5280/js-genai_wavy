@@ -33,10 +33,10 @@ export class ReplayAPIClient extends Client {
     this.replayFileJson = null;
   }
 
-  getReplayFilename(
-    replayFilePath: string,
-    testTableItem: any,
-    testName: string,
+  loadReplayFilename(
+      replayFilePath: string,
+      testTableItem: any,
+      testName: string,
   ) {
     const responseFilePath = replayFilePath.replace('_test_table', testName);
     let responseJson: any;

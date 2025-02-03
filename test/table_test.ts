@@ -228,9 +228,7 @@ function normalizeBody(body: string) {
     }
     return parsedBody;
   } catch (e) {
-    console.log('    === Failed to parse body: ', e);
-    console.log('    === body: ', body);
-    return body;
+    throw new Error(`Failed to parse body: ${body}`, {cause: e});
   }
 }
 
@@ -260,20 +258,26 @@ function getTestMode() {
   }
 }
 
-async function walk(dir: string): Promise<string[]> {
-  let files = await fs.promises.readdir(dir);
-  files = await Promise.all(
-    files.map(async (file: string) => {
-      const filePath = path.join(dir, file);
-      const stats = await fs.promises.stat(filePath);
-      if (stats.isDirectory()) return walk(filePath);
-      else if (stats.isFile()) return filePath;
-    }),
-  );
+function walk(dir: string): string[] {
+  let files = fs.readdirSync(dir);
+  files = files.map((file: string) => {
+    const filePath = path.join(dir, file);
+    const stats = fs.statSync(filePath);
+    if (stats.isDirectory()) return walk(filePath);
+    else if (stats.isFile()) return filePath;
+  });
 
   return files.reduce(
     (all: string[], folderContents: string[]) => all.concat(folderContents),
     [],
+  );
+}
+
+function normalizeParameters(parameters: any): any {
+  return JSON.parse(
+    snakeToCamel(
+      JSON.stringify(Object.values(parameters)),
+    ),
   );
 }
 
@@ -285,8 +289,8 @@ function snakeToCamel(str: string): string {
  * Creates a new ReplayAPIClient. If the tests are running in replay mode, the
  * client will be configured to use the mock server.
  */
-async function createReplayClient(vertexai: boolean) {
-  let apiKey = process.env['GOOGLE_GENAI_API_KEY'];
+function createReplayClient(vertexai: boolean) {
+  let apiKey = process.env['GOOGLE_API_KEY'];
   if (apiKey === undefined || apiKey === null || apiKey === '') {
     apiKey = 'This is not the key you are looking for';
   }
@@ -297,13 +301,100 @@ async function createReplayClient(vertexai: boolean) {
   return replayClient;
 }
 
-async function runTestTable(
-  filePath: string,
+function getTestTableMethod(
+  client: Client,
+  moduleName: string,
+  methodName: string,
+): Function | null {
+  const module: object = (client as any)[moduleName];
+
+  if (!module) {
+    console.log(
+      `    === Skipping method: ${moduleName}.${methodName}, Module "${
+        moduleName
+      }" is not supported in NodeJS`,
+    );
+    return null;
+  }
+  const method: Function = (module as any)[methodName];
+  if (!method) {
+    console.log(
+      `   === Skipping method:${moduleName}.${
+        methodName
+      }, not supported in NodeJS`,
+    );
+    return null;
+  }
+  return method;
+}
+
+function shouldSkipTestTableItem(
+  testTableItem: types.TestTableItem,
+  testName: string,
   client: ReplayAPIClient,
-  fetchSpy: any,
+  mode: string,
+): boolean {
+  if (testTableItem.exceptionIfMldev && !client.vertexai) {
+    // TODO: ybo handle exception.
+    console.log(
+      `   === Skipping item: ${testName} because it should fail in MLDev`,
+    );
+    return true;
+  }
+  if (testTableItem.exceptionIfVertex && client.vertexai) {
+    // TODO: ybo handle exception.
+    console.log(
+      `   === Skipping item: ${testName} because it should fail in VertexAI`,
+    );
+    return true;
+  }
+  if (mode === 'api' && testTableItem.skipInApiMode) {
+    console.log(
+      `   === Skipping item: ${
+        testName
+      } because it is not repeatable in API mode`,
+    );
+    return true;
+  }
+
+  // TODO(b/392700953): Remove once this test works.
+  if (testName.startsWith('models.embedContent.test_multi_texts_with_config')) {
+    return true;
+  }
+  return false;
+}
+
+function loadTestFiles(): string[] {
+  const google3Path = getGoogle3Path();
+  const replayPath =
+    google3Path + '/google/cloud/aiplatform/sdk/genai/replays/tests';
+
+  const testFiles: string[] = [];
+  const files = walk(replayPath);
+
+  files
+    .filter((file: string) => file.endsWith('/_test_table.json'))
+    .forEach((file: string) => {
+      testFiles.push(file);
+    });
+
+  return testFiles;
+}
+
+interface TestInfo {
+  fullTestName: string;
+  testTableItem: types.TestTableItem;
+  client: ReplayAPIClient;
+  method: Function;
+  testFileName: string;
+}
+
+function loadTestTableForMode(
+  testFileName: string,
+  client: ReplayAPIClient,
+  testTableFile: types.TestTableFile,
+  mode: string,
 ) {
-  const data = await fs.promises.readFile(filePath, 'utf8');
-  const testTableFile = JSON.parse(data) as types.TestTableFile;
   const parts = testTableFile.testMethod!.split('.');
   const moduleName: string = snakeToCamel(parts[0]);
   let methodName: string = snakeToCamel(parts[1]);
@@ -312,155 +403,118 @@ async function runTestTable(
   if (methodName === 'list') {
     methodName = '_list';
   }
-  const module: object = (client as any)[moduleName];
-  if (!module) {
-    console.log(
-      `    === Skipping method: ${testTableFile.testMethod}. Module "${
-        moduleName
-      }" is not supported in NodeJS`,
-    );
-    return;
-  }
-  const method: Function = (module as any)[methodName];
+  const method = getTestTableMethod(client, moduleName, methodName);
+
   if (!method) {
-    console.log(
-      `   === Skipping method: ${testTableFile.testMethod}, not supported in NodeJS`,
-    );
     return;
   }
-  console.log(`=== Running test table: ${testTableFile.testMethod}`);
+
   for (const testTableItem of testTableFile.testTable!) {
     const testName = `${moduleName}.${methodName}.${testTableItem.name}.${
       client.vertexai ? 'vertex' : 'mldev'
     }`;
-    if (testTableItem.exceptionIfMldev && !client.vertexai) {
-      // TODO: ybo handle exception.
-      console.log(
-        `   === Skipping item: ${testName} because it should fail in MLDev`,
-      );
-      continue;
-    }
-    if (testTableItem.exceptionIfVertex && client.vertexai) {
-      // TODO: ybo handle exception.
-      console.log(
-        `   === Skipping item: ${testName} because it should fail in VertexAI`,
-      );
-      continue;
-    }
-    if (testTableItem.skipInApiMode) {
-      console.log(
-        `   === Skipping item: ${testName} because it is not repeatable in API mode`,
-      );
-      continue;
-    }
 
-    const parameters = JSON.parse(
-      snakeToCamel(JSON.stringify(Object.values(testTableItem.parameters!))),
-    );
-
-    // TODO(b/392700953): Remove once this test works.
-    if (
-      testName.startsWith('models.embedContent.test_multi_texts_with_config')
-    ) {
-      continue;
-    }
-    console.log(
-      `   === Calling method: ${testName} on test mode: ${getTestMode()}`,
-    );
-
-    try {
-      if (getTestMode() === 'replay') {
-        client.getReplayFilename(
-          filePath,
+    if (!shouldSkipTestTableItem(testTableItem, testName, client, mode)) {
+      if (mode === 'replay') {
+        replayTests.push({
+          fullTestName: testName,
           testTableItem,
-          `${testTableItem.name}.${client.vertexai ? 'vertex' : 'mldev'}`,
-        );
-
-        const numInteractions = client.getNumInteractions();
-
-        for (let i = 0; i < numInteractions; i++) {
-          // Set the response for the mock server
-          client.mockReplayEndpoint(i, fetchSpy);
-
-          const response = await method.apply(client, parameters);
-          const expectedResponse = client.getExpectedResponseFromReplayFile(i);
-          const expectedRequest = client.getExpectedRequestFromReplayFile(i);
-          const responseCamelCase = JSON.parse(
-            snakeToCamel(JSON.stringify(response)),
-          );
-          const expectedResponseCamelCase = JSON.parse(
-            snakeToCamel(JSON.stringify(expectedResponse)),
-          );
-          const expectedRequestCamelCase = JSON.parse(
-            snakeToCamel(JSON.stringify(expectedRequest)),
-          );
-          const requestArgs = fetchSpy.calls.mostRecent();
-          const request = requestArgs.args[1];
-          const url = requestArgs.args[0];
-
-          assertMessagesEqual(responseCamelCase, expectedResponseCamelCase);
-          assertMessagesEqual(
-            normalizeRequest(request, url),
-            expectedRequestCamelCase,
-          );
-        }
-      } else {
-        const response = await method.apply(client, parameters);
-        console.log('response: ', response);
+          client,
+          method,
+          testFileName: testFileName,
+        });
+      } else if (mode === 'api') {
+        apiTests.push({
+          fullTestName: testName,
+          testTableItem,
+          client,
+          method,
+          testFileName: testFileName,
+        });
       }
-      console.log(`      === Success: ${testName}`);
-    } catch (e) {
-      if (e instanceof Error) {
-        console.log(`      === Error: ${e.stack}`);
-      } else {
-        console.log(`      === Error: ${e}`);
-      }
-      console.log(
-        `      === Parameters: ${JSON.stringify(parameters, null, 2)}`,
-      );
-      process.exit(1); // Exit the process.
     }
   }
 }
 
-async function main() {
-  const google3Path = getGoogle3Path();
-  const replayPath =
-    google3Path + '/google/cloud/aiplatform/sdk/genai/replays/tests';
+const replayTests: TestInfo[] = [];
+const apiTests: TestInfo[] = [];
 
-  const mlDevClient = await createReplayClient(false);
-  const vertexClient = await createReplayClient(true);
-
-  const testFiles: string[] = [];
-  await walk(replayPath)
-    .then(async (files) => {
-      files
-        .filter((file: string) => file.endsWith('/_test_table.json'))
-        .forEach(async (file: string) => {
-          testFiles.push(file);
-        });
-    })
-    .then(async () => {
-      let fetchSpy: any;
-      if (getTestMode() === 'replay') {
-        fetchSpy = spyOn(global, 'fetch');
-        // @ts-ignore TS2345 Argument of type '"fetchToken"' is not assignable
-        // to parameter of type 'keyof ApiClient'.
-        spyOn(vertexClient.apiClient, 'fetchToken').and.returnValue(
-          Promise.resolve('token'),
-        );
-      }
-      for (const file of testFiles) {
-        await runTestTable(file, mlDevClient, fetchSpy);
-        await runTestTable(file, vertexClient, fetchSpy);
-      }
-    })
-    .catch((err) => console.error(err));
+function loadTests() {
+  const testFiles = loadTestFiles();
+  const mode = getTestMode();
+  for (const testFileName of testFiles) {
+    const data = fs.readFileSync(testFileName, 'utf8');
+    const testTableFile = JSON.parse(data) as types.TestTableFile;
+    const mldevClient = createReplayClient(/*vertexai=*/ false);
+    const vertexClient = createReplayClient(/*vertexai=*/ true);
+    loadTestTableForMode(testFileName, mldevClient, testTableFile, mode);
+    loadTestTableForMode(testFileName, vertexClient, testTableFile, mode);
+  }
 }
 
 describe('TableTest', () => {
   jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000; // 30 seconds
-  it('runs table tests', async () => {
-    await main();
-  });
+
+  // Due to the way Jasmine works, we need to load the tests synchronously
+  // before the tests are even defined.
+  loadTests();
+
+  for (const replayTest of replayTests) {
+    it(replayTest.fullTestName, async () => {
+      const parameters = normalizeParameters(replayTest.testTableItem.parameters!);
+      replayTest.client.loadReplayFilename(
+        replayTest.testFileName,
+        replayTest.testTableItem,
+        `${replayTest.testTableItem.name}.${
+          replayTest.client.vertexai ? 'vertex' : 'mldev'
+        }`,
+      );
+      const fetchSpy: jasmine.Spy = spyOn(global, 'fetch');
+      if (replayTest.client.vertexai) {
+        // @ts-ignore TS2345 Argument of type '"fetchToken"' is not assignable
+        // to parameter of type 'keyof ApiClient'.
+        spyOn(replayTest.client.apiClient, 'fetchToken').and.returnValue(
+          Promise.resolve('token'),
+        );
+      }
+
+      // TODO (b/393269500) - Add support for interactions correctly.
+      //  Set the response for the mock server
+      replayTest.client.mockReplayEndpoint(0, fetchSpy);
+
+      const response = await replayTest.method.apply(
+        replayTest.client,
+        parameters,
+      );
+      const expectedResponse =
+        replayTest.client.getExpectedResponseFromReplayFile(0);
+      const expectedRequest =
+        replayTest.client.getExpectedRequestFromReplayFile(0);
+      const responseCamelCase = JSON.parse(
+        snakeToCamel(JSON.stringify(response)),
+      );
+      const expectedResponseCamelCase = JSON.parse(
+        snakeToCamel(JSON.stringify(expectedResponse)),
+      );
+      const expectedRequestCamelCase = JSON.parse(
+        snakeToCamel(JSON.stringify(expectedRequest)),
+      );
+      const requestArgs = fetchSpy.calls.first();
+      const request = requestArgs.args[1];
+      const url = requestArgs.args[0];
+
+      assertMessagesEqual(responseCamelCase, expectedResponseCamelCase);
+      assertMessagesEqual(
+        normalizeRequest(request, url),
+        expectedRequestCamelCase,
+      );
+    });
+  }
+
+  for (const apiTest of apiTests) {
+    it(apiTest.fullTestName, async () => {
+      const parameters = normalizeParameters(apiTest.testTableItem.parameters!);
+      await apiTest.method.apply(apiTest.client, parameters);
+    });
+  }
 });
