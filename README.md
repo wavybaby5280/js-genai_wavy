@@ -1,1 +1,1 @@
-# Google Gen AI Nodejs SDK
+# Google Gen AI NodeJS SDK
