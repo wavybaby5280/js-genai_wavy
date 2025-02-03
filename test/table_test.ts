@@ -33,7 +33,7 @@ function isBase64Encoded(str: string): boolean {
   }
 }
 
-function assertObjectIsEmpty(obj: any) {
+function isObjectEmpty(obj: any) {
   if (obj === undefined) {
     return true;
   }
@@ -42,7 +42,7 @@ function assertObjectIsEmpty(obj: any) {
   }
   for (const key of Object.keys(obj)) {
     if (typeof obj[key] === 'object') {
-      if (!assertObjectIsEmpty(obj[key])) {
+      if (!isObjectEmpty(obj[key])) {
         return false;
       }
     } else if (obj[key] !== undefined) {
@@ -59,21 +59,25 @@ function assertMessagesEqual(
 ) {
   const {ignoreKeys = []} = options || {};
 
-  function deepEqual(a: any, b: any): boolean {
-    if (a === undefined && typeof b === 'object') {
-      return assertObjectIsEmpty(b);
-    }
-
+  function assertDeepEqual(a: any, b: any) {
     if (typeof a !== typeof b) {
       // Possible that the type is bytes, which is represented in NodeJS as a
       // string.
       if (typeof a === 'string' && typeof b === 'number') {
-        return deepEqual(a,  b.toString());
+        if (a !== b.toString()) {
+          throw new Error(
+            `Unequal string and number values:\n a: ${a}\n b: ${b}`,
+          );
+        }
+        return;
+      } else if (a === undefined && typeof b === 'object') {
+        if (!isObjectEmpty(b)) {
+          throw new Error(`Object should be empty:\n a: ${a}\n b: ${b}`);
+        }
+        return;
+      } else {
+        throw new Error(`Invalid type: ${typeof a} !== ${typeof b}`);
       }
-      console.debug('Invalid type: ');
-      console.debug('typeof a: ', typeof a);
-      console.debug('typeof b: ', typeof b);
-      return false;
     }
 
     if (typeof a === 'object') {
@@ -81,53 +85,61 @@ function assertMessagesEqual(
       const bKeys = Object.keys(b).filter((key) => !ignoreKeys.includes(key));
 
       if (aKeys.length !== bKeys.length) {
-        console.debug('Unequal keys: ');
-        console.debug('aKeys length: ', aKeys.length);
-        console.debug('bKeys length: ', bKeys.length);
-        return false;
+        throw new Error(`Unequal keys: ${aKeys} !== ${bKeys}`);
       }
 
       for (const key of aKeys) {
-        // Could return additional fields in the SDK response.
         if (key == 'usageMetadata') {
           continue;
         }
+        try {
+          assertDeepEqual(a[key], b[key]);
+        } catch (e) {
+          let message = (e as Error).message;
+          if (
+            !message.includes('Unequal key value') &&
+            !message.includes('Unequal key trace')
+          ) {
+            message = `Unequal key value:\n a[${key}]: ${JSON.stringify(
+              a[key],
+              null,
+              2,
+            )}\n b[${key}]: ${JSON.stringify(b[key], null, 2)}`;
+          } else {
+            message = `Unequal key trace (see cause for detals): ${key}`;
+          }
 
-        if (!deepEqual(a[key], b[key])) {
-          console.debug('Unequal values: ');
-          console.debug(`a[${key}]: `, a[key]);
-          console.debug(`b[${key}]: `, b[key]);
-          return false;
+          throw new Error(message, {cause: e});
         }
       }
 
-      return true;
+      return;
     }
 
     if (typeof a === 'string' && isBase64Encoded(a)) {
       const aEncoded = snakeToCamel(websafeEncode(a));
       const bEncoded = snakeToCamel(websafeEncode(b));
-      if (aEncoded === bEncoded) {
-        return true;
-      } else {
-        console.debug('Unequal base64 encoded strings: ')
-        console.debug(`a: `, aEncoded);
-        console.debug(`b: `, bEncoded);
-        return false;
+      if (aEncoded !== bEncoded) {
+        throw new Error(
+          `Unequal base64 encoded strings:\n a: ${aEncoded}\n b: ${bEncoded}`,
+        );
       }
+      return;
     }
 
     if (Date.parse(a)) {
-      return Date.parse(a) === Date.parse(b);
+      if (Date.parse(a) !== Date.parse(b)) {
+        throw new Error(`Unequal dates:\n a: ${a}\n b: ${b}`);
+      }
+      return;
     }
 
-    return a === b;
+    if (a !== b) {
+      throw new Error(`Unequal values:\n a: ${a}\n b: ${b}`);
+    }
   }
 
-  if (!deepEqual(actual, expected)) {
-    throw new Error(
-        'Assertion failed comparing SDK responses. Check the logs for details.');
-  }
+  assertDeepEqual(actual, expected);
 }
 
 function redactVersionNumber(versionNumber: string) {
@@ -388,8 +400,8 @@ async function runTestTable(
 
           assertMessagesEqual(responseCamelCase, expectedResponseCamelCase);
           assertMessagesEqual(
-              normalizeRequest(request, url),
-              expectedRequestCamelCase,
+            normalizeRequest(request, url),
+            expectedRequestCamelCase,
           );
         }
       } else {
