@@ -478,36 +478,44 @@ describe('TableTest', () => {
         );
       }
 
-      // TODO (b/393269500) - Add support for interactions correctly.
-      //  Set the response for the mock server
-      replayTest.client.mockReplayEndpoint(0, fetchSpy);
-
+      replayTest.client.setupReplayResponses(fetchSpy);
+      const numInteractions = replayTest.client.getNumInteractions();
       const response = await replayTest.method.apply(
         replayTest.client,
         parameters,
       );
+
+      for (let i = 0; i < numInteractions; i++) {
+        const expectedRequest =
+          replayTest.client.getExpectedRequestFromReplayFile(i);
+        const expectedRequestCamelCase = JSON.parse(
+          snakeToCamel(JSON.stringify(expectedRequest)),
+        );
+        const requestArgs = fetchSpy.calls.argsFor(i);
+        const request = requestArgs[1];
+        const url = requestArgs[0];
+        assertMessagesEqual(
+          normalizeRequest(request, url),
+          expectedRequestCamelCase,
+        );
+      }
+      // Get the last response from the replay file, which will be the response
+      // from the test method. We only test the last response because it's the
+      // only one that we get after the SDK has processed it. We could add a spy
+      // to the request method to get each response after it's processed if we
+      // want to test all of them.
       const expectedResponse =
-        replayTest.client.getExpectedResponseFromReplayFile(0);
-      const expectedRequest =
-        replayTest.client.getExpectedRequestFromReplayFile(0);
+        replayTest.client.getExpectedResponseFromReplayFile(
+          numInteractions - 1,
+        );
       const responseCamelCase = JSON.parse(
         snakeToCamel(JSON.stringify(response)),
       );
       const expectedResponseCamelCase = JSON.parse(
         snakeToCamel(JSON.stringify(expectedResponse)),
       );
-      const expectedRequestCamelCase = JSON.parse(
-        snakeToCamel(JSON.stringify(expectedRequest)),
-      );
-      const requestArgs = fetchSpy.calls.first();
-      const request = requestArgs.args[1];
-      const url = requestArgs.args[0];
 
       assertMessagesEqual(responseCamelCase, expectedResponseCamelCase);
-      assertMessagesEqual(
-        normalizeRequest(request, url),
-        expectedRequestCamelCase,
-      );
     });
   }
 

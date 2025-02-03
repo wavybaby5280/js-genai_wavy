@@ -34,9 +34,9 @@ export class ReplayAPIClient extends Client {
   }
 
   loadReplayFilename(
-      replayFilePath: string,
-      testTableItem: any,
-      testName: string,
+    replayFilePath: string,
+    testTableItem: any,
+    testName: string,
   ) {
     const responseFilePath = replayFilePath.replace('_test_table', testName);
     let responseJson: any;
@@ -69,30 +69,30 @@ export class ReplayAPIClient extends Client {
   }
 
   /**
-   * Sets the response for the mock endpoint using the replay file when the
-   * tests are running in replay mode.
+   * Sets all the interaction responses on the replay client using the fetch
+   * spy.
    */
-  mockReplayEndpoint(interactionIndex: number, fetchSpy: any) {
+
+  setupReplayResponses(fetchSpy: any) {
     const responseJson: any = JSON.parse(fs.readFileSync(this.replayFile));
 
-    const responseStatusCode =
-      this.replayFileJson.interactions[interactionIndex]?.response
-        ?.status_code ?? 200;
-    const interactionResponse =
-      responseJson.interactions[interactionIndex]?.response;
-
-    const headers =
-      responseJson.interactions[interactionIndex]?.response?.headers;
-
-    if (fetchSpy) {
+    const responses: Promise<Response>[] = [];
+    for (const interaction of responseJson.interactions) {
+      const responseStatusCode = interaction?.response?.status_code ?? 200;
+      const interactionResponse = interaction?.response;
+      const headers = interaction?.response?.headers;
       const responseBody = JSON.stringify(interactionResponse.body_segments[0]);
-      const fakeResponse = new Response(responseBody, {
-        status: responseStatusCode,
-        headers: headers,
-      });
-
-      fetchSpy.calls.reset();
-      fetchSpy.and.resolveTo(fakeResponse);
+      responses.push(
+        Promise.resolve(
+          new Response(responseBody, {
+            status: responseStatusCode,
+            headers: headers,
+          }),
+        ),
+      );
     }
+
+    fetchSpy.calls.reset();
+    fetchSpy.and.returnValues(...responses);
   }
 }
