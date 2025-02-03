@@ -6,6 +6,7 @@
 
 // Pagers for the GenAI List APIs.
 
+/** @internal */
 export enum PagedItem {
   PAGED_ITEM_BATCH_JOBS = 'batchJobs',
   PAGED_ITEM_MODELS = 'models',

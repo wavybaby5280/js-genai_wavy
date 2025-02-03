@@ -8,5 +8,6 @@
   ],
   "excludePrivate": true,
   "excludeProtected": true,
+  "excludeInternal": true,
   "visibilityFilters": {}
 }

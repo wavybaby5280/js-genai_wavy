@@ -142,6 +142,7 @@ function partToVertex(
   return toObject;
 }
 
+/** @internal */
 export function contentToMldev(
   apiClient: ApiClient,
   fromObject: any,
@@ -168,6 +169,7 @@ export function contentToMldev(
   return toObject;
 }
 
+/** @internal */
 export function contentToVertex(
   apiClient: ApiClient,
   fromObject: any,
@@ -649,6 +651,7 @@ function googleSearchRetrievalToVertex(
   return toObject;
 }
 
+/** @internal */
 export function toolToMldev(
   apiClient: ApiClient,
   fromObject: any,
@@ -705,6 +708,7 @@ export function toolToMldev(
   return toObject;
 }
 
+/** @internal */
 export function toolToVertex(
   apiClient: ApiClient,
   fromObject: any,
@@ -2430,6 +2434,7 @@ function partFromVertex(
   return toObject;
 }
 
+/** @internal */
 export function contentFromMldev(
   apiClient: ApiClient,
   fromObject: any,
@@ -2456,6 +2461,7 @@ export function contentFromMldev(
   return toObject;
 }
 
+/** @internal */
 export function contentFromVertex(
   apiClient: ApiClient,
   fromObject: any,
