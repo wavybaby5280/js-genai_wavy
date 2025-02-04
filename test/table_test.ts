@@ -89,7 +89,7 @@ function assertMessagesEqual(
       }
 
       for (const key of aKeys) {
-        if (key == 'usageMetadata') {
+        if (key === 'usageMetadata') {
           continue;
         }
         try {
