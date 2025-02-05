@@ -9,14 +9,13 @@
  */
 
 import {GoogleAuth, GoogleAuthOptions} from 'google-auth-library';
+import * as WebSocket from 'ws';
 
 import {ApiClient} from './_api_client';
 import * as common from './_common';
 import * as t from './_transformers';
 import {contentFromMldev, contentFromVertex, contentToMldev, contentToVertex, toolToMldev, toolToVertex} from './models';
 import * as types from './types';
-
-import WebSocket = require('ws');
 
 
 const FUNCTION_RESPONSE_REQUIRES_ID =

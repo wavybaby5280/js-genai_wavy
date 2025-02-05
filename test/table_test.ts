@@ -241,9 +241,9 @@ function normalizeRequest(request: RequestInit, url: string) {
   };
 }
 
-const fs = require('fs');
-const path = require('path');
-const assert = require('assert/strict');
+import * as fs from 'fs';
+import * as path from 'path';
+import * as assert from 'assert/strict';
 
 /**
  * Gets the test mode from the environment variable. Currently supports 'api'
@@ -260,17 +260,25 @@ function getTestMode() {
 
 function walk(dir: string): string[] {
   let files = fs.readdirSync(dir);
-  files = files.map((file: string) => {
+  let mapped_files: (string[]|string)[] = files.map((file: string) => {
     const filePath = path.join(dir, file);
     const stats = fs.statSync(filePath);
-    if (stats.isDirectory()) return walk(filePath);
-    else if (stats.isFile()) return filePath;
+    if (stats.isDirectory())
+      return walk(filePath);
+    else if (stats.isFile())
+      return filePath;
+    else {
+      throw new Error(
+          `We should never reach here.`,
+      );
+    }
   });
 
-  return files.reduce(
-    (all: string[], folderContents: string[]) => all.concat(folderContents),
-    [],
-  );
+  return mapped_files.reduce(
+             (all: string[], folderContents: string[]|string) =>
+                 all.concat(folderContents),
+             [],
+             ) as string[];
 }
 
 function normalizeParameters(parameters: any): any {

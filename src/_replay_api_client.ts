@@ -4,14 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import * as fs from 'fs';
+import * as http from 'http';
+import {URL} from 'url';
+
 import {ApiClient} from './_api_client';
 import {Client, ClientInitOptions} from './client';
 import {Live} from './live';
 import {Models} from './models';
-
-const fs = require('fs');
-const http = require('http');
-const {URL} = require('url');
 
 export interface ReplayClientInitOpts extends ClientInitOptions {
   replaysDirectory?: string;
@@ -52,7 +52,8 @@ export class ReplayAPIClient extends Client {
         `${replayId}.${this.vertexai ? 'vertex' : 'mldev'}`,
       );
     }
-    this.replayFileJson = JSON.parse(fs.readFileSync(this.replayFile));
+    this.replayFileJson =
+        JSON.parse(fs.readFileSync(this.replayFile, {encoding: 'utf8'}));
   }
 
   getNumInteractions() {
@@ -74,7 +75,8 @@ export class ReplayAPIClient extends Client {
    */
 
   setupReplayResponses(fetchSpy: any) {
-    const responseJson: any = JSON.parse(fs.readFileSync(this.replayFile));
+    const responseJson: any =
+        JSON.parse(fs.readFileSync(this.replayFile, {encoding: 'utf8'}));
 
     const responses: Promise<Response>[] = [];
     for (const interaction of responseJson.interactions) {
