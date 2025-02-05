@@ -115,24 +115,16 @@ export class Chats {
  * far.
  */
 export class Chat {
-  private readonly apiClient: ApiClient;
-  private readonly modelsModule: Models;
-  private readonly model: string;
-  private readonly config: types.GenerateContentConfig;
-  private readonly curatedHistory: types.Content[] = [];
   // A promise to represent the current state of the message being sent to the
   // model.
   private sendPromise: Promise<void> = Promise.resolve();
 
   constructor(
-      apiClient: ApiClient, modelsModule: Models, model: string,
-      config: types.GenerateContentConfig, history: types.Content[]) {
-    this.apiClient = apiClient;
-    this.modelsModule = modelsModule;
-    this.model = model;
-    this.config = config;
-    this.curatedHistory = history;
-  }
+      private readonly apiClient: ApiClient,
+      private readonly modelsModule: Models,
+      private readonly model: string,
+      private readonly config: types.GenerateContentConfig,
+      private readonly curatedHistory: types.Content[]) {}
 
   /**
    * Sends a message to the model and returns the response.

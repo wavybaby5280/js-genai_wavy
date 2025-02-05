@@ -12,8 +12,8 @@ import {GoogleAuth, GoogleAuthOptions} from 'google-auth-library';
 
 import {ApiClient} from './_api_client';
 import * as common from './_common';
-import {contentFromMldev, contentFromVertex, contentToMldev, contentToVertex, toolToMldev, toolToVertex} from './models';
 import * as t from './_transformers';
+import {contentFromMldev, contentFromVertex, contentToMldev, contentToVertex, toolToMldev, toolToVertex} from './models';
 import * as types from './types';
 
 import WebSocket = require('ws');
@@ -500,11 +500,7 @@ function liveServerMessageFromVertex(
 // Generative Language API. It embeds ApiClient for general API settings.
 // The live module is experimental.
 export class Live {
-  private readonly apiClient: ApiClient;
-
-  constructor(apiClient: ApiClient) {
-    this.apiClient = apiClient;
-  }
+  constructor(private readonly apiClient: ApiClient) {}
 
   // Establishes a connection to the specified model with the given
   // configuration. It returns a Session object representing the connection.
@@ -583,12 +579,8 @@ export class Live {
 // Session class represents a connection to the API.
 // The live module is experimental.
 export class Session {
-  private readonly conn: WebSocket;
-  private readonly apiClient: ApiClient;
-
-  constructor(conn: WebSocket, apiClient: ApiClient) {
-    this.conn = conn;
-    this.apiClient = apiClient;
+  constructor(
+      private readonly conn: WebSocket, private readonly apiClient: ApiClient) {
   }
 
   private parseClientMessage(
