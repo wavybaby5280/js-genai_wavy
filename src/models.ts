@@ -3245,7 +3245,7 @@ export class Models extends BaseModule {
     }
   }
 
-  async generateContentStream(
+  private async _generateContentStream(
     model: string,
     contents: types.ContentListUnion,
     config?: types.GenerateContentConfig,
@@ -3532,5 +3532,13 @@ export class Models extends BaseModule {
     config?: types.GenerateContentConfig,
   ): Promise<types.GenerateContentResponse> => {
     return await this._generateContent(model, contents, config);
+  };
+
+  generateContentStream = async (
+    model: string,
+    contents: types.ContentListUnion,
+    config?: types.GenerateContentConfig,
+  ): Promise<AsyncGenerator<types.GenerateContentResponse>> => {
+    return await this._generateContentStream(model, contents, config);
   };
 }
