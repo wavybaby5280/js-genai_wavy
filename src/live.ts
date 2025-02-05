@@ -509,7 +509,7 @@ export class Live {
     const websocketBaseUrl = this.apiClient.getWebsocketBaseUrl();
     const apiVersion = this.apiClient.getApiVersion();
     let url: string;
-    let headers: any;
+    let headers: Record<string, string>;
     if (this.apiClient.isVertexAI()) {
       url = `${websocketBaseUrl}/ws/google.cloud.aiplatform.${
           apiVersion}.LlmBidiService/BidiGenerateContent`;

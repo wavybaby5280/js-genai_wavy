@@ -550,7 +550,7 @@ async function throwErrorIfNotOK(
   if (!response.ok) {
     const status: number = response.status;
     const statusText: string = response.statusText;
-    let errorBody;
+    let errorBody: any;
     if (response.headers.get('content-type')?.includes('application/json')) {
       errorBody = await response.json();
     } else {

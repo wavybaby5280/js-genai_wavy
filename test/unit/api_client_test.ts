@@ -33,27 +33,31 @@ const fetch400Options = {
   url: 'some-url',
 };
 
-const mockGenerateContentResponse = {
-  candidates: [
-    {
-      content: {
-        parts: [
-          {
-            text: 'The',
+const mockGenerateContentResponse: types.GenerateContentResponse =
+    Object.setPrototypeOf(
+        {
+          candidates: [
+            {
+              content: {
+                parts: [
+                  {
+                    text: 'The',
+                  },
+                ],
+                role: 'model',
+              },
+              finishReason: 'STOP' as types.FinishReason,
+              index: 0,
+            },
+          ],
+          usageMetadata: {
+            promptTokenCount: 8,
+            candidatesTokenCount: 1,
+            totalTokenCount: 9,
           },
-        ],
-        role: 'model',
-      },
-      finishReason: 'STOP' as types.FinishReason,
-      index: 0,
-    },
-  ],
-  usageMetadata: {
-    promptTokenCount: 8,
-    candidatesTokenCount: 1,
-    totalTokenCount: 9,
-  },
-};
+        },
+        types.GenerateContentResponse.prototype,
+    );
 
 describe('processStreamResponse', () => {
   const dataPrefix = 'data: '; // Replace with your actual dataPrefix
@@ -381,7 +385,7 @@ describe('ApiClient', () => {
     });
 
     it('should append HTTP headers with duplicate keys', () => {
-      const httpOptions = {
+      const httpOptions: types.HttpOptions = {
         headers: {
           'google-custom-header': 'custom-value',
           'Content-Type': 'text/plain',
@@ -414,7 +418,7 @@ describe('ApiClient', () => {
     });
 
     it('should append default HTTP headers with provided values MLDev', () => {
-      const httpOptions = {
+      const httpOptions: types.HttpOptions = {
         headers: {
           'x-goog-api-key': 'apikey-from-user',
         },
@@ -445,7 +449,7 @@ describe('ApiClient', () => {
     });
 
     it('should append default HTTP headers with provided values Vertex', () => {
-      const httpOptions = {
+      const httpOptions: types.HttpOptions = {
         headers: {
           Authorization: 'User Token',
         },
@@ -513,7 +517,7 @@ describe('ApiClient', () => {
       );
       // @ts-ignore TS2345 Argument of type '"fetchToken"' is not assignable to parameter of type 'keyof ApiClient'.
       spyOn(client, 'fetchToken').and.returnValue(Promise.resolve('token'));
-      const requestJson = {data: 'test'};
+      const requestJson: any = {data: 'test'};
       spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(
           new Response(
@@ -527,7 +531,7 @@ describe('ApiClient', () => {
     });
     it('should append query parameters to URL', async () => {
       const client = new ApiClient({apiKey: 'test-api-key'});
-      const requestJson = {_query: {param1: 'value1', param2: 'value2'}};
+      const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
       spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(
           new Response(
@@ -544,7 +548,7 @@ describe('ApiClient', () => {
     });
     it('should throw an error if request body is not empty for GET request', async () => {
       const client = new ApiClient({apiKey: 'test-api-key'});
-      const requestJson = {data: 'test'};
+      const requestJson: any = {data: 'test'};
       await client._request('test-path', requestJson, 'GET').catch((e) => {
         expect(e.message).toEqual(
           'Request body should be empty for GET request, but got: {"data":"test"}',
@@ -573,7 +577,7 @@ describe('ApiClient', () => {
     });
     it('should apply requestHttpOptions when provided', async () => {
       const client = new ApiClient({apiKey: 'test-api-key'});
-      const requestJson = {_query: {param1: 'value1', param2: 'value2'}};
+      const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
       const fetchSpy = spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(
           new Response(
@@ -607,7 +611,7 @@ describe('ApiClient', () => {
     });
     it('should set bearer token for vertexai', async () => {
       const client = new ApiClient({apiKey: 'test-api-key', vertexai: true});
-      const requestJson = {_query: {param1: 'value1', param2: 'value2'}};
+      const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
       const fetchSpy = spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(
           new Response(
@@ -635,7 +639,7 @@ describe('ApiClient', () => {
           baseUrl: 'https://custom-client-base-url.googleapis.com',
         },
       });
-      const requestJson = {_query: {param1: 'value1', param2: 'value2'}};
+      const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
       const fetchSpy = spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(
           new Response(
@@ -676,7 +680,7 @@ describe('ApiClient', () => {
           headers: {'google-custom-header': 'custom-header-value'},
         },
       });
-      const requestJson = {_query: {param1: 'value1', param2: 'value2'}};
+      const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
       const fetchSpy = spyOn(global, 'fetch').and.returnValues(
         Promise.resolve(
           new Response(
@@ -808,7 +812,7 @@ describe('ApiClient', () => {
     });
     it('should apply requestHttpOptions when provided', async () => {
       const client = new ApiClient({apiKey: 'test-api-key'});
-      const requestJson = {_query: {param1: 'value1', param2: 'value2'}};
+      const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
       const fetchSpy = spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(
           new Response(
@@ -842,7 +846,7 @@ describe('ApiClient', () => {
     });
     it('should set bearer token for vertexai', async () => {
       const client = new ApiClient({apiKey: 'test-api-key', vertexai: true});
-      const requestJson = {_query: {param1: 'value1', param2: 'value2'}};
+      const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
       const fetchSpy = spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(
           new Response(
@@ -870,7 +874,7 @@ describe('ApiClient', () => {
           baseUrl: 'https://custom-client-base-url.googleapis.com',
         },
       });
-      const requestJson = {_query: {param1: 'value1', param2: 'value2'}};
+      const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
       const fetchSpy = spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(
           new Response(
@@ -911,7 +915,7 @@ describe('ApiClient', () => {
           headers: {'google-custom-header': 'custom-header-value'},
         },
       });
-      const requestJson = {_query: {param1: 'value1', param2: 'value2'}};
+      const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
       const fetchSpy = spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(
           new Response(

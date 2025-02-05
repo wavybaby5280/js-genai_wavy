@@ -177,7 +177,7 @@ describe('GenerateContentResponse.functionCalls', () => {
 describe('createPart usability functions', () => {
   it('createPartFromText should create a text part', () => {
     const part = createPartFromText('Hello world!');
-    const expectedPart = {
+    const expectedPart: Part = {
       text: 'Hello world!',
     };
 
@@ -186,7 +186,7 @@ describe('createPart usability functions', () => {
 
   it('createPartFromUri should create a file data part', () => {
     const part = createPartFromUri('gs://bucket/file.txt', 'text/plain');
-    const expectedPart = {
+    const expectedPart: Part = {
       fileData: {
         fileUri: 'gs://bucket/file.txt',
         mimeType: 'text/plain',
@@ -201,7 +201,7 @@ describe('createPart usability functions', () => {
       param1: 'value1',
       param2: 'value2',
     });
-    const expectedPart = {
+    const expectedPart: Part = {
       functionCall: {
         name: 'func1',
         args: {
@@ -218,7 +218,7 @@ describe('createPart usability functions', () => {
     const part = createPartFromFunctionResponse('id1', 'func1', {
       output: 'value1',
     });
-    const expectedPart = {
+    const expectedPart: Part = {
       functionResponse: {
         id: 'id1',
         name: 'func1',
@@ -233,7 +233,7 @@ describe('createPart usability functions', () => {
 
   it('createPartFromBase64 should create an inline data part', () => {
     const part = createPartFromBase64('dGVzdA==', 'text/plain');
-    const expectedPart = {
+    const expectedPart: Part = {
       inlineData: {
         data: 'dGVzdA==',
         mimeType: 'text/plain',
@@ -245,7 +245,7 @@ describe('createPart usability functions', () => {
 
   it('createPartFromVideoMetadata should create a video metadata part', () => {
     const part = createPartFromVideoMetadata('0:00:01', '0:00:02');
-    const expectedPart = {
+    const expectedPart: Part = {
       videoMetadata: {
         startOffset: '0:00:01',
         endOffset: '0:00:02',
@@ -260,7 +260,7 @@ describe('createPart usability functions', () => {
       Outcome.OUTCOME_OK,
       'Hello world!',
     );
-    const expectedPart = {
+    const expectedPart: Part = {
       codeExecutionResult: {
         outcome: Outcome.OUTCOME_OK,
         output: 'Hello world!',
@@ -275,7 +275,7 @@ describe('createPart usability functions', () => {
       'print("Hello world!")',
       Language.PYTHON,
     );
-    const expectedPart = {
+    const expectedPart: Part = {
       executableCode: {
         code: 'print("Hello world!")',
         language: Language.PYTHON,
