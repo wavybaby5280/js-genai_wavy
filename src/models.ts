@@ -1857,15 +1857,8 @@ function generateImagesConfigToMldev(
     );
   }
 
-  const fromEnhancePrompt = common.getValueByPath(fromObject, [
-    'enhancePrompt',
-  ]);
-  if (fromEnhancePrompt !== undefined) {
-    common.setValueByPath(
-      parentObject,
-      ['parameters', 'enhancePrompt'],
-      fromEnhancePrompt,
-    );
+  if (common.getValueByPath(fromObject, ['enhancePrompt']) !== undefined) {
+    throw new Error('enhancePrompt parameter is not supported in Gemini API.');
   }
 
   return toObject;
@@ -3025,11 +3018,6 @@ function generatedImageFromMldev(
       ['raiFilteredReason'],
       fromRaiFilteredReason,
     );
-  }
-
-  const fromEnhancedPrompt = common.getValueByPath(fromObject, ['prompt']);
-  if (fromEnhancedPrompt !== undefined) {
-    common.setValueByPath(toObject, ['enhancedPrompt'], fromEnhancedPrompt);
   }
 
   return toObject;
