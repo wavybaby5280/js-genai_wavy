@@ -245,7 +245,6 @@ describe('ApiClient', () => {
         apiKey: 'apikey-from-opts',
         vertexai: false,
         apiVersion: 'v1beta',
-        googleAuthOptions: {},
       });
 
       expect(client.isVertexAI()).toBe(false);
@@ -288,7 +287,6 @@ describe('ApiClient', () => {
         vertexai: true,
         apiVersion: 'v1beta1',
         apiKey: 'apikey-from-opts',
-        googleAuthOptions: {},
       });
 
       expect(client.isVertexAI()).toBe(true);
@@ -317,7 +315,6 @@ describe('ApiClient', () => {
         apiKey: 'apikey-from-opts',
         vertexai: false,
         apiVersion: 'v1beta',
-        googleAuthOptions: {},
         httpOptions: {
           baseUrl: 'https://custom-base-url.googleapis.com',
         },
@@ -343,7 +340,6 @@ describe('ApiClient', () => {
         apiKey: 'apikey-from-opts',
         vertexai: false,
         apiVersion: 'v1beta',
-        googleAuthOptions: {},
         httpOptions: {
           apiVersion: 'v1',
         },
@@ -368,7 +364,6 @@ describe('ApiClient', () => {
         location: 'vertex-location',
         vertexai: true,
         apiVersion: 'v1beta1',
-        googleAuthOptions: {},
       });
 
       expect(client.isVertexAI()).toBe(true);
@@ -399,7 +394,6 @@ describe('ApiClient', () => {
         apiKey: 'apikey-from-opts',
         vertexai: false,
         apiVersion: 'v1beta',
-        googleAuthOptions: {},
         httpOptions: httpOptions,
       });
 
@@ -432,7 +426,6 @@ describe('ApiClient', () => {
         apiKey: 'apikey-from-opts',
         vertexai: false,
         apiVersion: 'v1beta',
-        googleAuthOptions: {},
         httpOptions: httpOptions,
       });
 
@@ -463,7 +456,6 @@ describe('ApiClient', () => {
         location: 'vertex-location',
         vertexai: true,
         apiVersion: 'v1beta1',
-        googleAuthOptions: {},
         httpOptions: httpOptions,
       });
 
