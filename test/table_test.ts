@@ -193,7 +193,7 @@ function normalizeKey(key: string) {
 function normalizeHeaders(headers?: Headers, ignoreAuthorizationHeader = true) {
   let headersObject: {[key: string]: string} = {};
   if (headers) {
-    for (const [key, value] of headers) {
+    for (const [key, value] of headers.entries()) {
       const normalizedKey = normalizeKey(key);
       if (normalizedKey === null) {
         continue;
