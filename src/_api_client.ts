@@ -8,6 +8,7 @@ import {GoogleAuth, GoogleAuthOptions} from 'google-auth-library';
 
 import * as types from './types';
 import {HttpOptions} from './types';
+import {Auth} from './_auth';
 
 const AUTHORIZATION_HEADER = 'Authorization';
 const CONTENT_TYPE_HEADER = 'Content-Type';
@@ -68,6 +69,10 @@ export class ServerError extends Error {
  * request to Vertex AI or Gemini API.
  */
 export interface ApiClientInitOptions {
+  /**
+   * The object used for adding authentication headers to API requests.
+   */
+  auth: Auth;
   /**
    * Optional. The Google Cloud project ID for Vertex AI users.
    * It is not the numeric project name.

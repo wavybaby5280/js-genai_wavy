@@ -1,0 +1,14 @@
+/**
+ * @license
+ * Copyright 2024 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+export interface Auth {
+    /**
+     * Sets the headers needed to authenticate with the API service.
+     *
+     * @param headers - The Headers object that will be updated with the authentication headers.
+     */
+    addAuthHeaders(headers: Headers): Promise<void>;
+}

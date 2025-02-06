@@ -6,6 +6,7 @@
 
 import {GoogleAuthOptions} from 'google-auth-library';
 
+import {NodeAuth} from './node/_node_auth';
 import {ApiClient} from './_api_client';
 import {Caches} from './caches';
 import {Chats} from './chats';
@@ -81,6 +82,7 @@ export class Client {
     this.location = options.location;
     this.apiVersion = options.apiVersion;
     this.apiClient = new ApiClient({
+      auth: new NodeAuth(),
       project: this.project,
       location: this.location,
       apiVersion: this.apiVersion,
