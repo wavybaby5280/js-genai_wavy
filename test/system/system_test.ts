@@ -7,7 +7,7 @@
 import {fail} from 'assert';
 import {GoogleAuthOptions} from 'google-auth-library';
 
-import {Client} from '../../src/client';
+import {Client} from '../../src/node/client';
 import {Part} from '../../src/types';
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Client} from '../src/client';
+import {Client} from '../src/node/client';
 import {ReplayAPIClient} from '../src/_replay_api_client';
 import {FakeAuth} from '../src/_fake_auth';
 import * as types from '../src/types';

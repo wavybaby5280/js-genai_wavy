@@ -6,16 +6,16 @@
 
 import { GoogleAuthOptions } from 'google-auth-library';
 
-import { ApiClient } from './_api_client';
-import { Auth } from './_auth';
-import { Caches } from './caches';
-import { Chats } from './chats';
-import { Files } from './files';
-import { Live } from './live';
-import { Models } from './models';
-import { NodeAuth } from './node/_node_auth';
-import { Tunings } from './tunings';
-import { HttpOptions } from './types';
+import { ApiClient } from '../_api_client';
+import { Auth } from '../_auth';
+import { Caches } from '../caches';
+import { Chats } from '../chats';
+import { Files } from '../files';
+import { Live } from '../live';
+import { Models } from '../models';
+import { NodeAuth } from '../node/_node_auth';
+import { Tunings } from '../tunings';
+import { HttpOptions } from '../types';
 
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
 
@@ -89,13 +89,13 @@ export class Client {
     // With Google Cloud Express an API key can be used with vertex.
     // TODO: Set the API key also when vertexai is true.
     if (!this.vertexai) {
-     this.apiKey = options.apiKey ?? getEnv('GOOGLE_API_KEY');
+      this.apiKey = options.apiKey ?? getEnv('GOOGLE_API_KEY');
     }
     this.project = options.project ?? getEnv('GOOGLE_CLOUD_PROJECT');
     this.location = options.location ?? getEnv('GOOGLE_CLOUD_LOCATION');
     this.apiVersion = options.apiVersion;
     this.apiClient = new ApiClient({
-      auth: options.auth ?? new NodeAuth({apiKey: this.apiKey, googleAuthOptions: options.googleAuthOptions}),
+      auth: options.auth ?? new NodeAuth({ apiKey: this.apiKey, googleAuthOptions: options.googleAuthOptions }),
       project: this.project,
       location: this.location,
       apiVersion: this.apiVersion,

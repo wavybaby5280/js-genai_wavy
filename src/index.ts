@@ -6,7 +6,7 @@
 
 export {Models} from './models';
 export * from './types';
-export * from './client';
+export * from './node/client';
 export * from './live';
 export * from './chats';
 export * from './caches';

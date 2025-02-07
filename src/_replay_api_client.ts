@@ -9,7 +9,7 @@ import * as http from 'http';
 import {URL} from 'url';
 
 import {ApiClient} from './_api_client';
-import {Client, ClientInitOptions} from './client';
+import {Client, ClientInitOptions} from './node/client';
 import {Live} from './live';
 import {Models} from './models';
 
