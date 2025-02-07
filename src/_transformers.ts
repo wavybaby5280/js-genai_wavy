@@ -9,7 +9,7 @@ import * as types from './types';
 
 export function tModel(apiClient: ApiClient, model: string): string {
   if (!model) {
-    return '';
+    throw new Error('model is required');
   }
 
   if (apiClient.isVertexAI()) {
