@@ -4,7 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-// Pagers for the GenAI List APIs.
+/**
+ * @fileoverview Pagers for the GenAI List APIs.
+ */
 
 /** @internal */
 export enum PagedItem {

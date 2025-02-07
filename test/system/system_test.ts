@@ -4,10 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-/**
- * To test Vertex AI endpoint, do `gcloud auth application-default login` and follow the prompts from terminal
- */
-
 import {fail} from 'assert';
 import {GoogleAuthOptions} from 'google-auth-library';
 
