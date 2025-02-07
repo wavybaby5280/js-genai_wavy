@@ -326,7 +326,7 @@ function getTestTableMethod(
     console.log(
       `    === Skipping method: ${moduleName}.${methodName}, Module "${
         moduleName
-      }" is not supported in NodeJS`,
+      }" is not supported in TypeScript`,
     );
     return null;
   }
@@ -335,7 +335,7 @@ function getTestTableMethod(
     console.log(
       `   === Skipping method:${moduleName}.${
         methodName
-      }, not supported in NodeJS`,
+      }, not supported in TypeScript`,
     );
     return null;
   }
