@@ -17,6 +17,8 @@ import { NodeAuth } from './node/_node_auth';
 import { Tunings } from './tunings';
 import { HttpOptions } from './types';
 
+const LANGUAGE_LABEL_PREFIX = 'gl-node/';
+
 /**
  * Options for initializing the Client. The Client uses the parameters
  * for authentication purposes as well as to infer if SDK should send the
@@ -82,10 +84,10 @@ export class Client {
   readonly files: Files;
 
   constructor(options: ClientInitOptions) {
-    this.apiKey = options.apiKey;
-    this.vertexai = options.vertexai;
-    this.project = options.project;
-    this.location = options.location;
+    this.apiKey = options.apiKey ?? getEnv('GOOGLE_API_KEY');
+    this.vertexai = options.vertexai ?? getBooleanEnv('GOOGLE_GENAI_USE_VERTEXAI') ?? false;
+    this.project = options.project ?? getEnv('GOOGLE_CLOUD_PROJECT');
+    this.location = options.location ?? getEnv('GOOGLE_CLOUD_LOCATION');
     this.apiVersion = options.apiVersion;
     this.apiClient = new ApiClient({
       auth: options.auth ? options.auth : new NodeAuth(options.googleAuthOptions),
@@ -95,6 +97,7 @@ export class Client {
       apiKey: this.apiKey,
       vertexai: this.vertexai,
       httpOptions: options.httpOptions,
+      userAgentExtra: LANGUAGE_LABEL_PREFIX + process.version,
     });
     this.models = new Models(this.apiClient);
     this.live = new Live(this.apiClient);
@@ -103,4 +106,19 @@ export class Client {
     this.caches = new Caches(this.apiClient);
     this.files = new Files(this.apiClient);
   }
+}
+
+function getEnv(env: string): string | undefined {
+  return process?.env?.[env]?.trim() ?? undefined;
+}
+
+function getBooleanEnv(env: string): boolean {
+  return stringToBoolean(getEnv(env));
+}
+
+function stringToBoolean(str?: string): boolean {
+  if (str === undefined) {
+    return false;
+  }
+  return str.toLowerCase() === 'true';
 }

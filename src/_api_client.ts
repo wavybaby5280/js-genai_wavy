@@ -17,23 +17,9 @@ const REQUIRED_VERTEX_AI_SCOPE =
   'https://www.googleapis.com/auth/cloud-platform';
 const SDK_VERSION = '0.1.0'; // x-release-please-version
 const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
-const LANGUAGE_LABEL_PREFIX = 'gl-node/';
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
 const responseLineRE = /^data: (.*)(?:\n\n|\r\r|\r\n\r\n)/;
-function getEnv(env: string): string | undefined {
-  return process?.env?.[env]?.trim() ?? undefined;
-}
-
-function getBooleanEnv(env: string): boolean {
-  return stringToBoolean(getEnv(env));
-}
-function stringToBoolean(str?: string): boolean {
-  if (str === undefined) {
-    return false;
-  }
-  return str.toLowerCase() === 'true';
-}
 
 // Client errors raised by the GenAI API.
 export class ClientError extends Error {
@@ -100,6 +86,12 @@ export interface ApiClientInitOptions {
    * Optional. A set of customizable configuration for HTTP requests.
    */
   httpOptions?: HttpOptions;
+  /**
+   * Optional. An extra string to append at the end of the User-Agent header.
+   *
+   * This can be used to e.g specify the runtime and its version.
+   */
+  userAgentExtra?: string;
 }
 
 export class ApiClient {
@@ -108,11 +100,11 @@ export class ApiClient {
   constructor(opts: ApiClientInitOptions) {
     this.clientOptions = {
       ...opts,
-      project: opts.project ?? getEnv('GOOGLE_CLOUD_PROJECT'),
-      location: opts.location ?? getEnv('GOOGLE_CLOUD_LOCATION'),
-      apiKey: opts.apiKey ?? getEnv('GOOGLE_API_KEY'),
+      project: opts.project,
+      location: opts.location,
+      apiKey: opts.apiKey,
       vertexai:
-        opts.vertexai ?? getBooleanEnv('GOOGLE_GENAI_USE_VERTEXAI') ?? false,
+        opts.vertexai,
     };
 
     const initHttpOptions: HttpOptions = {};
@@ -486,8 +478,7 @@ export class ApiClient {
   private _getDefaultHeaders(): Record<string, any> {
     const headers: Record<string, any> = {};
 
-    const languageLabel = LANGUAGE_LABEL_PREFIX + process.version;
-    const versionHeaderValue = LIBRARY_LABEL + ' ' + languageLabel;
+    const versionHeaderValue = LIBRARY_LABEL + ' ' + this.clientOptions.userAgentExtra;
 
     headers[USER_AGENT_HEADER] = versionHeaderValue;
     headers[GOOGLE_API_CLIENT_HEADER] = versionHeaderValue;

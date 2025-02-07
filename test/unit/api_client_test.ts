@@ -222,28 +222,6 @@ describe('processStreamResponse', () => {
 
 describe('ApiClient', () => {
   describe('constructor', () => {
-    it('should initialize with default values from environment variables', () => {
-      process.env['GOOGLE_CLOUD_PROJECT'] = 'project-from-env';
-      process.env['GOOGLE_CLOUD_LOCATION'] = 'location-from-env';
-      process.env['GOOGLE_API_KEY'] = 'apikey-from-env';
-      process.env['GOOGLE_GENAI_USE_VERTEXAI'] = 'false';
-
-      const client = new ApiClient({auth: new NodeAuth()});
-
-      expect(client.isVertexAI()).toBe(false);
-      expect(client.getProject()).toBe('project-from-env');
-      expect(client.getLocation()).toBe('location-from-env');
-      expect(client.getApiKey()).toBe('apikey-from-env');
-      expect(client.getRequestUrl()).toBe(
-        'https://generativelanguage.googleapis.com/v1beta',
-      );
-
-      delete process.env['GOOGLE_CLOUD_PROJECT'];
-      delete process.env['GOOGLE_CLOUD_LOCATION'];
-      delete process.env['GOOGLE_API_KEY'];
-      delete process.env['GOOGLE_GENAI_USE_VERTEXAI'];
-    });
-
     it('should initialize with provided values', () => {
       const client = new ApiClient({
         auth: new NodeAuth(),
@@ -262,29 +240,6 @@ describe('ApiClient', () => {
         'https://generativelanguage.googleapis.com/v1beta',
       );
       expect(client.getApiVersion()).toBe('v1beta');
-    });
-
-    it('should initialize with Vertex AI default values from environment variables', () => {
-      process.env['GOOGLE_CLOUD_PROJECT'] = 'project-from-env';
-      process.env['GOOGLE_CLOUD_LOCATION'] = 'location-from-env';
-      process.env['GOOGLE_API_KEY'] = 'apikey-from-env';
-      process.env['GOOGLE_GENAI_USE_VERTEXAI'] = 'true';
-
-      const client = new ApiClient({auth: new NodeAuth()});
-
-      expect(client.isVertexAI()).toBe(true);
-      expect(client.getProject()).toBe('project-from-env');
-      expect(client.getLocation()).toBe('location-from-env');
-      expect(client.getApiKey()).toBeUndefined(); // API key is ignored when setting opts.vertexai
-      expect(client.getRequestUrl()).toBe(
-        'https://location-from-env-aiplatform.googleapis.com/v1beta1',
-      );
-      expect(client.getApiVersion()).toBe('v1beta1');
-
-      delete process.env['GOOGLE_CLOUD_PROJECT'];
-      delete process.env['GOOGLE_CLOUD_LOCATION'];
-      delete process.env['GOOGLE_API_KEY'];
-      delete process.env['GOOGLE_GENAI_USE_VERTEXAI'];
     });
 
     it('should initialize with Vertex AI if specified', () => {
