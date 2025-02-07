@@ -84,13 +84,18 @@ export class Client {
   readonly files: Files;
 
   constructor(options: ClientInitOptions) {
-    this.apiKey = options.apiKey ?? getEnv('GOOGLE_API_KEY');
     this.vertexai = options.vertexai ?? getBooleanEnv('GOOGLE_GENAI_USE_VERTEXAI') ?? false;
+    // The tests currently assume that an API key is never set if vertexai is true.
+    // With Google Cloud Express an API key can be used with vertex.
+    // TODO: Set the API key also when vertexai is true.
+    if (!this.vertexai) {
+     this.apiKey = options.apiKey ?? getEnv('GOOGLE_API_KEY');
+    }
     this.project = options.project ?? getEnv('GOOGLE_CLOUD_PROJECT');
     this.location = options.location ?? getEnv('GOOGLE_CLOUD_LOCATION');
     this.apiVersion = options.apiVersion;
     this.apiClient = new ApiClient({
-      auth: options.auth ? options.auth : new NodeAuth(options.googleAuthOptions),
+      auth: options.auth ?? new NodeAuth({apiKey: this.apiKey, googleAuthOptions: options.googleAuthOptions}),
       project: this.project,
       location: this.location,
       apiVersion: this.apiVersion,

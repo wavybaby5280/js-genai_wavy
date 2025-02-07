@@ -5,10 +5,20 @@
  */
 
 import { Auth } from '../src/_auth';
-import { AUTHORIZATION_HEADER } from '../src/node/_node_auth';
+import { AUTHORIZATION_HEADER, GOOGLE_API_KEY_HEADER } from '../src/node/_node_auth';
 
 export class FakeAuth implements Auth {
+  constructor(private readonly apiKey?: string) {}
+
   async addAuthHeaders(headers: Headers): Promise<void> {
+    if (this.apiKey !== undefined) {
+      if (headers.get(GOOGLE_API_KEY_HEADER) !== null) {
+        return;
+      }
+      headers.append(GOOGLE_API_KEY_HEADER, this.apiKey);
+      return;
+    }
+
     if (headers.get(AUTHORIZATION_HEADER) !== null) {
       return;
     }

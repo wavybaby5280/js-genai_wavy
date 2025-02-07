@@ -63,7 +63,7 @@ const mockGenerateContentResponse: types.GenerateContentResponse =
 
 describe('processStreamResponse', () => {
   const dataPrefix = 'data: '; // Replace with your actual dataPrefix
-  const apiClient = new ApiClient({auth: new NodeAuth()});
+  const apiClient = new ApiClient({auth: new FakeAuth()});
 
   it('should throw an error if the chunk does not start with the data prefix', async () => {
     const invalidChunk = 'invalid chunk';
@@ -224,7 +224,7 @@ describe('ApiClient', () => {
   describe('constructor', () => {
     it('should initialize with provided values', () => {
       const client = new ApiClient({
-        auth: new NodeAuth(),
+        auth: new FakeAuth(),
         project: 'project-from-opts',
         location: 'location-from-opts',
         apiKey: 'apikey-from-opts',
@@ -244,7 +244,7 @@ describe('ApiClient', () => {
 
     it('should initialize with Vertex AI if specified', () => {
       const client = new ApiClient({
-        auth: new NodeAuth(),
+        auth: new FakeAuth(),
         project: 'vertex-project',
         location: 'vertex-location',
         vertexai: true,
@@ -264,7 +264,7 @@ describe('ApiClient', () => {
 
     it('should use default value if not provided', () => {
       const client = new ApiClient({
-        auth: new NodeAuth(),
+        auth: new FakeAuth(),
         project: 'env-project',
       });
       // baseUrl is based on apiVersion
@@ -274,7 +274,7 @@ describe('ApiClient', () => {
 
     it('should override base URL with provided values', () => {
       const client = new ApiClient({
-        auth: new NodeAuth(),
+        auth: new FakeAuth(),
         project: 'project-from-opts',
         location: 'location-from-opts',
         apiKey: 'apikey-from-opts',
@@ -300,7 +300,7 @@ describe('ApiClient', () => {
 
     it('should override API version with provided values', () => {
       const client = new ApiClient({
-        auth: new NodeAuth(),
+        auth: new FakeAuth(),
         project: 'project-from-opts',
         location: 'location-from-opts',
         apiKey: 'apikey-from-opts',
@@ -326,7 +326,7 @@ describe('ApiClient', () => {
 
     it('should return default HTTP headers', () => {
       const client = new ApiClient({
-        auth: new NodeAuth(),
+        auth: new FakeAuth(),
         project: 'vertex-project',
         location: 'vertex-location',
         vertexai: true,
@@ -356,10 +356,9 @@ describe('ApiClient', () => {
       };
 
       const client = new ApiClient({
-        auth: new NodeAuth(),
+        auth: new FakeAuth(),
         project: 'project-from-opts',
         location: 'location-from-opts',
-        apiKey: 'apikey-from-opts',
         vertexai: false,
         apiVersion: 'v1beta',
         httpOptions: httpOptions,
@@ -368,13 +367,11 @@ describe('ApiClient', () => {
       expect(client.isVertexAI()).toBe(false);
       expect(client.getProject()).toBe('project-from-opts');
       expect(client.getLocation()).toBe('location-from-opts');
-      expect(client.getApiKey()).toBe('apikey-from-opts');
       expect(client.getRequestUrl()).toBe(
         'https://generativelanguage.googleapis.com/v1beta',
       );
       const headers = client.getHeaders();
       expect(headers['Content-Type']).toBe('text/plain');
-      expect(headers['x-goog-api-key']).toBe('apikey-from-opts');
       expect(headers['User-Agent']).toContain('google-genai-sdk/');
       expect(headers['x-goog-api-client']).toContain('google-genai-sdk/');
       expect(headers['google-custom-header']).toBe('custom-value');
@@ -389,7 +386,7 @@ describe('ApiClient', () => {
       };
 
       const client = new ApiClient({
-        auth: new NodeAuth(),
+        auth: new FakeAuth(),
         project: 'project-from-opts',
         location: 'location-from-opts',
         apiKey: 'apikey-from-opts',
@@ -421,7 +418,7 @@ describe('ApiClient', () => {
       };
 
       const client = new ApiClient({
-        auth: new NodeAuth(),
+        auth: new FakeAuth(),
         project: 'vertex-project',
         location: 'vertex-location',
         vertexai: true,
@@ -447,7 +444,7 @@ describe('ApiClient', () => {
 
   describe('_request', () => {
     it('should delete _url from requestJson', async () => {
-      const client = new ApiClient({auth: new NodeAuth(), apiKey: 'test-api-key'});
+      const client = new ApiClient({auth: new FakeAuth('test-api-key'), apiKey: 'test-api-key'});
       const fetchSpy = spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(
           new Response(
@@ -481,7 +478,7 @@ describe('ApiClient', () => {
       expect(client.getBaseResourcePath).toHaveBeenCalled();
     });
     it('should append query parameters to URL', async () => {
-      const client = new ApiClient({auth: new NodeAuth(), apiKey: 'test-api-key'});
+      const client = new ApiClient({auth: new FakeAuth('test-api-key'), apiKey: 'test-api-key'});
       const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
       spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(
@@ -498,7 +495,7 @@ describe('ApiClient', () => {
       );
     });
     it('should throw an error if request body is not empty for GET request', async () => {
-      const client = new ApiClient({auth: new NodeAuth(), apiKey: 'test-api-key'});
+      const client = new ApiClient({auth: new FakeAuth('test-api-key'), apiKey: 'test-api-key'});
       const requestJson: any = {data: 'test'};
       await client._request('test-path', requestJson, 'GET').catch((e) => {
         expect(e.message).toEqual(
@@ -508,7 +505,7 @@ describe('ApiClient', () => {
     });
     it('should include AbortSignal when timeout is set', async () => {
       const client = new ApiClient({
-        auth: new NodeAuth(),
+        auth: new FakeAuth('test-api-key'),
         apiKey: 'test-api-key',
         httpOptions: {timeout: 1000},
       });
@@ -528,7 +525,7 @@ describe('ApiClient', () => {
       expect(fetchArgs[0][1].signal.aborted).toBeFalse();
     });
     it('should apply requestHttpOptions when provided', async () => {
-      const client = new ApiClient({auth: new NodeAuth(), apiKey: 'test-api-key'});
+      const client = new ApiClient({auth: new FakeAuth('test-api-key'), apiKey: 'test-api-key'});
       const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
       const fetchSpy = spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(
@@ -585,7 +582,7 @@ describe('ApiClient', () => {
     });
     it('should merge request http options and client http options', async () => {
       const client = new ApiClient({
-        auth: new NodeAuth(),
+        auth: new FakeAuth('test-api-key'),
         apiKey: 'test-api-key',
         httpOptions: {
           baseUrl: 'https://custom-client-base-url.googleapis.com',
@@ -624,7 +621,7 @@ describe('ApiClient', () => {
     });
     it('should not override the client http options permanently', async () => {
       const client = new ApiClient({
-        auth: new NodeAuth(),
+        auth: new FakeAuth('test-api-key'),
         apiKey: 'test-api-key',
         httpOptions: {
           baseUrl: 'https://custom-client-base-url.googleapis.com',
@@ -690,7 +687,7 @@ describe('ApiClient', () => {
   });
   describe('postStream', () => {
     it('should throw ServerError if response is 500', async () => {
-      const client = new ApiClient({auth: new NodeAuth(), apiKey: 'test-api-key'});
+      const client = new ApiClient({auth: new FakeAuth('test-api-key'), apiKey: 'test-api-key'});
       spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(new Response(JSON.stringify({}), fetch500Options)),
       );
@@ -699,7 +696,7 @@ describe('ApiClient', () => {
       });
     });
     it('should throw ClientError if response is 400', async () => {
-      const client = new ApiClient({auth: new NodeAuth(), apiKey: 'test-api-key'});
+      const client = new ApiClient({auth: new FakeAuth('test-api-key'), apiKey: 'test-api-key'});
       spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(new Response(JSON.stringify({}), fetch400Options)),
       );
@@ -724,7 +721,7 @@ describe('ApiClient', () => {
         },
       });
       const response = new Response(readableStream, fetchOkOptions);
-      const client = new ApiClient({auth: new NodeAuth(), apiKey: 'test-api-key'});
+      const client = new ApiClient({auth: new FakeAuth('test-api-key'), apiKey: 'test-api-key'});
       spyOn(global, 'fetch').and.returnValue(Promise.resolve(response));
       const generator = await client.postStream('test-path', {});
       const result = await generator.next();
@@ -745,7 +742,7 @@ describe('ApiClient', () => {
     });
     it('should include AbortSignal when timeout is set', async () => {
       const client = new ApiClient({
-        auth: new NodeAuth(),
+        auth: new FakeAuth('test-api-key'),
         apiKey: 'test-api-key',
         httpOptions: {timeout: 1000},
       });
@@ -765,7 +762,7 @@ describe('ApiClient', () => {
       expect(fetchArgs[1].signal.aborted).toBeFalse();
     });
     it('should apply requestHttpOptions when provided', async () => {
-      const client = new ApiClient({auth: new NodeAuth(), apiKey: 'test-api-key'});
+      const client = new ApiClient({auth: new FakeAuth('test-api-key'), apiKey: 'test-api-key'});
       const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
       const fetchSpy = spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(
@@ -822,7 +819,7 @@ describe('ApiClient', () => {
     });
     it('should merge request http options and client http options', async () => {
       const client = new ApiClient({
-        auth: new NodeAuth(),
+        auth: new FakeAuth('test-api-key'),
         apiKey: 'test-api-key',
         httpOptions: {
           baseUrl: 'https://custom-client-base-url.googleapis.com',
@@ -861,7 +858,7 @@ describe('ApiClient', () => {
     });
     it('should not override the client http options permanently', async () => {
       const client = new ApiClient({
-        auth: new NodeAuth(),
+        auth: new FakeAuth('test-api-key'),
         apiKey: 'test-api-key',
         httpOptions: {
           baseUrl: 'https://custom-client-base-url.googleapis.com',

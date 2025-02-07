@@ -11,7 +11,6 @@ import {Auth} from './_auth';
 const AUTHORIZATION_HEADER = 'Authorization';
 const CONTENT_TYPE_HEADER = 'Content-Type';
 const USER_AGENT_HEADER = 'User-Agent';
-const GOOGLE_API_KEY = 'x-goog-api-key';
 const GOOGLE_API_CLIENT_HEADER = 'x-goog-api-client';
 const REQUIRED_VERTEX_AI_SCOPE =
   'https://www.googleapis.com/auth/cloud-platform';
@@ -484,9 +483,6 @@ export class ApiClient {
     headers[GOOGLE_API_CLIENT_HEADER] = versionHeaderValue;
     headers[CONTENT_TYPE_HEADER] = 'application/json';
 
-    if (!this.isVertexAI()) {
-      headers[GOOGLE_API_KEY] = this.clientOptions.apiKey;
-    }
     return headers;
   }
 
@@ -499,9 +495,7 @@ export class ApiClient {
         headers.append(key, value);
       }
     }
-    if (this.isVertexAI() && headers.get(AUTHORIZATION_HEADER) === null) {
-      await this.clientOptions.auth.addAuthHeaders(headers);
-    }
+    await this.clientOptions.auth.addAuthHeaders(headers);
     return headers;
   }
 }

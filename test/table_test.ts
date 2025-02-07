@@ -304,7 +304,11 @@ function createReplayClient(vertexai: boolean) {
     apiKey = 'This is not the key you are looking for';
   }
   const replayClient = new ReplayAPIClient({
-    auth: new FakeAuth(),
+    // Currently the vertex tests are assuming no API key set, however with
+    // Google Cloud Express that assumption is no longer true.
+    // TODO: When the code supports Google Cloud Express we should not
+    // decide whether to set an apiKey based is the vertexai param.
+    auth: new FakeAuth(vertexai? undefined : apiKey),
     vertexai: vertexai,
     apiKey: apiKey,
   });
