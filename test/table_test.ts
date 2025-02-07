@@ -6,6 +6,7 @@
 
 import {Client} from '../src/client';
 import {ReplayAPIClient} from '../src/_replay_api_client';
+import {FakeAuth} from '../src/_fake_auth';
 import * as types from '../src/types';
 
 function getGoogle3Path() {
@@ -303,6 +304,7 @@ function createReplayClient(vertexai: boolean) {
     apiKey = 'This is not the key you are looking for';
   }
   const replayClient = new ReplayAPIClient({
+    auth: new FakeAuth(),
     vertexai: vertexai,
     apiKey: apiKey,
   });
@@ -478,13 +480,6 @@ describe('TableTest', () => {
         }`,
       );
       const fetchSpy: jasmine.Spy = spyOn(global, 'fetch');
-      if (replayTest.client.vertexai) {
-        // @ts-ignore TS2345 Argument of type '"fetchToken"' is not assignable
-        // to parameter of type 'keyof ApiClient'.
-        spyOn(replayTest.client.apiClient, 'fetchToken').and.returnValue(
-          Promise.resolve('token'),
-        );
-      }
 
       replayTest.client.setupReplayResponses(fetchSpy);
       const numInteractions = replayTest.client.getNumInteractions();

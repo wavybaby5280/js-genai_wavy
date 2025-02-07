@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "unit-test": "jasmine dist/test/unit/**/*_test.js",
+    "unit-test": "jasmine dist/test/unit/**/*_test.js dist/test/unit/*_test.js",
     "system-test": "jasmine dist/test/system/**/*_test.js",
     "table-test": "jasmine dist/test/table_test.js",
     "docs": "typedoc"

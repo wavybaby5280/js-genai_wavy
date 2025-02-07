@@ -4,17 +4,18 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {GoogleAuthOptions} from 'google-auth-library';
+import { GoogleAuthOptions } from 'google-auth-library';
 
-import {NodeAuth} from './node/_node_auth';
-import {ApiClient} from './_api_client';
-import {Caches} from './caches';
-import {Chats} from './chats';
-import {Files} from './files';
-import {Live} from './live';
-import {Models} from './models';
-import {Tunings} from './tunings';
-import {HttpOptions} from './types';
+import { ApiClient } from './_api_client';
+import { Auth } from './_auth';
+import { Caches } from './caches';
+import { Chats } from './chats';
+import { Files } from './files';
+import { Live } from './live';
+import { Models } from './models';
+import { NodeAuth } from './node/_node_auth';
+import { Tunings } from './tunings';
+import { HttpOptions } from './types';
 
 /**
  * Options for initializing the Client. The Client uses the parameters
@@ -22,6 +23,11 @@ import {HttpOptions} from './types';
  * request to Vertex AI or Gemini API.
  */
 export interface ClientInitOptions {
+  // TODO: remove this once we split to separate web and node clients.
+  /**
+   * The object used for adding authentication headers to API requests.
+   */
+  auth?: Auth;
   /**
    * Optional. The Google Cloud project ID for Vertex AI users.
    * It is not the numeric project name.
@@ -82,11 +88,10 @@ export class Client {
     this.location = options.location;
     this.apiVersion = options.apiVersion;
     this.apiClient = new ApiClient({
-      auth: new NodeAuth(),
+      auth: options.auth ? options.auth : new NodeAuth(options.googleAuthOptions),
       project: this.project,
       location: this.location,
       apiVersion: this.apiVersion,
-      googleAuthOptions: options.googleAuthOptions,
       apiKey: this.apiKey,
       vertexai: this.vertexai,
       httpOptions: options.httpOptions,

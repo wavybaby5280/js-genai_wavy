@@ -4,8 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {GoogleAuth, GoogleAuthOptions} from 'google-auth-library';
-
 import * as types from './types';
 import {HttpOptions} from './types';
 import {Auth} from './_auth';
@@ -99,13 +97,6 @@ export interface ApiClientInitOptions {
    */
   apiVersion?: string;
   /**
-   * Optional. These are the authentication options provided by google-auth-library for Vertex AI users.
-   * Complete list of authentication options are documented in the
-   * GoogleAuthOptions interface:
-   * https://github.com/googleapis/google-auth-library-nodejs/blob/main/src/auth/googleauth.ts.
-   */
-  googleAuthOptions?: GoogleAuthOptions;
-  /**
    * Optional. A set of customizable configuration for HTTP requests.
    */
   httpOptions?: HttpOptions;
@@ -113,7 +104,6 @@ export interface ApiClientInitOptions {
 
 export class ApiClient {
   private readonly clientOptions: ApiClientInitOptions;
-  private readonly googleAuth?: GoogleAuth;
 
   constructor(opts: ApiClientInitOptions) {
     this.clientOptions = {
@@ -131,13 +121,6 @@ export class ApiClient {
       initHttpOptions.apiVersion =
         this.clientOptions.apiVersion ?? VERTEX_AI_API_DEFAULT_VERSION;
       initHttpOptions.baseUrl = `https://${this.clientOptions.location}-aiplatform.googleapis.com/`;
-      const googleAuthOptions: GoogleAuthOptions = {
-        scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-      };
-      let authOptions = buildGoogleAuthOptions(
-        this.clientOptions.googleAuthOptions,
-      );
-      this.googleAuth = new GoogleAuth(authOptions);
       this.clientOptions.apiKey = undefined; // unset API key.
     } else {
       initHttpOptions.apiVersion =
@@ -155,16 +138,6 @@ export class ApiClient {
         opts.httpOptions,
       );
     }
-  }
-
-  private fetchToken(): Promise<string | null | undefined> {
-    if (!this.googleAuth) {
-      throw new Error('Invalid auth error.');
-    }
-    const tokenPromise = this.googleAuth.getAccessToken().catch((e: Error) => {
-      throw new Error(`invalid auth error: ${e}`);
-    });
-    return tokenPromise;
   }
 
   isVertexAI(): boolean {
@@ -536,9 +509,7 @@ export class ApiClient {
       }
     }
     if (this.isVertexAI() && headers.get(AUTHORIZATION_HEADER) === null) {
-      let token: string | undefined | null;
-      token = await this.fetchToken();
-      headers.append(AUTHORIZATION_HEADER, `Bearer ${token}`);
+      await this.clientOptions.auth.addAuthHeaders(headers);
     }
     return headers;
   }
@@ -578,33 +549,5 @@ async function throwErrorIfNotOK(
       throw serverError;
     }
     throw new Error(errorMessage);
-  }
-}
-
-function buildGoogleAuthOptions(
-  googleAuthOptions?: GoogleAuthOptions,
-): GoogleAuthOptions {
-  let authOptions: GoogleAuthOptions;
-  if (!googleAuthOptions) {
-    authOptions = {
-      scopes: [REQUIRED_VERTEX_AI_SCOPE],
-    };
-    return authOptions;
-  } else {
-    authOptions = googleAuthOptions;
-    if (!authOptions.scopes) {
-      authOptions.scopes = [REQUIRED_VERTEX_AI_SCOPE];
-      return authOptions;
-    } else if (
-      (typeof authOptions.scopes === 'string' &&
-        authOptions.scopes !== REQUIRED_VERTEX_AI_SCOPE) ||
-      (Array.isArray(authOptions.scopes) &&
-        authOptions.scopes.indexOf(REQUIRED_VERTEX_AI_SCOPE) < 0)
-    ) {
-      throw new Error(
-        `Invalid auth scopes. Scopes must include: ${REQUIRED_VERTEX_AI_SCOPE}`,
-      );
-    }
-    return authOptions;
   }
 }

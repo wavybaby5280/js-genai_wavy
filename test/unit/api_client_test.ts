@@ -6,6 +6,7 @@
 
 import {Readable} from 'stream';
 
+import {FakeAuth} from '../../src/_fake_auth';
 import {ApiClient, ClientError, ServerError} from '../../src/_api_client';
 import {NodeAuth} from '../../src/node/_node_auth';
 import * as types from '../../src/types';
@@ -487,22 +488,8 @@ describe('ApiClient', () => {
       expect(headers['x-goog-api-client']).toContain('google-genai-sdk/');
       expect(client.getApiVersion()).toBe('v1beta1');
     });
-
-    it('should throw error if invalid auth scope is provided for Vertex AI', () => {
-      expect(() => {
-        const client = new ApiClient({
-        auth: new NodeAuth(),
-          project: 'vertex-project',
-          location: 'vertex-location',
-          vertexai: true,
-          apiVersion: 'v1beta1',
-          googleAuthOptions: {
-            scopes: ['https://www.googleapis.com/auth/invalid-scope'],
-          },
-        });
-      }).toThrowError();
-    });
   });
+
   describe('_request', () => {
     it('should delete _url from requestJson', async () => {
       const client = new ApiClient({auth: new NodeAuth(), apiKey: 'test-api-key'});
@@ -522,12 +509,10 @@ describe('ApiClient', () => {
       expect(parsedBody._url).toBeUndefined();
     });
     it('should prepend base resource path if vertexai is true and path does not start with "projects/"', async () => {
-      const client = new ApiClient({auth: new NodeAuth(), vertexai: true});
+      const client = new ApiClient({auth: new FakeAuth(), vertexai: true});
       spyOn(client, 'getBaseResourcePath').and.returnValue(
         'base-resource-path',
       );
-      // @ts-ignore TS2345 Argument of type '"fetchToken"' is not assignable to parameter of type 'keyof ApiClient'.
-      spyOn(client, 'fetchToken').and.returnValue(Promise.resolve('token'));
       const requestJson: any = {data: 'test'};
       spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(
@@ -622,7 +607,7 @@ describe('ApiClient', () => {
       );
     });
     it('should set bearer token for vertexai', async () => {
-      const client = new ApiClient({auth: new NodeAuth(), apiKey: 'test-api-key', vertexai: true});
+      const client = new ApiClient({auth: new FakeAuth(), apiKey: 'test-api-key', vertexai: true});
       const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
       const fetchSpy = spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(
@@ -632,7 +617,6 @@ describe('ApiClient', () => {
           ),
         ),
       );
-      spyOn<any>(client, 'fetchToken').and.returnValue('test-token');
 
       await client._request('test-path', requestJson, 'GET', undefined);
 
@@ -640,7 +624,7 @@ describe('ApiClient', () => {
       const requestInit = fetchArgs[1] as RequestInit;
       const headers = requestInit.headers as Headers;
       expect(headers.get('Content-Type')).toBe('application/json');
-      expect(headers.get('Authorization')).toBe('Bearer test-token');
+      expect(headers.get('Authorization')).toBe('Bearer token');
       expect(headers.get('User-Agent')).toContain('google-genai-sdk/');
       expect(headers.get('x-goog-api-client')).toContain('google-genai-sdk/');
     });
@@ -860,7 +844,7 @@ describe('ApiClient', () => {
       );
     });
     it('should set bearer token for vertexai', async () => {
-      const client = new ApiClient({auth: new NodeAuth(), apiKey: 'test-api-key', vertexai: true});
+      const client = new ApiClient({auth: new FakeAuth(), apiKey: 'test-api-key', vertexai: true});
       const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
       const fetchSpy = spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(
@@ -870,7 +854,6 @@ describe('ApiClient', () => {
           ),
         ),
       );
-      spyOn<any>(client, 'fetchToken').and.returnValue('test-token');
 
       await client.postStream('test-path', {}, undefined);
 
@@ -878,7 +861,7 @@ describe('ApiClient', () => {
       const requestInit = fetchArgs[1] as RequestInit;
       const headers = requestInit.headers as Headers;
       expect(headers.get('Content-Type')).toBe('application/json');
-      expect(headers.get('Authorization')).toBe('Bearer test-token');
+      expect(headers.get('Authorization')).toBe('Bearer token');
       expect(headers.get('User-Agent')).toContain('google-genai-sdk/');
       expect(headers.get('x-goog-api-client')).toContain('google-genai-sdk/');
     });
