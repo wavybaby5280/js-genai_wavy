@@ -8,9 +8,9 @@
  * @fileoverview Live client. The live module is experimental.
  */
 
-import {GoogleAuth, GoogleAuthOptions} from 'google-auth-library';
 import * as WebSocket from 'ws';
 
+import {Auth} from './_auth';
 import {ApiClient} from './_api_client';
 import * as common from './_common';
 import * as t from './_transformers';
@@ -499,7 +499,7 @@ function liveServerMessageFromVertex(
 // Generative Language API. It embeds ApiClient for general API settings.
 // The live module is experimental.
 export class Live {
-  constructor(private readonly apiClient: ApiClient) {}
+  constructor(private readonly apiClient: ApiClient, private readonly auth: Auth) {}
 
   // Establishes a connection to the specified model with the given
   // configuration. It returns a Session object representing the connection.
@@ -509,32 +509,19 @@ export class Live {
     const websocketBaseUrl = this.apiClient.getWebsocketBaseUrl();
     const apiVersion = this.apiClient.getApiVersion();
     let url: string;
-    let headers: Record<string, string>;
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
     if (this.apiClient.isVertexAI()) {
       url = `${websocketBaseUrl}/ws/google.cloud.aiplatform.${
           apiVersion}.LlmBidiService/BidiGenerateContent`;
-      // Retrieve an access token for the Vertex AI API.
-      const googleAuthOptions: GoogleAuthOptions = {
-        scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-      };
-      const googleAuth = new GoogleAuth(googleAuthOptions);
-      const tokenPromise = googleAuth.getAccessToken().catch((e: any) => {
-        throw new Error('Unable to retrieve access token.');
-      });
-      headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${await tokenPromise}`,
-      };
+      await this.auth.addAuthHeaders(headers);
     } else {
       const apiKey = this.apiClient.getApiKey();
       url = `${websocketBaseUrl}/ws/google.ai.generativelanguage.${
           apiVersion}.GenerativeService.BidiGenerateContent?key=${apiKey}`;
-      headers = {
-        'Content-Type': 'application/json',
-      };
     }
 
-    const conn = new WebSocket(url, {headers: headers});
+    const conn = new WebSocket(url, {headers: headersToMap(headers)});
 
     // Wait for the socket t open.
     await new Promise((resolve: any) => {
@@ -713,4 +700,15 @@ export class Session {
   close() {
     this.conn.close()
   }
+}
+
+// Converts an headers object to a "map" object as expected by the WebSocket constructor.
+// We use this as the Auth interface works with Headers objects while the WebSocket constructor
+// takes a map.
+function headersToMap(headers: Headers): Record<string, string> {
+  let headerMap: Record<string, string> = {};
+  headers.forEach((value, key) => {
+    headerMap[key] = value;
+  });
+  return headerMap;
 }

@@ -94,8 +94,9 @@ export class Client {
     this.project = options.project ?? getEnv('GOOGLE_CLOUD_PROJECT');
     this.location = options.location ?? getEnv('GOOGLE_CLOUD_LOCATION');
     this.apiVersion = options.apiVersion;
+    const auth = options.auth ?? new NodeAuth({ apiKey: this.apiKey, googleAuthOptions: options.googleAuthOptions });
     this.apiClient = new ApiClient({
-      auth: options.auth ?? new NodeAuth({ apiKey: this.apiKey, googleAuthOptions: options.googleAuthOptions }),
+      auth: auth,
       project: this.project,
       location: this.location,
       apiVersion: this.apiVersion,
@@ -105,7 +106,7 @@ export class Client {
       userAgentExtra: LANGUAGE_LABEL_PREFIX + process.version,
     });
     this.models = new Models(this.apiClient);
-    this.live = new Live(this.apiClient);
+    this.live = new Live(this.apiClient, auth);
     this.tunings = new Tunings(this.apiClient);
     this.chats = new Chats(this.models, this.apiClient);
     this.caches = new Caches(this.apiClient);
