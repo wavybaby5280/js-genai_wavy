@@ -15,18 +15,18 @@ import * as types from './types';
 
 function listFilesConfigToMldev(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
+  fromObject: types.ListFilesConfig,
+  parentObject?: Record<string, any>,
 ): Record<string, any> {
   const toObject: Record<string, any> = {};
 
   const fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
-  if (fromPageSize !== undefined) {
+  if (parentObject !== undefined && fromPageSize !== undefined) {
     common.setValueByPath(parentObject, ['_query', 'pageSize'], fromPageSize);
   }
 
   const fromPageToken = common.getValueByPath(fromObject, ['pageToken']);
-  if (fromPageToken !== undefined) {
+  if (parentObject !== undefined && fromPageToken !== undefined) {
     common.setValueByPath(parentObject, ['_query', 'pageToken'], fromPageToken);
   }
 
@@ -35,18 +35,18 @@ function listFilesConfigToMldev(
 
 function listFilesConfigToVertex(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
+  fromObject: types.ListFilesConfig,
+  parentObject?: Record<string, any>,
 ): Record<string, any> {
   const toObject: Record<string, any> = {};
 
   const fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
-  if (fromPageSize !== undefined) {
+  if (parentObject !== undefined && fromPageSize !== undefined) {
     common.setValueByPath(parentObject, ['_query', 'pageSize'], fromPageSize);
   }
 
   const fromPageToken = common.getValueByPath(fromObject, ['pageToken']);
-  if (fromPageToken !== undefined) {
+  if (parentObject !== undefined && fromPageToken !== undefined) {
     common.setValueByPath(parentObject, ['_query', 'pageToken'], fromPageToken);
   }
 
@@ -55,8 +55,8 @@ function listFilesConfigToVertex(
 
 function listFilesParametersToMldev(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
+  fromObject: types.ListFilesParameters,
+  parentObject?: Record<string, any>,
 ): Record<string, any> {
   const toObject: Record<string, any> = {};
 
@@ -74,8 +74,8 @@ function listFilesParametersToMldev(
 
 function listFilesParametersToVertex(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
+  fromObject: types.ListFilesParameters,
+  parentObject?: Record<string, any>,
 ): Record<string, any> {
   const toObject: Record<string, any> = {};
 
@@ -88,8 +88,8 @@ function listFilesParametersToVertex(
 
 function getFileParametersToMldev(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
+  fromObject: types.GetFileParameters,
+  parentObject?: Record<string, any>,
 ): Record<string, any> {
   const toObject: Record<string, any> = {};
 
@@ -112,8 +112,8 @@ function getFileParametersToMldev(
 
 function getFileParametersToVertex(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
+  fromObject: types.GetFileParameters,
+  parentObject?: Record<string, any>,
 ): Record<string, any> {
   const toObject: Record<string, any> = {};
 
@@ -130,8 +130,8 @@ function getFileParametersToVertex(
 
 function fileStatusFromMldev(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
+  fromObject: types.FileStatus,
+  parentObject?: Record<string, any>,
 ): Record<string, any> {
   const toObject: Record<string, any> = {};
 
@@ -155,8 +155,8 @@ function fileStatusFromMldev(
 
 function fileStatusFromVertex(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
+  fromObject: types.FileStatus,
+  parentObject?: Record<string, any>,
 ): Record<string, any> {
   const toObject: Record<string, any> = {};
 
@@ -165,8 +165,8 @@ function fileStatusFromVertex(
 
 function fileFromMldev(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
+  fromObject: types.File,
+  parentObject?: Record<string, any>,
 ): Record<string, any> {
   const toObject: Record<string, any> = {};
 
@@ -253,8 +253,8 @@ function fileFromMldev(
 
 function fileFromVertex(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
+  fromObject: types.File,
+  parentObject?: Record<string, any>,
 ): Record<string, any> {
   const toObject: Record<string, any> = {};
 
@@ -263,8 +263,8 @@ function fileFromVertex(
 
 function listFilesResponseFromMldev(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
+  fromObject: types.ListFilesResponse,
+  parentObject?: Record<string, any>,
 ): Record<string, any> {
   const toObject: Record<string, any> = {};
 
@@ -291,8 +291,8 @@ function listFilesResponseFromMldev(
 
 function listFilesResponseFromVertex(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
+  fromObject: types.ListFilesResponse,
+  parentObject?: Record<string, any>,
 ): Record<string, any> {
   const toObject: Record<string, any> = {};
 

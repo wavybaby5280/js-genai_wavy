@@ -15,8 +15,8 @@ import * as types from './types';
 
 function getTuningJobParametersToMldev(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
+  fromObject: types.GetTuningJobParameters,
+  parentObject?: Record<string, any>,
 ): Record<string, any> {
   const toObject: Record<string, any> = {};
 
@@ -35,8 +35,8 @@ function getTuningJobParametersToMldev(
 
 function getTuningJobParametersToVertex(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
+  fromObject: types.GetTuningJobParameters,
+  parentObject?: Record<string, any>,
 ): Record<string, any> {
   const toObject: Record<string, any> = {};
 
@@ -55,23 +55,23 @@ function getTuningJobParametersToVertex(
 
 function listTuningJobsConfigToMldev(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
+  fromObject: types.ListTuningJobsConfig,
+  parentObject?: Record<string, any>,
 ): Record<string, any> {
   const toObject: Record<string, any> = {};
 
   const fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
-  if (fromPageSize !== undefined) {
+  if (parentObject !== undefined && fromPageSize !== undefined) {
     common.setValueByPath(parentObject, ['_query', 'pageSize'], fromPageSize);
   }
 
   const fromPageToken = common.getValueByPath(fromObject, ['pageToken']);
-  if (fromPageToken !== undefined) {
+  if (parentObject !== undefined && fromPageToken !== undefined) {
     common.setValueByPath(parentObject, ['_query', 'pageToken'], fromPageToken);
   }
 
   const fromFilter = common.getValueByPath(fromObject, ['filter']);
-  if (fromFilter !== undefined) {
+  if (parentObject !== undefined && fromFilter !== undefined) {
     common.setValueByPath(parentObject, ['_query', 'filter'], fromFilter);
   }
 
@@ -80,23 +80,23 @@ function listTuningJobsConfigToMldev(
 
 function listTuningJobsConfigToVertex(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
+  fromObject: types.ListTuningJobsConfig,
+  parentObject?: Record<string, any>,
 ): Record<string, any> {
   const toObject: Record<string, any> = {};
 
   const fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
-  if (fromPageSize !== undefined) {
+  if (parentObject !== undefined && fromPageSize !== undefined) {
     common.setValueByPath(parentObject, ['_query', 'pageSize'], fromPageSize);
   }
 
   const fromPageToken = common.getValueByPath(fromObject, ['pageToken']);
-  if (fromPageToken !== undefined) {
+  if (parentObject !== undefined && fromPageToken !== undefined) {
     common.setValueByPath(parentObject, ['_query', 'pageToken'], fromPageToken);
   }
 
   const fromFilter = common.getValueByPath(fromObject, ['filter']);
-  if (fromFilter !== undefined) {
+  if (parentObject !== undefined && fromFilter !== undefined) {
     common.setValueByPath(parentObject, ['_query', 'filter'], fromFilter);
   }
 
@@ -105,8 +105,8 @@ function listTuningJobsConfigToVertex(
 
 function listTuningJobsParametersToMldev(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
+  fromObject: types.ListTuningJobsParameters,
+  parentObject?: Record<string, any>,
 ): Record<string, any> {
   const toObject: Record<string, any> = {};
 
@@ -124,8 +124,8 @@ function listTuningJobsParametersToMldev(
 
 function listTuningJobsParametersToVertex(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
+  fromObject: types.ListTuningJobsParameters,
+  parentObject?: Record<string, any>,
 ): Record<string, any> {
   const toObject: Record<string, any> = {};
 
@@ -143,8 +143,8 @@ function listTuningJobsParametersToVertex(
 
 function tunedModelFromMldev(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
+  fromObject: types.TunedModel,
+  parentObject?: Record<string, any>,
 ): Record<string, any> {
   const toObject: Record<string, any> = {};
 
@@ -163,8 +163,8 @@ function tunedModelFromMldev(
 
 function tunedModelFromVertex(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
+  fromObject: types.TunedModel,
+  parentObject?: Record<string, any>,
 ): Record<string, any> {
   const toObject: Record<string, any> = {};
 
@@ -183,8 +183,8 @@ function tunedModelFromVertex(
 
 function tuningJobFromMldev(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
+  fromObject: types.TuningJob,
+  parentObject?: Record<string, any>,
 ): Record<string, any> {
   const toObject: Record<string, any> = {};
 
@@ -285,8 +285,8 @@ function tuningJobFromMldev(
 
 function tuningJobFromVertex(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
+  fromObject: types.TuningJob,
+  parentObject?: Record<string, any>,
 ): Record<string, any> {
   const toObject: Record<string, any> = {};
 
@@ -422,8 +422,8 @@ function tuningJobFromVertex(
 
 function listTuningJobsResponseFromMldev(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
+  fromObject: types.ListTuningJobsResponse,
+  parentObject?: Record<string, any>,
 ): Record<string, any> {
   const toObject: Record<string, any> = {};
 
@@ -450,8 +450,8 @@ function listTuningJobsResponseFromMldev(
 
 function listTuningJobsResponseFromVertex(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
+  fromObject: types.ListTuningJobsResponse,
+  parentObject?: Record<string, any>,
 ): Record<string, any> {
   const toObject: Record<string, any> = {};
 

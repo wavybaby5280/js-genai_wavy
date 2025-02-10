@@ -134,20 +134,16 @@ export function tContents(
 }
 
 export function tSchema(
-  apiClient: ApiClient,
-  schema?: types.Schema | null,
-): types.Schema | null | undefined {
+    apiClient: ApiClient,
+    schema: types.Schema,
+    ): types.Schema {
   return schema;
 }
 
 export function tSpeechConfig(
-  apiClient: ApiClient,
-  speechConfig?: types.SpeechConfigUnion | null,
-): types.SpeechConfig | null {
-  if (!speechConfig) {
-    return null;
-  }
-
+    apiClient: ApiClient,
+    speechConfig: types.SpeechConfigUnion,
+    ): types.SpeechConfig {
   if (typeof speechConfig === 'object' && 'voiceConfig' in speechConfig) {
     return speechConfig;
   } else if (typeof speechConfig === 'string') {
@@ -164,9 +160,9 @@ export function tSpeechConfig(
 }
 
 export function tTool(
-  apiClient: ApiClient,
-  tool?: types.Tool | null,
-): types.Tool | null | undefined {
+    apiClient: ApiClient,
+    tool: types.Tool,
+    ): types.Tool {
   return tool;
 }
 

@@ -6,7 +6,8 @@
 
 import {ApiClient} from '../../src/_api_client';
 import {FakeAuth} from '../../src/_fake_auth';
-import {tModel} from '../../src/_transformers';
+import {tModel, tSchema, tSpeechConfig, tTool} from '../../src/_transformers';
+import {Schema, SpeechConfig, Tool} from '../../src/types';
 
 describe('tModel', () => {
   it('empty string', () => {
@@ -59,5 +60,33 @@ describe('tModel', () => {
                new ApiClient({auth: new FakeAuth(), vertexai: true}),
                'gemini-1.5-flash-exp'))
         .toEqual('publishers/google/models/gemini-1.5-flash-exp');
+  });
+});
+
+describe(
+    'tSchema', () => {it('no change', () => {
+                 const schema = {title: 'title'};
+                 expect(tSchema(new ApiClient({auth: new FakeAuth()}), schema))
+                     .toEqual(schema);
+               })});
+
+describe('tSpeechConfig', () => {
+  it('string to speechConfig', () => {
+    const speechConfig = {
+      voiceConfig: {
+        prebuiltVoiceConfig: {
+          voiceName: 'voice-name',
+        },
+      },
+    };
+    expect(tSpeechConfig(new ApiClient({auth: new FakeAuth()}), 'voice-name'))
+        .toEqual(speechConfig);
+  });
+});
+
+describe('tTool', () => {
+  it('no change', () => {
+    const tool = {functionDeclarations: [{name: 'function-name'}]};
+    expect(tTool(new ApiClient({auth: new FakeAuth()}), tool)).toEqual(tool);
   });
 });
