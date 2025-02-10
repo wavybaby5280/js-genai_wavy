@@ -13,6 +13,114 @@ import * as t from './_transformers';
 import {PagedItem, Pager} from './pagers';
 import * as types from './types';
 
+export class Tunings extends BaseModule {
+  constructor(private readonly apiClient: ApiClient) {
+    super();
+  }
+
+  get = async (
+    name: string,
+    config?: types.GetTuningJobConfig,
+  ): Promise<types.TuningJob> => {
+    return await this._get(name, config);
+  };
+
+  list = async (
+    config?: types.ListTuningJobsConfig,
+  ): Promise<Pager<types.TuningJob>> => {
+    return new Pager<types.TuningJob>(
+      PagedItem.PAGED_ITEM_TUNING_JOBS,
+      this._list,
+      await this._list(config),
+      config,
+    );
+  };
+
+  private async _get(
+    name: string,
+    config?: types.GetTuningJobConfig,
+  ): Promise<types.TuningJob> {
+    let response: Promise<types.TuningJob>;
+    let path: string = '';
+    let body: Record<string, any> = {};
+    const kwargs: Record<string, any> = {};
+    kwargs['name'] = name;
+    kwargs['config'] = config;
+    if (this.apiClient.isVertexAI()) {
+      body = getTuningJobParametersToVertex(this.apiClient, kwargs);
+      path = common.formatMap('{name}', body['_url']);
+      delete body['config']; // TODO: Remove this hack for removing config.
+      response = this.apiClient.get(path, body, undefined, config?.httpOptions);
+
+      return response.then((apiResponse) => {
+        const resp = tuningJobFromVertex(this.apiClient, apiResponse);
+
+        return resp as types.TuningJob;
+      });
+    } else {
+      body = getTuningJobParametersToMldev(this.apiClient, kwargs);
+      path = common.formatMap('{name}', body['_url']);
+      delete body['config']; // TODO: Remove this hack for removing config.
+      response = this.apiClient.get(path, body, undefined, config?.httpOptions);
+
+      return response.then((apiResponse) => {
+        const resp = tuningJobFromMldev(this.apiClient, apiResponse);
+
+        return resp as types.TuningJob;
+      });
+    }
+  }
+
+  private async _list(
+    config?: types.ListTuningJobsConfig,
+  ): Promise<types.ListTuningJobsResponse> {
+    let response: Promise<types.ListTuningJobsResponse>;
+    let path: string = '';
+    let body: Record<string, any> = {};
+    const kwargs: Record<string, any> = {};
+    kwargs['config'] = config;
+    if (this.apiClient.isVertexAI()) {
+      body = listTuningJobsParametersToVertex(this.apiClient, kwargs);
+      path = common.formatMap('tuningJobs', body['_url']);
+      delete body['config']; // TODO: Remove this hack for removing config.
+      response = this.apiClient.get(
+        path,
+        body,
+        types.ListTuningJobsResponse,
+        config?.httpOptions,
+      );
+
+      return response.then((apiResponse) => {
+        const resp = listTuningJobsResponseFromVertex(
+          this.apiClient,
+          apiResponse,
+        );
+        Object.setPrototypeOf(resp, types.ListTuningJobsResponse.prototype);
+        return resp as types.ListTuningJobsResponse;
+      });
+    } else {
+      body = listTuningJobsParametersToMldev(this.apiClient, kwargs);
+      path = common.formatMap('tunedModels', body['_url']);
+      delete body['config']; // TODO: Remove this hack for removing config.
+      response = this.apiClient.get(
+        path,
+        body,
+        types.ListTuningJobsResponse,
+        config?.httpOptions,
+      );
+
+      return response.then((apiResponse) => {
+        const resp = listTuningJobsResponseFromMldev(
+          this.apiClient,
+          apiResponse,
+        );
+        Object.setPrototypeOf(resp, types.ListTuningJobsResponse.prototype);
+        return resp as types.ListTuningJobsResponse;
+      });
+    }
+  }
+}
+
 function getTuningJobParametersToMldev(
   apiClient: ApiClient,
   fromObject: types.GetTuningJobParameters,
@@ -474,112 +582,4 @@ function listTuningJobsResponseFromVertex(
   }
 
   return toObject;
-}
-
-export class Tunings extends BaseModule {
-  constructor(private readonly apiClient: ApiClient) {
-    super();
-  }
-
-  private async _get(
-    name: string,
-    config?: types.GetTuningJobConfig,
-  ): Promise<types.TuningJob> {
-    let response: Promise<types.TuningJob>;
-    let path: string = '';
-    let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['name'] = name;
-    kwargs['config'] = config;
-    if (this.apiClient.isVertexAI()) {
-      body = getTuningJobParametersToVertex(this.apiClient, kwargs);
-      path = common.formatMap('{name}', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.get(path, body, undefined, config?.httpOptions);
-
-      return response.then((apiResponse) => {
-        const resp = tuningJobFromVertex(this.apiClient, apiResponse);
-
-        return resp as types.TuningJob;
-      });
-    } else {
-      body = getTuningJobParametersToMldev(this.apiClient, kwargs);
-      path = common.formatMap('{name}', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.get(path, body, undefined, config?.httpOptions);
-
-      return response.then((apiResponse) => {
-        const resp = tuningJobFromMldev(this.apiClient, apiResponse);
-
-        return resp as types.TuningJob;
-      });
-    }
-  }
-
-  private async _list(
-    config?: types.ListTuningJobsConfig,
-  ): Promise<types.ListTuningJobsResponse> {
-    let response: Promise<types.ListTuningJobsResponse>;
-    let path: string = '';
-    let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['config'] = config;
-    if (this.apiClient.isVertexAI()) {
-      body = listTuningJobsParametersToVertex(this.apiClient, kwargs);
-      path = common.formatMap('tuningJobs', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.get(
-        path,
-        body,
-        types.ListTuningJobsResponse,
-        config?.httpOptions,
-      );
-
-      return response.then((apiResponse) => {
-        const resp = listTuningJobsResponseFromVertex(
-          this.apiClient,
-          apiResponse,
-        );
-        Object.setPrototypeOf(resp, types.ListTuningJobsResponse.prototype);
-        return resp as types.ListTuningJobsResponse;
-      });
-    } else {
-      body = listTuningJobsParametersToMldev(this.apiClient, kwargs);
-      path = common.formatMap('tunedModels', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.get(
-        path,
-        body,
-        types.ListTuningJobsResponse,
-        config?.httpOptions,
-      );
-
-      return response.then((apiResponse) => {
-        const resp = listTuningJobsResponseFromMldev(
-          this.apiClient,
-          apiResponse,
-        );
-        Object.setPrototypeOf(resp, types.ListTuningJobsResponse.prototype);
-        return resp as types.ListTuningJobsResponse;
-      });
-    }
-  }
-
-  get = async (
-    name: string,
-    config?: types.GetTuningJobConfig,
-  ): Promise<types.TuningJob> => {
-    return await this._get(name, config);
-  };
-
-  list = async (
-    config?: types.ListTuningJobsConfig,
-  ): Promise<Pager<types.TuningJob>> => {
-    return new Pager<types.TuningJob>(
-      PagedItem.PAGED_ITEM_TUNING_JOBS,
-      this._list,
-      await this._list(config),
-      config,
-    );
-  };
 }

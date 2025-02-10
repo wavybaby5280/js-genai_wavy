@@ -13,6 +13,96 @@ import * as t from './_transformers';
 import {PagedItem, Pager} from './pagers';
 import * as types from './types';
 
+export class Files extends BaseModule {
+  constructor(private readonly apiClient: ApiClient) {
+    super();
+  }
+
+  list = async (config?: types.ListFilesConfig): Promise<Pager<types.File>> => {
+    return new Pager<types.File>(
+      PagedItem.PAGED_ITEM_FILES,
+      this._list,
+      await this._list(config),
+      config,
+    );
+  };
+
+  private async _list(
+    config?: types.ListFilesConfig,
+  ): Promise<types.ListFilesResponse> {
+    let response: Promise<types.ListFilesResponse>;
+    let path: string = '';
+    let body: Record<string, any> = {};
+    const kwargs: Record<string, any> = {};
+    kwargs['config'] = config;
+    if (this.apiClient.isVertexAI()) {
+      body = listFilesParametersToVertex(this.apiClient, kwargs);
+      path = common.formatMap('None', body['_url']);
+      delete body['config']; // TODO: Remove this hack for removing config.
+      response = this.apiClient.get(
+        path,
+        body,
+        types.ListFilesResponse,
+        config?.httpOptions,
+      );
+
+      return response.then((apiResponse) => {
+        const resp = listFilesResponseFromVertex(this.apiClient, apiResponse);
+        Object.setPrototypeOf(resp, types.ListFilesResponse.prototype);
+        return resp as types.ListFilesResponse;
+      });
+    } else {
+      body = listFilesParametersToMldev(this.apiClient, kwargs);
+      path = common.formatMap('files', body['_url']);
+      delete body['config']; // TODO: Remove this hack for removing config.
+      response = this.apiClient.get(
+        path,
+        body,
+        types.ListFilesResponse,
+        config?.httpOptions,
+      );
+
+      return response.then((apiResponse) => {
+        const resp = listFilesResponseFromMldev(this.apiClient, apiResponse);
+        Object.setPrototypeOf(resp, types.ListFilesResponse.prototype);
+        return resp as types.ListFilesResponse;
+      });
+    }
+  }
+
+  async get(name: string, config?: types.GetFileConfig): Promise<types.File> {
+    let response: Promise<types.File>;
+    let path: string = '';
+    let body: Record<string, any> = {};
+    const kwargs: Record<string, any> = {};
+    kwargs['name'] = name;
+    kwargs['config'] = config;
+    if (this.apiClient.isVertexAI()) {
+      body = getFileParametersToVertex(this.apiClient, kwargs);
+      path = common.formatMap('None', body['_url']);
+      delete body['config']; // TODO: Remove this hack for removing config.
+      response = this.apiClient.get(path, body, undefined, config?.httpOptions);
+
+      return response.then((apiResponse) => {
+        const resp = fileFromVertex(this.apiClient, apiResponse);
+
+        return resp as types.File;
+      });
+    } else {
+      body = getFileParametersToMldev(this.apiClient, kwargs);
+      path = common.formatMap('files/{file}', body['_url']);
+      delete body['config']; // TODO: Remove this hack for removing config.
+      response = this.apiClient.get(path, body, undefined, config?.httpOptions);
+
+      return response.then((apiResponse) => {
+        const resp = fileFromMldev(this.apiClient, apiResponse);
+
+        return resp as types.File;
+      });
+    }
+  }
+}
+
 function listFilesConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.ListFilesConfig,
@@ -297,94 +387,4 @@ function listFilesResponseFromVertex(
   const toObject: Record<string, any> = {};
 
   return toObject;
-}
-
-export class Files extends BaseModule {
-  constructor(private readonly apiClient: ApiClient) {
-    super();
-  }
-
-  private async _list(
-    config?: types.ListFilesConfig,
-  ): Promise<types.ListFilesResponse> {
-    let response: Promise<types.ListFilesResponse>;
-    let path: string = '';
-    let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['config'] = config;
-    if (this.apiClient.isVertexAI()) {
-      body = listFilesParametersToVertex(this.apiClient, kwargs);
-      path = common.formatMap('None', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.get(
-        path,
-        body,
-        types.ListFilesResponse,
-        config?.httpOptions,
-      );
-
-      return response.then((apiResponse) => {
-        const resp = listFilesResponseFromVertex(this.apiClient, apiResponse);
-        Object.setPrototypeOf(resp, types.ListFilesResponse.prototype);
-        return resp as types.ListFilesResponse;
-      });
-    } else {
-      body = listFilesParametersToMldev(this.apiClient, kwargs);
-      path = common.formatMap('files', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.get(
-        path,
-        body,
-        types.ListFilesResponse,
-        config?.httpOptions,
-      );
-
-      return response.then((apiResponse) => {
-        const resp = listFilesResponseFromMldev(this.apiClient, apiResponse);
-        Object.setPrototypeOf(resp, types.ListFilesResponse.prototype);
-        return resp as types.ListFilesResponse;
-      });
-    }
-  }
-
-  async get(name: string, config?: types.GetFileConfig): Promise<types.File> {
-    let response: Promise<types.File>;
-    let path: string = '';
-    let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['name'] = name;
-    kwargs['config'] = config;
-    if (this.apiClient.isVertexAI()) {
-      body = getFileParametersToVertex(this.apiClient, kwargs);
-      path = common.formatMap('None', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.get(path, body, undefined, config?.httpOptions);
-
-      return response.then((apiResponse) => {
-        const resp = fileFromVertex(this.apiClient, apiResponse);
-
-        return resp as types.File;
-      });
-    } else {
-      body = getFileParametersToMldev(this.apiClient, kwargs);
-      path = common.formatMap('files/{file}', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.get(path, body, undefined, config?.httpOptions);
-
-      return response.then((apiResponse) => {
-        const resp = fileFromMldev(this.apiClient, apiResponse);
-
-        return resp as types.File;
-      });
-    }
-  }
-
-  list = async (config?: types.ListFilesConfig): Promise<Pager<types.File>> => {
-    return new Pager<types.File>(
-      PagedItem.PAGED_ITEM_FILES,
-      this._list,
-      await this._list(config),
-      config,
-    );
-  };
 }

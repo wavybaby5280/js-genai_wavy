@@ -13,6 +13,362 @@ import * as t from './_transformers';
 import {PagedItem, Pager} from './pagers';
 import * as types from './types';
 
+export class Models extends BaseModule {
+  constructor(private readonly apiClient: ApiClient) {
+    super();
+  }
+
+  generateContent = async (
+    model: string,
+    contents: types.ContentListUnion,
+    config?: types.GenerateContentConfig,
+  ): Promise<types.GenerateContentResponse> => {
+    return await this._generateContent(model, contents, config);
+  };
+
+  generateContentStream = async (
+    model: string,
+    contents: types.ContentListUnion,
+    config?: types.GenerateContentConfig,
+  ): Promise<AsyncGenerator<types.GenerateContentResponse>> => {
+    return await this._generateContentStream(model, contents, config);
+  };
+
+  private async _generateContent(
+    model: string,
+    contents: types.ContentListUnion,
+    config?: types.GenerateContentConfig,
+  ): Promise<types.GenerateContentResponse> {
+    let response: Promise<types.GenerateContentResponse>;
+    let path: string = '';
+    let body: Record<string, any> = {};
+    const kwargs: Record<string, any> = {};
+    kwargs['model'] = model;
+    kwargs['contents'] = contents;
+    kwargs['config'] = config;
+    if (this.apiClient.isVertexAI()) {
+      body = generateContentParametersToVertex(this.apiClient, kwargs);
+      path = common.formatMap('{model}:generateContent', body['_url']);
+      delete body['config']; // TODO: Remove this hack for removing config.
+      response = this.apiClient.post(
+        path,
+        body,
+        types.GenerateContentResponse,
+        config?.httpOptions,
+      );
+
+      return response.then((apiResponse) => {
+        const resp = generateContentResponseFromVertex(
+          this.apiClient,
+          apiResponse,
+        );
+        Object.setPrototypeOf(resp, types.GenerateContentResponse.prototype);
+        return resp as types.GenerateContentResponse;
+      });
+    } else {
+      body = generateContentParametersToMldev(this.apiClient, kwargs);
+      path = common.formatMap('{model}:generateContent', body['_url']);
+      delete body['config']; // TODO: Remove this hack for removing config.
+      response = this.apiClient.post(
+        path,
+        body,
+        types.GenerateContentResponse,
+        config?.httpOptions,
+      );
+
+      return response.then((apiResponse) => {
+        const resp = generateContentResponseFromMldev(
+          this.apiClient,
+          apiResponse,
+        );
+        Object.setPrototypeOf(resp, types.GenerateContentResponse.prototype);
+        return resp as types.GenerateContentResponse;
+      });
+    }
+  }
+
+  private async _generateContentStream(
+    model: string,
+    contents: types.ContentListUnion,
+    config?: types.GenerateContentConfig,
+  ): Promise<AsyncGenerator<types.GenerateContentResponse>> {
+    let response: Promise<AsyncGenerator<types.GenerateContentResponse>>;
+    let path: string = '';
+    let body: Record<string, any> = {};
+    const kwargs: Record<string, any> = {};
+    kwargs['model'] = model;
+    kwargs['contents'] = contents;
+    kwargs['config'] = config;
+    if (this.apiClient.isVertexAI()) {
+      body = generateContentParametersToVertex(this.apiClient, kwargs);
+      path = common.formatMap(
+        '{model}:streamGenerateContent?alt=sse',
+        body['_url'],
+      );
+      delete body['config']; // TODO: Remove this hack for removing config.
+      response = this.apiClient.postStream(
+        path,
+        body,
+        types.GenerateContentResponse,
+        config?.httpOptions,
+      );
+
+      let apiClient = this.apiClient;
+      return response.then(async function* (apiResponse: any) {
+        for await (const chunk of apiResponse) {
+          const resp = generateContentResponseFromVertex(apiClient, chunk);
+          Object.setPrototypeOf(resp, types.GenerateContentResponse.prototype);
+          yield resp as types.GenerateContentResponse;
+        }
+      });
+    } else {
+      body = generateContentParametersToMldev(this.apiClient, kwargs);
+      path = common.formatMap(
+        '{model}:streamGenerateContent?alt=sse',
+        body['_url'],
+      );
+      delete body['config']; // TODO: Remove this hack for removing config.
+      response = this.apiClient.postStream(
+        path,
+        body,
+        types.GenerateContentResponse,
+        config?.httpOptions,
+      );
+
+      const apiClient = this.apiClient;
+      return response.then(async function* (apiResponse: any) {
+        for await (const chunk of apiResponse) {
+          const resp = generateContentResponseFromMldev(apiClient, chunk);
+          Object.setPrototypeOf(resp, types.GenerateContentResponse.prototype);
+          yield resp as types.GenerateContentResponse;
+        }
+      });
+    }
+  }
+
+  async embedContent(
+    model: string,
+    contents: types.ContentListUnion,
+    config?: types.EmbedContentConfig,
+  ): Promise<types.EmbedContentResponse> {
+    let response: Promise<types.EmbedContentResponse>;
+    let path: string = '';
+    let body: Record<string, any> = {};
+    const kwargs: Record<string, any> = {};
+    kwargs['model'] = model;
+    kwargs['contents'] = contents;
+    kwargs['config'] = config;
+    if (this.apiClient.isVertexAI()) {
+      body = embedContentParametersToVertex(this.apiClient, kwargs);
+      path = common.formatMap('{model}:predict', body['_url']);
+      delete body['config']; // TODO: Remove this hack for removing config.
+      response = this.apiClient.post(
+        path,
+        body,
+        types.EmbedContentResponse,
+        config?.httpOptions,
+      );
+
+      return response.then((apiResponse) => {
+        const resp = embedContentResponseFromVertex(
+          this.apiClient,
+          apiResponse,
+        );
+        Object.setPrototypeOf(resp, types.EmbedContentResponse.prototype);
+        return resp as types.EmbedContentResponse;
+      });
+    } else {
+      body = embedContentParametersToMldev(this.apiClient, kwargs);
+      path = common.formatMap('{model}:batchEmbedContents', body['_url']);
+      delete body['config']; // TODO: Remove this hack for removing config.
+      response = this.apiClient.post(
+        path,
+        body,
+        types.EmbedContentResponse,
+        config?.httpOptions,
+      );
+
+      return response.then((apiResponse) => {
+        const resp = embedContentResponseFromMldev(this.apiClient, apiResponse);
+        Object.setPrototypeOf(resp, types.EmbedContentResponse.prototype);
+        return resp as types.EmbedContentResponse;
+      });
+    }
+  }
+
+  async generateImages(
+    model: string,
+    prompt: string,
+    config?: types.GenerateImagesConfig,
+  ): Promise<types.GenerateImagesResponse> {
+    let response: Promise<types.GenerateImagesResponse>;
+    let path: string = '';
+    let body: Record<string, any> = {};
+    const kwargs: Record<string, any> = {};
+    kwargs['model'] = model;
+    kwargs['prompt'] = prompt;
+    kwargs['config'] = config;
+    if (this.apiClient.isVertexAI()) {
+      body = generateImagesParametersToVertex(this.apiClient, kwargs);
+      path = common.formatMap('{model}:predict', body['_url']);
+      delete body['config']; // TODO: Remove this hack for removing config.
+      response = this.apiClient.post(
+        path,
+        body,
+        types.GenerateImagesResponse,
+        config?.httpOptions,
+      );
+
+      return response.then((apiResponse) => {
+        const resp = generateImagesResponseFromVertex(
+          this.apiClient,
+          apiResponse,
+        );
+        Object.setPrototypeOf(resp, types.GenerateImagesResponse.prototype);
+        return resp as types.GenerateImagesResponse;
+      });
+    } else {
+      body = generateImagesParametersToMldev(this.apiClient, kwargs);
+      path = common.formatMap('{model}:predict', body['_url']);
+      delete body['config']; // TODO: Remove this hack for removing config.
+      response = this.apiClient.post(
+        path,
+        body,
+        types.GenerateImagesResponse,
+        config?.httpOptions,
+      );
+
+      return response.then((apiResponse) => {
+        const resp = generateImagesResponseFromMldev(
+          this.apiClient,
+          apiResponse,
+        );
+        Object.setPrototypeOf(resp, types.GenerateImagesResponse.prototype);
+        return resp as types.GenerateImagesResponse;
+      });
+    }
+  }
+
+  /**
+   * Counts the number of tokens in the given contents.
+   *
+   * @param model - The model to use for counting tokens.
+   * @param contents - The contents to count tokens for.
+   *                                      Multimodal input is supported for
+   *                                      Gemini models.
+   * @param [config] - The config for counting tokens.
+   * @return The response from the API.
+   *
+   * @example
+   * ```ts
+   * const response = await client.models.countTokens(
+   *  'gemini-1.5-flash',
+   *  'The quick brown fox jumps over the lazy dog.'
+   * );
+   * console.log(response);
+   * ```
+   */
+  async countTokens(
+    model: string,
+    contents: types.ContentListUnion,
+    config?: types.CountTokensConfig,
+  ): Promise<types.CountTokensResponse> {
+    let response: Promise<types.CountTokensResponse>;
+    let path: string = '';
+    let body: Record<string, any> = {};
+    const kwargs: Record<string, any> = {};
+    kwargs['model'] = model;
+    kwargs['contents'] = contents;
+    kwargs['config'] = config;
+    if (this.apiClient.isVertexAI()) {
+      body = countTokensParametersToVertex(this.apiClient, kwargs);
+      path = common.formatMap('{model}:countTokens', body['_url']);
+      delete body['config']; // TODO: Remove this hack for removing config.
+      response = this.apiClient.post(
+        path,
+        body,
+        types.CountTokensResponse,
+        config?.httpOptions,
+      );
+
+      return response.then((apiResponse) => {
+        const resp = countTokensResponseFromVertex(this.apiClient, apiResponse);
+        Object.setPrototypeOf(resp, types.CountTokensResponse.prototype);
+        return resp as types.CountTokensResponse;
+      });
+    } else {
+      body = countTokensParametersToMldev(this.apiClient, kwargs);
+      path = common.formatMap('{model}:countTokens', body['_url']);
+      delete body['config']; // TODO: Remove this hack for removing config.
+      response = this.apiClient.post(
+        path,
+        body,
+        types.CountTokensResponse,
+        config?.httpOptions,
+      );
+
+      return response.then((apiResponse) => {
+        const resp = countTokensResponseFromMldev(this.apiClient, apiResponse);
+        Object.setPrototypeOf(resp, types.CountTokensResponse.prototype);
+        return resp as types.CountTokensResponse;
+      });
+    }
+  }
+
+  async computeTokens(
+    model: string,
+    contents: types.ContentListUnion,
+    config?: types.ComputeTokensConfig,
+  ): Promise<types.ComputeTokensResponse> {
+    let response: Promise<types.ComputeTokensResponse>;
+    let path: string = '';
+    let body: Record<string, any> = {};
+    const kwargs: Record<string, any> = {};
+    kwargs['model'] = model;
+    kwargs['contents'] = contents;
+    kwargs['config'] = config;
+    if (this.apiClient.isVertexAI()) {
+      body = computeTokensParametersToVertex(this.apiClient, kwargs);
+      path = common.formatMap('{model}:computeTokens', body['_url']);
+      delete body['config']; // TODO: Remove this hack for removing config.
+      response = this.apiClient.post(
+        path,
+        body,
+        types.ComputeTokensResponse,
+        config?.httpOptions,
+      );
+
+      return response.then((apiResponse) => {
+        const resp = computeTokensResponseFromVertex(
+          this.apiClient,
+          apiResponse,
+        );
+        Object.setPrototypeOf(resp, types.ComputeTokensResponse.prototype);
+        return resp as types.ComputeTokensResponse;
+      });
+    } else {
+      body = computeTokensParametersToMldev(this.apiClient, kwargs);
+      path = common.formatMap('None', body['_url']);
+      delete body['config']; // TODO: Remove this hack for removing config.
+      response = this.apiClient.post(
+        path,
+        body,
+        types.ComputeTokensResponse,
+        config?.httpOptions,
+      );
+
+      return response.then((apiResponse) => {
+        const resp = computeTokensResponseFromMldev(
+          this.apiClient,
+          apiResponse,
+        );
+        Object.setPrototypeOf(resp, types.ComputeTokensResponse.prototype);
+        return resp as types.ComputeTokensResponse;
+      });
+    }
+  }
+}
+
 function partToMldev(
   apiClient: ApiClient,
   fromObject: types.Part,
@@ -3179,360 +3535,4 @@ function computeTokensResponseFromVertex(
   }
 
   return toObject;
-}
-
-export class Models extends BaseModule {
-  constructor(private readonly apiClient: ApiClient) {
-    super();
-  }
-
-  private async _generateContent(
-    model: string,
-    contents: types.ContentListUnion,
-    config?: types.GenerateContentConfig,
-  ): Promise<types.GenerateContentResponse> {
-    let response: Promise<types.GenerateContentResponse>;
-    let path: string = '';
-    let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['model'] = model;
-    kwargs['contents'] = contents;
-    kwargs['config'] = config;
-    if (this.apiClient.isVertexAI()) {
-      body = generateContentParametersToVertex(this.apiClient, kwargs);
-      path = common.formatMap('{model}:generateContent', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.post(
-        path,
-        body,
-        types.GenerateContentResponse,
-        config?.httpOptions,
-      );
-
-      return response.then((apiResponse) => {
-        const resp = generateContentResponseFromVertex(
-          this.apiClient,
-          apiResponse,
-        );
-        Object.setPrototypeOf(resp, types.GenerateContentResponse.prototype);
-        return resp as types.GenerateContentResponse;
-      });
-    } else {
-      body = generateContentParametersToMldev(this.apiClient, kwargs);
-      path = common.formatMap('{model}:generateContent', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.post(
-        path,
-        body,
-        types.GenerateContentResponse,
-        config?.httpOptions,
-      );
-
-      return response.then((apiResponse) => {
-        const resp = generateContentResponseFromMldev(
-          this.apiClient,
-          apiResponse,
-        );
-        Object.setPrototypeOf(resp, types.GenerateContentResponse.prototype);
-        return resp as types.GenerateContentResponse;
-      });
-    }
-  }
-
-  private async _generateContentStream(
-    model: string,
-    contents: types.ContentListUnion,
-    config?: types.GenerateContentConfig,
-  ): Promise<AsyncGenerator<types.GenerateContentResponse>> {
-    let response: Promise<AsyncGenerator<types.GenerateContentResponse>>;
-    let path: string = '';
-    let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['model'] = model;
-    kwargs['contents'] = contents;
-    kwargs['config'] = config;
-    if (this.apiClient.isVertexAI()) {
-      body = generateContentParametersToVertex(this.apiClient, kwargs);
-      path = common.formatMap(
-        '{model}:streamGenerateContent?alt=sse',
-        body['_url'],
-      );
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.postStream(
-        path,
-        body,
-        types.GenerateContentResponse,
-        config?.httpOptions,
-      );
-
-      let apiClient = this.apiClient;
-      return response.then(async function* (apiResponse: any) {
-        for await (const chunk of apiResponse) {
-          const resp = generateContentResponseFromVertex(apiClient, chunk);
-          Object.setPrototypeOf(resp, types.GenerateContentResponse.prototype);
-          yield resp as types.GenerateContentResponse;
-        }
-      });
-    } else {
-      body = generateContentParametersToMldev(this.apiClient, kwargs);
-      path = common.formatMap(
-        '{model}:streamGenerateContent?alt=sse',
-        body['_url'],
-      );
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.postStream(
-        path,
-        body,
-        types.GenerateContentResponse,
-        config?.httpOptions,
-      );
-
-      const apiClient = this.apiClient;
-      return response.then(async function* (apiResponse: any) {
-        for await (const chunk of apiResponse) {
-          const resp = generateContentResponseFromMldev(apiClient, chunk);
-          Object.setPrototypeOf(resp, types.GenerateContentResponse.prototype);
-          yield resp as types.GenerateContentResponse;
-        }
-      });
-    }
-  }
-
-  async embedContent(
-    model: string,
-    contents: types.ContentListUnion,
-    config?: types.EmbedContentConfig,
-  ): Promise<types.EmbedContentResponse> {
-    let response: Promise<types.EmbedContentResponse>;
-    let path: string = '';
-    let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['model'] = model;
-    kwargs['contents'] = contents;
-    kwargs['config'] = config;
-    if (this.apiClient.isVertexAI()) {
-      body = embedContentParametersToVertex(this.apiClient, kwargs);
-      path = common.formatMap('{model}:predict', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.post(
-        path,
-        body,
-        types.EmbedContentResponse,
-        config?.httpOptions,
-      );
-
-      return response.then((apiResponse) => {
-        const resp = embedContentResponseFromVertex(
-          this.apiClient,
-          apiResponse,
-        );
-        Object.setPrototypeOf(resp, types.EmbedContentResponse.prototype);
-        return resp as types.EmbedContentResponse;
-      });
-    } else {
-      body = embedContentParametersToMldev(this.apiClient, kwargs);
-      path = common.formatMap('{model}:batchEmbedContents', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.post(
-        path,
-        body,
-        types.EmbedContentResponse,
-        config?.httpOptions,
-      );
-
-      return response.then((apiResponse) => {
-        const resp = embedContentResponseFromMldev(this.apiClient, apiResponse);
-        Object.setPrototypeOf(resp, types.EmbedContentResponse.prototype);
-        return resp as types.EmbedContentResponse;
-      });
-    }
-  }
-
-  async generateImages(
-    model: string,
-    prompt: string,
-    config?: types.GenerateImagesConfig,
-  ): Promise<types.GenerateImagesResponse> {
-    let response: Promise<types.GenerateImagesResponse>;
-    let path: string = '';
-    let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['model'] = model;
-    kwargs['prompt'] = prompt;
-    kwargs['config'] = config;
-    if (this.apiClient.isVertexAI()) {
-      body = generateImagesParametersToVertex(this.apiClient, kwargs);
-      path = common.formatMap('{model}:predict', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.post(
-        path,
-        body,
-        types.GenerateImagesResponse,
-        config?.httpOptions,
-      );
-
-      return response.then((apiResponse) => {
-        const resp = generateImagesResponseFromVertex(
-          this.apiClient,
-          apiResponse,
-        );
-        Object.setPrototypeOf(resp, types.GenerateImagesResponse.prototype);
-        return resp as types.GenerateImagesResponse;
-      });
-    } else {
-      body = generateImagesParametersToMldev(this.apiClient, kwargs);
-      path = common.formatMap('{model}:predict', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.post(
-        path,
-        body,
-        types.GenerateImagesResponse,
-        config?.httpOptions,
-      );
-
-      return response.then((apiResponse) => {
-        const resp = generateImagesResponseFromMldev(
-          this.apiClient,
-          apiResponse,
-        );
-        Object.setPrototypeOf(resp, types.GenerateImagesResponse.prototype);
-        return resp as types.GenerateImagesResponse;
-      });
-    }
-  }
-
-  /**
-   * Counts the number of tokens in the given contents.
-   *
-   * @param model - The model to use for counting tokens.
-   * @param contents - The contents to count tokens for.
-   *                                      Multimodal input is supported for
-   *                                      Gemini models.
-   * @param [config] - The config for counting tokens.
-   * @return The response from the API.
-   *
-   * @example
-   * ```ts
-   * const response = await client.models.countTokens(
-   *  'gemini-1.5-flash',
-   *  'The quick brown fox jumps over the lazy dog.'
-   * );
-   * console.log(response);
-   * ```
-   */
-  async countTokens(
-    model: string,
-    contents: types.ContentListUnion,
-    config?: types.CountTokensConfig,
-  ): Promise<types.CountTokensResponse> {
-    let response: Promise<types.CountTokensResponse>;
-    let path: string = '';
-    let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['model'] = model;
-    kwargs['contents'] = contents;
-    kwargs['config'] = config;
-    if (this.apiClient.isVertexAI()) {
-      body = countTokensParametersToVertex(this.apiClient, kwargs);
-      path = common.formatMap('{model}:countTokens', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.post(
-        path,
-        body,
-        types.CountTokensResponse,
-        config?.httpOptions,
-      );
-
-      return response.then((apiResponse) => {
-        const resp = countTokensResponseFromVertex(this.apiClient, apiResponse);
-        Object.setPrototypeOf(resp, types.CountTokensResponse.prototype);
-        return resp as types.CountTokensResponse;
-      });
-    } else {
-      body = countTokensParametersToMldev(this.apiClient, kwargs);
-      path = common.formatMap('{model}:countTokens', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.post(
-        path,
-        body,
-        types.CountTokensResponse,
-        config?.httpOptions,
-      );
-
-      return response.then((apiResponse) => {
-        const resp = countTokensResponseFromMldev(this.apiClient, apiResponse);
-        Object.setPrototypeOf(resp, types.CountTokensResponse.prototype);
-        return resp as types.CountTokensResponse;
-      });
-    }
-  }
-
-  async computeTokens(
-    model: string,
-    contents: types.ContentListUnion,
-    config?: types.ComputeTokensConfig,
-  ): Promise<types.ComputeTokensResponse> {
-    let response: Promise<types.ComputeTokensResponse>;
-    let path: string = '';
-    let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['model'] = model;
-    kwargs['contents'] = contents;
-    kwargs['config'] = config;
-    if (this.apiClient.isVertexAI()) {
-      body = computeTokensParametersToVertex(this.apiClient, kwargs);
-      path = common.formatMap('{model}:computeTokens', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.post(
-        path,
-        body,
-        types.ComputeTokensResponse,
-        config?.httpOptions,
-      );
-
-      return response.then((apiResponse) => {
-        const resp = computeTokensResponseFromVertex(
-          this.apiClient,
-          apiResponse,
-        );
-        Object.setPrototypeOf(resp, types.ComputeTokensResponse.prototype);
-        return resp as types.ComputeTokensResponse;
-      });
-    } else {
-      body = computeTokensParametersToMldev(this.apiClient, kwargs);
-      path = common.formatMap('None', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.post(
-        path,
-        body,
-        types.ComputeTokensResponse,
-        config?.httpOptions,
-      );
-
-      return response.then((apiResponse) => {
-        const resp = computeTokensResponseFromMldev(
-          this.apiClient,
-          apiResponse,
-        );
-        Object.setPrototypeOf(resp, types.ComputeTokensResponse.prototype);
-        return resp as types.ComputeTokensResponse;
-      });
-    }
-  }
-
-  generateContent = async (
-    model: string,
-    contents: types.ContentListUnion,
-    config?: types.GenerateContentConfig,
-  ): Promise<types.GenerateContentResponse> => {
-    return await this._generateContent(model, contents, config);
-  };
-
-  generateContentStream = async (
-    model: string,
-    contents: types.ContentListUnion,
-    config?: types.GenerateContentConfig,
-  ): Promise<AsyncGenerator<types.GenerateContentResponse>> => {
-    return await this._generateContentStream(model, contents, config);
-  };
 }

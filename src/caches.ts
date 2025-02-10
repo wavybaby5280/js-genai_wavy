@@ -13,6 +13,254 @@ import * as t from './_transformers';
 import {PagedItem, Pager} from './pagers';
 import * as types from './types';
 
+export class Caches extends BaseModule {
+  constructor(private readonly apiClient: ApiClient) {
+    super();
+  }
+
+  list = async (
+    config?: types.ListCachedContentsConfig,
+  ): Promise<Pager<types.CachedContent>> => {
+    return new Pager<types.CachedContent>(
+      PagedItem.PAGED_ITEM_CACHED_CONTENTS,
+      this._list,
+      await this._list(config),
+      config,
+    );
+  };
+
+  async create(
+    model: string,
+    config?: types.CreateCachedContentConfig,
+  ): Promise<types.CachedContent> {
+    let response: Promise<types.CachedContent>;
+    let path: string = '';
+    let body: Record<string, any> = {};
+    const kwargs: Record<string, any> = {};
+    kwargs['model'] = model;
+    kwargs['config'] = config;
+    if (this.apiClient.isVertexAI()) {
+      body = createCachedContentParametersToVertex(this.apiClient, kwargs);
+      path = common.formatMap('cachedContents', body['_url']);
+      delete body['config']; // TODO: Remove this hack for removing config.
+      response = this.apiClient.post(
+        path,
+        body,
+        undefined,
+        config?.httpOptions,
+      );
+
+      return response.then((apiResponse) => {
+        const resp = cachedContentFromVertex(this.apiClient, apiResponse);
+
+        return resp as types.CachedContent;
+      });
+    } else {
+      body = createCachedContentParametersToMldev(this.apiClient, kwargs);
+      path = common.formatMap('cachedContents', body['_url']);
+      delete body['config']; // TODO: Remove this hack for removing config.
+      response = this.apiClient.post(
+        path,
+        body,
+        undefined,
+        config?.httpOptions,
+      );
+
+      return response.then((apiResponse) => {
+        const resp = cachedContentFromMldev(this.apiClient, apiResponse);
+
+        return resp as types.CachedContent;
+      });
+    }
+  }
+
+  async get(
+    name: string,
+    config?: types.GetCachedContentConfig,
+  ): Promise<types.CachedContent> {
+    let response: Promise<types.CachedContent>;
+    let path: string = '';
+    let body: Record<string, any> = {};
+    const kwargs: Record<string, any> = {};
+    kwargs['name'] = name;
+    kwargs['config'] = config;
+    if (this.apiClient.isVertexAI()) {
+      body = getCachedContentParametersToVertex(this.apiClient, kwargs);
+      path = common.formatMap('{name}', body['_url']);
+      delete body['config']; // TODO: Remove this hack for removing config.
+      response = this.apiClient.get(path, body, undefined, config?.httpOptions);
+
+      return response.then((apiResponse) => {
+        const resp = cachedContentFromVertex(this.apiClient, apiResponse);
+
+        return resp as types.CachedContent;
+      });
+    } else {
+      body = getCachedContentParametersToMldev(this.apiClient, kwargs);
+      path = common.formatMap('{name}', body['_url']);
+      delete body['config']; // TODO: Remove this hack for removing config.
+      response = this.apiClient.get(path, body, undefined, config?.httpOptions);
+
+      return response.then((apiResponse) => {
+        const resp = cachedContentFromMldev(this.apiClient, apiResponse);
+
+        return resp as types.CachedContent;
+      });
+    }
+  }
+
+  async delete(
+    name: string,
+    config?: types.DeleteCachedContentConfig,
+  ): Promise<types.DeleteCachedContentResponse> {
+    let response: Promise<types.DeleteCachedContentResponse>;
+    let path: string = '';
+    let body: Record<string, any> = {};
+    const kwargs: Record<string, any> = {};
+    kwargs['name'] = name;
+    kwargs['config'] = config;
+    if (this.apiClient.isVertexAI()) {
+      body = deleteCachedContentParametersToVertex(this.apiClient, kwargs);
+      path = common.formatMap('{name}', body['_url']);
+      delete body['config']; // TODO: Remove this hack for removing config.
+      response = this.apiClient.delete(
+        path,
+        body,
+        types.DeleteCachedContentResponse,
+        config?.httpOptions,
+      );
+
+      return response.then((apiResponse) => {
+        const resp = deleteCachedContentResponseFromVertex(
+          this.apiClient,
+          apiResponse,
+        );
+        Object.setPrototypeOf(
+          resp,
+          types.DeleteCachedContentResponse.prototype,
+        );
+        return resp as types.DeleteCachedContentResponse;
+      });
+    } else {
+      body = deleteCachedContentParametersToMldev(this.apiClient, kwargs);
+      path = common.formatMap('{name}', body['_url']);
+      delete body['config']; // TODO: Remove this hack for removing config.
+      response = this.apiClient.delete(
+        path,
+        body,
+        types.DeleteCachedContentResponse,
+        config?.httpOptions,
+      );
+
+      return response.then((apiResponse) => {
+        const resp = deleteCachedContentResponseFromMldev(
+          this.apiClient,
+          apiResponse,
+        );
+        Object.setPrototypeOf(
+          resp,
+          types.DeleteCachedContentResponse.prototype,
+        );
+        return resp as types.DeleteCachedContentResponse;
+      });
+    }
+  }
+
+  async update(
+    name: string,
+    config?: types.UpdateCachedContentConfig,
+  ): Promise<types.CachedContent> {
+    let response: Promise<types.CachedContent>;
+    let path: string = '';
+    let body: Record<string, any> = {};
+    const kwargs: Record<string, any> = {};
+    kwargs['name'] = name;
+    kwargs['config'] = config;
+    if (this.apiClient.isVertexAI()) {
+      body = updateCachedContentParametersToVertex(this.apiClient, kwargs);
+      path = common.formatMap('{name}', body['_url']);
+      delete body['config']; // TODO: Remove this hack for removing config.
+      response = this.apiClient.patch(
+        path,
+        body,
+        undefined,
+        config?.httpOptions,
+      );
+
+      return response.then((apiResponse) => {
+        const resp = cachedContentFromVertex(this.apiClient, apiResponse);
+
+        return resp as types.CachedContent;
+      });
+    } else {
+      body = updateCachedContentParametersToMldev(this.apiClient, kwargs);
+      path = common.formatMap('{name}', body['_url']);
+      delete body['config']; // TODO: Remove this hack for removing config.
+      response = this.apiClient.patch(
+        path,
+        body,
+        undefined,
+        config?.httpOptions,
+      );
+
+      return response.then((apiResponse) => {
+        const resp = cachedContentFromMldev(this.apiClient, apiResponse);
+
+        return resp as types.CachedContent;
+      });
+    }
+  }
+
+  private async _list(
+    config?: types.ListCachedContentsConfig,
+  ): Promise<types.ListCachedContentsResponse> {
+    let response: Promise<types.ListCachedContentsResponse>;
+    let path: string = '';
+    let body: Record<string, any> = {};
+    const kwargs: Record<string, any> = {};
+    kwargs['config'] = config;
+    if (this.apiClient.isVertexAI()) {
+      body = listCachedContentsParametersToVertex(this.apiClient, kwargs);
+      path = common.formatMap('cachedContents', body['_url']);
+      delete body['config']; // TODO: Remove this hack for removing config.
+      response = this.apiClient.get(
+        path,
+        body,
+        types.ListCachedContentsResponse,
+        config?.httpOptions,
+      );
+
+      return response.then((apiResponse) => {
+        const resp = listCachedContentsResponseFromVertex(
+          this.apiClient,
+          apiResponse,
+        );
+        Object.setPrototypeOf(resp, types.ListCachedContentsResponse.prototype);
+        return resp as types.ListCachedContentsResponse;
+      });
+    } else {
+      body = listCachedContentsParametersToMldev(this.apiClient, kwargs);
+      path = common.formatMap('cachedContents', body['_url']);
+      delete body['config']; // TODO: Remove this hack for removing config.
+      response = this.apiClient.get(
+        path,
+        body,
+        types.ListCachedContentsResponse,
+        config?.httpOptions,
+      );
+
+      return response.then((apiResponse) => {
+        const resp = listCachedContentsResponseFromMldev(
+          this.apiClient,
+          apiResponse,
+        );
+        Object.setPrototypeOf(resp, types.ListCachedContentsResponse.prototype);
+        return resp as types.ListCachedContentsResponse;
+      });
+    }
+  }
+}
+
 function partToMldev(
   apiClient: ApiClient,
   fromObject: types.Part,
@@ -1475,252 +1723,4 @@ function listCachedContentsResponseFromVertex(
   }
 
   return toObject;
-}
-
-export class Caches extends BaseModule {
-  constructor(private readonly apiClient: ApiClient) {
-    super();
-  }
-
-  async create(
-    model: string,
-    config?: types.CreateCachedContentConfig,
-  ): Promise<types.CachedContent> {
-    let response: Promise<types.CachedContent>;
-    let path: string = '';
-    let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['model'] = model;
-    kwargs['config'] = config;
-    if (this.apiClient.isVertexAI()) {
-      body = createCachedContentParametersToVertex(this.apiClient, kwargs);
-      path = common.formatMap('cachedContents', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.post(
-        path,
-        body,
-        undefined,
-        config?.httpOptions,
-      );
-
-      return response.then((apiResponse) => {
-        const resp = cachedContentFromVertex(this.apiClient, apiResponse);
-
-        return resp as types.CachedContent;
-      });
-    } else {
-      body = createCachedContentParametersToMldev(this.apiClient, kwargs);
-      path = common.formatMap('cachedContents', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.post(
-        path,
-        body,
-        undefined,
-        config?.httpOptions,
-      );
-
-      return response.then((apiResponse) => {
-        const resp = cachedContentFromMldev(this.apiClient, apiResponse);
-
-        return resp as types.CachedContent;
-      });
-    }
-  }
-
-  async get(
-    name: string,
-    config?: types.GetCachedContentConfig,
-  ): Promise<types.CachedContent> {
-    let response: Promise<types.CachedContent>;
-    let path: string = '';
-    let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['name'] = name;
-    kwargs['config'] = config;
-    if (this.apiClient.isVertexAI()) {
-      body = getCachedContentParametersToVertex(this.apiClient, kwargs);
-      path = common.formatMap('{name}', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.get(path, body, undefined, config?.httpOptions);
-
-      return response.then((apiResponse) => {
-        const resp = cachedContentFromVertex(this.apiClient, apiResponse);
-
-        return resp as types.CachedContent;
-      });
-    } else {
-      body = getCachedContentParametersToMldev(this.apiClient, kwargs);
-      path = common.formatMap('{name}', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.get(path, body, undefined, config?.httpOptions);
-
-      return response.then((apiResponse) => {
-        const resp = cachedContentFromMldev(this.apiClient, apiResponse);
-
-        return resp as types.CachedContent;
-      });
-    }
-  }
-
-  async delete(
-    name: string,
-    config?: types.DeleteCachedContentConfig,
-  ): Promise<types.DeleteCachedContentResponse> {
-    let response: Promise<types.DeleteCachedContentResponse>;
-    let path: string = '';
-    let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['name'] = name;
-    kwargs['config'] = config;
-    if (this.apiClient.isVertexAI()) {
-      body = deleteCachedContentParametersToVertex(this.apiClient, kwargs);
-      path = common.formatMap('{name}', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.delete(
-        path,
-        body,
-        types.DeleteCachedContentResponse,
-        config?.httpOptions,
-      );
-
-      return response.then((apiResponse) => {
-        const resp = deleteCachedContentResponseFromVertex(
-          this.apiClient,
-          apiResponse,
-        );
-        Object.setPrototypeOf(
-          resp,
-          types.DeleteCachedContentResponse.prototype,
-        );
-        return resp as types.DeleteCachedContentResponse;
-      });
-    } else {
-      body = deleteCachedContentParametersToMldev(this.apiClient, kwargs);
-      path = common.formatMap('{name}', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.delete(
-        path,
-        body,
-        types.DeleteCachedContentResponse,
-        config?.httpOptions,
-      );
-
-      return response.then((apiResponse) => {
-        const resp = deleteCachedContentResponseFromMldev(
-          this.apiClient,
-          apiResponse,
-        );
-        Object.setPrototypeOf(
-          resp,
-          types.DeleteCachedContentResponse.prototype,
-        );
-        return resp as types.DeleteCachedContentResponse;
-      });
-    }
-  }
-
-  async update(
-    name: string,
-    config?: types.UpdateCachedContentConfig,
-  ): Promise<types.CachedContent> {
-    let response: Promise<types.CachedContent>;
-    let path: string = '';
-    let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['name'] = name;
-    kwargs['config'] = config;
-    if (this.apiClient.isVertexAI()) {
-      body = updateCachedContentParametersToVertex(this.apiClient, kwargs);
-      path = common.formatMap('{name}', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.patch(
-        path,
-        body,
-        undefined,
-        config?.httpOptions,
-      );
-
-      return response.then((apiResponse) => {
-        const resp = cachedContentFromVertex(this.apiClient, apiResponse);
-
-        return resp as types.CachedContent;
-      });
-    } else {
-      body = updateCachedContentParametersToMldev(this.apiClient, kwargs);
-      path = common.formatMap('{name}', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.patch(
-        path,
-        body,
-        undefined,
-        config?.httpOptions,
-      );
-
-      return response.then((apiResponse) => {
-        const resp = cachedContentFromMldev(this.apiClient, apiResponse);
-
-        return resp as types.CachedContent;
-      });
-    }
-  }
-
-  private async _list(
-    config?: types.ListCachedContentsConfig,
-  ): Promise<types.ListCachedContentsResponse> {
-    let response: Promise<types.ListCachedContentsResponse>;
-    let path: string = '';
-    let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['config'] = config;
-    if (this.apiClient.isVertexAI()) {
-      body = listCachedContentsParametersToVertex(this.apiClient, kwargs);
-      path = common.formatMap('cachedContents', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.get(
-        path,
-        body,
-        types.ListCachedContentsResponse,
-        config?.httpOptions,
-      );
-
-      return response.then((apiResponse) => {
-        const resp = listCachedContentsResponseFromVertex(
-          this.apiClient,
-          apiResponse,
-        );
-        Object.setPrototypeOf(resp, types.ListCachedContentsResponse.prototype);
-        return resp as types.ListCachedContentsResponse;
-      });
-    } else {
-      body = listCachedContentsParametersToMldev(this.apiClient, kwargs);
-      path = common.formatMap('cachedContents', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.get(
-        path,
-        body,
-        types.ListCachedContentsResponse,
-        config?.httpOptions,
-      );
-
-      return response.then((apiResponse) => {
-        const resp = listCachedContentsResponseFromMldev(
-          this.apiClient,
-          apiResponse,
-        );
-        Object.setPrototypeOf(resp, types.ListCachedContentsResponse.prototype);
-        return resp as types.ListCachedContentsResponse;
-      });
-    }
-  }
-
-  list = async (
-    config?: types.ListCachedContentsConfig,
-  ): Promise<Pager<types.CachedContent>> => {
-    return new Pager<types.CachedContent>(
-      PagedItem.PAGED_ITEM_CACHED_CONTENTS,
-      this._list,
-      await this._list(config),
-      config,
-    );
-  };
 }
