@@ -5,30 +5,21 @@
  */
 
 import * as fs from 'fs';
-import * as http from 'http';
-import {URL} from 'url';
 
 import {ApiClient} from './_api_client';
 import {Client, ClientInitOptions} from './node/client';
-import {Live} from './live';
-import {Models} from './models';
 
 export interface ReplayClientInitOpts extends ClientInitOptions {
-  replaysDirectory?: string;
   replayFile?: string;
   replayFileJson?: object;
-  server?: any;
 }
 
 export class ReplayAPIClient extends Client {
-  public readonly server: any;
-  private readonly replaysDirectory: any;
   private replayFile: any;
   private replayFileJson: any;
 
   constructor(opts: ReplayClientInitOpts) {
     super(opts);
-    this.replaysDirectory = process.env['GOOGLE_GENAI_REPLAYS_DIRECTORY'];
     this.replayFile = null;
     this.replayFileJson = null;
   }
