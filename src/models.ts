@@ -1567,10 +1567,11 @@ function generateContentConfigToMldev(
     );
   }
 
-  if (common.getValueByPath(fromObject, ['mediaResolution']) !== undefined) {
-    throw new Error(
-      'mediaResolution parameter is not supported in Gemini API.',
-    );
+  const fromMediaResolution = common.getValueByPath(fromObject, [
+    'mediaResolution',
+  ]);
+  if (fromMediaResolution !== undefined) {
+    common.setValueByPath(toObject, ['mediaResolution'], fromMediaResolution);
   }
 
   const fromSpeechConfig = common.getValueByPath(fromObject, ['speechConfig']);
