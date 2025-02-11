@@ -133,10 +133,39 @@ export function tContents(
   return [tContent(apiClient, origin as types.ContentUnion)!];
 }
 
+export function processSchema(
+    apiClient: ApiClient,
+    schema: types.Schema,
+) {
+  if (!apiClient.isVertexAI()) {
+    if ('title' in schema) {
+      delete schema['title'];
+    }
+
+    if ('default' in schema) {
+      throw new Error(
+          'Default value is not supported in the response schema for the Gemini API.');
+    }
+  }
+
+  if ('anyOf' in schema) {
+    if (!apiClient.isVertexAI()) {
+      throw new Error(
+          'AnyOf is not supported in the response schema for the Gemini API.');
+    }
+    if (schema['anyOf'] !== undefined) {
+      for (const subSchema of schema['anyOf']) {
+        processSchema(apiClient, subSchema);
+      }
+    }
+  }
+}
+
 export function tSchema(
     apiClient: ApiClient,
     schema: types.Schema,
     ): types.Schema {
+  processSchema(apiClient, schema);
   return schema;
 }
 

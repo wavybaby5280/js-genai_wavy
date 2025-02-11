@@ -2125,7 +2125,7 @@ export type ContentUnion = Content | PartUnion[] | PartUnion;
 
 export type ContentListUnion = ContentUnion[] | ContentUnion;
 
-export type SchemaUnion = Record<string, any> | Schema;
+export type SchemaUnion = Schema;
 
 export type SpeechConfigUnion = SpeechConfig | string;
 

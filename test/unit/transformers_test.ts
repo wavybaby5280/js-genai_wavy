@@ -63,13 +63,6 @@ describe('tModel', () => {
   });
 });
 
-describe(
-    'tSchema', () => {it('no change', () => {
-                 const schema = {title: 'title'};
-                 expect(tSchema(new ApiClient({auth: new FakeAuth()}), schema))
-                     .toEqual(schema);
-               })});
-
 describe('tSpeechConfig', () => {
   it('string to speechConfig', () => {
     const speechConfig = {
@@ -88,5 +81,35 @@ describe('tTool', () => {
   it('no change', () => {
     const tool = {functionDeclarations: [{name: 'function-name'}]};
     expect(tTool(new ApiClient({auth: new FakeAuth()}), tool)).toEqual(tool);
+  });
+});
+
+describe('tSchema', () => {
+  it('no change', () => {
+    const schema = {title: 'title'};
+    expect(tSchema(new ApiClient({auth: new FakeAuth(), vertexai: true}), schema)).toEqual(schema);
+  });
+  it('removes title for MLDev', () => {
+    const schema = {title: 'title'};
+    expect(tSchema(new ApiClient({auth: new FakeAuth(), vertexai: false}), schema)).toEqual({});
+  });
+  it('throws error if default value is present for MLDev', () => {
+    const schema = {default: 'default'};
+    expect(() => {tSchema(new ApiClient({auth: new FakeAuth(), vertexai: false}), schema)})
+        .toThrowError(
+            'Default value is not supported in the response schema for the Gemini API.');
+  });
+  it('throws error if anyOf value is present for MLDev', () => {
+    const schema = {anyOf: []};
+    expect(() => {tSchema(new ApiClient({auth: new FakeAuth(), vertexai: false}), schema)})
+        .toThrowError(
+            'AnyOf is not supported in the response schema for the Gemini API.');
+  });
+  it('processes anyOf', () => {
+    const schema = {
+      title: 'title',
+      anyOf: [{title: 'subSchemaTitle1'}, {title: 'subSchemaTitle2'}]
+    };
+    expect(tSchema(new ApiClient({auth: new FakeAuth(), vertexai: true}), schema)).toEqual(schema);
   });
 });
