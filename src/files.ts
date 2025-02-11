@@ -48,8 +48,9 @@ export class Files extends BaseModule {
 
       return response.then((apiResponse) => {
         const resp = listFilesResponseFromVertex(this.apiClient, apiResponse);
-        Object.setPrototypeOf(resp, types.ListFilesResponse.prototype);
-        return resp as types.ListFilesResponse;
+        let typed_resp = new types.ListFilesResponse();
+        Object.assign(typed_resp, resp);
+        return typed_resp;
       });
     } else {
       body = listFilesParametersToMldev(this.apiClient, kwargs);
@@ -64,8 +65,9 @@ export class Files extends BaseModule {
 
       return response.then((apiResponse) => {
         const resp = listFilesResponseFromMldev(this.apiClient, apiResponse);
-        Object.setPrototypeOf(resp, types.ListFilesResponse.prototype);
-        return resp as types.ListFilesResponse;
+        let typed_resp = new types.ListFilesResponse();
+        Object.assign(typed_resp, resp);
+        return typed_resp;
       });
     }
   }

@@ -62,8 +62,9 @@ export class Models extends BaseModule {
           this.apiClient,
           apiResponse,
         );
-        Object.setPrototypeOf(resp, types.GenerateContentResponse.prototype);
-        return resp as types.GenerateContentResponse;
+        let typed_resp = new types.GenerateContentResponse();
+        Object.assign(typed_resp, resp);
+        return typed_resp;
       });
     } else {
       body = generateContentParametersToMldev(this.apiClient, kwargs);
@@ -81,8 +82,9 @@ export class Models extends BaseModule {
           this.apiClient,
           apiResponse,
         );
-        Object.setPrototypeOf(resp, types.GenerateContentResponse.prototype);
-        return resp as types.GenerateContentResponse;
+        let typed_resp = new types.GenerateContentResponse();
+        Object.assign(typed_resp, resp);
+        return typed_resp;
       });
     }
   }
@@ -117,8 +119,9 @@ export class Models extends BaseModule {
       return response.then(async function* (apiResponse: any) {
         for await (const chunk of apiResponse) {
           const resp = generateContentResponseFromVertex(apiClient, chunk);
-          Object.setPrototypeOf(resp, types.GenerateContentResponse.prototype);
-          yield resp as types.GenerateContentResponse;
+          let typed_resp = new types.GenerateContentResponse();
+          Object.assign(typed_resp, resp);
+          yield typed_resp;
         }
       });
     } else {
@@ -139,8 +142,9 @@ export class Models extends BaseModule {
       return response.then(async function* (apiResponse: any) {
         for await (const chunk of apiResponse) {
           const resp = generateContentResponseFromMldev(apiClient, chunk);
-          Object.setPrototypeOf(resp, types.GenerateContentResponse.prototype);
-          yield resp as types.GenerateContentResponse;
+          let typed_resp = new types.GenerateContentResponse();
+          Object.assign(typed_resp, resp);
+          yield typed_resp;
         }
       });
     }
@@ -174,8 +178,9 @@ export class Models extends BaseModule {
           this.apiClient,
           apiResponse,
         );
-        Object.setPrototypeOf(resp, types.EmbedContentResponse.prototype);
-        return resp as types.EmbedContentResponse;
+        let typed_resp = new types.EmbedContentResponse();
+        Object.assign(typed_resp, resp);
+        return typed_resp;
       });
     } else {
       body = embedContentParametersToMldev(this.apiClient, kwargs);
@@ -190,8 +195,9 @@ export class Models extends BaseModule {
 
       return response.then((apiResponse) => {
         const resp = embedContentResponseFromMldev(this.apiClient, apiResponse);
-        Object.setPrototypeOf(resp, types.EmbedContentResponse.prototype);
-        return resp as types.EmbedContentResponse;
+        let typed_resp = new types.EmbedContentResponse();
+        Object.assign(typed_resp, resp);
+        return typed_resp;
       });
     }
   }
@@ -224,8 +230,9 @@ export class Models extends BaseModule {
           this.apiClient,
           apiResponse,
         );
-        Object.setPrototypeOf(resp, types.GenerateImagesResponse.prototype);
-        return resp as types.GenerateImagesResponse;
+        let typed_resp = new types.GenerateImagesResponse();
+        Object.assign(typed_resp, resp);
+        return typed_resp;
       });
     } else {
       body = generateImagesParametersToMldev(this.apiClient, kwargs);
@@ -243,8 +250,9 @@ export class Models extends BaseModule {
           this.apiClient,
           apiResponse,
         );
-        Object.setPrototypeOf(resp, types.GenerateImagesResponse.prototype);
-        return resp as types.GenerateImagesResponse;
+        let typed_resp = new types.GenerateImagesResponse();
+        Object.assign(typed_resp, resp);
+        return typed_resp;
       });
     }
   }
@@ -293,8 +301,9 @@ export class Models extends BaseModule {
 
       return response.then((apiResponse) => {
         const resp = countTokensResponseFromVertex(this.apiClient, apiResponse);
-        Object.setPrototypeOf(resp, types.CountTokensResponse.prototype);
-        return resp as types.CountTokensResponse;
+        let typed_resp = new types.CountTokensResponse();
+        Object.assign(typed_resp, resp);
+        return typed_resp;
       });
     } else {
       body = countTokensParametersToMldev(this.apiClient, kwargs);
@@ -309,8 +318,9 @@ export class Models extends BaseModule {
 
       return response.then((apiResponse) => {
         const resp = countTokensResponseFromMldev(this.apiClient, apiResponse);
-        Object.setPrototypeOf(resp, types.CountTokensResponse.prototype);
-        return resp as types.CountTokensResponse;
+        let typed_resp = new types.CountTokensResponse();
+        Object.assign(typed_resp, resp);
+        return typed_resp;
       });
     }
   }
@@ -343,8 +353,9 @@ export class Models extends BaseModule {
           this.apiClient,
           apiResponse,
         );
-        Object.setPrototypeOf(resp, types.ComputeTokensResponse.prototype);
-        return resp as types.ComputeTokensResponse;
+        let typed_resp = new types.ComputeTokensResponse();
+        Object.assign(typed_resp, resp);
+        return typed_resp;
       });
     } else {
       body = computeTokensParametersToMldev(this.apiClient, kwargs);
@@ -362,8 +373,9 @@ export class Models extends BaseModule {
           this.apiClient,
           apiResponse,
         );
-        Object.setPrototypeOf(resp, types.ComputeTokensResponse.prototype);
-        return resp as types.ComputeTokensResponse;
+        let typed_resp = new types.ComputeTokensResponse();
+        Object.assign(typed_resp, resp);
+        return typed_resp;
       });
     }
   }

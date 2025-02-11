@@ -445,7 +445,9 @@ export class ApiClient {
           try {
             const chunkData = JSON.parse(processedChunkString);
             if (chunkType) {
-              Object.setPrototypeOf(chunkData, chunkType.prototype);
+              let typed_chunk = new chunkType();
+              Object.assign(typed_chunk, chunkData);
+              yield typed_chunk;
             }
             yield chunkData;
             buffer = buffer.slice(match[0].length);
