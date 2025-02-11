@@ -2001,15 +2001,6 @@ function embedContentParametersToMldev(
 ): Record<string, any> {
   const toObject: Record<string, any> = {};
 
-  const fromModelForEmbedContent = common.getValueByPath(fromObject, ['model']);
-  if (fromModelForEmbedContent !== undefined) {
-    common.setValueByPath(
-      toObject,
-      ['requests[]', 'model'],
-      [t.tModel(apiClient, fromModelForEmbedContent)],
-    );
-  }
-
   const fromModel = common.getValueByPath(fromObject, ['model']);
   if (fromModel !== undefined) {
     common.setValueByPath(
@@ -2037,6 +2028,14 @@ function embedContentParametersToMldev(
     );
   }
 
+  const fromModelForEmbedContent = common.getValueByPath(fromObject, ['model']);
+  if (fromModelForEmbedContent !== undefined) {
+    common.setValueByPath(
+      toObject,
+      ['requests[]', 'model'],
+      t.tModel(apiClient, fromModelForEmbedContent),
+    );
+  }
   return toObject;
 }
 

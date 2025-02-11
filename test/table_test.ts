@@ -217,7 +217,8 @@ function normalizeBody(body: string) {
     if (body === undefined) {
       return body;
     }
-    let parsedBody = JSON.parse(body);
+    let camelCaseBody = snakeToCamel(body);
+    let parsedBody = JSON.parse(camelCaseBody);
     if (typeof parsedBody === 'object' && parsedBody !== null) {
       for (const key of Object.keys(parsedBody as object)) {
         let value = (parsedBody as any)[key];
@@ -370,11 +371,6 @@ function shouldSkipTestTableItem(
     );
     return true;
   }
-
-  // TODO(b/392700953): Remove once this test works.
-  if (testName.startsWith('models.embedContent.test_multi_texts_with_config')) {
-    return true;
-  }
   return false;
 }
 
@@ -502,8 +498,8 @@ describe('TableTest', () => {
         const request = requestArgs[1];
         const url = requestArgs[0];
         assertMessagesEqual(
-          normalizeRequest(request, url),
-          expectedRequestCamelCase,
+            normalizeRequest(request, url),
+            expectedRequestCamelCase,
         );
       }
       // Get the last response from the replay file, which will be the response
@@ -516,7 +512,7 @@ describe('TableTest', () => {
           numInteractions - 1,
         );
       const responseCamelCase = JSON.parse(
-        snakeToCamel(JSON.stringify(response)),
+          snakeToCamel(JSON.stringify(response)),
       );
       const expectedResponseCamelCase = JSON.parse(
         snakeToCamel(JSON.stringify(expectedResponse)),
