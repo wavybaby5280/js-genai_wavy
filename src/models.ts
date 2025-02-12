@@ -581,10 +581,11 @@ function schemaToMldev(
     throw new Error('example parameter is not supported in Gemini API.');
   }
 
-  if (common.getValueByPath(fromObject, ['propertyOrdering']) !== undefined) {
-    throw new Error(
-      'propertyOrdering parameter is not supported in Gemini API.',
-    );
+  const fromPropertyOrdering = common.getValueByPath(fromObject, [
+    'propertyOrdering',
+  ]);
+  if (fromPropertyOrdering !== undefined) {
+    common.setValueByPath(toObject, ['propertyOrdering'], fromPropertyOrdering);
   }
 
   if (common.getValueByPath(fromObject, ['pattern']) !== undefined) {
