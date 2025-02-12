@@ -7,6 +7,9 @@
 import { Auth } from '../src/_auth';
 import { AUTHORIZATION_HEADER, GOOGLE_API_KEY_HEADER } from '../src/node/_node_auth';
 
+/**
+ * A mock implementation of the Auth interface for testing purposes.
+ */
 export class FakeAuth implements Auth {
   constructor(private readonly apiKey?: string) {}
 

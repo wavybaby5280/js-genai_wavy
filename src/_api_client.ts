@@ -20,7 +20,9 @@ const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
 const responseLineRE = /^data: (.*)(?:\n\n|\r\r|\r\n\r\n)/;
 
-// Client errors raised by the GenAI API.
+/**
+ * Client errors raised by the GenAI API.
+ */
 export class ClientError extends Error {
   constructor(message: string, stackTrace?: string) {
     if (stackTrace) {
@@ -33,7 +35,9 @@ export class ClientError extends Error {
   }
 }
 
-// Server errors raised by the GenAI API.
+/**
+ * Server errors raised by the GenAI API.
+ */
 export class ServerError extends Error {
   constructor(message: string, stackTrace?: string) {
     if (stackTrace) {
@@ -93,6 +97,10 @@ export interface ApiClientInitOptions {
   userAgentExtra?: string;
 }
 
+/**
+ * The ApiClient class is used to send requests to the Gemini API or Vertex AI
+ * endpoints.
+ */
 export class ApiClient {
   private readonly clientOptions: ApiClientInitOptions;
 

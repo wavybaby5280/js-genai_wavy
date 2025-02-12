@@ -9,11 +9,24 @@ import * as fs from 'fs';
 import {ApiClient} from './_api_client';
 import {Client, ClientInitOptions} from './node/client';
 
+/**
+ * Configuration options for initializing a `ReplayClient`.
+ *
+ * This interface extends the base {@link ./_api_client.ClientInitOptions} and
+ * private fields to hold the replay file's path or its JSON format.
+ *
+ * @interface
+ * @extends ClientInitOptions
+ */
 export interface ReplayClientInitOpts extends ClientInitOptions {
   replayFile?: string;
   replayFileJson?: object;
 }
 
+/**
+ * The ReplayAPIClient class is used to execute intergration tests in replay
+ * mode, where the API responses are loaded and constructed from recorded files.
+ */
 export class ReplayAPIClient extends Client {
   private replayFile: any;
   private replayFileJson: any;
@@ -64,7 +77,6 @@ export class ReplayAPIClient extends Client {
    * Sets all the interaction responses on the replay client using the fetch
    * spy.
    */
-
   setupReplayResponses(fetchSpy: any) {
     const responseJson: any =
         JSON.parse(fs.readFileSync(this.replayFile, {encoding: 'utf8'}));

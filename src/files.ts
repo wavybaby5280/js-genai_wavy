@@ -18,6 +18,21 @@ export class Files extends BaseModule {
     super();
   }
 
+  /**
+   * This method lists all files from the service.
+   *
+   * @param config - The configuration for the list request
+   * @returns The paginated results of the list of files
+   *
+   * @example
+   * The following code prints the names of all files from the service, the
+   * szie of each page is 2.
+   *
+   * const listResponse = await client.files.list({'pageSize': 2});
+   * for await (const file of listResponse) {
+   *   console.log(file.name());
+   * }
+   */
   list = async (config?: types.ListFilesConfig): Promise<Pager<types.File>> => {
     return new Pager<types.File>(
       PagedItem.PAGED_ITEM_FILES,
