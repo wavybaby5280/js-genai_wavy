@@ -19,35 +19,34 @@ export class Caches extends BaseModule {
   }
 
   list = async (
-    config?: types.ListCachedContentsConfig,
+    params: types.ListCachedContentsParameters = {},
   ): Promise<Pager<types.CachedContent>> => {
     return new Pager<types.CachedContent>(
       PagedItem.PAGED_ITEM_CACHED_CONTENTS,
       this.listInternal,
-      await this.listInternal(config),
-      config,
+      await this.listInternal(params),
+      params.config,
     );
   };
 
   async create(
-    model: string,
-    config?: types.CreateCachedContentConfig,
+    params: types.CreateCachedContentParameters,
   ): Promise<types.CachedContent> {
     let response: Promise<types.CachedContent>;
     let path: string = '';
     let body: Record<string, any> = {};
     const kwargs: Record<string, any> = {};
-    kwargs['model'] = model;
-    kwargs['config'] = config;
+    kwargs['model'] = params.model;
+    kwargs['config'] = params.config;
     if (this.apiClient.isVertexAI()) {
       body = createCachedContentParametersToVertex(this.apiClient, kwargs);
       path = common.formatMap('cachedContents', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
+      delete body['config'];
       response = this.apiClient.post(
         path,
         body,
         undefined,
-        config?.httpOptions,
+        params.config?.httpOptions,
       );
 
       return response.then((apiResponse) => {
@@ -58,12 +57,12 @@ export class Caches extends BaseModule {
     } else {
       body = createCachedContentParametersToMldev(this.apiClient, kwargs);
       path = common.formatMap('cachedContents', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
+      delete body['config'];
       response = this.apiClient.post(
         path,
         body,
         undefined,
-        config?.httpOptions,
+        params.config?.httpOptions,
       );
 
       return response.then((apiResponse) => {
@@ -75,20 +74,24 @@ export class Caches extends BaseModule {
   }
 
   async get(
-    name: string,
-    config?: types.GetCachedContentConfig,
+    params: types.GetCachedContentParameters,
   ): Promise<types.CachedContent> {
     let response: Promise<types.CachedContent>;
     let path: string = '';
     let body: Record<string, any> = {};
     const kwargs: Record<string, any> = {};
-    kwargs['name'] = name;
-    kwargs['config'] = config;
+    kwargs['name'] = params.name;
+    kwargs['config'] = params.config;
     if (this.apiClient.isVertexAI()) {
       body = getCachedContentParametersToVertex(this.apiClient, kwargs);
       path = common.formatMap('{name}', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.get(path, body, undefined, config?.httpOptions);
+      delete body['config'];
+      response = this.apiClient.get(
+        path,
+        body,
+        undefined,
+        params.config?.httpOptions,
+      );
 
       return response.then((apiResponse) => {
         const resp = cachedContentFromVertex(this.apiClient, apiResponse);
@@ -98,8 +101,13 @@ export class Caches extends BaseModule {
     } else {
       body = getCachedContentParametersToMldev(this.apiClient, kwargs);
       path = common.formatMap('{name}', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.get(path, body, undefined, config?.httpOptions);
+      delete body['config'];
+      response = this.apiClient.get(
+        path,
+        body,
+        undefined,
+        params.config?.httpOptions,
+      );
 
       return response.then((apiResponse) => {
         const resp = cachedContentFromMldev(this.apiClient, apiResponse);
@@ -110,24 +118,23 @@ export class Caches extends BaseModule {
   }
 
   async delete(
-    name: string,
-    config?: types.DeleteCachedContentConfig,
+    params: types.DeleteCachedContentParameters,
   ): Promise<types.DeleteCachedContentResponse> {
     let response: Promise<types.DeleteCachedContentResponse>;
     let path: string = '';
     let body: Record<string, any> = {};
     const kwargs: Record<string, any> = {};
-    kwargs['name'] = name;
-    kwargs['config'] = config;
+    kwargs['name'] = params.name;
+    kwargs['config'] = params.config;
     if (this.apiClient.isVertexAI()) {
       body = deleteCachedContentParametersToVertex(this.apiClient, kwargs);
       path = common.formatMap('{name}', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
+      delete body['config'];
       response = this.apiClient.delete(
         path,
         body,
         types.DeleteCachedContentResponse,
-        config?.httpOptions,
+        params.config?.httpOptions,
       );
 
       return response.then((apiResponse) => {
@@ -142,12 +149,12 @@ export class Caches extends BaseModule {
     } else {
       body = deleteCachedContentParametersToMldev(this.apiClient, kwargs);
       path = common.formatMap('{name}', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
+      delete body['config'];
       response = this.apiClient.delete(
         path,
         body,
         types.DeleteCachedContentResponse,
-        config?.httpOptions,
+        params.config?.httpOptions,
       );
 
       return response.then((apiResponse) => {
@@ -163,24 +170,23 @@ export class Caches extends BaseModule {
   }
 
   async update(
-    name: string,
-    config?: types.UpdateCachedContentConfig,
+    params: types.UpdateCachedContentParameters,
   ): Promise<types.CachedContent> {
     let response: Promise<types.CachedContent>;
     let path: string = '';
     let body: Record<string, any> = {};
     const kwargs: Record<string, any> = {};
-    kwargs['name'] = name;
-    kwargs['config'] = config;
+    kwargs['name'] = params.name;
+    kwargs['config'] = params.config;
     if (this.apiClient.isVertexAI()) {
       body = updateCachedContentParametersToVertex(this.apiClient, kwargs);
       path = common.formatMap('{name}', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
+      delete body['config'];
       response = this.apiClient.patch(
         path,
         body,
         undefined,
-        config?.httpOptions,
+        params.config?.httpOptions,
       );
 
       return response.then((apiResponse) => {
@@ -191,12 +197,12 @@ export class Caches extends BaseModule {
     } else {
       body = updateCachedContentParametersToMldev(this.apiClient, kwargs);
       path = common.formatMap('{name}', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
+      delete body['config'];
       response = this.apiClient.patch(
         path,
         body,
         undefined,
-        config?.httpOptions,
+        params.config?.httpOptions,
       );
 
       return response.then((apiResponse) => {
@@ -208,22 +214,22 @@ export class Caches extends BaseModule {
   }
 
   private async listInternal(
-    config?: types.ListCachedContentsConfig,
+    params: types.ListCachedContentsParameters,
   ): Promise<types.ListCachedContentsResponse> {
     let response: Promise<types.ListCachedContentsResponse>;
     let path: string = '';
     let body: Record<string, any> = {};
     const kwargs: Record<string, any> = {};
-    kwargs['config'] = config;
+    kwargs['config'] = params.config;
     if (this.apiClient.isVertexAI()) {
       body = listCachedContentsParametersToVertex(this.apiClient, kwargs);
       path = common.formatMap('cachedContents', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
+      delete body['config'];
       response = this.apiClient.get(
         path,
         body,
         types.ListCachedContentsResponse,
-        config?.httpOptions,
+        params.config?.httpOptions,
       );
 
       return response.then((apiResponse) => {
@@ -238,12 +244,12 @@ export class Caches extends BaseModule {
     } else {
       body = listCachedContentsParametersToMldev(this.apiClient, kwargs);
       path = common.formatMap('cachedContents', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
+      delete body['config'];
       response = this.apiClient.get(
         path,
         body,
         types.ListCachedContentsResponse,
-        config?.httpOptions,
+        params.config?.httpOptions,
       );
 
       return response.then((apiResponse) => {

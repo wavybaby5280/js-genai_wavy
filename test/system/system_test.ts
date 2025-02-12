@@ -19,11 +19,11 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000; // 30 seconds
 describe('generateContent', () => {
   it('ML Dev should generate content with specified parameters', async () => {
     const client = new Client({vertexai: false, apiKey: GOOGLE_API_KEY});
-    const response = await client.models.generateContent(
-      'gemini-1.5-flash',
-      'why is the sky blue?',
-      {maxOutputTokens: 20, candidateCount: 1},
-    );
+    const response = await client.models.generateContent({
+      model: 'gemini-1.5-flash',
+      contents: 'why is the sky blue?',
+      config: {maxOutputTokens: 20, candidateCount: 1},
+    });
     expect(response.candidates!.length).toBe(
       1,
       'Expected 1 candidate got ' + response.candidates!.length,
@@ -45,11 +45,11 @@ describe('generateContent', () => {
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
     });
-    const response = await client.models.generateContent(
-      'gemini-1.5-flash',
-      'why is the sky blue?',
-      {maxOutputTokens: 20, candidateCount: 1},
-    );
+    const response = await client.models.generateContent({
+      model: 'gemini-1.5-flash',
+      contents: 'why is the sky blue?',
+      config: {maxOutputTokens: 20, candidateCount: 1},
+    });
     expect(response.candidates!.length).toBe(
       1,
       'Expected 1 candidate got ' + response.candidates!.length,
@@ -67,11 +67,11 @@ describe('generateContent', () => {
 
   it('ML Dev should generate content with system instruction', async () => {
     const client = new Client({vertexai: false, apiKey: GOOGLE_API_KEY});
-    const response = await client.models.generateContent(
-      'gemini-1.5-flash',
-      'high',
-      {systemInstruction: 'I say high you say low'},
-    );
+    const response = await client.models.generateContent({
+      model: 'gemini-1.5-flash',
+      contents: 'high',
+      config: {systemInstruction: 'I say high you say low'},
+    });
     const responseText = response.text();
     expect(responseText?.includes('low') ?? false).toBe(
       true,
@@ -89,11 +89,11 @@ describe('generateContent', () => {
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
     });
-    const response = await client.models.generateContent(
-      'gemini-1.5-flash',
-      'high',
-      {systemInstruction: 'I say high you say low.'},
-    );
+    const response = await client.models.generateContent({
+      model: 'gemini-1.5-flash',
+      contents: 'high',
+      config: {systemInstruction: 'I say high you say low.'},
+    });
     const responseText = response.text();
     expect(responseText?.includes('low') ?? false).toBe(
       true,
@@ -111,11 +111,11 @@ describe('generateContent', () => {
          project: GOOGLE_CLOUD_PROJECT,
          location: GOOGLE_CLOUD_LOCATION,
        });
-       const response = await client.models.generateContent(
-           'gemini-1.5-flash',
-           'high',
-           {systemInstruction: 'I say high you say low.'},
-       );
+       const response = await client.models.generateContent({
+         model: 'gemini-1.5-flash',
+         contents: 'high',
+         config: {systemInstruction: 'I say high you say low.'},
+       });
        console.info(
            'Vertex AI should use application default credentials when no auth options are provided\n',
        );
@@ -132,11 +132,11 @@ describe('generateContent', () => {
       googleAuthOptions: googleAuthOptions,
     });
     try {
-      const response = await client.models.generateContent(
-          'gemini-1.5-flash',
-          'why is the sky blue?',
-          {maxOutputTokens: 20, candidateCount: 1},
-      );
+      const response = await client.models.generateContent({
+        model: 'gemini-1.5-flash',
+        contents: 'why is the sky blue?',
+        config: {maxOutputTokens: 20, candidateCount: 1},
+      });
       console.info(
           'Vertex AI should allow user provided googleAuth objects\n',
       );
@@ -152,11 +152,11 @@ describe('generateContent', () => {
 describe('generateContentStream', () => {
   it('ML Dev should stream generate content with specified parameters', async () => {
     const client = new Client({vertexai: false, apiKey: GOOGLE_API_KEY});
-    const response = await client.models.generateContentStream(
-      'gemini-1.5-flash',
-      'why is the sky blue?',
-      {candidateCount: 1, maxOutputTokens: 200},
-    );
+    const response = await client.models.generateContentStream({
+      model: 'gemini-1.5-flash',
+      contents: 'why is the sky blue?',
+      config: {candidateCount: 1, maxOutputTokens: 200},
+    });
     let i = 1;
     let finalChunk: any;
     console.info(
@@ -186,11 +186,11 @@ describe('generateContentStream', () => {
          project: GOOGLE_CLOUD_PROJECT,
          location: GOOGLE_CLOUD_LOCATION,
        });
-       const response = await client.models.generateContentStream(
-           'gemini-1.5-flash',
-           'why is the sky blue?',
-           {candidateCount: 1, maxOutputTokens: 200},
-       );
+       const response = await client.models.generateContentStream({
+         model: 'gemini-1.5-flash',
+         contents: 'why is the sky blue?',
+         config: {candidateCount: 1, maxOutputTokens: 200},
+       });
        let i = 1;
        let finalChunk: any;
        console.info(
@@ -216,16 +216,16 @@ describe('generateContentStream', () => {
 
   it('ML Dev should stream generate content with system instruction', async () => {
     const client = new Client({vertexai: false, apiKey: GOOGLE_API_KEY});
-    const response = await client.models.generateContentStream(
-      'gemini-1.5-flash',
-      'high',
-      {
+    const response = await client.models.generateContentStream({
+      model: 'gemini-1.5-flash',
+      contents: 'high',
+      config: {
         systemInstruction:
-          'I say high you say low, and then tell me why is the sky blue.',
+            'I say high you say low, and then tell me why is the sky blue.',
         candidateCount: 1,
         maxOutputTokens: 200,
       },
-    );
+    });
     let i = 1;
     let finalChunk: any;
     console.info(
@@ -254,16 +254,16 @@ describe('generateContentStream', () => {
          project: GOOGLE_CLOUD_PROJECT,
          location: GOOGLE_CLOUD_LOCATION,
        });
-       const response = await client.models.generateContentStream(
-           'gemini-1.5-flash',
-           'high',
-           {
-             systemInstruction:
-                 'I say high you say low, then tell me why is the sky blue.',
-             maxOutputTokens: 200,
-             candidateCount: 1,
-           },
-       );
+       const response = await client.models.generateContentStream({
+         model: 'gemini-1.5-flash',
+         contents: 'high',
+         config: {
+           systemInstruction:
+               'I say high you say low, then tell me why is the sky blue.',
+           maxOutputTokens: 200,
+           candidateCount: 1,
+         },
+       });
        let i = 1;
        let finalChunk: any;
        console.info(
@@ -291,11 +291,11 @@ describe('generateContentStream', () => {
 describe('generateImages', () => {
   it('ML Dev should generate image with specified parameters', async () => {
     const client = new Client({vertexai: false, apiKey: GOOGLE_API_KEY});
-    const response = await client.models.generateImages(
-        'imagen-3.0-generate-002',
-        'Robot holding a red skateboard',
-        {numberOfImages: 1, outputMimeType: 'image/jpeg'},
-    );
+    const response = await client.models.generateImages({
+      model: 'imagen-3.0-generate-002',
+      prompt: 'Robot holding a red skateboard',
+      config: {numberOfImages: 1, outputMimeType: 'image/jpeg'},
+    });
     expect(response?.generatedImages!.length)
         .toBe(
             1,
@@ -312,11 +312,11 @@ describe('generateImages', () => {
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
     });
-    const response = await client.models.generateImages(
-        'imagen-3.0-generate-001',
-        'Robot holding a red skateboard',
-        {numberOfImages: 1, outputMimeType: 'image/jpeg'},
-    );
+    const response = await client.models.generateImages({
+      model: 'imagen-3.0-generate-002',
+      prompt: 'Robot holding a red skateboard',
+      config: {numberOfImages: 1, outputMimeType: 'image/jpeg'},
+    });
     expect(response?.generatedImages!.length)
         .toBe(
             1,
@@ -335,23 +335,23 @@ describe('test async performance', () => {
   it('generate content should complete in less than 10 seconds', async () => {
     const client = new Client({vertexai: false, apiKey: GOOGLE_API_KEY});
     async function firstAsyncFunc() {
-      const response1 = client.models.generateContent(
-        'gemini-1.5-flash',
-        'high',
-        {
+      const response1 = client.models.generateContent({
+        model: 'gemini-1.5-flash',
+        contents: 'high',
+        config: {
           systemInstruction: 'I say high you say low.',
         },
-      );
+      });
       await new Promise((resolve) => setTimeout(resolve, 5000)); // artificially add 5 seconds delay
     }
     async function secondAsyncFunc() {
-      const response2 = client.models.generateContent(
-        'gemini-1.5-flash',
-        'high',
-        {
+      const response2 = client.models.generateContent({
+        model: 'gemini-1.5-flash',
+        contents: 'high',
+        config: {
           systemInstruction: 'I say high you say low.',
         },
-      );
+      });
       await new Promise((resolve) => setTimeout(resolve, 10000)); // artificially add 10 seconds timeout
     }
     const startTime = performance.now(); // Record start time
@@ -375,23 +375,23 @@ describe('test async performance', () => {
   it('stream generate content should complete in less than 10 seconds', async () => {
     const client = new Client({vertexai: false, apiKey: GOOGLE_API_KEY});
     async function firstAsyncFunc() {
-      const response1 = client.models.generateContentStream(
-        'gemini-1.5-flash',
-        'high',
-        {
+      const response1 = client.models.generateContentStream({
+        model: 'gemini-1.5-flash',
+        contents: 'high',
+        config: {
           systemInstruction: 'I say high you say low.',
         },
-      );
+      });
       await new Promise((resolve) => setTimeout(resolve, 5000)); // artificially add 5 seconds delay
     }
     async function secondAsyncFunc() {
-      const response2 = client.models.generateContentStream(
-        'gemini-1.5-flash',
-        'high',
-        {
+      const response2 = client.models.generateContentStream({
+        model: 'gemini-1.5-flash',
+        contents: 'high',
+        config: {
           systemInstruction: 'I say high you say low.',
         },
-      );
+      });
       await new Promise((resolve) => setTimeout(resolve, 10000)); // artificially add 10 seconds timeout
     }
     const startTime = performance.now(); // Record start time
@@ -415,25 +415,25 @@ describe('test async performance', () => {
 });
 
 describe('test forward compatibility', () => {
-  it('generate content should return thought field when supported', async () => {
+  it('generate content should not return thought field', async () => {
     const client = new Client({
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
       httpOptions: {apiVersion: 'v1alpha'}
     });
-    const response = await client.models.generateContent(
-        'gemini-2.0-flash-thinking-exp',
-        'What is the sum of natural numbers from 1 to 100?',
-        {
-          maxOutputTokens: 20,
-          candidateCount: 1,
-          thinkingConfig: {includeThoughts: true}
-        },
-    );
+    const response = await client.models.generateContent({
+      model: 'gemini-2.0-flash-thinking-exp',
+      contents: 'What is the sum of natural numbers from 1 to 100?',
+      config: {
+        maxOutputTokens: 20,
+        candidateCount: 1,
+        thinkingConfig: {includeThoughts: true}
+      },
+    });
     expect(JSON.stringify(response))
-        .toContain(
+        .not.toContain(
             '"thought":true',
-            'Expected response to contain field "thought" which is not yet supported in the model definition.');
+            'Expected response to not contain field "thought');
   });
 });
 
@@ -441,11 +441,10 @@ describe('countTokens', () => {
   it('ML Dev should count tokens with specified parameters', async () => {
     const client = new Client({vertexai: false, apiKey: GOOGLE_API_KEY});
 
-    const response = await client.models.countTokens(
-        'gemini-1.5-flash',
-        'The quick brown fox jumps over the lazy dog.',
-        {},
-    );
+    const response = await client.models.countTokens({
+      model: 'gemini-1.5-flash',
+      contents: 'The quick brown fox jumps over the lazy dog.',
+    });
     expect(response!.totalTokens ?? 0)
         .toBeGreaterThan(
             0,
@@ -464,11 +463,10 @@ describe('countTokens', () => {
       location: GOOGLE_CLOUD_LOCATION,
     });
 
-    const response = await client.models.countTokens(
-      'gemini-1.5-flash',
-      'The quick brown fox jumps over the lazy dog.',
-      {},
-    );
+    const response = await client.models.countTokens({
+      model: 'gemini-1.5-flash',
+      contents: 'The quick brown fox jumps over the lazy dog.',
+    });
     expect(response!.totalTokens ?? 0)
         .toBeGreaterThan(
             0,
@@ -489,11 +487,10 @@ describe('embedContent', () => {
       location: GOOGLE_CLOUD_LOCATION,
     });
 
-    const response = await client.models.embedContent(
-      'text-embedding-004',
-      'Hello world',
-      {},
-    );
+    const response = await client.models.embedContent({
+      model: 'text-embedding-004',
+      contents: 'Hello world',
+    });
     expect(response!.embeddings!.length)
         .toBeGreaterThan(
             0,
@@ -514,11 +511,10 @@ describe('computeTokens', () => {
       location: GOOGLE_CLOUD_LOCATION,
     });
 
-    const response = await client.models.computeTokens(
-      'gemini-1.5-flash',
-      'The quick brown fox jumps over the lazy dog.',
-      {},
-    );
+    const response = await client.models.computeTokens({
+      model: 'gemini-1.5-flash',
+      contents: 'The quick brown fox jumps over the lazy dog.',
+    });
     expect(response!.tokensInfo!.length)
         .toBeGreaterThan(
             0,
@@ -555,24 +551,41 @@ describe('cachedContent', () => {
     };
 
     const cache = await client.caches.create(
-        'gemini-1.5-pro-002',
-        {contents: [cachedContent1, cachedContent2]},
+        {
+          model: 'gemini-1.5-pro-002',
+          config: {contents: [cachedContent1, cachedContent2]}
+        },
     );
     expect(cache.name).toBeDefined();
 
-    const getResponse = await client.caches.get(cache.name ?? '');
+    const getResponse = await client.caches.get({name: cache.name ?? ''});
     expect(getResponse.name)
         .toBe(
             cache.name,
             'Expected getResponse to contain the created cache name.',
         );
   });
+
+  it('Vertex AI should return list of caches', async () => {
+    const client = new Client({
+      vertexai: true,
+      project: GOOGLE_CLOUD_PROJECT,
+      location: GOOGLE_CLOUD_LOCATION,
+    });
+
+    const no_config_response = await client.caches.list();
+    const with_config_response =
+        await client.caches.list({config: {pageSize: 2}});
+
+    expect(no_config_response.len()).toBeGreaterThan(0);
+    expect(with_config_response).toBeGreaterThan(0);
+  })
 });
 
 describe('files', () => {
   it('ML Dev should list files with specified parameters', async () => {
     const client = new Client({vertexai: false, apiKey: GOOGLE_API_KEY});
-    const response = await client.files.list({'pageSize': 2});
+    const response = await client.files.list({config: {'pageSize': 2}});
     expect(response!.len() ?? 0)
         .toBeGreaterThan(
             0,

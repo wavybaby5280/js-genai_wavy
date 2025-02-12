@@ -21,44 +21,46 @@ export class Files extends BaseModule {
   /**
    * This method lists all files from the service.
    *
-   * @param config - The configuration for the list request
+   * @param params - The parameters for the list request
    * @returns The paginated results of the list of files
    *
    * @example
    * The following code prints the names of all files from the service, the
    * szie of each page is 2.
    *
-   * const listResponse = await client.files.list({'pageSize': 2});
+   * const listResponse = await client.files.list({config: {'pageSize': 2}});
    * for await (const file of listResponse) {
    *   console.log(file.name());
    * }
    */
-  list = async (config?: types.ListFilesConfig): Promise<Pager<types.File>> => {
+  list = async (
+    params: types.ListFilesParameters = {},
+  ): Promise<Pager<types.File>> => {
     return new Pager<types.File>(
       PagedItem.PAGED_ITEM_FILES,
       this.listInternal,
-      await this.listInternal(config),
-      config,
+      await this.listInternal(params),
+      params.config,
     );
   };
 
   private async listInternal(
-    config?: types.ListFilesConfig,
+    params: types.ListFilesParameters,
   ): Promise<types.ListFilesResponse> {
     let response: Promise<types.ListFilesResponse>;
     let path: string = '';
     let body: Record<string, any> = {};
     const kwargs: Record<string, any> = {};
-    kwargs['config'] = config;
+    kwargs['config'] = params.config;
     if (this.apiClient.isVertexAI()) {
       body = listFilesParametersToVertex(this.apiClient, kwargs);
       path = common.formatMap('None', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
+      delete body['config'];
       response = this.apiClient.get(
         path,
         body,
         types.ListFilesResponse,
-        config?.httpOptions,
+        params.config?.httpOptions,
       );
 
       return response.then((apiResponse) => {
@@ -70,12 +72,12 @@ export class Files extends BaseModule {
     } else {
       body = listFilesParametersToMldev(this.apiClient, kwargs);
       path = common.formatMap('files', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
+      delete body['config'];
       response = this.apiClient.get(
         path,
         body,
         types.ListFilesResponse,
-        config?.httpOptions,
+        params.config?.httpOptions,
       );
 
       return response.then((apiResponse) => {
@@ -87,18 +89,23 @@ export class Files extends BaseModule {
     }
   }
 
-  async get(name: string, config?: types.GetFileConfig): Promise<types.File> {
+  async get(params: types.GetFileParameters): Promise<types.File> {
     let response: Promise<types.File>;
     let path: string = '';
     let body: Record<string, any> = {};
     const kwargs: Record<string, any> = {};
-    kwargs['name'] = name;
-    kwargs['config'] = config;
+    kwargs['name'] = params.name;
+    kwargs['config'] = params.config;
     if (this.apiClient.isVertexAI()) {
       body = getFileParametersToVertex(this.apiClient, kwargs);
       path = common.formatMap('None', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.get(path, body, undefined, config?.httpOptions);
+      delete body['config'];
+      response = this.apiClient.get(
+        path,
+        body,
+        undefined,
+        params.config?.httpOptions,
+      );
 
       return response.then((apiResponse) => {
         const resp = fileFromVertex(this.apiClient, apiResponse);
@@ -108,8 +115,13 @@ export class Files extends BaseModule {
     } else {
       body = getFileParametersToMldev(this.apiClient, kwargs);
       path = common.formatMap('files/{file}', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
-      response = this.apiClient.get(path, body, undefined, config?.httpOptions);
+      delete body['config'];
+      response = this.apiClient.get(
+        path,
+        body,
+        undefined,
+        params.config?.httpOptions,
+      );
 
       return response.then((apiResponse) => {
         const resp = fileFromMldev(this.apiClient, apiResponse);

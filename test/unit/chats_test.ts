@@ -53,15 +53,17 @@ describe('sendMessage invalid response', () => {
       let response = await chat.sendMessage('send message 1');
       expect(response).toEqual(testCase.response);
       response = await chat.sendMessage('send message 2');
-      expect(modelsModule.generateContent)
-          .toHaveBeenCalledWith(
-              'gemini-1.5-flash',
-              [{role: 'user', parts: [{text: 'send message 1'}]}], {})
+      expect(modelsModule.generateContent).toHaveBeenCalledWith({
+        model: 'gemini-1.5-flash',
+        contents: [{role: 'user', parts: [{text: 'send message 1'}]}],
+        config: {},
+      });
       // Verify that invalid response and request are not added to the
-      expect(modelsModule.generateContent)
-          .toHaveBeenCalledWith(
-              'gemini-1.5-flash',
-              [{role: 'user', parts: [{text: 'send message 2'}]}], {})
+      expect(modelsModule.generateContent).toHaveBeenCalledWith({
+        model: 'gemini-1.5-flash',
+        contents: [{role: 'user', parts: [{text: 'send message 2'}]}],
+        config: {},
+      })
     });
   });
 });
@@ -90,20 +92,21 @@ describe(
       let response = await chat.sendMessage('send message 1');
       expect(response).toEqual(validResponse);
       response = await chat.sendMessage('send message 2');
-      expect(modelsModule.generateContent)
-          .toHaveBeenCalledWith(
-              'gemini-1.5-flash',
-              [{role: 'user', parts: [{text: 'send message 1'}]}], {});
+      expect(modelsModule.generateContent).toHaveBeenCalledWith({
+        model: 'gemini-1.5-flash',
+        contents: [{role: 'user', parts: [{text: 'send message 1'}]}],
+        config: {},
+      });
       // Verify that valid response and request are added to the history.
-      expect(modelsModule.generateContent)
-          .toHaveBeenCalledWith(
-              'gemini-1.5-flash',
-              [
-                {role: 'user', parts: [{text: 'send message 1'}]},
-                {role: 'model', parts: [{text: 'valid response 1'}]},
-                {role: 'user', parts: [{text: 'send message 2'}]},
-              ],
-              {});
+      expect(modelsModule.generateContent).toHaveBeenCalledWith({
+        model: 'gemini-1.5-flash',
+        contents: [
+          {role: 'user', parts: [{text: 'send message 1'}]},
+          {role: 'model', parts: [{text: 'valid response 1'}]},
+          {role: 'user', parts: [{text: 'send message 2'}]},
+        ],
+        config: {},
+      });
     })});
 
 
@@ -146,15 +149,17 @@ describe('sendMessageStream invalid response', () => {
     const chat = client.chats.create('gemini-1.5-flash', {}, []);
     let response = await chat.sendMessageStream('send message 1');
     response = await chat.sendMessageStream('send message 2');
-    expect(modelsModule.generateContentStream)
-        .toHaveBeenCalledWith(
-            'gemini-1.5-flash',
-            [{role: 'user', parts: [{text: 'send message 1'}]}], {})
+    expect(modelsModule.generateContentStream).toHaveBeenCalledWith({
+      model: 'gemini-1.5-flash',
+      contents: [{role: 'user', parts: [{text: 'send message 1'}]}],
+      config: {},
+    })
     // Verify that invalid response and request are not added to the history.
-    expect(modelsModule.generateContentStream)
-        .toHaveBeenCalledWith(
-            'gemini-1.5-flash',
-            [{role: 'user', parts: [{text: 'send message 2'}]}], {})
+    expect(modelsModule.generateContentStream).toHaveBeenCalledWith({
+      model: 'gemini-1.5-flash',
+      contents: [{role: 'user', parts: [{text: 'send message 2'}]}],
+      config: {},
+    })
   });
 });
 
@@ -203,20 +208,21 @@ describe('sendMessageStream valid response', () => {
     chunk = await response.next();
     expect(chunk.value).toEqual(responseChunk2);
     response = await chat.sendMessageStream('send message 2');
-    expect(modelsModule.generateContentStream)
-        .toHaveBeenCalledWith(
-            'gemini-1.5-flash',
-            [{role: 'user', parts: [{text: 'send message 1'}]}], {})
+    expect(modelsModule.generateContentStream).toHaveBeenCalledWith({
+      model: 'gemini-1.5-flash',
+      contents: [{role: 'user', parts: [{text: 'send message 1'}]}],
+      config: {},
+    })
     // Verify that valid response and request are added to the history.
-    expect(modelsModule.generateContentStream)
-        .toHaveBeenCalledWith(
-            'gemini-1.5-flash',
-            [
-              {role: 'user', parts: [{text: 'send message 1'}]},
-              {role: 'model', parts: [{text: 'response chunk 1'}]},
-              {role: 'model', parts: [{text: 'response chunk 2'}]},
-              {role: 'user', parts: [{text: 'send message 2'}]},
-            ],
-            {})
+    expect(modelsModule.generateContentStream).toHaveBeenCalledWith({
+      model: 'gemini-1.5-flash',
+      contents: [
+        {role: 'user', parts: [{text: 'send message 1'}]},
+        {role: 'model', parts: [{text: 'response chunk 1'}]},
+        {role: 'model', parts: [{text: 'response chunk 2'}]},
+        {role: 'user', parts: [{text: 'send message 2'}]},
+      ],
+      config: {},
+    })
   });
 });

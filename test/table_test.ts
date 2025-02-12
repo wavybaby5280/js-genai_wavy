@@ -285,9 +285,9 @@ function walk(dir: string): string[] {
 
 function normalizeParameters(parameters: any): any {
   return JSON.parse(
-    snakeToCamel(
-      JSON.stringify(Object.values(parameters)),
-    ),
+      snakeToCamel(
+          JSON.stringify(parameters),
+          ),
   );
 }
 
@@ -484,8 +484,8 @@ describe('TableTest', () => {
       replayTest.client.setupReplayResponses(fetchSpy);
       const numInteractions = replayTest.client.getNumInteractions();
       const response = await replayTest.method.apply(
-        replayTest.client,
-        parameters,
+          replayTest.client,
+          [parameters],
       );
 
       for (let i = 0; i < numInteractions; i++) {
@@ -525,7 +525,7 @@ describe('TableTest', () => {
   for (const apiTest of apiTests) {
     it(apiTest.fullTestName, async () => {
       const parameters = normalizeParameters(apiTest.testTableItem.parameters!);
-      await apiTest.method.apply(apiTest.client, parameters);
+      await apiTest.method.apply(apiTest.client, [parameters]);
     });
   }
 });

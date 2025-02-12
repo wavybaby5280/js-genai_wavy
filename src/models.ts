@@ -19,42 +19,36 @@ export class Models extends BaseModule {
   }
 
   generateContent = async (
-    model: string,
-    contents: types.ContentListUnion,
-    config?: types.GenerateContentConfig,
+    params: types.GenerateContentParameters,
   ): Promise<types.GenerateContentResponse> => {
-    return await this.generateContentInternal(model, contents, config);
+    return await this.generateContentInternal(params);
   };
 
   generateContentStream = async (
-    model: string,
-    contents: types.ContentListUnion,
-    config?: types.GenerateContentConfig,
+    params: types.GenerateContentParameters,
   ): Promise<AsyncGenerator<types.GenerateContentResponse>> => {
-    return await this.generateContentStreamInternal(model, contents, config);
+    return await this.generateContentStreamInternal(params);
   };
 
   private async generateContentInternal(
-    model: string,
-    contents: types.ContentListUnion,
-    config?: types.GenerateContentConfig,
+    params: types.GenerateContentParameters,
   ): Promise<types.GenerateContentResponse> {
     let response: Promise<types.GenerateContentResponse>;
     let path: string = '';
     let body: Record<string, any> = {};
     const kwargs: Record<string, any> = {};
-    kwargs['model'] = model;
-    kwargs['contents'] = contents;
-    kwargs['config'] = config;
+    kwargs['model'] = params.model;
+    kwargs['contents'] = params.contents;
+    kwargs['config'] = params.config;
     if (this.apiClient.isVertexAI()) {
       body = generateContentParametersToVertex(this.apiClient, kwargs);
       path = common.formatMap('{model}:generateContent', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
+      delete body['config'];
       response = this.apiClient.post(
         path,
         body,
         types.GenerateContentResponse,
-        config?.httpOptions,
+        params.config?.httpOptions,
       );
 
       return response.then((apiResponse) => {
@@ -69,12 +63,12 @@ export class Models extends BaseModule {
     } else {
       body = generateContentParametersToMldev(this.apiClient, kwargs);
       path = common.formatMap('{model}:generateContent', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
+      delete body['config'];
       response = this.apiClient.post(
         path,
         body,
         types.GenerateContentResponse,
-        config?.httpOptions,
+        params.config?.httpOptions,
       );
 
       return response.then((apiResponse) => {
@@ -90,29 +84,27 @@ export class Models extends BaseModule {
   }
 
   private async generateContentStreamInternal(
-    model: string,
-    contents: types.ContentListUnion,
-    config?: types.GenerateContentConfig,
+    params: types.GenerateContentParameters,
   ): Promise<AsyncGenerator<types.GenerateContentResponse>> {
     let response: Promise<AsyncGenerator<types.GenerateContentResponse>>;
     let path: string = '';
     let body: Record<string, any> = {};
     const kwargs: Record<string, any> = {};
-    kwargs['model'] = model;
-    kwargs['contents'] = contents;
-    kwargs['config'] = config;
+    kwargs['model'] = params.model;
+    kwargs['contents'] = params.contents;
+    kwargs['config'] = params.config;
     if (this.apiClient.isVertexAI()) {
       body = generateContentParametersToVertex(this.apiClient, kwargs);
       path = common.formatMap(
         '{model}:streamGenerateContent?alt=sse',
         body['_url'],
       );
-      delete body['config']; // TODO: Remove this hack for removing config.
+      delete body['config'];
       response = this.apiClient.postStream(
         path,
         body,
         types.GenerateContentResponse,
-        config?.httpOptions,
+        params.config?.httpOptions,
       );
 
       let apiClient = this.apiClient;
@@ -130,12 +122,12 @@ export class Models extends BaseModule {
         '{model}:streamGenerateContent?alt=sse',
         body['_url'],
       );
-      delete body['config']; // TODO: Remove this hack for removing config.
+      delete body['config'];
       response = this.apiClient.postStream(
         path,
         body,
         types.GenerateContentResponse,
-        config?.httpOptions,
+        params.config?.httpOptions,
       );
 
       const apiClient = this.apiClient;
@@ -151,26 +143,24 @@ export class Models extends BaseModule {
   }
 
   async embedContent(
-    model: string,
-    contents: types.ContentListUnion,
-    config?: types.EmbedContentConfig,
+    params: types.EmbedContentParameters,
   ): Promise<types.EmbedContentResponse> {
     let response: Promise<types.EmbedContentResponse>;
     let path: string = '';
     let body: Record<string, any> = {};
     const kwargs: Record<string, any> = {};
-    kwargs['model'] = model;
-    kwargs['contents'] = contents;
-    kwargs['config'] = config;
+    kwargs['model'] = params.model;
+    kwargs['contents'] = params.contents;
+    kwargs['config'] = params.config;
     if (this.apiClient.isVertexAI()) {
       body = embedContentParametersToVertex(this.apiClient, kwargs);
       path = common.formatMap('{model}:predict', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
+      delete body['config'];
       response = this.apiClient.post(
         path,
         body,
         types.EmbedContentResponse,
-        config?.httpOptions,
+        params.config?.httpOptions,
       );
 
       return response.then((apiResponse) => {
@@ -185,12 +175,12 @@ export class Models extends BaseModule {
     } else {
       body = embedContentParametersToMldev(this.apiClient, kwargs);
       path = common.formatMap('{model}:batchEmbedContents', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
+      delete body['config'];
       response = this.apiClient.post(
         path,
         body,
         types.EmbedContentResponse,
-        config?.httpOptions,
+        params.config?.httpOptions,
       );
 
       return response.then((apiResponse) => {
@@ -203,26 +193,24 @@ export class Models extends BaseModule {
   }
 
   async generateImages(
-    model: string,
-    prompt: string,
-    config?: types.GenerateImagesConfig,
+    params: types.GenerateImagesParameters,
   ): Promise<types.GenerateImagesResponse> {
     let response: Promise<types.GenerateImagesResponse>;
     let path: string = '';
     let body: Record<string, any> = {};
     const kwargs: Record<string, any> = {};
-    kwargs['model'] = model;
-    kwargs['prompt'] = prompt;
-    kwargs['config'] = config;
+    kwargs['model'] = params.model;
+    kwargs['prompt'] = params.prompt;
+    kwargs['config'] = params.config;
     if (this.apiClient.isVertexAI()) {
       body = generateImagesParametersToVertex(this.apiClient, kwargs);
       path = common.formatMap('{model}:predict', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
+      delete body['config'];
       response = this.apiClient.post(
         path,
         body,
         types.GenerateImagesResponse,
-        config?.httpOptions,
+        params.config?.httpOptions,
       );
 
       return response.then((apiResponse) => {
@@ -237,12 +225,12 @@ export class Models extends BaseModule {
     } else {
       body = generateImagesParametersToMldev(this.apiClient, kwargs);
       path = common.formatMap('{model}:predict', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
+      delete body['config'];
       response = this.apiClient.post(
         path,
         body,
         types.GenerateImagesResponse,
-        config?.httpOptions,
+        params.config?.httpOptions,
       );
 
       return response.then((apiResponse) => {
@@ -277,26 +265,24 @@ export class Models extends BaseModule {
    * ```
    */
   async countTokens(
-    model: string,
-    contents: types.ContentListUnion,
-    config?: types.CountTokensConfig,
+    params: types.CountTokensParameters,
   ): Promise<types.CountTokensResponse> {
     let response: Promise<types.CountTokensResponse>;
     let path: string = '';
     let body: Record<string, any> = {};
     const kwargs: Record<string, any> = {};
-    kwargs['model'] = model;
-    kwargs['contents'] = contents;
-    kwargs['config'] = config;
+    kwargs['model'] = params.model;
+    kwargs['contents'] = params.contents;
+    kwargs['config'] = params.config;
     if (this.apiClient.isVertexAI()) {
       body = countTokensParametersToVertex(this.apiClient, kwargs);
       path = common.formatMap('{model}:countTokens', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
+      delete body['config'];
       response = this.apiClient.post(
         path,
         body,
         types.CountTokensResponse,
-        config?.httpOptions,
+        params.config?.httpOptions,
       );
 
       return response.then((apiResponse) => {
@@ -308,12 +294,12 @@ export class Models extends BaseModule {
     } else {
       body = countTokensParametersToMldev(this.apiClient, kwargs);
       path = common.formatMap('{model}:countTokens', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
+      delete body['config'];
       response = this.apiClient.post(
         path,
         body,
         types.CountTokensResponse,
-        config?.httpOptions,
+        params.config?.httpOptions,
       );
 
       return response.then((apiResponse) => {
@@ -326,26 +312,24 @@ export class Models extends BaseModule {
   }
 
   async computeTokens(
-    model: string,
-    contents: types.ContentListUnion,
-    config?: types.ComputeTokensConfig,
+    params: types.ComputeTokensParameters,
   ): Promise<types.ComputeTokensResponse> {
     let response: Promise<types.ComputeTokensResponse>;
     let path: string = '';
     let body: Record<string, any> = {};
     const kwargs: Record<string, any> = {};
-    kwargs['model'] = model;
-    kwargs['contents'] = contents;
-    kwargs['config'] = config;
+    kwargs['model'] = params.model;
+    kwargs['contents'] = params.contents;
+    kwargs['config'] = params.config;
     if (this.apiClient.isVertexAI()) {
       body = computeTokensParametersToVertex(this.apiClient, kwargs);
       path = common.formatMap('{model}:computeTokens', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
+      delete body['config'];
       response = this.apiClient.post(
         path,
         body,
         types.ComputeTokensResponse,
-        config?.httpOptions,
+        params.config?.httpOptions,
       );
 
       return response.then((apiResponse) => {
@@ -360,12 +344,12 @@ export class Models extends BaseModule {
     } else {
       body = computeTokensParametersToMldev(this.apiClient, kwargs);
       path = common.formatMap('None', body['_url']);
-      delete body['config']; // TODO: Remove this hack for removing config.
+      delete body['config'];
       response = this.apiClient.post(
         path,
         body,
         types.ComputeTokensResponse,
-        config?.httpOptions,
+        params.config?.httpOptions,
       );
 
       return response.then((apiResponse) => {

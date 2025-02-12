@@ -129,8 +129,11 @@ export class Chat {
       Promise<types.GenerateContentResponse> {
     await this.sendPromise;
     const inputContent = t.tContent(this.apiClient, message);
-    const responsePromise = this.modelsModule.generateContent(
-        this.model, this.curatedHistory.concat(inputContent), this.config);
+    const responsePromise = this.modelsModule.generateContent({
+      model: this.model,
+      contents: this.curatedHistory.concat(inputContent),
+      config: this.config
+    });
     this.sendPromise = (async () => {
       const response = await responsePromise;
       if (validateResponse(response)) {
@@ -160,8 +163,11 @@ export class Chat {
       Promise<AsyncGenerator<types.GenerateContentResponse>> {
     await this.sendPromise;
     const inputContent = t.tContent(this.apiClient, message);
-    const streamResponse = this.modelsModule.generateContentStream(
-        this.model, this.curatedHistory.concat(inputContent), this.config);
+    const streamResponse = this.modelsModule.generateContentStream({
+      model: this.model,
+      contents: this.curatedHistory.concat(inputContent),
+      config: this.config
+    });
     this.sendPromise = streamResponse.then(() => undefined);
     const response = await streamResponse;
     const result =
