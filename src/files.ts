@@ -36,13 +36,13 @@ export class Files extends BaseModule {
   list = async (config?: types.ListFilesConfig): Promise<Pager<types.File>> => {
     return new Pager<types.File>(
       PagedItem.PAGED_ITEM_FILES,
-      this._list,
-      await this._list(config),
+      this.listInternal,
+      await this.listInternal(config),
       config,
     );
   };
 
-  private async _list(
+  private async listInternal(
     config?: types.ListFilesConfig,
   ): Promise<types.ListFilesResponse> {
     let response: Promise<types.ListFilesResponse>;

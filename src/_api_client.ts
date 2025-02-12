@@ -127,12 +127,12 @@ export class ApiClient {
       initHttpOptions.baseUrl = `https://generativelanguage.googleapis.com/`;
     }
 
-    initHttpOptions.headers = this._getDefaultHeaders();
+    initHttpOptions.headers = this.getDefaultHeaders();
 
     this.clientOptions.httpOptions = initHttpOptions;
 
     if (opts.httpOptions) {
-      this.clientOptions.httpOptions = this._patchHttpOptions(
+      this.clientOptions.httpOptions = this.patchHttpOptions(
         initHttpOptions,
         opts.httpOptions,
       );
@@ -160,14 +160,14 @@ export class ApiClient {
   }
 
   getRequestUrl() {
-    return this._getRequestUrl(this.clientOptions.httpOptions!);
+    return this.getRequestUrlInternal(this.clientOptions.httpOptions!);
   }
 
   getHeaders() {
     return this.clientOptions.httpOptions!.headers!;
   }
 
-  private _getRequestUrl(httpOptions: HttpOptions) {
+  private getRequestUrlInternal(httpOptions: HttpOptions) {
     if (!httpOptions.baseUrl!.endsWith('/')) {
       return `${httpOptions.baseUrl}/${httpOptions.apiVersion}`;
     }
@@ -201,7 +201,7 @@ export class ApiClient {
     respType?: any,
     requestHttpOptions?: HttpOptions,
   ): Promise<any> {
-    return this._request(
+    return this.request(
       path,
       requestObject,
       'GET',
@@ -216,7 +216,7 @@ export class ApiClient {
     respType?: any,
     requestHttpOptions?: HttpOptions,
   ): Promise<any> {
-    return this._request(
+    return this.request(
       path,
       requestObject,
       'POST',
@@ -231,7 +231,7 @@ export class ApiClient {
     respType?: any,
     requestHttpOptions?: HttpOptions,
   ): Promise<any> {
-    return this._request(
+    return this.request(
       path,
       requestObject,
       'PATCH',
@@ -246,7 +246,7 @@ export class ApiClient {
     respType?: any,
     requestHttpOptions?: HttpOptions,
   ): Promise<any> {
-    return this._request(
+    return this.request(
       path,
       requestObject,
       'DELETE',
@@ -255,7 +255,7 @@ export class ApiClient {
     );
   }
 
-  async _request(
+  private async request(
     path: string,
     requestJson: any,
     httpMethod: 'GET' | 'POST' | 'PATCH' | 'DELETE',
@@ -269,7 +269,7 @@ export class ApiClient {
 
     let patchedHttpOptions = this.clientOptions.httpOptions!;
     if (requestHttpOptions) {
-      patchedHttpOptions = this._patchHttpOptions(
+      patchedHttpOptions = this.patchHttpOptions(
         this.clientOptions.httpOptions!,
         requestHttpOptions,
       );
@@ -278,7 +278,7 @@ export class ApiClient {
     if (this.clientOptions.vertexai && !path.startsWith('projects/')) {
       path = `${this.getBaseResourcePath()}/${path}`;
     }
-    const url = new URL(`${this._getRequestUrl(patchedHttpOptions)}/${path}`);
+    const url = new URL(`${this.getRequestUrlInternal(patchedHttpOptions)}/${path}`);
     if (localRequestJson._query) {
       for (const [key, value] of Object.entries(localRequestJson._query)) {
         url.searchParams.append(key, String(value));
@@ -300,14 +300,14 @@ export class ApiClient {
     } else {
       requestInit.body = body;
     }
-    requestInit = await this._includeExtraHttpOptionsToRequestInit(
+    requestInit = await this.includeExtraHttpOptionsToRequestInit(
       requestInit,
       patchedHttpOptions,
     );
     return this.unaryApiCall(url, requestInit, httpMethod, respType);
   }
 
-  _patchHttpOptions(
+  private patchHttpOptions(
     baseHttpOptions: HttpOptions,
     requestHttpOptions: HttpOptions,
   ): HttpOptions {
@@ -343,7 +343,7 @@ export class ApiClient {
 
     let patchedHttpOptions = this.clientOptions.httpOptions!;
     if (requestHttpOptions) {
-      patchedHttpOptions = this._patchHttpOptions(
+      patchedHttpOptions = this.patchHttpOptions(
         this.clientOptions.httpOptions!,
         requestHttpOptions,
       );
@@ -352,20 +352,20 @@ export class ApiClient {
     if (this.clientOptions.vertexai && !path.startsWith('projects/')) {
       path = `${this.getBaseResourcePath()}/${path}`;
     }
-    const url = new URL(`${this._getRequestUrl(patchedHttpOptions)}/${path}`);
+    const url = new URL(`${this.getRequestUrlInternal(patchedHttpOptions)}/${path}`);
     if (!url.searchParams.has('alt') || url.searchParams.get('alt') !== 'sse') {
       url.searchParams.set('alt', 'sse');
     }
     let requestInit: RequestInit = {};
     requestInit.body = JSON.stringify(requestJson);
-    requestInit = await this._includeExtraHttpOptionsToRequestInit(
+    requestInit = await this.includeExtraHttpOptionsToRequestInit(
       requestInit,
       patchedHttpOptions,
     );
     return this.streamApiCall(url, requestInit, 'POST', chunkType);
   }
 
-  private async _includeExtraHttpOptionsToRequestInit(
+  private async includeExtraHttpOptionsToRequestInit(
     requestInit: RequestInit,
     httpOptions: HttpOptions,
   ): Promise<RequestInit> {
@@ -375,7 +375,7 @@ export class ApiClient {
       setTimeout(() => abortController.abort(), httpOptions.timeout);
       requestInit.signal = signal;
     }
-    requestInit.headers = await this._getHeaders(httpOptions);
+    requestInit.headers = await this.getHeadersInternal(httpOptions);
     return requestInit;
   }
 
@@ -484,7 +484,7 @@ export class ApiClient {
     });
   }
 
-  private _getDefaultHeaders(): Record<string, any> {
+  private getDefaultHeaders(): Record<string, any> {
     const headers: Record<string, any> = {};
 
     const versionHeaderValue = LIBRARY_LABEL + ' ' + this.clientOptions.userAgentExtra;
@@ -496,7 +496,7 @@ export class ApiClient {
     return headers;
   }
 
-  private async _getHeaders(
+  private async getHeadersInternal(
     httpOptions: HttpOptions | undefined,
   ): Promise<Headers> {
     const headers = new Headers();

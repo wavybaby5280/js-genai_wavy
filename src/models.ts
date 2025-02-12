@@ -23,7 +23,7 @@ export class Models extends BaseModule {
     contents: types.ContentListUnion,
     config?: types.GenerateContentConfig,
   ): Promise<types.GenerateContentResponse> => {
-    return await this._generateContent(model, contents, config);
+    return await this.generateContentInternal(model, contents, config);
   };
 
   generateContentStream = async (
@@ -31,10 +31,10 @@ export class Models extends BaseModule {
     contents: types.ContentListUnion,
     config?: types.GenerateContentConfig,
   ): Promise<AsyncGenerator<types.GenerateContentResponse>> => {
-    return await this._generateContentStream(model, contents, config);
+    return await this.generateContentStreamInternal(model, contents, config);
   };
 
-  private async _generateContent(
+  private async generateContentInternal(
     model: string,
     contents: types.ContentListUnion,
     config?: types.GenerateContentConfig,
@@ -89,7 +89,7 @@ export class Models extends BaseModule {
     }
   }
 
-  private async _generateContentStream(
+  private async generateContentStreamInternal(
     model: string,
     contents: types.ContentListUnion,
     config?: types.GenerateContentConfig,

@@ -442,7 +442,7 @@ describe('ApiClient', () => {
     });
   });
 
-  describe('_request', () => {
+  describe('post/get methods', () => {
     it('should delete _url from requestJson', async () => {
       const client = new ApiClient({auth: new FakeAuth('test-api-key'), apiKey: 'test-api-key'});
       const fetchSpy = spyOn(global, 'fetch').and.returnValue(
@@ -454,7 +454,7 @@ describe('ApiClient', () => {
         ),
       );
       let requestJson = {_url: 'some-url', data: 'test'};
-      await client._request('test-path', requestJson, 'POST');
+      await client.post('test-path', requestJson);
       const requestInit = fetchSpy.calls.first().args[1] as RequestInit;
       const body = requestInit.body as string;
       const parsedBody: any = JSON.parse(body);
@@ -474,7 +474,7 @@ describe('ApiClient', () => {
           ),
         ),
       );
-      await client._request('test-path', requestJson, 'POST');
+      await client.post('test-path', requestJson);
       expect(client.getBaseResourcePath).toHaveBeenCalled();
     });
     it('should append query parameters to URL', async () => {
@@ -488,7 +488,7 @@ describe('ApiClient', () => {
           ),
         ),
       );
-      await client._request('test-path', requestJson, 'GET');
+      await client.get('test-path', requestJson);
       expect(global.fetch).toHaveBeenCalledWith(
         jasmine.stringMatching(/param1=value1&param2=value2/),
         jasmine.any(Object),
@@ -497,7 +497,7 @@ describe('ApiClient', () => {
     it('should throw an error if request body is not empty for GET request', async () => {
       const client = new ApiClient({auth: new FakeAuth('test-api-key'), apiKey: 'test-api-key'});
       const requestJson: any = {data: 'test'};
-      await client._request('test-path', requestJson, 'GET').catch((e) => {
+      await client.get('test-path', requestJson).catch((e) => {
         expect(e.message).toEqual(
           'Request body should be empty for GET request, but got: {"data":"test"}',
         );
@@ -517,7 +517,7 @@ describe('ApiClient', () => {
           ),
         ),
       );
-      await client._request('test-path', {}, 'POST');
+      await client.post('test-path', {});
       const fetchArgs = fetchSpy.calls.allArgs();
       // @ts-ignore TS2532: Object is possibly 'undefined'.
       expect(fetchArgs[0][1].signal instanceof AbortSignal).toBeTrue();
@@ -537,7 +537,7 @@ describe('ApiClient', () => {
       );
       const timeoutSpy = spyOn(global, 'setTimeout');
 
-      await client._request('test-path', requestJson, 'GET', undefined, {
+      await client.get('test-path', requestJson,  undefined, {
         baseUrl: 'https://custom-request-base-url.googleapis.com',
         apiVersion: 'v1alpha',
         timeout: 1001,
@@ -570,7 +570,7 @@ describe('ApiClient', () => {
         ),
       );
 
-      await client._request('test-path', requestJson, 'GET', undefined);
+      await client.get('test-path', requestJson);
 
       const fetchArgs = fetchSpy.calls.first().args;
       const requestInit = fetchArgs[1] as RequestInit;
@@ -599,7 +599,7 @@ describe('ApiClient', () => {
       );
       const timeoutSpy = spyOn(global, 'setTimeout');
 
-      await client._request('test-path', requestJson, 'GET', undefined, {
+      await client.get('test-path', requestJson,  undefined, {
         headers: {'google-custom-header': 'custom-header-value'},
         timeout: 1001,
         apiVersion: 'v1alpha',
@@ -647,7 +647,7 @@ describe('ApiClient', () => {
       );
       const timeoutSpy = spyOn(global, 'setTimeout');
 
-      await client._request('test-path', requestJson, 'GET', undefined, {
+      await client.get('test-path', requestJson, undefined, {
         baseUrl: 'https://custom-request-base-url.googleapis.com',
         apiVersion: 'v1alpha',
         timeout: 1002,
@@ -668,7 +668,7 @@ describe('ApiClient', () => {
         'https://custom-request-base-url.googleapis.com/v1alpha/test-path?param1=value1&param2=value2',
       );
 
-      await client._request('test-path', requestJson, 'GET', undefined);
+      await client.get('test-path', requestJson);
 
       const secondFetchArgs = fetchSpy.calls.mostRecent().args;
       const secondRequestInit = fetchArgs[1] as RequestInit;

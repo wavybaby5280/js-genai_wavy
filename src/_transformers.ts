@@ -254,7 +254,7 @@ export function tTools(
  * -> 'some/wrong/resource/name/123'
  * ```
  */
-function _resourceName(
+function resourceName(
   client: ApiClient,
   resourceName: string,
   resourcePrefix: string,
@@ -283,7 +283,7 @@ function _resourceName(
 }
 
 export function tCachedContentName(apiClient: ApiClient, name: string): string {
-  return _resourceName(apiClient, name, 'cachedContents');
+  return resourceName(apiClient, name, 'cachedContents');
 }
 
 export function tTuningJobStatus(apiClient: ApiClient, status: string): string {

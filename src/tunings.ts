@@ -22,7 +22,7 @@ export class Tunings extends BaseModule {
     name: string,
     config?: types.GetTuningJobConfig,
   ): Promise<types.TuningJob> => {
-    return await this._get(name, config);
+    return await this.getInternal(name, config);
   };
 
   list = async (
@@ -30,13 +30,13 @@ export class Tunings extends BaseModule {
   ): Promise<Pager<types.TuningJob>> => {
     return new Pager<types.TuningJob>(
       PagedItem.PAGED_ITEM_TUNING_JOBS,
-      this._list,
-      await this._list(config),
+      this.listInternal,
+      await this.listInternal(config),
       config,
     );
   };
 
-  private async _get(
+  private async getInternal(
     name: string,
     config?: types.GetTuningJobConfig,
   ): Promise<types.TuningJob> {
@@ -71,7 +71,7 @@ export class Tunings extends BaseModule {
     }
   }
 
-  private async _list(
+  private async listInternal(
     config?: types.ListTuningJobsConfig,
   ): Promise<types.ListTuningJobsResponse> {
     let response: Promise<types.ListTuningJobsResponse>;

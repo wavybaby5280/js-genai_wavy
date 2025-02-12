@@ -21,24 +21,24 @@ export enum PagedItem {
  * Base pager class for iterating through paginated results.
  */
 class BasePager<T> {
-  private _name!: PagedItem;
-  private _page: T[] = [];
-  private _config: any;
-  private _pageSize!: number;
-  protected _request!: (config: any) => any;
-  protected _idx!: number;
+  private nameInternal!: PagedItem;
+  private pageInternal: T[] = [];
+  private configInternal: any;
+  private pageInternalSize!: number;
+  protected requestInternal!: (config: any) => any;
+  protected idxInternal!: number;
 
-  _init(
+  init(
       name: PagedItem,
       request: (config: any) => any,
       response: any,
       config: any,
   ) {
-    this._name = name;
-    this._request = request;
+    this.nameInternal = name;
+    this.requestInternal = request;
 
-    this._page = response[this._name] || [];
-    this._idx = 0;
+    this.pageInternal = response[this.nameInternal] || [];
+    this.idxInternal = 0;
 
     let requestConfig: any = {};
     if (!config) {
@@ -49,9 +49,9 @@ class BasePager<T> {
       requestConfig = config;
     }
     requestConfig['pageToken'] = response['nextPageToken'];
-    this._config = requestConfig;
+    this.configInternal = requestConfig;
 
-    this._pageSize = requestConfig['pageSize'] ?? this._page.length;
+    this.pageInternalSize = requestConfig['pageSize'] ?? this.pageInternal.length;
   }
 
   constructor(
@@ -60,7 +60,7 @@ class BasePager<T> {
       response: any,
       config: any,
   ) {
-    this._init(name, request, response, config);
+    this.init(name, request, response, config);
   }
 
   /**
@@ -69,14 +69,14 @@ class BasePager<T> {
    * The returned list of items is a subset of the entire list.
    */
   page(): T[] {
-    return this._page;
+    return this.pageInternal;
   }
 
   /**
    * Returns the type of paged item (for example, ``batch_jobs``).
    */
   name(): PagedItem {
-    return this._name;
+    return this.nameInternal;
   }
 
   /**
@@ -85,7 +85,7 @@ class BasePager<T> {
    * The number of items in the page is less than or equal to the page length.
    */
   pageSize(): number {
-    return this._pageSize;
+    return this.pageInternalSize;
   }
 
   /**
@@ -96,21 +96,21 @@ class BasePager<T> {
    * contains the token to request the next page.
    */
   config(): any {
-    return this._config;
+    return this.configInternal;
   }
 
   /**
    * Returns the total number of items in the current page.
    */
   len(): number {
-    return this._page.length;
+    return this.pageInternal.length;
   }
 
   /**
    * Returns the item at the given index.
    */
   getItem(index: number): T {
-    return this._page[index];
+    return this.pageInternal[index];
   }
 
   /**
@@ -119,8 +119,8 @@ class BasePager<T> {
    * This is an internal method that should be called by subclasses after
    * fetching the next page.
    */
-  protected _initNextPage(response: any): void {
-    this._init(this._name, this._request, response, this._config);
+  protected initNextPage(response: any): void {
+    this.init(this.nameInternal, this.requestInternal, response, this.configInternal);
   }
 }
 
@@ -140,15 +140,15 @@ export class Pager<T> extends BasePager<T> implements AsyncIterable<T> {
   [Symbol.asyncIterator](): AsyncIterator<T> {
     return {
       next: async () => {
-        if (this._idx >= this.len()) {
+        if (this.idxInternal >= this.len()) {
           try {
-            this._nextPage();
+            this.nextPage();
           } catch (e) {
             return {value: undefined, done: true};
           }
         }
-        let item = this.getItem(this._idx);
-        this._idx += 1;
+        let item = this.getItem(this.idxInternal);
+        this.idxInternal += 1;
         return {value: item, done: false};
       },
       return: async () => {
@@ -160,12 +160,12 @@ export class Pager<T> extends BasePager<T> implements AsyncIterable<T> {
   /**
    * Fetches the next page of items. This makes a new API request.
    */
-  private _nextPage(): T[] {
+  private nextPage(): T[] {
     if (!this.config()['pageToken']) {
       throw new Error('No more pages to fetch.');
     }
-    let response = this._request(this.config());
-    this._initNextPage(response);
+    let response = this.requestInternal(this.config());
+    this.initNextPage(response);
     return this.page();
   }
 }

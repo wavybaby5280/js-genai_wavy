@@ -23,8 +23,8 @@ export class Caches extends BaseModule {
   ): Promise<Pager<types.CachedContent>> => {
     return new Pager<types.CachedContent>(
       PagedItem.PAGED_ITEM_CACHED_CONTENTS,
-      this._list,
-      await this._list(config),
+      this.listInternal,
+      await this.listInternal(config),
       config,
     );
   };
@@ -207,7 +207,7 @@ export class Caches extends BaseModule {
     }
   }
 
-  private async _list(
+  private async listInternal(
     config?: types.ListCachedContentsConfig,
   ): Promise<types.ListCachedContentsResponse> {
     let response: Promise<types.ListCachedContentsResponse>;
