@@ -5,13 +5,15 @@
  */
 
 /**
- * @fileoverview Live client. The live module is experimental.
+ * Live client.
+ *
+ * @experimental
  */
 
 import * as WebSocket from 'ws';
 
-import {Auth} from './_auth';
 import {ApiClient} from './_api_client';
+import {Auth} from './_auth';
 import * as common from './_common';
 import * as t from './_transformers';
 import {contentFromMldev, contentFromVertex, contentToMldev, contentToVertex, toolToMldev, toolToVertex} from './models';
@@ -495,15 +497,22 @@ function liveServerMessageFromVertex(
   return toObject;
 }
 
-// Live class encapsulates the configuration for live interaction with the
-// Generative Language API. It embeds ApiClient for general API settings.
-// The live module is experimental.
-export class Live {
-  constructor(private readonly apiClient: ApiClient, private readonly auth: Auth) {}
+/**
+   Live class encapsulates the configuration for live interaction with the
+   Generative Language API. It embeds ApiClient for general API settings.
 
-  // Establishes a connection to the specified model with the given
-  // configuration. It returns a Session object representing the connection.
-  // The live module is experimental.
+   @experimental
+  */
+export class Live {
+  constructor(
+      private readonly apiClient: ApiClient, private readonly auth: Auth) {}
+
+  /**
+     Establishes a connection to the specified model with the given
+     configuration. It returns a Session object representing the connection.
+
+     @experimental
+    */
   async connect(model: string, config: types.LiveConnectConfig):
       Promise<Session> {
     const websocketBaseUrl = this.apiClient.getWebsocketBaseUrl();
@@ -562,8 +571,11 @@ export class Live {
   }
 }
 
-// Session class represents a connection to the API.
-// The live module is experimental.
+/**
+   Session class represents a connection to the API.
+
+   @experimental
+  */
 export class Session {
   constructor(
       private readonly conn: WebSocket, private readonly apiClient: ApiClient) {
@@ -661,8 +673,11 @@ export class Session {
     return clientMessage;
   }
 
-  // Transmits a message over the established websocket connection.
-  // The live module is experimental.
+  /**
+     Transmits a message over the established websocket connection.
+
+     @experimental
+   */
   send(
       message: types.ContentListUnion|types.LiveClientContent|
       types.LiveClientRealtimeInput|types.LiveClientToolResponse|
@@ -676,8 +691,11 @@ export class Session {
     this.conn.send(JSON.stringify(clientMessage));
   }
 
-  // Reads a LiveServerMessage from the websocket connection.
-  // The live module is experimental.
+  /**
+     Reads a LiveServerMessage from the websocket connection.
+
+     @experimental
+   */
   async receive(): Promise<types.LiveServerMessage> {
     return new Promise((resolve: any) => {
       this.conn.onmessage = (event: any) => {
@@ -695,16 +713,19 @@ export class Session {
     });
   }
 
-  // Close terminates the websocket connection.
-  // The live module is experimental.
+  /**
+     Close terminates the websocket connection.
+
+     @experimental
+   */
   close() {
     this.conn.close()
   }
 }
 
-// Converts an headers object to a "map" object as expected by the WebSocket constructor.
-// We use this as the Auth interface works with Headers objects while the WebSocket constructor
-// takes a map.
+// Converts an headers object to a "map" object as expected by the WebSocket
+// constructor. We use this as the Auth interface works with Headers objects
+// while the WebSocket constructor takes a map.
 function headersToMap(headers: Headers): Record<string, string> {
   let headerMap: Record<string, string> = {};
   headers.forEach((value, key) => {
