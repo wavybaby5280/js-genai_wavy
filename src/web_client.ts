@@ -4,16 +4,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ApiClient } from './_api_client';
-import { WebAuth } from './_web_auth';
-import { Caches } from './caches';
-import { Chats } from './chats';
-import { Files } from './files';
+import {ApiClient} from './_api_client';
+import {WebAuth} from './_web_auth';
+import {Caches} from './caches';
+import {Chats} from './chats';
+import {Files} from './files';
 // TODO: bring this back when live is web compatible
 // import {Live} from './live';
-import { Models } from './models';
-import { Tunings } from './tunings';
-import { HttpOptions } from './types';
+import {Models} from './models';
+import {Tunings} from './tunings';
+import {HttpOptions} from './types';
 
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
 
@@ -43,6 +43,38 @@ export interface WebClientInitOptions {
   httpOptions?: HttpOptions;
 }
 
+/**
+  Client for making requests in a browser-compatible environment.
+
+  Use this client to make a request to the Gemini Developer API or Vertex AI
+  API and then wait for the response.
+
+  To initialize the client, Gemini API users can provide API key by providing
+  input argument `apiKey="your-api-key"`.
+
+  Vertex AI API users can provide inputs argument as `vertexai=true.
+
+  Attributes:
+    options: See ClientInitOptions for usage.
+
+  Usage for the Gemini Developer API:
+
+  ```ts
+    import * as genai from ("@google/genai");
+
+    const client = genai.Client({apiKey: 'my-api-key'})
+  ```
+
+  Usage for the Vertex AI API:
+
+  ```ts
+    import * as genai from ("@google/genai");
+
+    const client = genai.Client({
+        vertexai: true, project: 'my-project-id', location: 'us-central1'
+    })
+  ```
+  */
 export class WebClient {
   protected readonly apiClient: ApiClient;
   private readonly apiKey: string;

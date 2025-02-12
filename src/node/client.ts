@@ -68,6 +68,43 @@ export interface ClientInitOptions {
   httpOptions?: HttpOptions;
 }
 
+/**
+  Client for making requests in a Node-compatible environment.
+
+  Use this client to make a request to the Gemini Developer API or Vertex AI
+  API and then wait for the response.
+
+  To initialize the client, provide the required arguments either directly
+  or by using environment variables. Gemini API users can provide API key by
+  providing input argument `apiKey="your-api-key"` or by defining
+  `GOOGLE_API_KEY="your-api-key"` as an environment variable.
+
+  Vertex AI API users can provide inputs argument as `vertexai=true,
+  project="your-project-id", location="us-central1"` or by defining
+  `GOOGLE_GENAI_USE_VERTEXAI=false`, `GOOGLE_CLOUD_PROJECT` and
+  `GOOGLE_CLOUD_LOCATION` environment variables.
+
+  Attributes:
+    options: See ClientInitOptions for usage.
+
+  Usage for the Gemini Developer API:
+
+  ```ts
+    import * as genai from ("@google/genai");
+
+    const client = genai.Client({apiKey: 'my-api-key'})
+  ```
+
+  Usage for the Vertex AI API:
+
+  ```ts
+    import * as genai from ("@google/genai");
+
+    const client = genai.Client({
+        vertexai: true, project: 'my-project-id', location: 'us-central1'
+    })
+  ```
+  */
 export class Client {
   protected readonly apiClient: ApiClient;
   private readonly apiKey?: string;
