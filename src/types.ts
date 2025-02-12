@@ -1674,7 +1674,7 @@ export interface File {
   sizeBytes?: number;
   /** Output only. The timestamp of when the `File` was created. */
   createTime?: string;
-  /** Optional. The human-readable display name for the `File`. The display name must be no more than 512 characters in length, including spaces. Example: 'Welcome Image' */
+  /** Output only. The timestamp of when the `File` will be deleted. Only set if the `File` is scheduled to expire. */
   expirationTime?: string;
   /** Output only. The timestamp of when the `File` was last updated. */
   updateTime?: string;
