@@ -18,12 +18,95 @@ export class Models extends BaseModule {
     super();
   }
 
+  /**
+   * Makes an API request to generate content with a given model.
+   *
+   * For the `model` parameter, supported formats for Vertex AI API include:
+   * - The Gemini model ID, for example: 'gemini-1.5-flash-002'
+   * - The full resource name starts with 'projects/', for example:
+   *  'projects/my-project-id/locations/us-central1/publishers/google/models/gemini-1.5-flash-002'
+   * - The partial resource name with 'publishers/', for example:
+   *  'publishers/google/models/gemini-1.5-flash-002' or
+   *  'publishers/meta/models/llama-3.1-405b-instruct-maas'
+   * - `/` separated publisher and model name, for example:
+   * 'google/gemini-1.5-flash-002' or 'meta/llama-3.1-405b-instruct-maas'
+   *
+   * For the `model` parameter, supported formats for Gemini API include:
+   * - The Gemini model ID, for example: 'gemini-1.5-flash-002'
+   * - The model name starts with 'models/', for example:
+   *  'models/gemini-1.5-flash-002'
+   * - If you would like to use a tuned model, the model name starts with
+   * 'tunedModels/', for example:
+   * 'tunedModels/1234567890123456789'
+   *
+   * Some models support multimodal input and output.
+   *
+   * @param model - The model to use for generating content.
+   * @param contents - The input contents to use for generating content.
+   * @param [config] - The configuration for generating content.
+   * @return The response from generating content.
+   *
+   * @example
+   * ```ts
+   * const response = await client.models.generateContent(
+   *   'gemini-1.5-flash-002',
+   *   'why is the sky blue?',
+   *   {
+   *     candidateCount: 2,
+   *   }
+   * );
+   * console.log(response);
+   * ```
+   */
   generateContent = async (
     params: types.GenerateContentParameters,
   ): Promise<types.GenerateContentResponse> => {
     return await this.generateContentInternal(params);
   };
 
+  /**
+   * Makes an API request to generate content with a given model and yields the
+   * response in chunks.
+   *
+   * For the `model` parameter, supported formats for Vertex AI API include:
+   * - The Gemini model ID, for example: 'gemini-1.5-flash-002'
+   * - The full resource name starts with 'projects/', for example:
+   *  'projects/my-project-id/locations/us-central1/publishers/google/models/gemini-1.5-flash-002'
+   * - The partial resource name with 'publishers/', for example:
+   *  'publishers/google/models/gemini-1.5-flash-002' or
+   *  'publishers/meta/models/llama-3.1-405b-instruct-maas'
+   * - `/` separated publisher and model name, for example:
+   * 'google/gemini-1.5-flash-002' or 'meta/llama-3.1-405b-instruct-maas'
+   *
+   * For the `model` parameter, supported formats for Gemini API include:
+   * - The Gemini model ID, for example: 'gemini-1.5-flash-002'
+   * - The model name starts with 'models/', for example:
+   *  'models/gemini-1.5-flash-002'
+   * - If you would like to use a tuned model, the model name starts with
+   * 'tunedModels/', for example:
+   * 'tunedModels/1234567890123456789'
+   *
+   * Some models support multimodal input and output.
+   *
+   * @param model - The model to use for generating content.
+   * @param contents - The input contents to use for generating content.
+   * @param [config] - The configuration for generating content.
+   * @return The response from generating content.
+   *
+   * @example
+   * ```ts
+   * const response = await client.models.generateContentStream(
+   *   'gemini-1.5-flash-002',
+   *   'why is the sky blue?',
+   *   {
+   *     maxOutputTokens: 200,
+   *   }
+   * );
+   * for await (const chunk of response) {
+   *   console.log(chunk);
+   * }
+   * ```
+   */
   generateContentStream = async (
     params: types.GenerateContentParameters,
   ): Promise<AsyncGenerator<types.GenerateContentResponse>> => {
@@ -142,6 +225,29 @@ export class Models extends BaseModule {
     }
   }
 
+  /**
+   * Calculates embeddings for the given contents. Only text is supported.
+   *
+   * @param model - The model to use.
+   * @param contents - The contents to embed.
+   * @param [config] - The config for embedding contents.
+   * @return The response from the API.
+   *
+   * @example
+   * ```ts
+   * const response = await client.models.embedContent(
+   *  'text-embedding-004',
+   *  [
+   *    'What is your name?',
+   *    'What is your favorite color?',
+   *  ],
+   *  {
+   *    outputDimensionality: 64,
+   *  },
+   * );
+   * console.log(response);
+   * ```
+   */
   async embedContent(
     params: types.EmbedContentParameters,
   ): Promise<types.EmbedContentResponse> {
@@ -192,6 +298,27 @@ export class Models extends BaseModule {
     }
   }
 
+  /**
+   * Generates an image based on a text description and configuration.
+   *
+   * @param model - The model to use.
+   * @param prompt - A text description of the image to generate.
+   * @param [config] - The config for image generation.
+   * @return The response from the API.
+   *
+   * @example
+   * ```ts
+   * const response = await client.models.generateImages(
+   *  'imagen-3.0-generate-002',
+   *  'Robot holding a red skateboard',
+   *  {
+   *    numberOfImages: 1,
+   *    includeRaiReason: true,
+   *  },
+   * );
+   * console.log(response?.generatedImages?.[0]?.image?.imageBytes);
+   * ```
+   */
   async generateImages(
     params: types.GenerateImagesParameters,
   ): Promise<types.GenerateImagesResponse> {
@@ -246,12 +373,11 @@ export class Models extends BaseModule {
   }
 
   /**
-   * Counts the number of tokens in the given contents.
+   * Counts the number of tokens in the given contents. Multimodal input is
+   * supported for Gemini models.
    *
    * @param model - The model to use for counting tokens.
    * @param contents - The contents to count tokens for.
-   *                                      Multimodal input is supported for
-   *                                      Gemini models.
    * @param [config] - The config for counting tokens.
    * @return The response from the API.
    *
@@ -311,6 +437,26 @@ export class Models extends BaseModule {
     }
   }
 
+  /**
+   * Return a list of tokens based on the input contents. Only text is
+   * supported.
+   *
+   * This method is not supported by the Gemini Developer API.
+   *
+   * @param model - The model to use.
+   * @param contents - The content to compute tokens for.
+   * @param [config] - The config for computing tokens.
+   * @return The response from the API.
+   *
+   * @example
+   * ```ts
+   * const response = await client.models.computeTokens(
+   *  'gemini-1.5-flash',
+   *  'What is your name?'
+   * );
+   * console.log(response);
+   * ```
+   */
   async computeTokens(
     params: types.ComputeTokensParameters,
   ): Promise<types.ComputeTokensResponse> {
