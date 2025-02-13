@@ -22,33 +22,33 @@ import {
 } from '../../src/types';
 
 describe('GenerateContentResponse.text', () => {
-  it('should return null when candidates is undefined', () => {
+  it('should return undefined when candidates is undefined', () => {
     const response = new GenerateContentResponse();
-    expect(response.text()).toBeNull();
+    expect(response.text()).toBeUndefined();
   });
 
-  it('should return null when candidates is an empty array', () => {
+  it('should return undefined when candidates is an empty array', () => {
     const response = new GenerateContentResponse();
     response.candidates = [];
-    expect(response.text()).toBeNull();
+    expect(response.text()).toBeUndefined();
   });
 
-  it('should return null when content is undefined', () => {
+  it('should return undefined when content is undefined', () => {
     const response = new GenerateContentResponse();
     response.candidates = [{} as Candidate];
-    expect(response.text()).toBeNull();
+    expect(response.text()).toBeUndefined();
   });
 
-  it('should return null when content.parts is undefined', () => {
+  it('should return undefined when content.parts is undefined', () => {
     const response = new GenerateContentResponse();
     response.candidates = [{content: {} as Content} as Candidate];
-    expect(response.text()).toBeNull();
+    expect(response.text()).toBeUndefined();
   });
 
-  it('should return null when content.parts is empty array', () => {
+  it('should return undefined when content.parts is empty array', () => {
     const response = new GenerateContentResponse();
     response.candidates = [{content: {parts: []}} as Candidate];
-    expect(response.text()).toBeNull();
+    expect(response.text()).toBeUndefined();
   });
 
   it('should use first candidate when there are multiple candidates', () => {
@@ -154,12 +154,12 @@ describe('GenerateContentResponse.functionCalls', () => {
     ]);
   });
 
-  it('should return an empty array when candidates[0].content.parts contains no function calls', () => {
+  it('should return undefined when candidates[0].content.parts contains no function calls', () => {
     const response = new GenerateContentResponse();
     response.candidates = [
       {content: {parts: [{text: 'text1'}, {text: 'text2'}]}},
     ];
-    expect(response.functionCalls()).toEqual([]);
+    expect(response.functionCalls()).toBeUndefined();
   });
   it('should filter out filter out undefined function calls', () => {
     const response = new GenerateContentResponse();

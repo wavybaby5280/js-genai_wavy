@@ -873,9 +873,9 @@ export class GenerateContentResponse {
   promptFeedback?: GenerateContentResponsePromptFeedback;
   /** Usage metadata about the response(s). */
   usageMetadata?: GenerateContentResponseUsageMetadata;
-  text(): string | null {
+  text(): string | undefined {
     if (this?.candidates?.[0]?.content?.parts?.length === 0) {
-      return null;
+      return undefined;
     }
     if (this?.candidates && this.candidates.length > 1) {
       console.warn(
@@ -905,7 +905,7 @@ export class GenerateContentResponse {
       }
     }
     // part.text === '' is different from part.text is null
-    return anyTextPartText ? text : null;
+    return anyTextPartText ? text : undefined;
   }
   functionCalls(): FunctionCall[] | undefined {
     if (this?.candidates?.[0]?.content?.parts?.length === 0) {
@@ -916,13 +916,17 @@ export class GenerateContentResponse {
         'there are multiple candidates in the response, returning function calls from the first one.',
       );
     }
-    return this?.candidates?.[0]?.content?.parts
+    const functionCalls = this?.candidates?.[0]?.content?.parts
       ?.filter((part) => part.functionCall)
       .map((part) => part.functionCall)
       .filter(
         (functionCall): functionCall is FunctionCall =>
           functionCall !== undefined,
       );
+    if (functionCalls?.length === 0) {
+      return undefined;
+    }
+    return functionCalls;
   }
 }
 
