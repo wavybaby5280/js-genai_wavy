@@ -119,18 +119,18 @@ export function tContentsForEmbed(
 }
 
 export function tContents(
-  apiClient: ApiClient,
-  origin: types.ContentListUnion,
-): types.Content[] | null {
+    apiClient: ApiClient,
+    origin: types.ContentListUnion,
+    ): types.Content[] {
   if (!origin) {
     return [];
   }
   if (Array.isArray(origin)) {
     return origin.map(
-      (item) => tContent(apiClient, item as types.ContentUnion)!,
+        (item) => tContent(apiClient, item),
     );
   }
-  return [tContent(apiClient, origin as types.ContentUnion)!];
+  return [tContent(apiClient, origin)];
 }
 
 export function processSchema(
@@ -196,9 +196,9 @@ export function tTool(
 }
 
 export function tTools(
-  apiClient: ApiClient,
-  tool?: types.Tool[] | null,
-): types.Tool[] | null | undefined {
+    apiClient: ApiClient,
+    tool: types.Tool[],
+    ): types.Tool[] {
   return tool;
 }
 

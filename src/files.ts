@@ -140,12 +140,20 @@ function listFilesConfigToMldev(
   const toObject: Record<string, any> = {};
 
   const fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
-  if (parentObject !== undefined && fromPageSize !== undefined) {
+  if (
+    parentObject !== undefined &&
+    fromPageSize !== undefined &&
+    fromPageSize !== null
+  ) {
     common.setValueByPath(parentObject, ['_query', 'pageSize'], fromPageSize);
   }
 
   const fromPageToken = common.getValueByPath(fromObject, ['pageToken']);
-  if (parentObject !== undefined && fromPageToken !== undefined) {
+  if (
+    parentObject !== undefined &&
+    fromPageToken !== undefined &&
+    fromPageToken !== null
+  ) {
     common.setValueByPath(parentObject, ['_query', 'pageToken'], fromPageToken);
   }
 
@@ -160,12 +168,20 @@ function listFilesConfigToVertex(
   const toObject: Record<string, any> = {};
 
   const fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
-  if (parentObject !== undefined && fromPageSize !== undefined) {
+  if (
+    parentObject !== undefined &&
+    fromPageSize !== undefined &&
+    fromPageSize !== null
+  ) {
     common.setValueByPath(parentObject, ['_query', 'pageSize'], fromPageSize);
   }
 
   const fromPageToken = common.getValueByPath(fromObject, ['pageToken']);
-  if (parentObject !== undefined && fromPageToken !== undefined) {
+  if (
+    parentObject !== undefined &&
+    fromPageToken !== undefined &&
+    fromPageToken !== null
+  ) {
     common.setValueByPath(parentObject, ['_query', 'pageToken'], fromPageToken);
   }
 
@@ -180,7 +196,7 @@ function listFilesParametersToMldev(
   const toObject: Record<string, any> = {};
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig !== undefined) {
+  if (fromConfig !== undefined && fromConfig !== null) {
     common.setValueByPath(
       toObject,
       ['config'],
@@ -213,7 +229,7 @@ function getFileParametersToMldev(
   const toObject: Record<string, any> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName !== undefined) {
+  if (fromName !== undefined && fromName !== null) {
     common.setValueByPath(
       toObject,
       ['_url', 'file'],
@@ -222,7 +238,7 @@ function getFileParametersToMldev(
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig !== undefined) {
+  if (fromConfig !== undefined && fromConfig !== null) {
     common.setValueByPath(toObject, ['config'], fromConfig);
   }
 
@@ -255,17 +271,17 @@ function fileStatusFromMldev(
   const toObject: Record<string, any> = {};
 
   const fromDetails = common.getValueByPath(fromObject, ['details']);
-  if (fromDetails !== undefined) {
+  if (fromDetails !== undefined && fromDetails !== null) {
     common.setValueByPath(toObject, ['details'], fromDetails);
   }
 
   const fromMessage = common.getValueByPath(fromObject, ['message']);
-  if (fromMessage !== undefined) {
+  if (fromMessage !== undefined && fromMessage !== null) {
     common.setValueByPath(toObject, ['message'], fromMessage);
   }
 
   const fromCode = common.getValueByPath(fromObject, ['code']);
-  if (fromCode !== undefined) {
+  if (fromCode !== undefined && fromCode !== null) {
     common.setValueByPath(toObject, ['code'], fromCode);
   }
 
@@ -290,76 +306,76 @@ function fileFromMldev(
   const toObject: Record<string, any> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName !== undefined) {
+  if (fromName !== undefined && fromName !== null) {
     common.setValueByPath(toObject, ['name'], fromName);
   }
 
   const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
-  if (fromDisplayName !== undefined) {
+  if (fromDisplayName !== undefined && fromDisplayName !== null) {
     common.setValueByPath(toObject, ['displayName'], fromDisplayName);
   }
 
   const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
-  if (fromMimeType !== undefined) {
+  if (fromMimeType !== undefined && fromMimeType !== null) {
     common.setValueByPath(toObject, ['mimeType'], fromMimeType);
   }
 
   const fromSizeBytes = common.getValueByPath(fromObject, ['sizeBytes']);
-  if (fromSizeBytes !== undefined) {
+  if (fromSizeBytes !== undefined && fromSizeBytes !== null) {
     common.setValueByPath(toObject, ['sizeBytes'], fromSizeBytes);
   }
 
   const fromCreateTime = common.getValueByPath(fromObject, ['createTime']);
-  if (fromCreateTime !== undefined) {
+  if (fromCreateTime !== undefined && fromCreateTime !== null) {
     common.setValueByPath(toObject, ['createTime'], fromCreateTime);
   }
 
   const fromExpirationTime = common.getValueByPath(fromObject, [
     'expirationTime',
   ]);
-  if (fromExpirationTime !== undefined) {
+  if (fromExpirationTime !== undefined && fromExpirationTime !== null) {
     common.setValueByPath(toObject, ['expirationTime'], fromExpirationTime);
   }
 
   const fromUpdateTime = common.getValueByPath(fromObject, ['updateTime']);
-  if (fromUpdateTime !== undefined) {
+  if (fromUpdateTime !== undefined && fromUpdateTime !== null) {
     common.setValueByPath(toObject, ['updateTime'], fromUpdateTime);
   }
 
   const fromSha256Hash = common.getValueByPath(fromObject, ['sha256Hash']);
-  if (fromSha256Hash !== undefined) {
+  if (fromSha256Hash !== undefined && fromSha256Hash !== null) {
     common.setValueByPath(toObject, ['sha256Hash'], fromSha256Hash);
   }
 
   const fromUri = common.getValueByPath(fromObject, ['uri']);
-  if (fromUri !== undefined) {
+  if (fromUri !== undefined && fromUri !== null) {
     common.setValueByPath(toObject, ['uri'], fromUri);
   }
 
   const fromDownloadUri = common.getValueByPath(fromObject, ['downloadUri']);
-  if (fromDownloadUri !== undefined) {
+  if (fromDownloadUri !== undefined && fromDownloadUri !== null) {
     common.setValueByPath(toObject, ['downloadUri'], fromDownloadUri);
   }
 
   const fromState = common.getValueByPath(fromObject, ['state']);
-  if (fromState !== undefined) {
+  if (fromState !== undefined && fromState !== null) {
     common.setValueByPath(toObject, ['state'], fromState);
   }
 
   const fromSource = common.getValueByPath(fromObject, ['source']);
-  if (fromSource !== undefined) {
+  if (fromSource !== undefined && fromSource !== null) {
     common.setValueByPath(toObject, ['source'], fromSource);
   }
 
   const fromVideoMetadata = common.getValueByPath(fromObject, [
     'videoMetadata',
   ]);
-  if (fromVideoMetadata !== undefined) {
+  if (fromVideoMetadata !== undefined && fromVideoMetadata !== null) {
     common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
   }
 
   const fromError = common.getValueByPath(fromObject, ['error']);
-  if (fromError !== undefined) {
+  if (fromError !== undefined && fromError !== null) {
     common.setValueByPath(
       toObject,
       ['error'],
@@ -390,16 +406,16 @@ function listFilesResponseFromMldev(
   const fromNextPageToken = common.getValueByPath(fromObject, [
     'nextPageToken',
   ]);
-  if (fromNextPageToken !== undefined) {
+  if (fromNextPageToken !== undefined && fromNextPageToken !== null) {
     common.setValueByPath(toObject, ['nextPageToken'], fromNextPageToken);
   }
 
   const fromFiles = common.getValueByPath(fromObject, ['files']);
-  if (fromFiles !== undefined) {
+  if (fromFiles !== undefined && fromFiles !== null) {
     common.setValueByPath(
       toObject,
       ['files'],
-      fromFiles!.map((item: any) => {
+      fromFiles.map((item: any) => {
         return fileFromMldev(apiClient, item, toObject);
       }),
     );
