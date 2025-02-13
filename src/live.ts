@@ -10,12 +10,12 @@
  * @experimental
  */
 
-import * as WebSocket from 'ws';
 
 import {ApiClient} from './_api_client';
 import {Auth} from './_auth';
 import * as common from './_common';
 import * as t from './_transformers';
+import {WebSocket, WebSocketCallbacks, WebSocketFactory} from './_websocket';
 import {contentFromMldev, contentFromVertex, contentToMldev, contentToVertex, toolToMldev, toolToVertex} from './models';
 import * as types from './types';
 
@@ -505,16 +505,25 @@ function liveServerMessageFromVertex(
   */
 export class Live {
   constructor(
-      private readonly apiClient: ApiClient, private readonly auth: Auth) {}
+      private readonly apiClient: ApiClient, private readonly auth: Auth,
+      private readonly webSocketFactory: WebSocketFactory) {}
 
   /**
      Establishes a connection to the specified model with the given
      configuration. It returns a Session object representing the connection.
 
      @experimental
+
+     @param model - Model to use for the Live session.
+     @param config - Configuration parameters for the Live session.
+     @param callbacks - Optional callbacks for websocket events. If not
+         provided, default no-op callbacks will be used. Generally, prefer to
+         provide explicit callbacks to allow for proper handling of websocket
+         events (e.g. connection errors).
     */
-  async connect(model: string, config: types.LiveConnectConfig):
-      Promise<Session> {
+  async connect(
+      model: string, config: types.LiveConnectConfig,
+      callbacks?: WebSocketCallbacks): Promise<Session> {
     const websocketBaseUrl = this.apiClient.getWebsocketBaseUrl();
     const apiVersion = this.apiClient.getApiVersion();
     let url: string;
@@ -530,22 +539,28 @@ export class Live {
           apiVersion}.GenerativeService.BidiGenerateContent?key=${apiKey}`;
     }
 
-    const conn = new WebSocket(url, {headers: headersToMap(headers)});
-
-    // Wait for the socket t open.
-    await new Promise((resolve: any) => {
-      conn.onopen = resolve;
-      conn.onerror = (e: any) => {
-        if (e.reason) {
-          console.log('Connection error: ', e.reason);
-        }
-      };
+    let onopenResolve: () => void;
+    const onopenPromise = new Promise((resolve: any) => {
+      onopenResolve = resolve;
     });
-    conn.onclose = function(e: any) {
-      if (e.reason) {
-        console.log('Connection closed: ', e.reason);
-      }
+
+    const onopenAwaitedCallback = function() {
+      callbacks?.onopen?.();
+      onopenResolve();
     };
+
+    const websocketCallbacks: WebSocketCallbacks = {
+      onopen: onopenAwaitedCallback,
+      onmessage: callbacks?.onmessage ?? function(e: any) {},
+      onerror: callbacks?.onerror ?? function(e: any) {},
+      onclose: callbacks?.onclose ?? function(e: any) {},
+    };
+
+    const conn = this.webSocketFactory.create(
+        url, headersToMap(headers), websocketCallbacks);
+    conn.connect();
+    // Wait for the websocket to open before sending requests.
+    await onopenPromise;
 
     let transformedModel = t.tModel(this.apiClient, model);
     if (this.apiClient.isVertexAI() &&
@@ -697,8 +712,9 @@ export class Session {
      @experimental
    */
   async receive(): Promise<types.LiveServerMessage> {
+    // Create a promise that resolves when a message is actually received.
     return new Promise((resolve: any) => {
-      this.conn.onmessage = (event: any) => {
+      this.conn.setOnMessageCallback((event: any) => {
         let serverMessage: Record<string, any> = {};
         if (this.apiClient.isVertexAI()) {
           serverMessage = liveServerMessageFromVertex(
@@ -709,7 +725,7 @@ export class Session {
         }
 
         resolve(serverMessage);
-      };
+      });
     });
   }
 
@@ -719,7 +735,7 @@ export class Session {
      @experimental
    */
   close() {
-    this.conn.close()
+    this.conn.close();
   }
 }
 

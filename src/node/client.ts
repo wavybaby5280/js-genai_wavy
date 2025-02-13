@@ -14,6 +14,7 @@ import { Files } from '../files';
 import { Live } from '../live';
 import { Models } from '../models';
 import { NodeAuth } from '../node/_node_auth';
+import { NodeWebSocketFactory } from '../node/_node_websocket';
 import { Tunings } from '../tunings';
 import { HttpOptions } from '../types';
 
@@ -143,7 +144,7 @@ export class Client {
       userAgentExtra: LANGUAGE_LABEL_PREFIX + process.version,
     });
     this.models = new Models(this.apiClient);
-    this.live = new Live(this.apiClient, auth);
+    this.live = new Live(this.apiClient, auth, new NodeWebSocketFactory());
     this.tunings = new Tunings(this.apiClient);
     this.chats = new Chats(this.models, this.apiClient);
     this.caches = new Caches(this.apiClient);

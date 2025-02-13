@@ -9,11 +9,11 @@ import {WebAuth} from './_web_auth';
 import {Caches} from './caches';
 import {Chats} from './chats';
 import {Files} from './files';
-// TODO: bring this back when live is web compatible
-// import {Live} from './live';
+import {Live} from './live';
 import {Models} from './models';
 import {Tunings} from './tunings';
 import {HttpOptions} from './types';
+import {BrowserWebSocketFactory} from './_browser_websocket';
 
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
 
@@ -81,8 +81,7 @@ export class WebClient {
   public readonly vertexai: boolean;
   private readonly apiVersion?: string;
   readonly models: Models;
-  // TODO: bring this back when live is web compatible
-  // readonly live: Live;
+  readonly live: Live;
   readonly tunings: Tunings;
   readonly chats: Chats;
   readonly caches: Caches;
@@ -92,8 +91,9 @@ export class WebClient {
     this.vertexai = options.vertexai ?? false;
     this.apiKey = options.apiKey;
     this.apiVersion = options.apiVersion;
+    const auth = new WebAuth(this.apiKey);
     this.apiClient = new ApiClient({
-      auth: new WebAuth(options.apiKey),
+      auth: auth,
       apiVersion: this.apiVersion,
       apiKey: this.apiKey,
       vertexai: this.vertexai,
@@ -101,8 +101,8 @@ export class WebClient {
       userAgentExtra: LANGUAGE_LABEL_PREFIX + 'web',
     });
     this.models = new Models(this.apiClient);
-    // TODO: bring this back when live is web compatible
-    // this.live = new Live(this.apiClient);
+    this.live =
+        new Live(this.apiClient, auth, new BrowserWebSocketFactory());
     this.tunings = new Tunings(this.apiClient);
     this.chats = new Chats(this.models, this.apiClient);
     this.caches = new Caches(this.apiClient);
