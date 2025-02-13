@@ -456,8 +456,9 @@ export class ApiClient {
               let typed_chunk = new chunkType();
               Object.assign(typed_chunk, chunkData);
               yield typed_chunk;
+            } else {
+              yield chunkData;
             }
-            yield chunkData;
             buffer = buffer.slice(match[0].length);
             match = buffer.match(responseLineRE);
           } catch (e) {
