@@ -19,6 +19,8 @@ import {
   createPartFromVideoMetadata,
   createPartFromCodeExecutionResult,
   createPartFromExecutableCode,
+  createUserContent,
+  createModelContent,
 } from '../../src/types';
 
 describe('GenerateContentResponse.text', () => {
@@ -283,5 +285,116 @@ describe('createPart usability functions', () => {
     };
 
     expect(part).toEqual(expectedPart);
+  });
+});
+
+describe('createUserContent', () => {
+  it('should throw an error when partOrString is number type', () => {
+    // @ts-ignore
+    expect(() => createUserContent(123)).toThrow(
+      new Error('partOrString must be a Part object, string, or array'),
+    );
+  });
+  it('should throw an error when partOrString is empty array', () => {
+    expect(() => createUserContent([])).toThrow(
+      new Error('partOrString cannot be an empty array'),
+    )
+  });
+  it('should throw an error when partOrString array contains unsupported type', () => {
+    // @ts-ignore
+    expect(() => createUserContent([123])).toThrow(
+      new Error('element in PartUnion must be a Part object or string'),
+    )
+  });
+  it('should throw an error when partOrString array contains unsupported object', () => {
+    expect(() => createUserContent([{}])).toThrow(
+      new Error('element in PartUnion must be a Part object or string'),
+    );
+  });
+  it('should throw an error when partOrString is unsupported object', () => {
+    expect(() => createUserContent({})).toThrow(
+      new Error('partOrString must be a Part object, string, or array'),
+    );
+  });
+  it('should create a user content object from a string', () => {
+    expect(createUserContent('Hello world!')).toEqual({
+      role: 'user',
+      parts: [{text: 'Hello world!'}],
+    });
+  });
+  it('should create a user content object from a Part object', () => {
+    expect(
+      createUserContent({
+        fileData: {
+          fileUri: 'gs://bucket/file.txt',
+          mimeType: 'text/plain',
+        },
+      }),
+    ).toEqual({
+      role: 'user',
+      parts: [
+        {
+          fileData: {
+            fileUri: 'gs://bucket/file.txt',
+            mimeType: 'text/plain',
+          },
+        },
+      ],
+    });
+  });
+});
+describe('createModelContent', () => {
+  it('should throw an error when partOrString is number type', () => {
+    // @ts-ignore
+    expect(() => createModelContent(123)).toThrow(
+      new Error('partOrString must be a Part object, string, or array'),
+    );
+  });
+  it('should throw an error when partOrString is empty array', () => {
+    expect(() => createModelContent([])).toThrow(
+      new Error('partOrString cannot be an empty array'),
+    )
+  });
+  it('should throw an error when partOrString array contains unsupported type', () => {
+    // @ts-ignore
+    expect(() => createModelContent([123])).toThrow(
+      new Error('element in PartUnion must be a Part object or string'),
+    )
+  });
+  it('should throw an error when partOrString array contains unsupported object', () => {
+    expect(() => createModelContent([{}])).toThrow(
+      new Error('element in PartUnion must be a Part object or string'),
+    );
+  });
+  it('should throw an error when partOrString is unsupported object', () => {
+    expect(() => createModelContent({})).toThrow(
+      new Error('partOrString must be a Part object, string, or array'),
+    );
+  });
+  it('should create a model content object from a string', () => {
+    expect(createModelContent('Hello world!')).toEqual({
+      role: 'model',
+      parts: [{text: 'Hello world!'}],
+    });
+  });
+  it('should create a model content object from a Part object', () => {
+    expect(
+      createModelContent({
+        fileData: {
+          fileUri: 'gs://bucket/file.txt',
+          mimeType: 'text/plain',
+        },
+      }),
+    ).toEqual({
+      role: 'model',
+      parts: [
+        {
+          fileData: {
+            fileUri: 'gs://bucket/file.txt',
+            mimeType: 'text/plain',
+          },
+        },
+      ],
+    });
   });
 });
