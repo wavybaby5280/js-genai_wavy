@@ -48,7 +48,7 @@ const mockGenerateContentResponse: types.GenerateContentResponse =
                 ],
                 role: 'model',
               },
-              finishReason: 'STOP' as types.FinishReason,
+              finishReason: types.FinishReason.STOP,
               index: 0,
             },
           ],
@@ -80,8 +80,8 @@ describe('processStreamResponse', () => {
     const response = new Response(readableStream);
 
     const generator = apiClient.processStreamResponse(
-      response as Response,
-      (types as any)?.GenerateContentResponse,
+        response,
+        types.GenerateContentResponse,
     );
 
     await expectAsync(generator.next()).toBeRejectedWithError(
@@ -104,8 +104,8 @@ describe('processStreamResponse', () => {
     const response = new Response(readableStream);
 
     const generator = apiClient.processStreamResponse(
-      response as Response,
-      (types as any)?.GenerateContentResponse,
+        response,
+        types.GenerateContentResponse,
     );
 
     await expectAsync(generator.next()).toBeRejectedWithError(
@@ -159,8 +159,8 @@ describe('processStreamResponse', () => {
           types.GenerateContentResponse.prototype,
         );
       const generator = apiClient.processStreamResponse(
-        response,
-        (types as any)?.GenerateContentResponse,
+          response,
+          types.GenerateContentResponse,
       );
       const result = await generator.next();
       const value: types.GenerateContentResponse = result.value;
@@ -186,33 +186,33 @@ describe('processStreamResponse', () => {
     });
     const response = new Response(readableStream);
     const expectedResponse: types.GenerateContentResponse =
-      Object.setPrototypeOf(
-        {
-          candidates: [
+        Object.setPrototypeOf(
             {
-              content: {
-                parts: [
-                  {
-                    text: 'The',
+              candidates: [
+                {
+                  content: {
+                    parts: [
+                      {
+                        text: 'The',
+                      },
+                    ],
+                    role: 'model',
                   },
-                ],
-                role: 'model',
+                  finishReason: types.FinishReason.STOP,
+                  index: 0,
+                },
+              ],
+              usageMetadata: {
+                promptTokenCount: 8,
+                candidatesTokenCount: 1,
+                totalTokenCount: 9,
               },
-              finishReason: 'STOP' as types.FinishReason,
-              index: 0,
             },
-          ],
-          usageMetadata: {
-            promptTokenCount: 8,
-            candidatesTokenCount: 1,
-            totalTokenCount: 9,
-          },
-        },
-        types.GenerateContentResponse.prototype,
-      );
+            types.GenerateContentResponse.prototype,
+        );
     const generator = apiClient.processStreamResponse(
-      response,
-      (types as any)?.GenerateContentResponse,
+        response,
+        types.GenerateContentResponse,
     );
     const result = await generator.next();
     const value: types.GenerateContentResponse = result.value;

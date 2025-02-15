@@ -4,9 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Client} from '../src/node/client';
-import {ReplayAPIClient} from '../src/_replay_api_client';
+import {BaseModule} from '../src/_common';
 import {FakeAuth} from '../src/_fake_auth';
+import {ReplayAPIClient} from '../src/_replay_api_client';
+import {Client} from '../src/node/client';
 import * as types from '../src/types';
 
 function getGoogle3Path() {
@@ -96,21 +97,22 @@ function assertMessagesEqual(
         try {
           assertDeepEqual(a[key], b[key]);
         } catch (e) {
-          let message = (e as Error).message;
-          if (
-            !message.includes('Unequal key value') &&
-            !message.includes('Unequal key trace')
-          ) {
-            message = `Unequal key value:\n a[${key}]: ${JSON.stringify(
-              a[key],
-              null,
-              2,
-            )}\n b[${key}]: ${JSON.stringify(b[key], null, 2)}`;
-          } else {
-            message = `Unequal key trace (see cause for detals): ${key}`;
+          if (e instanceof Error) {
+            let message = e.message;
+            if (!message.includes('Unequal key value') &&
+                !message.includes('Unequal key trace')) {
+              message = `Unequal key value:\n a[${key}]: ${
+                  JSON.stringify(
+                      a[key],
+                      null,
+                      2,
+                      )}\n b[${key}]: ${JSON.stringify(b[key], null, 2)}`;
+            } else {
+              message = `Unequal key trace (see cause for detals): ${key}`;
+            }
+            throw new Error(message, {cause: e});
           }
-
-          throw new Error(message, {cause: e});
+          throw e;
         }
       }
 
@@ -220,7 +222,9 @@ function normalizeBody(body: string) {
     let camelCaseBody = snakeToCamel(body);
     let parsedBody = JSON.parse(camelCaseBody);
     if (typeof parsedBody === 'object' && parsedBody !== null) {
-      for (const key of Object.keys(parsedBody as object)) {
+      for (const key of Object.keys(parsedBody)) {
+        // JSON.parse return any type but we need to explicitly cast it to any
+        // to access the values by string key.
         let value = (parsedBody as any)[key];
         if (typeof value === 'string') {
           (parsedBody as any)[key] = redactProjectAndLocationPath(value);
@@ -238,7 +242,9 @@ function normalizeRequest(request: RequestInit, url: string) {
   return {
     method: request.method?.toLowerCase(),
     url: redactUrl(url),
+    // request.headers is a Headers object according to the fetch spec.
     headers: normalizeHeaders(request.headers as Headers),
+    // request.body is a string according to the fetch spec.
     bodySegments: normalizeBody(request.body as string),
   };
 }
@@ -277,10 +283,10 @@ function walk(dir: string): string[] {
   });
 
   return mapped_files.reduce(
-             (all: string[], folderContents: string[]|string) =>
-                 all.concat(folderContents),
-             [],
-             ) as string[];
+      (all: string[], folderContents: string[]|string) =>
+          all.concat(folderContents),
+      [],
+  );
 }
 
 function normalizeParameters(parameters: any): any {
@@ -321,7 +327,7 @@ function getTestTableMethod(
   moduleName: string,
   methodName: string,
 ): Function | null {
-  const module: object = (client as any)[moduleName];
+  const module: BaseModule = client[moduleName];
 
   if (!module) {
     console.log(
@@ -331,7 +337,7 @@ function getTestTableMethod(
     );
     return null;
   }
-  const method: Function = (module as any)[methodName];
+  const method: Function = module[methodName];
   if (!method) {
     console.log(
       `   === Skipping method:${moduleName}.${
@@ -405,6 +411,7 @@ function loadTestTableForMode(
   testTableFile: types.TestTableFile,
   mode: string,
 ) {
+  // This is a test, if the testMethod is null we should fail.
   const parts = testTableFile.testMethod!.split('.');
   const moduleName: string = snakeToCamel(parts[0]);
   let methodName: string = snakeToCamel(parts[1]);
@@ -454,6 +461,7 @@ function loadTests() {
   const mode = getTestMode();
   for (const testFileName of testFiles) {
     const data = fs.readFileSync(testFileName, 'utf8');
+    // Test tables files only contain data in the TestableFile format.
     const testTableFile = JSON.parse(data) as types.TestTableFile;
     const mldevClient = createReplayClient(/*vertexai=*/ false);
     const vertexClient = createReplayClient(/*vertexai=*/ true);

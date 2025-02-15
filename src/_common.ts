@@ -4,7 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export class BaseModule {}
+export class BaseModule {
+  [key: string]: any;
+}
 export function formatMap(
   templateString: string,
   valueMap: Record<string, any>,
