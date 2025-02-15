@@ -69,11 +69,11 @@ function liveConnectConfigToMldev(
   }
 
   let fromTools = common.getValueByPath(fromObject, ['tools']);
-  if (fromTools !== undefined) {
+  if (fromTools !== undefined && fromTools !== null) {
     common.setValueByPath(
         toObject,
         ['tools'],
-        fromTools!.map((item: any) => {
+        fromTools.map((item: any) => {
           return toolToMldev(apiClient, item, toObject);
         }),
     );
@@ -135,11 +135,11 @@ function liveConnectConfigToVertex(
   }
 
   let fromTools = common.getValueByPath(fromObject, ['tools']);
-  if (fromTools !== undefined) {
+  if (fromTools !== undefined && fromTools !== null) {
     common.setValueByPath(
         toObject,
         ['tools'],
-        fromTools!.map((item: any) => {
+        fromTools.map((item: any) => {
           return toolToVertex(apiClient, item, toObject);
         }),
     );
@@ -327,11 +327,11 @@ function liveServerToolCallFromMldev(
   let toObject: Record<string, any> = {};
 
   let fromFunctionCalls = common.getValueByPath(fromObject, ['functionCalls']);
-  if (fromFunctionCalls !== undefined) {
+  if (fromFunctionCalls !== undefined && fromFunctionCalls !== null) {
     common.setValueByPath(
         toObject,
         ['functionCalls'],
-        fromFunctionCalls!.map((item: any) => {
+        fromFunctionCalls.map((item: any) => {
           return functionCallFromMldev(apiClient, item, toObject);
         }),
     );
@@ -348,11 +348,11 @@ function liveServerToolCallFromVertex(
   let toObject: Record<string, any> = {};
 
   let fromFunctionCalls = common.getValueByPath(fromObject, ['functionCalls']);
-  if (fromFunctionCalls !== undefined) {
+  if (fromFunctionCalls !== undefined && fromFunctionCalls !== null) {
     common.setValueByPath(
         toObject,
         ['functionCalls'],
-        fromFunctionCalls!.map((item: any) => {
+        fromFunctionCalls.map((item: any) => {
           return functionCallFromVertex(apiClient, item, toObject);
         }),
     );
@@ -629,10 +629,10 @@ export class Session {
         Array.isArray(input) && input.some((c) => typeof c === 'string')) {
       const toObject: Record<string, any> = {};
       const contents = apiClient.isVertexAI() ?
-          t.tContents(apiClient, input as types.ContentListUnion)!.map(
-              (item) => contentToVertex(apiClient, item, toObject)) :
-          t.tContents(apiClient, input as types.ContentListUnion)!.map(
-              (item) => contentToMldev(apiClient, item, toObject));
+          t.tContents(apiClient, input as types.ContentListUnion)
+              .map((item) => contentToVertex(apiClient, item, toObject)) :
+          t.tContents(apiClient, input as types.ContentListUnion)
+              .map((item) => contentToMldev(apiClient, item, toObject));
 
       clientMessage = {
         clientContent: {turns: contents, turnComplete: turnComplete},

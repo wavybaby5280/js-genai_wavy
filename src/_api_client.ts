@@ -152,23 +152,40 @@ export class ApiClient {
   }
 
   getApiVersion() {
-    return this.clientOptions.httpOptions!.apiVersion!;
+    if (this.clientOptions.httpOptions &&
+        this.clientOptions.httpOptions.apiVersion !== undefined) {
+      return this.clientOptions.httpOptions.apiVersion;
+    }
+    throw new Error('API version is not set.');
   }
 
   getBaseUrl() {
-    return this.clientOptions.httpOptions!.baseUrl!;
+    if (this.clientOptions.httpOptions &&
+        this.clientOptions.httpOptions.baseUrl !== undefined) {
+      return this.clientOptions.httpOptions.baseUrl;
+    }
+    throw new Error('Base URL is not set.');
   }
 
   getRequestUrl() {
-    return this.getRequestUrlInternal(this.clientOptions.httpOptions!);
+    return this.getRequestUrlInternal(this.clientOptions.httpOptions);
   }
 
   getHeaders() {
-    return this.clientOptions.httpOptions!.headers!;
+    if (this.clientOptions.httpOptions &&
+        this.clientOptions.httpOptions.headers !== undefined) {
+      return this.clientOptions.httpOptions.headers;
+    } else {
+      throw new Error('Headers are not set.');
+    }
   }
 
-  private getRequestUrlInternal(httpOptions: HttpOptions) {
-    if (!httpOptions.baseUrl!.endsWith('/')) {
+  private getRequestUrlInternal(httpOptions?: HttpOptions) {
+    if (!httpOptions || httpOptions.baseUrl === undefined ||
+        httpOptions.apiVersion === undefined) {
+      throw new Error('HTTP options are not correctly set.');
+    }
+    if (!httpOptions.baseUrl.endsWith('/')) {
       return `${httpOptions.baseUrl}/${httpOptions.apiVersion}`;
     }
     return `${httpOptions.baseUrl}${httpOptions.apiVersion}`;
@@ -192,7 +209,11 @@ export class ApiClient {
   }
 
   setBaseUrl(url: string) {
-    this.clientOptions.httpOptions!.baseUrl = url;
+    if (this.clientOptions.httpOptions) {
+      this.clientOptions.httpOptions.baseUrl = url;
+    } else {
+      throw new Error('HTTP options are not correctly set.');
+    }
   }
 
   get(

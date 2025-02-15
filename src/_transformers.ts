@@ -103,12 +103,21 @@ export function tContentsForEmbed(
     return [];
   }
   if (apiClient.isVertexAI() && Array.isArray(origin)) {
-    return origin.map(
-      (item) =>
-        tContent(apiClient, item as types.ContentUnion)!.parts![0].text!,
-    );
+    return origin.flatMap((item) => {
+      let content = tContent(apiClient, item as types.ContentUnion);
+      if (content.parts && content.parts.length > 0 &&
+          content.parts[0].text !== undefined) {
+        return [content.parts[0].text];
+      }
+      return [];
+    })
   } else if (apiClient.isVertexAI()) {
-    return [tContent(apiClient, origin as types.ContentUnion)!.parts![0].text!];
+    let content = tContent(apiClient, origin as types.ContentUnion);
+    if (content.parts && content.parts.length > 0 &&
+        content.parts[0].text !== undefined) {
+      return [content.parts[0].text];
+    }
+    return [];
   }
   if (Array.isArray(origin)) {
     return origin.map(
