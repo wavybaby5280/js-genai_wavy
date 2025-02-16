@@ -23,10 +23,7 @@
     "gts": "^5.2.0",
     "jasmine": "^5.5.0",
     "jasmine-reporters": "^2.4.0",
-    "linkinator": "^4.0.0",
-    "nyc": "^15.1.0",
     "prettier": "3.3.3",
-    "prettier-plugin-organize-imports": "^4.1.0",
     "typedoc": "^0.27.0",
     "typescript": "~5.2.0"
   },
