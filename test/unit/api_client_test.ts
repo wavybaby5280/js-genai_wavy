@@ -6,8 +6,8 @@
 
 import {Readable} from 'stream';
 
-import {FakeAuth} from '../../src/_fake_auth';
 import {ApiClient, ClientError, ServerError} from '../../src/_api_client';
+import {FakeAuth} from '../../src/_fake_auth';
 import {NodeAuth} from '../../src/node/_node_auth';
 import * as types from '../../src/types';
 
@@ -62,69 +62,73 @@ const mockGenerateContentResponse: types.GenerateContentResponse =
     );
 
 describe('processStreamResponse', () => {
-  const dataPrefix = 'data: '; // Replace with your actual dataPrefix
+  const dataPrefix = 'data: ';  // Replace with your actual dataPrefix
   const apiClient = new ApiClient({auth: new FakeAuth()});
 
-  it('should throw an error if the chunk does not start with the data prefix', async () => {
-    const invalidChunk = 'invalid chunk';
-    const stream = new Readable();
-    stream.push(invalidChunk);
-    stream.push(null); // single end of stream
-    const readableStream = new ReadableStream({
-      start(controller) {
-        stream.on('data', (chunk) => controller.enqueue(chunk));
-        stream.on('end', () => controller.close());
-        stream.on('error', (err) => controller.error(err));
-      },
-    });
-    const response = new Response(readableStream);
+  it('should throw an error if the chunk does not start with the data prefix',
+     async () => {
+       const invalidChunk = 'invalid chunk';
+       const stream = new Readable();
+       stream.push(invalidChunk);
+       stream.push(null);  // signal end of stream
+       const readableStream = new ReadableStream({
+         start(controller) {
+           stream.on('data', (chunk) => controller.enqueue(chunk));
+           stream.on('end', () => controller.close());
+           stream.on('error', (err) => controller.error(err));
+         },
+       });
+       const response = new Response(readableStream);
 
-    const generator = apiClient.processStreamResponse(
-        response,
-        types.GenerateContentResponse,
-    );
+       const generator = apiClient.processStreamResponse(
+           response,
+           types.GenerateContentResponse,
+       );
 
-    await expectAsync(generator.next()).toBeRejectedWithError(
-      'Incomplete JSON segment at the end: invalid chunk',
-    );
-  });
+       await expectAsync(generator.next())
+           .toBeRejectedWithError(
+               'Incomplete JSON segment at the end: invalid chunk',
+           );
+     });
 
-  it('should throw an error if the chunk cannot be parsed as JSON', async () => {
-    const invalidChunk = 'data: invalid chunk';
-    const stream = new Readable();
-    stream.push(invalidChunk);
-    stream.push(null); // single end of stream
-    const readableStream = new ReadableStream({
-      start(controller) {
-        stream.on('data', (chunk) => controller.enqueue(chunk));
-        stream.on('end', () => controller.close());
-        stream.on('error', (err) => controller.error(err));
-      },
-    });
-    const response = new Response(readableStream);
+  it('should throw an error if the chunk cannot be parsed as JSON',
+     async () => {
+       const invalidChunk = 'data: invalid chunk';
+       const stream = new Readable();
+       stream.push(invalidChunk);
+       stream.push(null);  // signal end of stream
+       const readableStream = new ReadableStream({
+         start(controller) {
+           stream.on('data', (chunk) => controller.enqueue(chunk));
+           stream.on('end', () => controller.close());
+           stream.on('error', (err) => controller.error(err));
+         },
+       });
+       const response = new Response(readableStream);
 
-    const generator = apiClient.processStreamResponse(
-        response,
-        types.GenerateContentResponse,
-    );
+       const generator = apiClient.processStreamResponse(
+           response,
+           types.GenerateContentResponse,
+       );
 
-    await expectAsync(generator.next()).toBeRejectedWithError(
-      'Incomplete JSON segment at the end: data: invalid chunk',
-    );
-  });
+       await expectAsync(generator.next())
+           .toBeRejectedWithError(
+               'Incomplete JSON segment at the end: data: invalid chunk',
+           );
+     });
 
   it('should yield the parsed chunk data', async () => {
     const validChunk1 =
-      'data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"},"finishReason": "STOP","index": 0}],"usageMetadata": {"promptTokenCount": 8,"candidatesTokenCount": 1,"totalTokenCount": 9}}\n\n';
+        'data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"},"finishReason": "STOP","index": 0}],"usageMetadata": {"promptTokenCount": 8,"candidatesTokenCount": 1,"totalTokenCount": 9}}\n\n';
     const validChunk2 =
-      'data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"},"finishReason": "STOP","index": 0}],"usageMetadata": {"promptTokenCount": 8,"candidatesTokenCount": 1,"totalTokenCount": 9}}\r\r';
+        'data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"},"finishReason": "STOP","index": 0}],"usageMetadata": {"promptTokenCount": 8,"candidatesTokenCount": 1,"totalTokenCount": 9}}\r\r';
     const validChunk3 =
-      'data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"},"finishReason": "STOP","index": 0}],"usageMetadata": {"promptTokenCount": 8,"candidatesTokenCount": 1,"totalTokenCount": 9}}\r\n\r\n';
+        'data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"},"finishReason": "STOP","index": 0}],"usageMetadata": {"promptTokenCount": 8,"candidatesTokenCount": 1,"totalTokenCount": 9}}\r\n\r\n';
     const validChunks = [validChunk1, validChunk2, validChunk3];
     for (const validChunk of validChunks) {
       const stream = new Readable();
       stream.push(validChunk);
-      stream.push(null); // single end of stream
+      stream.push(null);  // signal end of stream
       const readableStream = new ReadableStream({
         start(controller) {
           stream.on('data', (chunk) => controller.enqueue(chunk));
@@ -134,30 +138,30 @@ describe('processStreamResponse', () => {
       });
       const response = new Response(readableStream);
       const expectedResponse: types.GenerateContentResponse =
-        Object.setPrototypeOf(
-          {
-            candidates: [
+          Object.setPrototypeOf(
               {
-                content: {
-                  parts: [
-                    {
-                      text: 'The',
+                candidates: [
+                  {
+                    content: {
+                      parts: [
+                        {
+                          text: 'The',
+                        },
+                      ],
+                      role: 'model',
                     },
-                  ],
-                  role: 'model',
+                    finishReason: 'STOP' as types.FinishReason,
+                    index: 0,
+                  },
+                ],
+                usageMetadata: {
+                  promptTokenCount: 8,
+                  candidatesTokenCount: 1,
+                  totalTokenCount: 9,
                 },
-                finishReason: 'STOP' as types.FinishReason,
-                index: 0,
               },
-            ],
-            usageMetadata: {
-              promptTokenCount: 8,
-              candidatesTokenCount: 1,
-              totalTokenCount: 9,
-            },
-          },
-          types.GenerateContentResponse.prototype,
-        );
+              types.GenerateContentResponse.prototype,
+          );
       const generator = apiClient.processStreamResponse(
           response,
           types.GenerateContentResponse,
@@ -168,15 +172,52 @@ describe('processStreamResponse', () => {
     }
   });
 
+  it('should yield all expected chunks', async () => {
+    const chunk1 =
+        'data: {"candidates": [{"content": {"parts": [{"text": "One"}],"role": "model"},"finishReason": "STOP","index": 0}],"usageMetadata": {"promptTokenCount": 8,"candidatesTokenCount": 1,"totalTokenCount": 9}}\n\n';
+    const chunk2 =
+        'data: {"candidates": [{"content": {"parts": [{"text": "Two"}],"role": "model"},"finishReason": "STOP","index": 0}],"usageMetadata": {"promptTokenCount": 8,"candidatesTokenCount": 1,"totalTokenCount": 9}}\r\r';
+    const chunk3 =
+        'data: {"candidates": [{"content": {"parts": [{"text": "Three"}],"role": "model"},"finishReason": "STOP","index": 0}],"usageMetadata": {"promptTokenCount": 8,"candidatesTokenCount": 1,"totalTokenCount": 9}}\r\n\r\n';
+    const chunks = [chunk1, chunk2, chunk3];
+    const stream = new Readable();
+    for (const chunk of chunks) {
+      stream.push(chunk);
+    }
+    stream.push(null);  // signal end of stream
+    const readableStream = new ReadableStream({
+      start(controller) {
+        stream.on('data', (chunk) => controller.enqueue(chunk));
+        stream.on('end', () => controller.close());
+        stream.on('error', (err) => controller.error(err));
+      },
+    });
+    const response = new Response(readableStream);
+
+    const streamResponse = await apiClient.processStreamResponse(
+        response,
+        (types as any)?.GenerateContentResponse,
+    );
+
+    let count = 0;
+    const expectedText = ['One', 'Two', 'Three'];
+    for await (let chunkResponse of streamResponse) {
+      expect(chunkResponse.text()).toEqual(expectedText[count]);
+      count++;
+    }
+    expect(count).toEqual(3);
+  });
+
+
   it('should yield valid json split into multiple chunk data', async () => {
     const validChunk1 =
-      'data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"},"finishReason": "STOP","index": 0}],';
+        'data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"},"finishReason": "STOP","index": 0}],';
     const validChunk2 =
-      '"usageMetadata": {"promptTokenCount": 8,"candidatesTokenCount": 1,"totalTokenCount": 9}}\n\n';
+        '"usageMetadata": {"promptTokenCount": 8,"candidatesTokenCount": 1,"totalTokenCount": 9}}\n\n';
     const stream = new Readable();
     stream.push(validChunk1);
     stream.push(validChunk2);
-    stream.push(null); // single end of stream
+    stream.push(null);  // signal end of stream
     const readableStream = new ReadableStream({
       start(controller) {
         stream.on('data', (chunk) => controller.enqueue(chunk));
@@ -236,9 +277,10 @@ describe('ApiClient', () => {
       expect(client.getProject()).toBe('project-from-opts');
       expect(client.getLocation()).toBe('location-from-opts');
       expect(client.getApiKey()).toBe('apikey-from-opts');
-      expect(client.getRequestUrl()).toBe(
-        'https://generativelanguage.googleapis.com/v1beta',
-      );
+      expect(client.getRequestUrl())
+          .toBe(
+              'https://generativelanguage.googleapis.com/v1beta',
+          );
       expect(client.getApiVersion()).toBe('v1beta');
     });
 
@@ -255,10 +297,12 @@ describe('ApiClient', () => {
       expect(client.isVertexAI()).toBe(true);
       expect(client.getProject()).toBe('vertex-project');
       expect(client.getLocation()).toBe('vertex-location');
-      expect(client.getApiKey()).toBeUndefined(); // API key is ignored when setting opts.vertexai
-      expect(client.getRequestUrl()).toBe(
-        'https://vertex-location-aiplatform.googleapis.com/v1beta1',
-      );
+      expect(client.getApiKey())
+          .toBeUndefined();  // API key is ignored when setting opts.vertexai
+      expect(client.getRequestUrl())
+          .toBe(
+              'https://vertex-location-aiplatform.googleapis.com/v1beta1',
+          );
       expect(client.getApiVersion()).toBe('v1beta1');
     });
 
@@ -289,12 +333,14 @@ describe('ApiClient', () => {
       expect(client.getProject()).toBe('project-from-opts');
       expect(client.getLocation()).toBe('location-from-opts');
       expect(client.getApiKey()).toBe('apikey-from-opts');
-      expect(client.getRequestUrl()).toBe(
-        'https://custom-base-url.googleapis.com/v1beta',
-      );
-      expect(client.getWebsocketBaseUrl()).toBe(
-        'wss://custom-base-url.googleapis.com/',
-      );
+      expect(client.getRequestUrl())
+          .toBe(
+              'https://custom-base-url.googleapis.com/v1beta',
+          );
+      expect(client.getWebsocketBaseUrl())
+          .toBe(
+              'wss://custom-base-url.googleapis.com/',
+          );
       expect(client.getApiVersion()).toBe('v1beta');
     });
 
@@ -315,12 +361,14 @@ describe('ApiClient', () => {
       expect(client.getProject()).toBe('project-from-opts');
       expect(client.getLocation()).toBe('location-from-opts');
       expect(client.getApiKey()).toBe('apikey-from-opts');
-      expect(client.getRequestUrl()).toBe(
-        'https://generativelanguage.googleapis.com/v1',
-      );
-      expect(client.getWebsocketBaseUrl()).toBe(
-        'wss://generativelanguage.googleapis.com/',
-      );
+      expect(client.getRequestUrl())
+          .toBe(
+              'https://generativelanguage.googleapis.com/v1',
+          );
+      expect(client.getWebsocketBaseUrl())
+          .toBe(
+              'wss://generativelanguage.googleapis.com/',
+          );
       expect(client.getApiVersion()).toBe('v1');
     });
 
@@ -336,10 +384,12 @@ describe('ApiClient', () => {
       expect(client.isVertexAI()).toBe(true);
       expect(client.getProject()).toBe('vertex-project');
       expect(client.getLocation()).toBe('vertex-location');
-      expect(client.getApiKey()).toBeUndefined(); // API key is ignored when setting opts.vertexai
-      expect(client.getRequestUrl()).toBe(
-        'https://vertex-location-aiplatform.googleapis.com/v1beta1',
-      );
+      expect(client.getApiKey())
+          .toBeUndefined();  // API key is ignored when setting opts.vertexai
+      expect(client.getRequestUrl())
+          .toBe(
+              'https://vertex-location-aiplatform.googleapis.com/v1beta1',
+          );
       const headers = client.getHeaders();
       expect(headers['Content-Type']).toBe('application/json');
       expect(headers['User-Agent']).toContain('google-genai-sdk/');
@@ -367,9 +417,10 @@ describe('ApiClient', () => {
       expect(client.isVertexAI()).toBe(false);
       expect(client.getProject()).toBe('project-from-opts');
       expect(client.getLocation()).toBe('location-from-opts');
-      expect(client.getRequestUrl()).toBe(
-        'https://generativelanguage.googleapis.com/v1beta',
-      );
+      expect(client.getRequestUrl())
+          .toBe(
+              'https://generativelanguage.googleapis.com/v1beta',
+          );
       const headers = client.getHeaders();
       expect(headers['Content-Type']).toBe('text/plain');
       expect(headers['User-Agent']).toContain('google-genai-sdk/');
@@ -399,9 +450,10 @@ describe('ApiClient', () => {
       expect(client.getProject()).toBe('project-from-opts');
       expect(client.getLocation()).toBe('location-from-opts');
       expect(client.getApiKey()).toBe('apikey-from-opts');
-      expect(client.getRequestUrl()).toBe(
-        'https://generativelanguage.googleapis.com/v1beta',
-      );
+      expect(client.getRequestUrl())
+          .toBe(
+              'https://generativelanguage.googleapis.com/v1beta',
+          );
       const headers = client.getHeaders();
       expect(headers['Content-Type']).toBe('application/json');
       expect(headers['x-goog-api-key']).toBe('apikey-from-user');
@@ -429,10 +481,12 @@ describe('ApiClient', () => {
       expect(client.isVertexAI()).toBe(true);
       expect(client.getProject()).toBe('vertex-project');
       expect(client.getLocation()).toBe('vertex-location');
-      expect(client.getApiKey()).toBeUndefined(); // API key is ignored when setting opts.vertexai
-      expect(client.getRequestUrl()).toBe(
-        'https://vertex-location-aiplatform.googleapis.com/v1beta1',
-      );
+      expect(client.getApiKey())
+          .toBeUndefined();  // API key is ignored when setting opts.vertexai
+      expect(client.getRequestUrl())
+          .toBe(
+              'https://vertex-location-aiplatform.googleapis.com/v1beta1',
+          );
       const headers = client.getHeaders();
       expect(headers['Content-Type']).toBe('application/json');
       expect(headers['Authorization']).toBe('User Token');
@@ -444,15 +498,18 @@ describe('ApiClient', () => {
 
   describe('post/get methods', () => {
     it('should delete _url from requestJson', async () => {
-      const client = new ApiClient({auth: new FakeAuth('test-api-key'), apiKey: 'test-api-key'});
-      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
-        Promise.resolve(
-          new Response(
-            JSON.stringify(mockGenerateContentResponse),
-            fetchOkOptions,
-          ),
-        ),
-      );
+      const client = new ApiClient(
+          {auth: new FakeAuth('test-api-key'), apiKey: 'test-api-key'});
+      const fetchSpy =
+          spyOn(global, 'fetch')
+              .and.returnValue(
+                  Promise.resolve(
+                      new Response(
+                          JSON.stringify(mockGenerateContentResponse),
+                          fetchOkOptions,
+                          ),
+                      ),
+              );
       let requestJson = {_url: 'some-url', data: 'test'};
       await client.post('test-path', requestJson);
       const requestInit = fetchSpy.calls.first().args[1] as RequestInit;
@@ -460,63 +517,73 @@ describe('ApiClient', () => {
       const parsedBody: any = JSON.parse(body);
       expect(parsedBody._url).toBeUndefined();
     });
-    it('should prepend base resource path if vertexai is true and path does not start with "projects/"', async () => {
-      const client = new ApiClient({auth: new FakeAuth(), vertexai: true});
-      spyOn(client, 'getBaseResourcePath').and.returnValue(
-        'base-resource-path',
-      );
-      const requestJson: any = {data: 'test'};
-      spyOn(global, 'fetch').and.returnValue(
-        Promise.resolve(
-          new Response(
-            JSON.stringify(mockGenerateContentResponse),
-            fetchOkOptions,
-          ),
-        ),
-      );
-      await client.post('test-path', requestJson);
-      expect(client.getBaseResourcePath).toHaveBeenCalled();
-    });
+    it('should prepend base resource path if vertexai is true and path does not start with "projects/"',
+       async () => {
+         const client = new ApiClient({auth: new FakeAuth(), vertexai: true});
+         spyOn(client, 'getBaseResourcePath')
+             .and.returnValue(
+                 'base-resource-path',
+             );
+         const requestJson: any = {data: 'test'};
+         spyOn(global, 'fetch')
+             .and.returnValue(
+                 Promise.resolve(
+                     new Response(
+                         JSON.stringify(mockGenerateContentResponse),
+                         fetchOkOptions,
+                         ),
+                     ),
+             );
+         await client.post('test-path', requestJson);
+         expect(client.getBaseResourcePath).toHaveBeenCalled();
+       });
     it('should append query parameters to URL', async () => {
-      const client = new ApiClient({auth: new FakeAuth('test-api-key'), apiKey: 'test-api-key'});
+      const client = new ApiClient(
+          {auth: new FakeAuth('test-api-key'), apiKey: 'test-api-key'});
       const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
-      spyOn(global, 'fetch').and.returnValue(
-        Promise.resolve(
-          new Response(
-            JSON.stringify(mockGenerateContentResponse),
-            fetchOkOptions,
-          ),
-        ),
-      );
+      spyOn(global, 'fetch')
+          .and.returnValue(
+              Promise.resolve(
+                  new Response(
+                      JSON.stringify(mockGenerateContentResponse),
+                      fetchOkOptions,
+                      ),
+                  ),
+          );
       await client.get('test-path', requestJson);
-      expect(global.fetch).toHaveBeenCalledWith(
-        jasmine.stringMatching(/param1=value1&param2=value2/),
-        jasmine.any(Object),
-      );
+      expect(global.fetch)
+          .toHaveBeenCalledWith(
+              jasmine.stringMatching(/param1=value1&param2=value2/),
+              jasmine.any(Object),
+          );
     });
-    it('should throw an error if request body is not empty for GET request', async () => {
-      const client = new ApiClient({auth: new FakeAuth('test-api-key'), apiKey: 'test-api-key'});
-      const requestJson: any = {data: 'test'};
-      await client.get('test-path', requestJson).catch((e) => {
-        expect(e.message).toEqual(
-          'Request body should be empty for GET request, but got: {"data":"test"}',
-        );
-      });
-    });
+    it('should throw an error if request body is not empty for GET request',
+       async () => {
+         const client = new ApiClient(
+             {auth: new FakeAuth('test-api-key'), apiKey: 'test-api-key'});
+         const requestJson: any = {data: 'test'};
+         await client.get('test-path', requestJson).catch((e) => {
+           expect(e.message).toEqual(
+               'Request body should be empty for GET request, but got: {"data":"test"}',
+           );
+         });
+       });
     it('should include AbortSignal when timeout is set', async () => {
       const client = new ApiClient({
         auth: new FakeAuth('test-api-key'),
         apiKey: 'test-api-key',
         httpOptions: {timeout: 1000},
       });
-      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
-        Promise.resolve(
-          new Response(
-            JSON.stringify(mockGenerateContentResponse),
-            fetchOkOptions,
-          ),
-        ),
-      );
+      const fetchSpy =
+          spyOn(global, 'fetch')
+              .and.returnValue(
+                  Promise.resolve(
+                      new Response(
+                          JSON.stringify(mockGenerateContentResponse),
+                          fetchOkOptions,
+                          ),
+                      ),
+              );
       await client.post('test-path', {});
       const fetchArgs = fetchSpy.calls.allArgs();
       // @ts-ignore TS2532: Object is possibly 'undefined'.
@@ -525,19 +592,22 @@ describe('ApiClient', () => {
       expect(fetchArgs[0][1].signal.aborted).toBeFalse();
     });
     it('should apply requestHttpOptions when provided', async () => {
-      const client = new ApiClient({auth: new FakeAuth('test-api-key'), apiKey: 'test-api-key'});
+      const client = new ApiClient(
+          {auth: new FakeAuth('test-api-key'), apiKey: 'test-api-key'});
       const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
-      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
-        Promise.resolve(
-          new Response(
-            JSON.stringify(mockGenerateContentResponse),
-            fetchOkOptions,
-          ),
-        ),
-      );
+      const fetchSpy =
+          spyOn(global, 'fetch')
+              .and.returnValue(
+                  Promise.resolve(
+                      new Response(
+                          JSON.stringify(mockGenerateContentResponse),
+                          fetchOkOptions,
+                          ),
+                      ),
+              );
       const timeoutSpy = spyOn(global, 'setTimeout');
 
-      await client.get('test-path', requestJson,  undefined, {
+      await client.get('test-path', requestJson, undefined, {
         baseUrl: 'https://custom-request-base-url.googleapis.com',
         apiVersion: 'v1alpha',
         timeout: 1001,
@@ -554,21 +624,25 @@ describe('ApiClient', () => {
       expect(headers.get('x-goog-api-client')).toContain('google-genai-sdk/');
       expect(headers.get('google-custom-header')).toBe('custom-header-value');
       expect(timeoutArgs[1]).toEqual(1001);
-      expect(fetchArgs[0]).toEqual(
-        'https://custom-request-base-url.googleapis.com/v1alpha/test-path?param1=value1&param2=value2',
-      );
+      expect(fetchArgs[0])
+          .toEqual(
+              'https://custom-request-base-url.googleapis.com/v1alpha/test-path?param1=value1&param2=value2',
+          );
     });
     it('should set bearer token for vertexai', async () => {
-      const client = new ApiClient({auth: new FakeAuth(), apiKey: 'test-api-key', vertexai: true});
+      const client = new ApiClient(
+          {auth: new FakeAuth(), apiKey: 'test-api-key', vertexai: true});
       const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
-      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
-        Promise.resolve(
-          new Response(
-            JSON.stringify(mockGenerateContentResponse),
-            fetchOkOptions,
-          ),
-        ),
-      );
+      const fetchSpy =
+          spyOn(global, 'fetch')
+              .and.returnValue(
+                  Promise.resolve(
+                      new Response(
+                          JSON.stringify(mockGenerateContentResponse),
+                          fetchOkOptions,
+                          ),
+                      ),
+              );
 
       await client.get('test-path', requestJson);
 
@@ -589,17 +663,19 @@ describe('ApiClient', () => {
         },
       });
       const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
-      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
-        Promise.resolve(
-          new Response(
-            JSON.stringify(mockGenerateContentResponse),
-            fetchOkOptions,
-          ),
-        ),
-      );
+      const fetchSpy =
+          spyOn(global, 'fetch')
+              .and.returnValue(
+                  Promise.resolve(
+                      new Response(
+                          JSON.stringify(mockGenerateContentResponse),
+                          fetchOkOptions,
+                          ),
+                      ),
+              );
       const timeoutSpy = spyOn(global, 'setTimeout');
 
-      await client.get('test-path', requestJson,  undefined, {
+      await client.get('test-path', requestJson, undefined, {
         headers: {'google-custom-header': 'custom-header-value'},
         timeout: 1001,
         apiVersion: 'v1alpha',
@@ -615,9 +691,10 @@ describe('ApiClient', () => {
       expect(headers.get('google-custom-header')).toBe('custom-header-value');
       const timeoutArgs = timeoutSpy.calls.first().args;
       expect(timeoutArgs[1]).toEqual(1001);
-      expect(fetchArgs[0]).toEqual(
-        'https://custom-client-base-url.googleapis.com/v1alpha/test-path?param1=value1&param2=value2',
-      );
+      expect(fetchArgs[0])
+          .toEqual(
+              'https://custom-client-base-url.googleapis.com/v1alpha/test-path?param1=value1&param2=value2',
+          );
     });
     it('should not override the client http options permanently', async () => {
       const client = new ApiClient({
@@ -631,20 +708,22 @@ describe('ApiClient', () => {
         },
       });
       const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
-      const fetchSpy = spyOn(global, 'fetch').and.returnValues(
-        Promise.resolve(
-          new Response(
-            JSON.stringify(mockGenerateContentResponse),
-            fetchOkOptions,
-          ),
-        ),
-        Promise.resolve(
-          new Response(
-            JSON.stringify(mockGenerateContentResponse),
-            fetchOkOptions,
-          ),
-        ),
-      );
+      const fetchSpy =
+          spyOn(global, 'fetch')
+              .and.returnValues(
+                  Promise.resolve(
+                      new Response(
+                          JSON.stringify(mockGenerateContentResponse),
+                          fetchOkOptions,
+                          ),
+                      ),
+                  Promise.resolve(
+                      new Response(
+                          JSON.stringify(mockGenerateContentResponse),
+                          fetchOkOptions,
+                          ),
+                      ),
+              );
       const timeoutSpy = spyOn(global, 'setTimeout');
 
       await client.get('test-path', requestJson, undefined, {
@@ -661,12 +740,14 @@ describe('ApiClient', () => {
       expect(headers.get('x-goog-api-key')).toBe('test-api-key');
       expect(headers.get('User-Agent')).toContain('google-genai-sdk/');
       expect(headers.get('x-goog-api-client')).toContain('google-genai-sdk/');
-      expect(headers.get('google-custom-header')).toBe('custom-header-request-value');
+      expect(headers.get('google-custom-header'))
+          .toBe('custom-header-request-value');
       const timeoutArgs = timeoutSpy.calls.mostRecent().args;
       expect(timeoutArgs[1]).toEqual(1002);
-      expect(fetchArgs[0]).toEqual(
-        'https://custom-request-base-url.googleapis.com/v1alpha/test-path?param1=value1&param2=value2',
-      );
+      expect(fetchArgs[0])
+          .toEqual(
+              'https://custom-request-base-url.googleapis.com/v1alpha/test-path?param1=value1&param2=value2',
+          );
 
       await client.get('test-path', requestJson);
 
@@ -676,43 +757,52 @@ describe('ApiClient', () => {
       expect(secondHeaders.get('Content-Type')).toBe('application/json');
       expect(secondHeaders.get('x-goog-api-key')).toBe('test-api-key');
       expect(secondHeaders.get('User-Agent')).toContain('google-genai-sdk/');
-      expect(secondHeaders.get('x-goog-api-client')).toContain('google-genai-sdk/');
-      expect(secondHeaders.get('google-custom-header')).toBe('custom-header-request-value');
+      expect(secondHeaders.get('x-goog-api-client'))
+          .toContain('google-genai-sdk/');
+      expect(secondHeaders.get('google-custom-header'))
+          .toBe('custom-header-request-value');
       const secondTimeoutArgs = timeoutSpy.calls.mostRecent().args;
       expect(secondTimeoutArgs[1]).toEqual(1000);
-      expect(secondFetchArgs[0]).toEqual(
-        'https://custom-client-base-url.googleapis.com/v1beta1/test-path?param1=value1&param2=value2',
-      );
+      expect(secondFetchArgs[0])
+          .toEqual(
+              'https://custom-client-base-url.googleapis.com/v1beta1/test-path?param1=value1&param2=value2',
+          );
     });
   });
   describe('postStream', () => {
     it('should throw ServerError if response is 500', async () => {
-      const client = new ApiClient({auth: new FakeAuth('test-api-key'), apiKey: 'test-api-key'});
-      spyOn(global, 'fetch').and.returnValue(
-        Promise.resolve(new Response(JSON.stringify({}), fetch500Options)),
-      );
+      const client = new ApiClient(
+          {auth: new FakeAuth('test-api-key'), apiKey: 'test-api-key'});
+      spyOn(global, 'fetch')
+          .and.returnValue(
+              Promise.resolve(
+                  new Response(JSON.stringify({}), fetch500Options)),
+          );
       await client.postStream('test-path', {}).catch((e) => {
         expect(e.name).toEqual('ServerError');
       });
     });
     it('should throw ClientError if response is 400', async () => {
-      const client = new ApiClient({auth: new FakeAuth('test-api-key'), apiKey: 'test-api-key'});
-      spyOn(global, 'fetch').and.returnValue(
-        Promise.resolve(new Response(JSON.stringify({}), fetch400Options)),
-      );
+      const client = new ApiClient(
+          {auth: new FakeAuth('test-api-key'), apiKey: 'test-api-key'});
+      spyOn(global, 'fetch')
+          .and.returnValue(
+              Promise.resolve(
+                  new Response(JSON.stringify({}), fetch400Options)),
+          );
       await client.postStream('test-path', {}).catch((e) => {
         expect(e.name).toEqual('ClientError');
       });
     });
     it('should yield data if response is ok', async () => {
       const validChunk1 =
-        'data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"},"finishReason": "STOP","index": 0}],';
+          'data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"},"finishReason": "STOP","index": 0}],';
       const validChunk2 =
-        '"usageMetadata": {"promptTokenCount": 8,"candidatesTokenCount": 1,"totalTokenCount": 9}}\n\n';
+          '"usageMetadata": {"promptTokenCount": 8,"candidatesTokenCount": 1,"totalTokenCount": 9}}\n\n';
       const stream = new Readable();
       stream.push(validChunk1);
       stream.push(validChunk2);
-      stream.push(null); // single end of stream
+      stream.push(null);  // signal end of stream
       const readableStream = new ReadableStream({
         start(controller) {
           stream.on('data', (chunk) => controller.enqueue(chunk));
@@ -721,7 +811,8 @@ describe('ApiClient', () => {
         },
       });
       const response = new Response(readableStream, fetchOkOptions);
-      const client = new ApiClient({auth: new FakeAuth('test-api-key'), apiKey: 'test-api-key'});
+      const client = new ApiClient(
+          {auth: new FakeAuth('test-api-key'), apiKey: 'test-api-key'});
       spyOn(global, 'fetch').and.returnValue(Promise.resolve(response));
       const generator = await client.postStream('test-path', {});
       const result = await generator.next();
@@ -746,14 +837,16 @@ describe('ApiClient', () => {
         apiKey: 'test-api-key',
         httpOptions: {timeout: 1000},
       });
-      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
-        Promise.resolve(
-          new Response(
-            JSON.stringify(mockGenerateContentResponse),
-            fetchOkOptions,
-          ),
-        ),
-      );
+      const fetchSpy =
+          spyOn(global, 'fetch')
+              .and.returnValue(
+                  Promise.resolve(
+                      new Response(
+                          JSON.stringify(mockGenerateContentResponse),
+                          fetchOkOptions,
+                          ),
+                      ),
+              );
       await client.postStream('test-path', {});
       const fetchArgs = fetchSpy.calls.first().args;
       // @ts-ignore TS2532: Object is possibly 'undefined'.
@@ -762,16 +855,19 @@ describe('ApiClient', () => {
       expect(fetchArgs[1].signal.aborted).toBeFalse();
     });
     it('should apply requestHttpOptions when provided', async () => {
-      const client = new ApiClient({auth: new FakeAuth('test-api-key'), apiKey: 'test-api-key'});
+      const client = new ApiClient(
+          {auth: new FakeAuth('test-api-key'), apiKey: 'test-api-key'});
       const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
-      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
-        Promise.resolve(
-          new Response(
-            JSON.stringify(mockGenerateContentResponse),
-            fetchOkOptions,
-          ),
-        ),
-      );
+      const fetchSpy =
+          spyOn(global, 'fetch')
+              .and.returnValue(
+                  Promise.resolve(
+                      new Response(
+                          JSON.stringify(mockGenerateContentResponse),
+                          fetchOkOptions,
+                          ),
+                      ),
+              );
       const timeoutSpy = spyOn(global, 'setTimeout');
 
       await client.postStream('test-path', {}, undefined, {
@@ -791,21 +887,25 @@ describe('ApiClient', () => {
       expect(headers.get('google-custom-header')).toBe('custom-header-value');
       const timeoutArgs = timeoutSpy.calls.first().args;
       expect(timeoutArgs[1]).toEqual(1001);
-      expect(fetchArgs[0]).toEqual(
-        'https://custom-request-base-url.googleapis.com/v1alpha/test-path?alt=sse',
-      );
+      expect(fetchArgs[0])
+          .toEqual(
+              'https://custom-request-base-url.googleapis.com/v1alpha/test-path?alt=sse',
+          );
     });
     it('should set bearer token for vertexai', async () => {
-      const client = new ApiClient({auth: new FakeAuth(), apiKey: 'test-api-key', vertexai: true});
+      const client = new ApiClient(
+          {auth: new FakeAuth(), apiKey: 'test-api-key', vertexai: true});
       const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
-      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
-        Promise.resolve(
-          new Response(
-            JSON.stringify(mockGenerateContentResponse),
-            fetchOkOptions,
-          ),
-        ),
-      );
+      const fetchSpy =
+          spyOn(global, 'fetch')
+              .and.returnValue(
+                  Promise.resolve(
+                      new Response(
+                          JSON.stringify(mockGenerateContentResponse),
+                          fetchOkOptions,
+                          ),
+                      ),
+              );
 
       await client.postStream('test-path', {}, undefined);
 
@@ -826,14 +926,16 @@ describe('ApiClient', () => {
         },
       });
       const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
-      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
-        Promise.resolve(
-          new Response(
-            JSON.stringify(mockGenerateContentResponse),
-            fetchOkOptions,
-          ),
-        ),
-      );
+      const fetchSpy =
+          spyOn(global, 'fetch')
+              .and.returnValue(
+                  Promise.resolve(
+                      new Response(
+                          JSON.stringify(mockGenerateContentResponse),
+                          fetchOkOptions,
+                          ),
+                      ),
+              );
       const timeoutSpy = spyOn(global, 'setTimeout');
 
       await client.postStream('test-path', requestJson, undefined, {
@@ -852,9 +954,10 @@ describe('ApiClient', () => {
       expect(headers.get('google-custom-header')).toBe('custom-header-value');
       const timeoutArgs = timeoutSpy.calls.first().args;
       expect(timeoutArgs[1]).toEqual(1001);
-      expect(fetchArgs[0]).toEqual(
-        'https://custom-client-base-url.googleapis.com/v1alpha/test-path?alt=sse',
-      );
+      expect(fetchArgs[0])
+          .toEqual(
+              'https://custom-client-base-url.googleapis.com/v1alpha/test-path?alt=sse',
+          );
     });
     it('should not override the client http options permanently', async () => {
       const client = new ApiClient({
@@ -868,14 +971,16 @@ describe('ApiClient', () => {
         },
       });
       const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
-      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
-        Promise.resolve(
-          new Response(
-            JSON.stringify(mockGenerateContentResponse),
-            fetchOkOptions,
-          ),
-        ),
-      );
+      const fetchSpy =
+          spyOn(global, 'fetch')
+              .and.returnValue(
+                  Promise.resolve(
+                      new Response(
+                          JSON.stringify(mockGenerateContentResponse),
+                          fetchOkOptions,
+                          ),
+                      ),
+              );
       const timeoutSpy = spyOn(global, 'setTimeout');
 
       await client.postStream('test-path', requestJson, undefined, {
@@ -892,12 +997,14 @@ describe('ApiClient', () => {
       expect(headers.get('x-goog-api-key')).toBe('test-api-key');
       expect(headers.get('User-Agent')).toContain('google-genai-sdk/');
       expect(headers.get('x-goog-api-client')).toContain('google-genai-sdk/');
-      expect(headers.get('google-custom-header')).toBe('custom-header-request-value');
+      expect(headers.get('google-custom-header'))
+          .toBe('custom-header-request-value');
       const timeoutArgs = timeoutSpy.calls.mostRecent().args;
       expect(timeoutArgs[1]).toEqual(1002);
-      expect(fetchArgs[0]).toEqual(
-        'https://custom-request-base-url.googleapis.com/v1alpha/test-path?alt=sse',
-      );
+      expect(fetchArgs[0])
+          .toEqual(
+              'https://custom-request-base-url.googleapis.com/v1alpha/test-path?alt=sse',
+          );
 
       await client.postStream('test-path', requestJson, undefined);
 
@@ -907,13 +1014,16 @@ describe('ApiClient', () => {
       expect(secondHeaders.get('Content-Type')).toBe('application/json');
       expect(secondHeaders.get('x-goog-api-key')).toBe('test-api-key');
       expect(secondHeaders.get('User-Agent')).toContain('google-genai-sdk/');
-      expect(secondHeaders.get('x-goog-api-client')).toContain('google-genai-sdk/');
-      expect(secondHeaders.get('google-custom-header')).toBe('custom-header-request-value');
+      expect(secondHeaders.get('x-goog-api-client'))
+          .toContain('google-genai-sdk/');
+      expect(secondHeaders.get('google-custom-header'))
+          .toBe('custom-header-request-value');
       const secondTimeoutArgs = timeoutSpy.calls.mostRecent().args;
       expect(secondTimeoutArgs[1]).toEqual(1000);
-      expect(secondFetchArgs[0]).toEqual(
-        'https://custom-client-base-url.googleapis.com/v1beta1/test-path?alt=sse',
-      );
+      expect(secondFetchArgs[0])
+          .toEqual(
+              'https://custom-client-base-url.googleapis.com/v1beta1/test-path?alt=sse',
+          );
     });
   });
 });
