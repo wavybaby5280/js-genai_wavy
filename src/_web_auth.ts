@@ -13,8 +13,8 @@ export class WebAuth implements Auth {
 
   async addAuthHeaders(headers: Headers): Promise<void> {
     if (headers.get(GOOGLE_API_KEY_HEADER) !== null) {
-        return;
+      return;
     }
-    headers.append(GOOGLE_API_KEY_HEADER, this.apiKey)
+    headers.append(GOOGLE_API_KEY_HEADER, this.apiKey);
   }
 }

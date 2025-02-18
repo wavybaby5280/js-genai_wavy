@@ -98,9 +98,9 @@ export class Tunings extends BaseModule {
           this.apiClient,
           apiResponse,
         );
-        let typed_resp = new types.ListTuningJobsResponse();
-        Object.assign(typed_resp, resp);
-        return typed_resp;
+        const typedResp = new types.ListTuningJobsResponse();
+        Object.assign(typedResp, resp);
+        return typedResp;
       });
     } else {
       body = listTuningJobsParametersToMldev(this.apiClient, params);
@@ -118,9 +118,9 @@ export class Tunings extends BaseModule {
           this.apiClient,
           apiResponse,
         );
-        let typed_resp = new types.ListTuningJobsResponse();
-        Object.assign(typed_resp, resp);
-        return typed_resp;
+        const typedResp = new types.ListTuningJobsResponse();
+        Object.assign(typedResp, resp);
+        return typedResp;
       });
     }
   }

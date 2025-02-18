@@ -10,72 +10,77 @@
  * @experimental
  */
 
-
 import {ApiClient} from './_api_client';
 import {Auth} from './_auth';
 import * as common from './_common';
 import * as t from './_transformers';
 import {WebSocket, WebSocketCallbacks, WebSocketFactory} from './_websocket';
-import {contentFromMldev, contentFromVertex, contentToMldev, contentToVertex, toolToMldev, toolToVertex} from './models';
+import {
+  contentFromMldev,
+  contentFromVertex,
+  contentToMldev,
+  contentToVertex,
+  toolToMldev,
+  toolToVertex,
+} from './models';
 import * as types from './types';
 
-
 const FUNCTION_RESPONSE_REQUIRES_ID =
-    ('FunctionResponse request must have an `id` field from the response of a ToolCall.FunctionalCalls in Google AI.');
+  'FunctionResponse request must have an `id` field from the response of a ToolCall.FunctionalCalls in Google AI.';
 
 function liveConnectConfigToMldev(
-    apiClient: ApiClient,
-    fromObject: any,
-    parentObject?: any,
-    ): Record<string, any> {
-  let toObject: Record<string, any> = {};
+  apiClient: ApiClient,
+  fromObject: any,
+  parentObject?: any,
+): Record<string, any> {
+  const toObject: Record<string, any> = {};
 
-  let fromGenerationConfig = common.getValueByPath(fromObject, [
+  const fromGenerationConfig = common.getValueByPath(fromObject, [
     'generationConfig',
   ]);
   if (fromGenerationConfig !== undefined) {
     common.setValueByPath(toObject, ['generationConfig'], fromGenerationConfig);
   }
 
-  let fromResponseModalities = common.getValueByPath(fromObject, [
+  const fromResponseModalities = common.getValueByPath(fromObject, [
     'responseModalities',
   ]);
   if (fromResponseModalities !== undefined) {
     common.setValueByPath(
-        toObject,
-        ['generationConfig', 'responseModalities'],
-        fromResponseModalities,
+      toObject,
+      ['generationConfig', 'responseModalities'],
+      fromResponseModalities,
     );
   }
 
-  let fromSpeechConfig = common.getValueByPath(fromObject, ['speechConfig']);
+  const fromSpeechConfig = common.getValueByPath(fromObject, ['speechConfig']);
   if (fromSpeechConfig !== undefined) {
     common.setValueByPath(
-        toObject,
-        ['generationConfig', 'speechConfig'],
-        fromSpeechConfig,
+      toObject,
+      ['generationConfig', 'speechConfig'],
+      fromSpeechConfig,
     );
   }
 
-  let fromSystemInstruction = common.getValueByPath(fromObject, [
+  const fromSystemInstruction = common.getValueByPath(fromObject, [
     'systemInstruction',
   ]);
   if (fromSystemInstruction !== undefined) {
     common.setValueByPath(
-        toObject,
-        ['systemInstruction'],
-        contentToMldev(apiClient, fromSystemInstruction, toObject),
+      toObject,
+      ['systemInstruction'],
+      contentToMldev(apiClient, fromSystemInstruction, toObject),
     );
   }
 
-  let fromTools = common.getValueByPath(fromObject, ['tools']);
+  const fromTools = common.getValueByPath(fromObject, ['tools']);
   if (fromTools !== undefined && fromTools !== null) {
     common.setValueByPath(
-        toObject,
-        ['tools'],
-        fromTools.map((item: any) => {
-          return toolToMldev(apiClient, item, toObject);
-        }),
+      toObject,
+      ['tools'],
+      fromTools.map((item: any) => {
+        return toolToMldev(apiClient, item, toObject);
+      }),
     );
   }
 
@@ -83,65 +88,65 @@ function liveConnectConfigToMldev(
 }
 
 function liveConnectConfigToVertex(
-    apiClient: ApiClient,
-    fromObject: any,
-    parentObject?: any,
-    ): Record<string, any> {
-  let toObject: Record<string, any> = {};
+  apiClient: ApiClient,
+  fromObject: any,
+  parentObject?: any,
+): Record<string, any> {
+  const toObject: Record<string, any> = {};
 
-  let fromGenerationConfig = common.getValueByPath(fromObject, [
+  const fromGenerationConfig = common.getValueByPath(fromObject, [
     'generationConfig',
   ]);
   if (fromGenerationConfig !== undefined) {
     common.setValueByPath(toObject, ['generationConfig'], fromGenerationConfig);
   }
 
-  let fromResponseModalities = common.getValueByPath(fromObject, [
+  const fromResponseModalities = common.getValueByPath(fromObject, [
     'responseModalities',
   ]);
   if (fromResponseModalities !== undefined) {
     common.setValueByPath(
-        toObject,
-        ['generationConfig', 'responseModalities'],
-        fromResponseModalities,
+      toObject,
+      ['generationConfig', 'responseModalities'],
+      fromResponseModalities,
     );
   } else {
     // Set default to AUDIO to align with MLDev API.
     common.setValueByPath(
-        toObject,
-        ['generationConfig', 'responseModalities'],
-        ['AUDIO'],
+      toObject,
+      ['generationConfig', 'responseModalities'],
+      ['AUDIO'],
     );
   }
 
-  let fromSpeechConfig = common.getValueByPath(fromObject, ['speechConfig']);
+  const fromSpeechConfig = common.getValueByPath(fromObject, ['speechConfig']);
   if (fromSpeechConfig !== undefined) {
     common.setValueByPath(
-        toObject,
-        ['generationConfig', 'speechConfig'],
-        fromSpeechConfig,
+      toObject,
+      ['generationConfig', 'speechConfig'],
+      fromSpeechConfig,
     );
   }
 
-  let fromSystemInstruction = common.getValueByPath(fromObject, [
+  const fromSystemInstruction = common.getValueByPath(fromObject, [
     'systemInstruction',
   ]);
   if (fromSystemInstruction !== undefined) {
     common.setValueByPath(
-        toObject,
-        ['systemInstruction'],
-        contentToVertex(apiClient, fromSystemInstruction, toObject),
+      toObject,
+      ['systemInstruction'],
+      contentToVertex(apiClient, fromSystemInstruction, toObject),
     );
   }
 
-  let fromTools = common.getValueByPath(fromObject, ['tools']);
+  const fromTools = common.getValueByPath(fromObject, ['tools']);
   if (fromTools !== undefined && fromTools !== null) {
     common.setValueByPath(
-        toObject,
-        ['tools'],
-        fromTools.map((item: any) => {
-          return toolToVertex(apiClient, item, toObject);
-        }),
+      toObject,
+      ['tools'],
+      fromTools.map((item: any) => {
+        return toolToVertex(apiClient, item, toObject);
+      }),
     );
   }
 
@@ -149,22 +154,22 @@ function liveConnectConfigToVertex(
 }
 
 function liveConnectParametersToMldev(
-    apiClient: ApiClient,
-    fromObject: any,
-    parentObject?: any,
-    ): Record<string, any> {
-  let toObject: Record<string, any> = {};
+  apiClient: ApiClient,
+  fromObject: any,
+  parentObject?: any,
+): Record<string, any> {
+  const toObject: Record<string, any> = {};
 
-  let fromConfig = common.getValueByPath(fromObject, ['config']);
+  const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig !== undefined) {
     common.setValueByPath(
-        toObject,
-        ['setup'],
-        liveConnectConfigToMldev(apiClient, fromConfig, toObject),
+      toObject,
+      ['setup'],
+      liveConnectConfigToMldev(apiClient, fromConfig, toObject),
     );
   }
 
-  let fromModel = common.getValueByPath(fromObject, ['model']);
+  const fromModel = common.getValueByPath(fromObject, ['model']);
   if (fromModel !== undefined) {
     common.setValueByPath(toObject, ['setup', 'model'], fromModel);
   }
@@ -173,22 +178,22 @@ function liveConnectParametersToMldev(
 }
 
 function liveConnectParametersToVertex(
-    apiClient: ApiClient,
-    fromObject: any,
-    parentObject?: any,
-    ): Record<string, any> {
-  let toObject: Record<string, any> = {};
+  apiClient: ApiClient,
+  fromObject: any,
+  parentObject?: any,
+): Record<string, any> {
+  const toObject: Record<string, any> = {};
 
-  let fromConfig = common.getValueByPath(fromObject, ['config']);
+  const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig !== undefined) {
     common.setValueByPath(
-        toObject,
-        ['setup'],
-        liveConnectConfigToVertex(apiClient, fromConfig, toObject),
+      toObject,
+      ['setup'],
+      liveConnectConfigToVertex(apiClient, fromConfig, toObject),
     );
   }
 
-  let fromModel = common.getValueByPath(fromObject, ['model']);
+  const fromModel = common.getValueByPath(fromObject, ['model']);
   if (fromModel !== undefined) {
     common.setValueByPath(toObject, ['setup', 'model'], fromModel);
   }
@@ -197,47 +202,47 @@ function liveConnectParametersToVertex(
 }
 
 function liveServerSetupCompleteFromMldev(
-    apiClient: ApiClient,
-    fromObject: any,
-    parentObject?: any,
-    ): Record<string, any> {
-  let toObject: Record<string, any> = {};
+  apiClient: ApiClient,
+  fromObject: any,
+  parentObject?: any,
+): Record<string, any> {
+  const toObject: Record<string, any> = {};
 
   return toObject;
 }
 
 function liveServerSetupCompleteFromVertex(
-    apiClient: ApiClient,
-    fromObject: any,
-    parentObject?: any,
-    ): Record<string, any> {
-  let toObject: Record<string, any> = {};
+  apiClient: ApiClient,
+  fromObject: any,
+  parentObject?: any,
+): Record<string, any> {
+  const toObject: Record<string, any> = {};
 
   return toObject;
 }
 
 function liveServercontentFromMldev(
-    apiClient: ApiClient,
-    fromObject: any,
-    parentObject?: any,
-    ): Record<string, any> {
-  let toObject: Record<string, any> = {};
+  apiClient: ApiClient,
+  fromObject: any,
+  parentObject?: any,
+): Record<string, any> {
+  const toObject: Record<string, any> = {};
 
-  let fromModelTurn = common.getValueByPath(fromObject, ['modelTurn']);
+  const fromModelTurn = common.getValueByPath(fromObject, ['modelTurn']);
   if (fromModelTurn !== undefined) {
     common.setValueByPath(
-        toObject,
-        ['modelTurn'],
-        contentFromMldev(apiClient, fromModelTurn, toObject),
+      toObject,
+      ['modelTurn'],
+      contentFromMldev(apiClient, fromModelTurn, toObject),
     );
   }
 
-  let fromTurnComplete = common.getValueByPath(fromObject, ['turnComplete']);
+  const fromTurnComplete = common.getValueByPath(fromObject, ['turnComplete']);
   if (fromTurnComplete !== undefined) {
     common.setValueByPath(toObject, ['turnComplete'], fromTurnComplete);
   }
 
-  let fromInterrupted = common.getValueByPath(fromObject, ['interrupted']);
+  const fromInterrupted = common.getValueByPath(fromObject, ['interrupted']);
   if (fromInterrupted !== undefined) {
     common.setValueByPath(toObject, ['interrupted'], fromInterrupted);
   }
@@ -246,27 +251,27 @@ function liveServercontentFromMldev(
 }
 
 function liveServercontentFromVertex(
-    apiClient: ApiClient,
-    fromObject: any,
-    parentObject?: any,
-    ): Record<string, any> {
-  let toObject: Record<string, any> = {};
+  apiClient: ApiClient,
+  fromObject: any,
+  parentObject?: any,
+): Record<string, any> {
+  const toObject: Record<string, any> = {};
 
-  let fromModelTurn = common.getValueByPath(fromObject, ['modelTurn']);
+  const fromModelTurn = common.getValueByPath(fromObject, ['modelTurn']);
   if (fromModelTurn !== undefined) {
     common.setValueByPath(
-        toObject,
-        ['modelTurn'],
-        contentFromVertex(apiClient, fromModelTurn, toObject),
+      toObject,
+      ['modelTurn'],
+      contentFromVertex(apiClient, fromModelTurn, toObject),
     );
   }
 
-  let fromTurnComplete = common.getValueByPath(fromObject, ['turnComplete']);
+  const fromTurnComplete = common.getValueByPath(fromObject, ['turnComplete']);
   if (fromTurnComplete !== undefined) {
     common.setValueByPath(toObject, ['turnComplete'], fromTurnComplete);
   }
 
-  let fromInterrupted = common.getValueByPath(fromObject, ['interrupted']);
+  const fromInterrupted = common.getValueByPath(fromObject, ['interrupted']);
   if (fromInterrupted !== undefined) {
     common.setValueByPath(toObject, ['interrupted'], fromInterrupted);
   }
@@ -275,23 +280,23 @@ function liveServercontentFromVertex(
 }
 
 function functionCallFromMldev(
-    apiClient: ApiClient,
-    fromObject: any,
-    parentObject?: any,
-    ): Record<string, any> {
-  let toObject: Record<string, any> = {};
+  apiClient: ApiClient,
+  fromObject: any,
+  parentObject?: any,
+): Record<string, any> {
+  const toObject: Record<string, any> = {};
 
-  let fromId = common.getValueByPath(fromObject, ['id']);
+  const fromId = common.getValueByPath(fromObject, ['id']);
   if (fromId !== undefined) {
     common.setValueByPath(toObject, ['id'], fromId);
   }
 
-  let fromArgs = common.getValueByPath(fromObject, ['args']);
+  const fromArgs = common.getValueByPath(fromObject, ['args']);
   if (fromArgs !== undefined) {
     common.setValueByPath(toObject, ['args'], fromArgs);
   }
 
-  let fromName = common.getValueByPath(fromObject, ['name']);
+  const fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined) {
     common.setValueByPath(toObject, ['name'], fromName);
   }
@@ -300,18 +305,18 @@ function functionCallFromMldev(
 }
 
 function functionCallFromVertex(
-    apiClient: ApiClient,
-    fromObject: any,
-    parentObject?: any,
-    ): Record<string, any> {
-  let toObject: Record<string, any> = {};
+  apiClient: ApiClient,
+  fromObject: any,
+  parentObject?: any,
+): Record<string, any> {
+  const toObject: Record<string, any> = {};
 
-  let fromArgs = common.getValueByPath(fromObject, ['args']);
+  const fromArgs = common.getValueByPath(fromObject, ['args']);
   if (fromArgs !== undefined) {
     common.setValueByPath(toObject, ['args'], fromArgs);
   }
 
-  let fromName = common.getValueByPath(fromObject, ['name']);
+  const fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined) {
     common.setValueByPath(toObject, ['name'], fromName);
   }
@@ -320,20 +325,22 @@ function functionCallFromVertex(
 }
 
 function liveServerToolCallFromMldev(
-    apiClient: ApiClient,
-    fromObject: any,
-    parentObject?: any,
-    ): Record<string, any> {
-  let toObject: Record<string, any> = {};
+  apiClient: ApiClient,
+  fromObject: any,
+  parentObject?: any,
+): Record<string, any> {
+  const toObject: Record<string, any> = {};
 
-  let fromFunctionCalls = common.getValueByPath(fromObject, ['functionCalls']);
+  const fromFunctionCalls = common.getValueByPath(fromObject, [
+    'functionCalls',
+  ]);
   if (fromFunctionCalls !== undefined && fromFunctionCalls !== null) {
     common.setValueByPath(
-        toObject,
-        ['functionCalls'],
-        fromFunctionCalls.map((item: any) => {
-          return functionCallFromMldev(apiClient, item, toObject);
-        }),
+      toObject,
+      ['functionCalls'],
+      fromFunctionCalls.map((item: any) => {
+        return functionCallFromMldev(apiClient, item, toObject);
+      }),
     );
   }
 
@@ -341,20 +348,22 @@ function liveServerToolCallFromMldev(
 }
 
 function liveServerToolCallFromVertex(
-    apiClient: ApiClient,
-    fromObject: any,
-    parentObject?: any,
-    ): Record<string, any> {
-  let toObject: Record<string, any> = {};
+  apiClient: ApiClient,
+  fromObject: any,
+  parentObject?: any,
+): Record<string, any> {
+  const toObject: Record<string, any> = {};
 
-  let fromFunctionCalls = common.getValueByPath(fromObject, ['functionCalls']);
+  const fromFunctionCalls = common.getValueByPath(fromObject, [
+    'functionCalls',
+  ]);
   if (fromFunctionCalls !== undefined && fromFunctionCalls !== null) {
     common.setValueByPath(
-        toObject,
-        ['functionCalls'],
-        fromFunctionCalls.map((item: any) => {
-          return functionCallFromVertex(apiClient, item, toObject);
-        }),
+      toObject,
+      ['functionCalls'],
+      fromFunctionCalls.map((item: any) => {
+        return functionCallFromVertex(apiClient, item, toObject);
+      }),
     );
   }
 
@@ -362,13 +371,13 @@ function liveServerToolCallFromVertex(
 }
 
 function liveServerToolCallCancellationFromMldev(
-    apiClient: ApiClient,
-    fromObject: any,
-    parentObject?: any,
-    ): Record<string, any> {
-  let toObject: Record<string, any> = {};
+  apiClient: ApiClient,
+  fromObject: any,
+  parentObject?: any,
+): Record<string, any> {
+  const toObject: Record<string, any> = {};
 
-  let fromIds = common.getValueByPath(fromObject, ['ids']);
+  const fromIds = common.getValueByPath(fromObject, ['ids']);
   if (fromIds !== undefined) {
     common.setValueByPath(toObject, ['ids'], fromIds);
   }
@@ -377,13 +386,13 @@ function liveServerToolCallCancellationFromMldev(
 }
 
 function liveServerToolCallCancellationFromVertex(
-    apiClient: ApiClient,
-    fromObject: any,
-    parentObject?: any,
-    ): Record<string, any> {
-  let toObject: Record<string, any> = {};
+  apiClient: ApiClient,
+  fromObject: any,
+  parentObject?: any,
+): Record<string, any> {
+  const toObject: Record<string, any> = {};
 
-  let fromIds = common.getValueByPath(fromObject, ['ids']);
+  const fromIds = common.getValueByPath(fromObject, ['ids']);
   if (fromIds !== undefined) {
     common.setValueByPath(toObject, ['ids'], fromIds);
   }
@@ -392,52 +401,55 @@ function liveServerToolCallCancellationFromVertex(
 }
 
 function liveServerMessageFromMldev(
-    apiClient: ApiClient,
-    fromObject: any,
-    parentObject?: any,
-    ): Record<string, any> {
-  let toObject: Record<string, any> = {};
+  apiClient: ApiClient,
+  fromObject: any,
+  parentObject?: any,
+): Record<string, any> {
+  const toObject: Record<string, any> = {};
 
-  let fromSetupComplete = common.getValueByPath(fromObject, ['setupComplete']);
+  const fromSetupComplete = common.getValueByPath(fromObject, [
+    'setupComplete',
+  ]);
   if (fromSetupComplete !== undefined) {
     common.setValueByPath(
-        toObject,
-        ['setupComplete'],
-        liveServerSetupCompleteFromMldev(
-            apiClient, fromSetupComplete, toObject),
+      toObject,
+      ['setupComplete'],
+      liveServerSetupCompleteFromMldev(apiClient, fromSetupComplete, toObject),
     );
   }
 
-  let fromServerContent = common.getValueByPath(fromObject, ['serverContent']);
+  const fromServerContent = common.getValueByPath(fromObject, [
+    'serverContent',
+  ]);
   if (fromServerContent !== undefined) {
     common.setValueByPath(
-        toObject,
-        ['serverContent'],
-        liveServercontentFromMldev(apiClient, fromServerContent, toObject),
+      toObject,
+      ['serverContent'],
+      liveServercontentFromMldev(apiClient, fromServerContent, toObject),
     );
   }
 
-  let fromToolCall = common.getValueByPath(fromObject, ['toolCall']);
+  const fromToolCall = common.getValueByPath(fromObject, ['toolCall']);
   if (fromToolCall !== undefined) {
     common.setValueByPath(
-        toObject,
-        ['toolCall'],
-        liveServerToolCallFromMldev(apiClient, fromToolCall, toObject),
+      toObject,
+      ['toolCall'],
+      liveServerToolCallFromMldev(apiClient, fromToolCall, toObject),
     );
   }
 
-  let fromToolCallCancellation = common.getValueByPath(fromObject, [
+  const fromToolCallCancellation = common.getValueByPath(fromObject, [
     'toolCallCancellation',
   ]);
   if (fromToolCallCancellation !== undefined) {
     common.setValueByPath(
+      toObject,
+      ['toolCallCancellation'],
+      liveServerToolCallCancellationFromMldev(
+        apiClient,
+        fromToolCallCancellation,
         toObject,
-        ['toolCallCancellation'],
-        liveServerToolCallCancellationFromMldev(
-            apiClient,
-            fromToolCallCancellation,
-            toObject,
-            ),
+      ),
     );
   }
 
@@ -445,52 +457,55 @@ function liveServerMessageFromMldev(
 }
 
 function liveServerMessageFromVertex(
-    apiClient: ApiClient,
-    fromObject: any,
-    parentObject?: any,
-    ): Record<string, any> {
-  let toObject: Record<string, any> = {};
+  apiClient: ApiClient,
+  fromObject: any,
+  parentObject?: any,
+): Record<string, any> {
+  const toObject: Record<string, any> = {};
 
-  let fromSetupComplete = common.getValueByPath(fromObject, ['setupComplete']);
+  const fromSetupComplete = common.getValueByPath(fromObject, [
+    'setupComplete',
+  ]);
   if (fromSetupComplete !== undefined) {
     common.setValueByPath(
-        toObject,
-        ['setupComplete'],
-        liveServerSetupCompleteFromVertex(
-            apiClient, fromSetupComplete, toObject),
+      toObject,
+      ['setupComplete'],
+      liveServerSetupCompleteFromVertex(apiClient, fromSetupComplete, toObject),
     );
   }
 
-  let fromServerContent = common.getValueByPath(fromObject, ['serverContent']);
+  const fromServerContent = common.getValueByPath(fromObject, [
+    'serverContent',
+  ]);
   if (fromServerContent !== undefined) {
     common.setValueByPath(
-        toObject,
-        ['serverContent'],
-        liveServercontentFromVertex(apiClient, fromServerContent, toObject),
+      toObject,
+      ['serverContent'],
+      liveServercontentFromVertex(apiClient, fromServerContent, toObject),
     );
   }
 
-  let fromToolCall = common.getValueByPath(fromObject, ['toolCall']);
+  const fromToolCall = common.getValueByPath(fromObject, ['toolCall']);
   if (fromToolCall !== undefined) {
     common.setValueByPath(
-        toObject,
-        ['toolCall'],
-        liveServerToolCallFromVertex(apiClient, fromToolCall, toObject),
+      toObject,
+      ['toolCall'],
+      liveServerToolCallFromVertex(apiClient, fromToolCall, toObject),
     );
   }
 
-  let fromToolCallCancellation = common.getValueByPath(fromObject, [
+  const fromToolCallCancellation = common.getValueByPath(fromObject, [
     'toolCallCancellation',
   ]);
   if (fromToolCallCancellation !== undefined) {
     common.setValueByPath(
+      toObject,
+      ['toolCallCancellation'],
+      liveServerToolCallCancellationFromVertex(
+        apiClient,
+        fromToolCallCancellation,
         toObject,
-        ['toolCallCancellation'],
-        liveServerToolCallCancellationFromVertex(
-            apiClient,
-            fromToolCallCancellation,
-            toObject,
-            ),
+      ),
     );
   }
 
@@ -505,8 +520,10 @@ function liveServerMessageFromVertex(
   */
 export class Live {
   constructor(
-      private readonly apiClient: ApiClient, private readonly auth: Auth,
-      private readonly webSocketFactory: WebSocketFactory) {}
+    private readonly apiClient: ApiClient,
+    private readonly auth: Auth,
+    private readonly webSocketFactory: WebSocketFactory,
+  ) {}
 
   /**
      Establishes a connection to the specified model with the given
@@ -522,21 +539,25 @@ export class Live {
          events (e.g. connection errors).
     */
   async connect(
-      model: string, config: types.LiveConnectConfig,
-      callbacks?: WebSocketCallbacks): Promise<Session> {
+    model: string,
+    config: types.LiveConnectConfig,
+    callbacks?: WebSocketCallbacks,
+  ): Promise<Session> {
     const websocketBaseUrl = this.apiClient.getWebsocketBaseUrl();
     const apiVersion = this.apiClient.getApiVersion();
     let url: string;
-    let headers = new Headers();
+    const headers = new Headers();
     headers.append('Content-Type', 'application/json');
     if (this.apiClient.isVertexAI()) {
       url = `${websocketBaseUrl}/ws/google.cloud.aiplatform.${
-          apiVersion}.LlmBidiService/BidiGenerateContent`;
+        apiVersion
+      }.LlmBidiService/BidiGenerateContent`;
       await this.auth.addAuthHeaders(headers);
     } else {
       const apiKey = this.apiClient.getApiKey();
       url = `${websocketBaseUrl}/ws/google.ai.generativelanguage.${
-          apiVersion}.GenerativeService.BidiGenerateContent?key=${apiKey}`;
+        apiVersion
+      }.GenerativeService.BidiGenerateContent?key=${apiKey}`;
     }
 
     let onopenResolve: () => void;
@@ -544,35 +565,40 @@ export class Live {
       onopenResolve = resolve;
     });
 
-    const onopenAwaitedCallback = function() {
+    const onopenAwaitedCallback = function () {
       callbacks?.onopen?.();
       onopenResolve();
     };
 
     const websocketCallbacks: WebSocketCallbacks = {
       onopen: onopenAwaitedCallback,
-      onmessage: callbacks?.onmessage ?? function(e: any) {},
-      onerror: callbacks?.onerror ?? function(e: any) {},
-      onclose: callbacks?.onclose ?? function(e: any) {},
+      onmessage: callbacks?.onmessage ?? function (e: any) {},
+      onerror: callbacks?.onerror ?? function (e: any) {},
+      onclose: callbacks?.onclose ?? function (e: any) {},
     };
 
     const conn = this.webSocketFactory.create(
-        url, headersToMap(headers), websocketCallbacks);
+      url,
+      headersToMap(headers),
+      websocketCallbacks,
+    );
     conn.connect();
     // Wait for the websocket to open before sending requests.
     await onopenPromise;
 
     let transformedModel = t.tModel(this.apiClient, model);
-    if (this.apiClient.isVertexAI() &&
-        transformedModel.startsWith('publishers/')) {
+    if (
+      this.apiClient.isVertexAI() &&
+      transformedModel.startsWith('publishers/')
+    ) {
       const project = this.apiClient.getProject();
       const location = this.apiClient.getLocation();
       transformedModel =
-          `projects/${project}/locations/${location}/` + transformedModel;
+        `projects/${project}/locations/${location}/` + transformedModel;
     }
 
     let clientMessage: Record<string, any> = {};
-    let kwargs: Record<string, any> = {};
+    const kwargs: Record<string, any> = {};
     kwargs['model'] = transformedModel;
     kwargs['config'] = config;
     if (this.apiClient.isVertexAI()) {
@@ -593,74 +619,105 @@ export class Live {
   */
 export class Session {
   constructor(
-      private readonly conn: WebSocket, private readonly apiClient: ApiClient) {
-  }
+    private readonly conn: WebSocket,
+    private readonly apiClient: ApiClient,
+  ) {}
 
   private parseClientMessage(
-      apiClient: ApiClient,
-      input: types.ContentListUnion|types.LiveClientContent|
-      types.LiveClientRealtimeInput|types.LiveClientToolResponse|
-      types.FunctionResponse|types.FunctionResponse[],
-      turnComplete: boolean = false): Record<string, any> {
+    apiClient: ApiClient,
+    input:
+      | types.ContentListUnion
+      | types.LiveClientContent
+      | types.LiveClientRealtimeInput
+      | types.LiveClientToolResponse
+      | types.FunctionResponse
+      | types.FunctionResponse[],
+    turnComplete: boolean = false,
+  ): Record<string, any> {
     if (typeof input === 'object' && input !== null && 'setup' in input) {
       throw new Error(
-          'Message type \'setup\' is not supported in send(). Use connect() instead.');
+        "Message type 'setup' is not supported in send(). Use connect() instead.",
+      );
     }
     if (typeof input === 'string') {
       input = [input];
     } else if (
-        typeof input === 'object' && input !== null && 'name' in input &&
-        'response' in input) {
+      typeof input === 'object' &&
+      input !== null &&
+      'name' in input &&
+      'response' in input
+    ) {
       // ToolResponse.FunctionResponse
-      if (!(apiClient.isVertexAI()) && !('id' in input)) {
+      if (!apiClient.isVertexAI() && !('id' in input)) {
         throw new Error(FUNCTION_RESPONSE_REQUIRES_ID);
       }
       input = [input];
     }
 
     let clientMessage: Record<string, any> = input;
-    if (Array.isArray(input) &&
-        input.some(
-            (c) => typeof c === 'object' && c !== null && 'name' in c &&
-                'response' in c)) {
+    if (
+      Array.isArray(input) &&
+      input.some(
+        (c) =>
+          typeof c === 'object' && c !== null && 'name' in c && 'response' in c,
+      )
+    ) {
       // ToolResponse.FunctionResponse
       clientMessage = {toolResponse: {functionResponses: input}};
     } else if (
-        Array.isArray(input) && input.some((c) => typeof c === 'string')) {
+      Array.isArray(input) &&
+      input.some((c) => typeof c === 'string')
+    ) {
       const toObject: Record<string, any> = {};
-      const contents = apiClient.isVertexAI() ?
-          t.tContents(apiClient, input as types.ContentListUnion)
-              .map((item) => contentToVertex(apiClient, item, toObject)) :
-          t.tContents(apiClient, input as types.ContentListUnion)
-              .map((item) => contentToMldev(apiClient, item, toObject));
+      const contents = apiClient.isVertexAI()
+        ? t
+            .tContents(apiClient, input as types.ContentListUnion)
+            .map((item) => contentToVertex(apiClient, item, toObject))
+        : t
+            .tContents(apiClient, input as types.ContentListUnion)
+            .map((item) => contentToMldev(apiClient, item, toObject));
 
       clientMessage = {
         clientContent: {turns: contents, turnComplete: turnComplete},
       };
     } else if (
-        typeof input === 'object' && input !== null && 'content' in input) {
+      typeof input === 'object' &&
+      input !== null &&
+      'content' in input
+    ) {
       clientMessage = {clientContent: input};
     } else if (
-        typeof input === 'object' && input !== null && 'mediaChunks' in input) {
+      typeof input === 'object' &&
+      input !== null &&
+      'mediaChunks' in input
+    ) {
       // LiveClientRealtimeInput
       clientMessage = {realtimeInput: input};
     } else if (
-        typeof input === 'object' && input !== null && 'turns' in input) {
+      typeof input === 'object' &&
+      input !== null &&
+      'turns' in input
+    ) {
       // LiveClientContent
       clientMessage = {clientContent: input};
     } else if (
-        typeof input === 'object' && input !== null &&
-        'functionResponses' in input) {
+      typeof input === 'object' &&
+      input !== null &&
+      'functionResponses' in input
+    ) {
       // LiveClientToolResponse
-      if (!(apiClient.isVertexAI()) && !(input.functionResponses![0].id)) {
+      if (!apiClient.isVertexAI() && !input.functionResponses![0].id) {
         throw new Error(FUNCTION_RESPONSE_REQUIRES_ID);
       }
       clientMessage = {toolResponse: input};
     } else if (
-        typeof input === 'object' && input !== null && 'name' in input &&
-        'response' in input) {
+      typeof input === 'object' &&
+      input !== null &&
+      'name' in input &&
+      'response' in input
+    ) {
       // FunctionResponse
-      if (!(apiClient.isVertexAI()) && !input.id) {
+      if (!apiClient.isVertexAI() && !input.id) {
         throw new Error(FUNCTION_RESPONSE_REQUIRES_ID);
       }
       clientMessage = {
@@ -669,10 +726,14 @@ export class Session {
         },
       };
     } else if (
-        Array.isArray(input) && typeof input[0] === 'object' &&
-        input[0] !== null && 'name' in input[0] && 'response' in input[0]) {
+      Array.isArray(input) &&
+      typeof input[0] === 'object' &&
+      input[0] !== null &&
+      'name' in input[0] &&
+      'response' in input[0]
+    ) {
       // FunctionResponse[]
-      if (!(apiClient.isVertexAI()) && !input[0].id) {
+      if (!apiClient.isVertexAI() && !input[0].id) {
         throw new Error(FUNCTION_RESPONSE_REQUIRES_ID);
       }
       clientMessage = {
@@ -681,8 +742,9 @@ export class Session {
         },
       };
     } else {
-      throw new Error(`Unsupported input type '${
-          typeof input}' or input content '${input}'.`);
+      throw new Error(
+        `Unsupported input type '${typeof input}' or input content '${input}'.`,
+      );
     }
 
     return clientMessage;
@@ -694,14 +756,19 @@ export class Session {
      @experimental
    */
   send(
-      message: types.ContentListUnion|types.LiveClientContent|
-      types.LiveClientRealtimeInput|types.LiveClientToolResponse|
-      types.FunctionResponse|types.FunctionResponse[],
-      turnComplete: boolean = false) {
+    message:
+      | types.ContentListUnion
+      | types.LiveClientContent
+      | types.LiveClientRealtimeInput
+      | types.LiveClientToolResponse
+      | types.FunctionResponse
+      | types.FunctionResponse[],
+    turnComplete: boolean = false,
+  ) {
     const clientMessage: Record<string, any> = this.parseClientMessage(
-        this.apiClient,
-        message,
-        turnComplete,
+      this.apiClient,
+      message,
+      turnComplete,
     );
     this.conn.send(JSON.stringify(clientMessage));
   }
@@ -718,10 +785,14 @@ export class Session {
         let serverMessage: Record<string, any> = {};
         if (this.apiClient.isVertexAI()) {
           serverMessage = liveServerMessageFromVertex(
-              this.apiClient, JSON.parse(event.data));
+            this.apiClient,
+            JSON.parse(event.data),
+          );
         } else {
           serverMessage = liveServerMessageFromMldev(
-              this.apiClient, JSON.parse(event.data));
+            this.apiClient,
+            JSON.parse(event.data),
+          );
         }
 
         resolve(serverMessage);
@@ -743,7 +814,7 @@ export class Session {
 // constructor. We use this as the Auth interface works with Headers objects
 // while the WebSocket constructor takes a map.
 function headersToMap(headers: Headers): Record<string, string> {
-  let headerMap: Record<string, string> = {};
+  const headerMap: Record<string, string> = {};
   headers.forEach((value, key) => {
     headerMap[key] = value;
   });

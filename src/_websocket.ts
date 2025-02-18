@@ -37,6 +37,8 @@ export interface WebSocketFactory {
    * Returns a new WebSocket instance.
    */
   create(
-      url: string, headers: Record<string, string>,
-      callbacks: WebSocketCallbacks): WebSocket;
+    url: string,
+    headers: Record<string, string>,
+    callbacks: WebSocketCallbacks,
+  ): WebSocket;
 }

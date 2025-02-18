@@ -25,7 +25,8 @@
     "jasmine-reporters": "^2.4.0",
     "prettier": "3.3.3",
     "typedoc": "^0.27.0",
-    "typescript": "~5.2.0"
+    "typescript": "~5.2.0",
+    "prettier-plugin-organize-imports": "^4.1.0"
   },
   "dependencies": {
     "google-auth-library": "^9.14.2",

@@ -133,9 +133,9 @@ export class Caches extends BaseModule {
           this.apiClient,
           apiResponse,
         );
-        let typed_resp = new types.DeleteCachedContentResponse();
-        Object.assign(typed_resp, resp);
-        return typed_resp;
+        const typedResp = new types.DeleteCachedContentResponse();
+        Object.assign(typedResp, resp);
+        return typedResp;
       });
     } else {
       body = deleteCachedContentParametersToMldev(this.apiClient, params);
@@ -153,9 +153,9 @@ export class Caches extends BaseModule {
           this.apiClient,
           apiResponse,
         );
-        let typed_resp = new types.DeleteCachedContentResponse();
-        Object.assign(typed_resp, resp);
-        return typed_resp;
+        const typedResp = new types.DeleteCachedContentResponse();
+        Object.assign(typedResp, resp);
+        return typedResp;
       });
     }
   }
@@ -223,9 +223,9 @@ export class Caches extends BaseModule {
           this.apiClient,
           apiResponse,
         );
-        let typed_resp = new types.ListCachedContentsResponse();
-        Object.assign(typed_resp, resp);
-        return typed_resp;
+        const typedResp = new types.ListCachedContentsResponse();
+        Object.assign(typedResp, resp);
+        return typedResp;
       });
     } else {
       body = listCachedContentsParametersToMldev(this.apiClient, params);
@@ -243,9 +243,9 @@ export class Caches extends BaseModule {
           this.apiClient,
           apiResponse,
         );
-        let typed_resp = new types.ListCachedContentsResponse();
-        Object.assign(typed_resp, resp);
-        return typed_resp;
+        const typedResp = new types.ListCachedContentsResponse();
+        Object.assign(typedResp, resp);
+        return typedResp;
       });
     }
   }

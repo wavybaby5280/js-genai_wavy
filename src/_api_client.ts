@@ -4,16 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import * as types from './types';
-import {HttpOptions} from './types';
 import {Auth} from './_auth';
+import {HttpOptions} from './types';
 
-const AUTHORIZATION_HEADER = 'Authorization';
 const CONTENT_TYPE_HEADER = 'Content-Type';
 const USER_AGENT_HEADER = 'User-Agent';
 const GOOGLE_API_CLIENT_HEADER = 'x-goog-api-client';
-const REQUIRED_VERTEX_AI_SCOPE =
-  'https://www.googleapis.com/auth/cloud-platform';
 const SDK_VERSION = '0.1.0'; // x-release-please-version
 const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
@@ -110,8 +106,7 @@ export class ApiClient {
       project: opts.project,
       location: opts.location,
       apiKey: opts.apiKey,
-      vertexai:
-        opts.vertexai,
+      vertexai: opts.vertexai,
     };
 
     const initHttpOptions: HttpOptions = {};
@@ -152,16 +147,20 @@ export class ApiClient {
   }
 
   getApiVersion() {
-    if (this.clientOptions.httpOptions &&
-        this.clientOptions.httpOptions.apiVersion !== undefined) {
+    if (
+      this.clientOptions.httpOptions &&
+      this.clientOptions.httpOptions.apiVersion !== undefined
+    ) {
       return this.clientOptions.httpOptions.apiVersion;
     }
     throw new Error('API version is not set.');
   }
 
   getBaseUrl() {
-    if (this.clientOptions.httpOptions &&
-        this.clientOptions.httpOptions.baseUrl !== undefined) {
+    if (
+      this.clientOptions.httpOptions &&
+      this.clientOptions.httpOptions.baseUrl !== undefined
+    ) {
       return this.clientOptions.httpOptions.baseUrl;
     }
     throw new Error('Base URL is not set.');
@@ -172,8 +171,10 @@ export class ApiClient {
   }
 
   getHeaders() {
-    if (this.clientOptions.httpOptions &&
-        this.clientOptions.httpOptions.headers !== undefined) {
+    if (
+      this.clientOptions.httpOptions &&
+      this.clientOptions.httpOptions.headers !== undefined
+    ) {
       return this.clientOptions.httpOptions.headers;
     } else {
       throw new Error('Headers are not set.');
@@ -181,8 +182,11 @@ export class ApiClient {
   }
 
   private getRequestUrlInternal(httpOptions?: HttpOptions) {
-    if (!httpOptions || httpOptions.baseUrl === undefined ||
-        httpOptions.apiVersion === undefined) {
+    if (
+      !httpOptions ||
+      httpOptions.baseUrl === undefined ||
+      httpOptions.apiVersion === undefined
+    ) {
       throw new Error('HTTP options are not correctly set.');
     }
     if (!httpOptions.baseUrl.endsWith('/')) {
@@ -284,7 +288,7 @@ export class ApiClient {
     requestHttpOptions?: HttpOptions,
   ): Promise<any> {
     // Copy the json locally so as to not modify the user provided one.
-    let localRequestJson: any = JSON.parse(JSON.stringify(requestJson));
+    const localRequestJson: any = JSON.parse(JSON.stringify(requestJson));
     // _url is a special dict for populating the url.
     delete localRequestJson._url;
 
@@ -299,7 +303,9 @@ export class ApiClient {
     if (this.clientOptions.vertexai && !path.startsWith('projects/')) {
       path = `${this.getBaseResourcePath()}/${path}`;
     }
-    const url = new URL(`${this.getRequestUrlInternal(patchedHttpOptions)}/${path}`);
+    const url = new URL(
+      `${this.getRequestUrlInternal(patchedHttpOptions)}/${path}`,
+    );
     if (localRequestJson._query) {
       for (const [key, value] of Object.entries(localRequestJson._query)) {
         url.searchParams.append(key, String(value));
@@ -325,7 +331,7 @@ export class ApiClient {
       requestInit,
       patchedHttpOptions,
     );
-    return this.unaryApiCall(url, requestInit, httpMethod, respType);
+    return this.unaryApiCall(url, requestInit, httpMethod);
   }
 
   private patchHttpOptions(
@@ -373,7 +379,9 @@ export class ApiClient {
     if (this.clientOptions.vertexai && !path.startsWith('projects/')) {
       path = `${this.getBaseResourcePath()}/${path}`;
     }
-    const url = new URL(`${this.getRequestUrlInternal(patchedHttpOptions)}/${path}`);
+    const url = new URL(
+      `${this.getRequestUrlInternal(patchedHttpOptions)}/${path}`,
+    );
     if (!url.searchParams.has('alt') || url.searchParams.get('alt') !== 'sse') {
       url.searchParams.set('alt', 'sse');
     }
@@ -404,7 +412,6 @@ export class ApiClient {
     url: URL,
     requestInit: RequestInit,
     httpMethod: 'GET' | 'POST' | 'PATCH' | 'DELETE',
-    respType?: any,
   ): Promise<any> {
     return this.apiCall(url.toString(), {
       ...requestInit,
@@ -474,9 +481,9 @@ export class ApiClient {
           try {
             const chunkData = JSON.parse(processedChunkString);
             if (chunkType) {
-              let typed_chunk = new chunkType();
-              Object.assign(typed_chunk, chunkData);
-              yield typed_chunk;
+              const typedChunk = new chunkType();
+              Object.assign(typedChunk, chunkData);
+              yield typedChunk;
             } else {
               yield chunkData;
             }
@@ -509,7 +516,8 @@ export class ApiClient {
   private getDefaultHeaders(): Record<string, any> {
     const headers: Record<string, any> = {};
 
-    const versionHeaderValue = LIBRARY_LABEL + ' ' + this.clientOptions.userAgentExtra;
+    const versionHeaderValue =
+      LIBRARY_LABEL + ' ' + this.clientOptions.userAgentExtra;
 
     headers[USER_AGENT_HEADER] = versionHeaderValue;
     headers[GOOGLE_API_CLIENT_HEADER] = versionHeaderValue;

@@ -99,14 +99,15 @@ function assertMessagesEqual(
         } catch (e) {
           if (e instanceof Error) {
             let message = e.message;
-            if (!message.includes('Unequal key value') &&
-                !message.includes('Unequal key trace')) {
-              message = `Unequal key value:\n a[${key}]: ${
-                  JSON.stringify(
-                      a[key],
-                      null,
-                      2,
-                      )}\n b[${key}]: ${JSON.stringify(b[key], null, 2)}`;
+            if (
+              !message.includes('Unequal key value') &&
+              !message.includes('Unequal key trace')
+            ) {
+              message = `Unequal key value:\n a[${key}]: ${JSON.stringify(
+                a[key],
+                null,
+                2,
+              )}\n b[${key}]: ${JSON.stringify(b[key], null, 2)}`;
             } else {
               message = `Unequal key trace (see cause for detals): ${key}`;
             }
@@ -194,7 +195,7 @@ function normalizeKey(key: string) {
 }
 
 function normalizeHeaders(headers?: Headers, ignoreAuthorizationHeader = true) {
-  let headersObject: {[key: string]: string} = {};
+  const headersObject: {[key: string]: string} = {};
   if (headers) {
     for (const [key, value] of headers.entries()) {
       const normalizedKey = normalizeKey(key);
@@ -219,13 +220,13 @@ function normalizeBody(body: string) {
     if (body === undefined) {
       return body;
     }
-    let camelCaseBody = snakeToCamel(body);
+    const camelCaseBody = snakeToCamel(body);
     let parsedBody = JSON.parse(camelCaseBody);
     if (typeof parsedBody === 'object' && parsedBody !== null) {
       for (const key of Object.keys(parsedBody)) {
         // JSON.parse return any type but we need to explicitly cast it to any
         // to access the values by string key.
-        let value = (parsedBody as any)[key];
+        const value = (parsedBody as any)[key];
         if (typeof value === 'string') {
           (parsedBody as any)[key] = redactProjectAndLocationPath(value);
         }
@@ -251,7 +252,6 @@ function normalizeRequest(request: RequestInit, url: string) {
 
 import * as fs from 'fs';
 import * as path from 'path';
-import * as assert from 'assert/strict';
 
 /**
  * Gets the test mode from the environment variable. Currently supports 'api'
@@ -267,34 +267,26 @@ function getTestMode() {
 }
 
 function walk(dir: string): string[] {
-  let files = fs.readdirSync(dir);
-  let mapped_files: (string[]|string)[] = files.map((file: string) => {
+  const files = fs.readdirSync(dir);
+  const mapped_files: (string[] | string)[] = files.map((file: string) => {
     const filePath = path.join(dir, file);
     const stats = fs.statSync(filePath);
-    if (stats.isDirectory())
-      return walk(filePath);
-    else if (stats.isFile())
-      return filePath;
+    if (stats.isDirectory()) return walk(filePath);
+    else if (stats.isFile()) return filePath;
     else {
-      throw new Error(
-          `We should never reach here.`,
-      );
+      throw new Error(`We should never reach here.`);
     }
   });
 
   return mapped_files.reduce(
-      (all: string[], folderContents: string[]|string) =>
-          all.concat(folderContents),
-      [],
-  );
+    (all: string[], folderContents: string[] | string) =>
+      all.concat(folderContents),
+    [],
+  ) as string[];
 }
 
 function normalizeParameters(parameters: any): any {
-  return JSON.parse(
-      snakeToCamel(
-          JSON.stringify(parameters),
-          ),
-  );
+  return JSON.parse(snakeToCamel(JSON.stringify(parameters)));
 }
 
 function snakeToCamel(str: string): string {
@@ -315,7 +307,7 @@ function createReplayClient(vertexai: boolean) {
     // Google Cloud Express that assumption is no longer true.
     // TODO: When the code supports Google Cloud Express we should not
     // decide whether to set an apiKey based is the vertexai param.
-    auth: new FakeAuth(vertexai? undefined : apiKey),
+    auth: new FakeAuth(vertexai ? undefined : apiKey),
     vertexai: vertexai,
     apiKey: apiKey,
   });
@@ -479,7 +471,9 @@ describe('TableTest', () => {
 
   for (const replayTest of replayTests) {
     it(replayTest.fullTestName, async () => {
-      const parameters = normalizeParameters(replayTest.testTableItem.parameters!);
+      const parameters = normalizeParameters(
+        replayTest.testTableItem.parameters!,
+      );
       replayTest.client.loadReplayFilename(
         replayTest.testFileName,
         replayTest.testTableItem,
@@ -491,10 +485,9 @@ describe('TableTest', () => {
 
       replayTest.client.setupReplayResponses(fetchSpy);
       const numInteractions = replayTest.client.getNumInteractions();
-      const response = await replayTest.method.apply(
-          replayTest.client,
-          [parameters],
-      );
+      const response = await replayTest.method.apply(replayTest.client, [
+        parameters,
+      ]);
 
       for (let i = 0; i < numInteractions; i++) {
         const expectedRequest =
@@ -506,8 +499,8 @@ describe('TableTest', () => {
         const request = requestArgs[1];
         const url = requestArgs[0];
         assertMessagesEqual(
-            normalizeRequest(request, url),
-            expectedRequestCamelCase,
+          normalizeRequest(request, url),
+          expectedRequestCamelCase,
         );
       }
       // Get the last response from the replay file, which will be the response
@@ -520,7 +513,7 @@ describe('TableTest', () => {
           numInteractions - 1,
         );
       const responseCamelCase = JSON.parse(
-          snakeToCamel(JSON.stringify(response)),
+        snakeToCamel(JSON.stringify(response)),
       );
       const expectedResponseCamelCase = JSON.parse(
         snakeToCamel(JSON.stringify(expectedResponse)),

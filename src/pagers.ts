@@ -14,7 +14,7 @@ export enum PagedItem {
   PAGED_ITEM_MODELS = 'models',
   PAGED_ITEM_TUNING_JOBS = 'tuningJobs',
   PAGED_ITEM_FILES = 'files',
-  PAGED_ITEM_CACHED_CONTENTS = 'cachedContents'
+  PAGED_ITEM_CACHED_CONTENTS = 'cachedContents',
 }
 
 /**
@@ -29,10 +29,10 @@ class BasePager<T> {
   protected idxInternal!: number;
 
   init(
-      name: PagedItem,
-      request: (config: any) => any,
-      response: any,
-      config: any,
+    name: PagedItem,
+    request: (config: any) => any,
+    response: any,
+    config: any,
   ) {
     this.nameInternal = name;
     this.requestInternal = request;
@@ -51,14 +51,15 @@ class BasePager<T> {
     requestConfig['pageToken'] = response['nextPageToken'];
     this.configInternal = requestConfig;
 
-    this.pageInternalSize = requestConfig['pageSize'] ?? this.pageInternal.length;
+    this.pageInternalSize =
+      requestConfig['pageSize'] ?? this.pageInternal.length;
   }
 
   constructor(
-      name: PagedItem,
-      request: (config: any) => any,
-      response: any,
-      config: any,
+    name: PagedItem,
+    request: (config: any) => any,
+    response: any,
+    config: any,
   ) {
     this.init(name, request, response, config);
   }
@@ -120,7 +121,12 @@ class BasePager<T> {
    * fetching the next page.
    */
   protected initNextPage(response: any): void {
-    this.init(this.nameInternal, this.requestInternal, response, this.configInternal);
+    this.init(
+      this.nameInternal,
+      this.requestInternal,
+      response,
+      this.configInternal,
+    );
   }
 }
 
@@ -129,10 +135,10 @@ class BasePager<T> {
  */
 export class Pager<T> extends BasePager<T> implements AsyncIterable<T> {
   constructor(
-      name: PagedItem,
-      request: (config: any) => any,
-      response: any,
-      config: any,
+    name: PagedItem,
+    request: (config: any) => any,
+    response: any,
+    config: any,
   ) {
     super(name, request, response, config);
   }
@@ -147,13 +153,13 @@ export class Pager<T> extends BasePager<T> implements AsyncIterable<T> {
             return {value: undefined, done: true};
           }
         }
-        let item = this.getItem(this.idxInternal);
+        const item = this.getItem(this.idxInternal);
         this.idxInternal += 1;
         return {value: item, done: false};
       },
       return: async () => {
         return {value: undefined, done: true};
-      }
+      },
     };
   }
 
@@ -164,7 +170,7 @@ export class Pager<T> extends BasePager<T> implements AsyncIterable<T> {
     if (!this.config()['pageToken']) {
       throw new Error('No more pages to fetch.');
     }
-    let response = this.requestInternal(this.config());
+    const response = this.requestInternal(this.config());
     this.initNextPage(response);
     return this.page();
   }

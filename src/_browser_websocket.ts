@@ -4,12 +4,18 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {WebSocket as Ws, WebSocketCallbacks, WebSocketFactory} from './_websocket';
+import {
+  WebSocketCallbacks,
+  WebSocketFactory,
+  WebSocket as Ws,
+} from './_websocket';
 
 export class BrowserWebSocketFactory implements WebSocketFactory {
   create(
-      url: string, headers: Record<string, string>,
-      callbacks: WebSocketCallbacks): Ws {
+    url: string,
+    headers: Record<string, string>,
+    callbacks: WebSocketCallbacks,
+  ): Ws {
     return new BrowserWebSocket(url, headers, callbacks);
   }
 }
@@ -18,9 +24,10 @@ export class BrowserWebSocket implements Ws {
   private ws?: WebSocket;
 
   constructor(
-      private readonly url: string,
-      private readonly headers: Record<string, string>,
-      private readonly callbacks: WebSocketCallbacks) {}
+    private readonly url: string,
+    private readonly headers: Record<string, string>,
+    private readonly callbacks: WebSocketCallbacks,
+  ) {}
 
   connect(): void {
     this.ws = new WebSocket(this.url);
@@ -47,7 +54,7 @@ export class BrowserWebSocket implements Ws {
     this.ws.close();
   }
 
-  setOnMessageCallback(callback: any) {
+  setOnMessageCallback(callback: (e: any) => void) {
     if (this.ws === undefined) {
       throw new Error('WebSocket is not connected');
     }

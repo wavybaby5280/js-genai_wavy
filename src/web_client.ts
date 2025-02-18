@@ -5,6 +5,7 @@
  */
 
 import {ApiClient} from './_api_client';
+import {BrowserWebSocketFactory} from './_browser_websocket';
 import {WebAuth} from './_web_auth';
 import {Caches} from './caches';
 import {Chats} from './chats';
@@ -13,7 +14,6 @@ import {Live} from './live';
 import {Models} from './models';
 import {Tunings} from './tunings';
 import {HttpOptions} from './types';
-import {BrowserWebSocketFactory} from './_browser_websocket';
 
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
 
@@ -101,8 +101,7 @@ export class WebClient {
       userAgentExtra: LANGUAGE_LABEL_PREFIX + 'web',
     });
     this.models = new Models(this.apiClient);
-    this.live =
-        new Live(this.apiClient, auth, new BrowserWebSocketFactory());
+    this.live = new Live(this.apiClient, auth, new BrowserWebSocketFactory());
     this.tunings = new Tunings(this.apiClient);
     this.chats = new Chats(this.models, this.apiClient);
     this.caches = new Caches(this.apiClient);

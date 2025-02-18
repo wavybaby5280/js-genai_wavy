@@ -4,19 +4,19 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { GoogleAuthOptions } from 'google-auth-library';
+import {GoogleAuthOptions} from 'google-auth-library';
 
-import { ApiClient } from '../_api_client';
-import { Auth } from '../_auth';
-import { Caches } from '../caches';
-import { Chats } from '../chats';
-import { Files } from '../files';
-import { Live } from '../live';
-import { Models } from '../models';
-import { NodeAuth } from '../node/_node_auth';
-import { NodeWebSocketFactory } from '../node/_node_websocket';
-import { Tunings } from '../tunings';
-import { HttpOptions } from '../types';
+import {ApiClient} from '../_api_client';
+import {Auth} from '../_auth';
+import {Caches} from '../caches';
+import {Chats} from '../chats';
+import {Files} from '../files';
+import {Live} from '../live';
+import {Models} from '../models';
+import {NodeAuth} from '../node/_node_auth';
+import {NodeWebSocketFactory} from '../node/_node_websocket';
+import {Tunings} from '../tunings';
+import {HttpOptions} from '../types';
 
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
 
@@ -123,7 +123,8 @@ export class Client {
   readonly files: Files;
 
   constructor(options: ClientInitOptions) {
-    this.vertexai = options.vertexai ?? getBooleanEnv('GOOGLE_GENAI_USE_VERTEXAI') ?? false;
+    this.vertexai =
+      options.vertexai ?? getBooleanEnv('GOOGLE_GENAI_USE_VERTEXAI') ?? false;
     // The tests currently assume that an API key is never set if vertexai is true.
     // With Google Cloud Express an API key can be used with vertex.
     // TODO: Set the API key also when vertexai is true.
@@ -133,7 +134,12 @@ export class Client {
     this.project = options.project ?? getEnv('GOOGLE_CLOUD_PROJECT');
     this.location = options.location ?? getEnv('GOOGLE_CLOUD_LOCATION');
     this.apiVersion = options.apiVersion;
-    const auth = options.auth ?? new NodeAuth({ apiKey: this.apiKey, googleAuthOptions: options.googleAuthOptions });
+    const auth =
+      options.auth ??
+      new NodeAuth({
+        apiKey: this.apiKey,
+        googleAuthOptions: options.googleAuthOptions,
+      });
     this.apiClient = new ApiClient({
       auth: auth,
       project: this.project,

@@ -105,16 +105,22 @@ export function tContentsForEmbed(
   if (apiClient.isVertexAI() && Array.isArray(origin)) {
     return origin.flatMap((item) => {
       let content = tContent(apiClient, item as types.ContentUnion);
-      if (content.parts && content.parts.length > 0 &&
-          content.parts[0].text !== undefined) {
+      if (
+        content.parts &&
+        content.parts.length > 0 &&
+        content.parts[0].text !== undefined
+      ) {
         return [content.parts[0].text];
       }
       return [];
-    })
+    });
   } else if (apiClient.isVertexAI()) {
     let content = tContent(apiClient, origin as types.ContentUnion);
-    if (content.parts && content.parts.length > 0 &&
-        content.parts[0].text !== undefined) {
+    if (
+      content.parts &&
+      content.parts.length > 0 &&
+      content.parts[0].text !== undefined
+    ) {
       return [content.parts[0].text];
     }
     return [];
@@ -128,24 +134,19 @@ export function tContentsForEmbed(
 }
 
 export function tContents(
-    apiClient: ApiClient,
-    origin: types.ContentListUnion,
-    ): types.Content[] {
+  apiClient: ApiClient,
+  origin: types.ContentListUnion,
+): types.Content[] {
   if (!origin) {
     return [];
   }
   if (Array.isArray(origin)) {
-    return origin.map(
-        (item) => tContent(apiClient, item),
-    );
+    return origin.map((item) => tContent(apiClient, item));
   }
   return [tContent(apiClient, origin)];
 }
 
-export function processSchema(
-    apiClient: ApiClient,
-    schema: types.Schema,
-) {
+export function processSchema(apiClient: ApiClient, schema: types.Schema) {
   if (!apiClient.isVertexAI()) {
     if ('title' in schema) {
       delete schema['title'];
@@ -153,14 +154,16 @@ export function processSchema(
 
     if ('default' in schema) {
       throw new Error(
-          'Default value is not supported in the response schema for the Gemini API.');
+        'Default value is not supported in the response schema for the Gemini API.',
+      );
     }
   }
 
   if ('anyOf' in schema) {
     if (!apiClient.isVertexAI()) {
       throw new Error(
-          'AnyOf is not supported in the response schema for the Gemini API.');
+        'AnyOf is not supported in the response schema for the Gemini API.',
+      );
     }
     if (schema['anyOf'] !== undefined) {
       for (const subSchema of schema['anyOf']) {
@@ -171,17 +174,17 @@ export function processSchema(
 }
 
 export function tSchema(
-    apiClient: ApiClient,
-    schema: types.Schema,
-    ): types.Schema {
+  apiClient: ApiClient,
+  schema: types.Schema,
+): types.Schema {
   processSchema(apiClient, schema);
   return schema;
 }
 
 export function tSpeechConfig(
-    apiClient: ApiClient,
-    speechConfig: types.SpeechConfigUnion,
-    ): types.SpeechConfig {
+  apiClient: ApiClient,
+  speechConfig: types.SpeechConfigUnion,
+): types.SpeechConfig {
   if (typeof speechConfig === 'object' && 'voiceConfig' in speechConfig) {
     return speechConfig;
   } else if (typeof speechConfig === 'string') {
@@ -197,17 +200,11 @@ export function tSpeechConfig(
   }
 }
 
-export function tTool(
-    apiClient: ApiClient,
-    tool: types.Tool,
-    ): types.Tool {
+export function tTool(apiClient: ApiClient, tool: types.Tool): types.Tool {
   return tool;
 }
 
-export function tTools(
-    apiClient: ApiClient,
-    tool: types.Tool[],
-    ): types.Tool[] {
+export function tTools(apiClient: ApiClient, tool: types.Tool[]): types.Tool[] {
   return tool;
 }
 

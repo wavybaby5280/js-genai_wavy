@@ -5,22 +5,22 @@
  */
 
 import {
-  GenerateContentResponse,
   Candidate,
   Content,
+  GenerateContentResponse,
   Language,
   Outcome,
   Part,
-  createPartFromUri,
-  createPartFromText,
-  createPartFromFunctionCall,
-  createPartFromFunctionResponse,
+  createModelContent,
   createPartFromBase64,
-  createPartFromVideoMetadata,
   createPartFromCodeExecutionResult,
   createPartFromExecutableCode,
+  createPartFromFunctionCall,
+  createPartFromFunctionResponse,
+  createPartFromText,
+  createPartFromUri,
+  createPartFromVideoMetadata,
   createUserContent,
-  createModelContent,
 } from '../../src/types';
 
 describe('GenerateContentResponse.text', () => {
@@ -298,13 +298,13 @@ describe('createUserContent', () => {
   it('should throw an error when partOrString is empty array', () => {
     expect(() => createUserContent([])).toThrow(
       new Error('partOrString cannot be an empty array'),
-    )
+    );
   });
   it('should throw an error when partOrString array contains unsupported type', () => {
     // @ts-ignore
     expect(() => createUserContent([123])).toThrow(
       new Error('element in PartUnion must be a Part object or string'),
-    )
+    );
   });
   it('should throw an error when partOrString array contains unsupported object', () => {
     expect(() => createUserContent([{}])).toThrow(
@@ -353,13 +353,13 @@ describe('createModelContent', () => {
   it('should throw an error when partOrString is empty array', () => {
     expect(() => createModelContent([])).toThrow(
       new Error('partOrString cannot be an empty array'),
-    )
+    );
   });
   it('should throw an error when partOrString array contains unsupported type', () => {
     // @ts-ignore
     expect(() => createModelContent([123])).toThrow(
       new Error('element in PartUnion must be a Part object or string'),
-    )
+    );
   });
   it('should throw an error when partOrString array contains unsupported object', () => {
     expect(() => createModelContent([{}])).toThrow(

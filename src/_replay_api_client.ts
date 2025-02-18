@@ -6,7 +6,6 @@
 
 import * as fs from 'fs';
 
-import {ApiClient} from './_api_client';
 import {Client, ClientInitOptions} from './node/client';
 
 /**
@@ -43,7 +42,6 @@ export class ReplayAPIClient extends Client {
     testName: string,
   ) {
     const responseFilePath = replayFilePath.replace('_test_table', testName);
-    let responseJson: any;
 
     // Get the response filename from the test name if it exists, otherwise get
     // it from the override replay ID.
@@ -56,8 +54,9 @@ export class ReplayAPIClient extends Client {
         `${replayId}.${this.vertexai ? 'vertex' : 'mldev'}`,
       );
     }
-    this.replayFileJson =
-        JSON.parse(fs.readFileSync(this.replayFile, {encoding: 'utf8'}));
+    this.replayFileJson = JSON.parse(
+      fs.readFileSync(this.replayFile, {encoding: 'utf8'}),
+    );
   }
 
   getNumInteractions() {
@@ -78,8 +77,9 @@ export class ReplayAPIClient extends Client {
    * spy.
    */
   setupReplayResponses(fetchSpy: any) {
-    const responseJson: any =
-        JSON.parse(fs.readFileSync(this.replayFile, {encoding: 'utf8'}));
+    const responseJson: any = JSON.parse(
+      fs.readFileSync(this.replayFile, {encoding: 'utf8'}),
+    );
 
     const responses: Promise<Response>[] = [];
     for (const interaction of responseJson.interactions) {

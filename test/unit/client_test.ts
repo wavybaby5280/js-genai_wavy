@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Client } from '../../src/node/client';
+import {Client} from '../../src/node/client';
 
 describe('Client', () => {
   afterEach(() => {

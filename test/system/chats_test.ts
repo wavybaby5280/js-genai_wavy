@@ -92,8 +92,10 @@ describe('sendMessage', () => {
       model: 'gemini-1.5-flash',
       config: {},
       history: [],
-      messages:
-          ['Tell me a story in 100 words?', 'What is the title of the story?'],
+      messages: [
+        'Tell me a story in 100 words?',
+        'What is the title of the story?',
+      ],
     },
     {
       name: 'Vertex AI multilple messages',
@@ -101,16 +103,21 @@ describe('sendMessage', () => {
       model: 'gemini-1.5-flash',
       config: {},
       history: [],
-      messages:
-          ['Tell me a story in 100 words?', 'What is the title of the story?'],
+      messages: [
+        'Tell me a story in 100 words?',
+        'What is the title of the story?',
+      ],
     },
   ];
 
   testCases.forEach(async (testCase) => {
     it(testCase.name, async () => {
       const client = testCase.client;
-      const chat =
-          client.chats.create(testCase.model, testCase.config, testCase.history)
+      const chat = client.chats.create(
+        testCase.model,
+        testCase.config,
+        testCase.history,
+      );
       for (const message of testCase.messages) {
         const response = await chat.sendMessage(message);
         console.log('chat.sendMessage response: ', response.text());
@@ -122,12 +129,15 @@ describe('sendMessage', () => {
   testCases.forEach(async (testCase) => {
     it(testCase.name + ' stream', async () => {
       const client = testCase.client;
-      const chat =
-          client.chats.create(testCase.model, testCase.config, testCase.history)
+      const chat = client.chats.create(
+        testCase.model,
+        testCase.config,
+        testCase.history,
+      );
       for (const message of testCase.messages) {
         const response = await chat.sendMessageStream(message);
         for await (const chunk of response) {
-          console.log('chat.sendMessageStream response chunk: ', chunk.text())
+          console.log('chat.sendMessageStream response chunk: ', chunk.text());
           expect(chunk.text()).not.toBeNull();
         }
       }
@@ -137,16 +147,20 @@ describe('sendMessage', () => {
   it('Google AI array of strings', async () => {
     const client = new Client({vertexai: false, apiKey: GOOGLE_API_KEY});
     const chat = client.chats.create('gemini-1.5-flash');
-    const response = await chat.sendMessage(
-        ['why is the sky blue?', 'Can the sky appear in other colors?']);
+    const response = await chat.sendMessage([
+      'why is the sky blue?',
+      'Can the sky appear in other colors?',
+    ]);
     console.log('chat.sendMessage response: ', response.text());
   });
 
   it('Vertex AI array of strings', async () => {
     const client = new Client({vertexai: true, project: GOOGLE_CLOUD_PROJECT});
     const chat = client.chats.create('gemini-1.5-flash');
-    const response = await chat.sendMessage(
-        ['why is the sky blue?', 'Can the sky appear in other colors?']);
+    const response = await chat.sendMessage([
+      'why is the sky blue?',
+      'Can the sky appear in other colors?',
+    ]);
     console.log('chat.sendMessage response: ', response.text());
   });
 });
@@ -168,19 +182,23 @@ describe('chats function calling', () => {
       config: {tools: [function_calling]},
       history: [],
       messages: ['what is the result of 100/2', 'what is the result of 50/2?'],
-    }
+    },
   ];
-
 
   testCases.forEach(async (testCase) => {
     it(testCase.name, async () => {
       const client = testCase.client;
-      const chat =
-          client.chats.create(testCase.model, testCase.config, testCase.history)
+      const chat = client.chats.create(
+        testCase.model,
+        testCase.config,
+        testCase.history,
+      );
       for (const message of testCase.messages) {
         const response = await chat.sendMessage(message);
         console.log(
-            'chat.sendMessage function calls: ', response.functionCalls());
+          'chat.sendMessage function calls: ',
+          response.functionCalls(),
+        );
         expect(response.functionCalls()).not.toBeNull();
       }
     });
@@ -189,13 +207,18 @@ describe('chats function calling', () => {
   testCases.forEach(async (testCase) => {
     it(testCase.name + ' stream', async () => {
       const client = testCase.client;
-      const chat =
-          client.chats.create(testCase.model, testCase.config, testCase.history)
+      const chat = client.chats.create(
+        testCase.model,
+        testCase.config,
+        testCase.history,
+      );
       for (const message of testCase.messages) {
         const response = await chat.sendMessageStream(message);
         for await (const chunk of response) {
           console.log(
-              'chat.sendMessageStream function calls: ', chunk.functionCalls());
+            'chat.sendMessageStream function calls: ',
+            chunk.functionCalls(),
+          );
           expect(chunk.functionCalls()).not.toBeNull();
         }
       }

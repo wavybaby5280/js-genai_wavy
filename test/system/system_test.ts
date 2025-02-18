@@ -104,26 +104,27 @@ describe('generateContent', () => {
       responseText,
     );
   });
-  it('Vertex AI should use application default credentials when no auth options are provided',
-     async () => {
-       const client = new Client({
-         vertexai: true,
-         project: GOOGLE_CLOUD_PROJECT,
-         location: GOOGLE_CLOUD_LOCATION,
-       });
-       const response = await client.models.generateContent({
-         model: 'gemini-1.5-flash',
-         contents: 'high',
-         config: {systemInstruction: 'I say high you say low.'},
-       });
-       console.info(
-           'Vertex AI should use application default credentials when no auth options are provided\n',
-       );
-     });
+  it('Vertex AI should use application default credentials when no auth options are provided', async () => {
+    const client = new Client({
+      vertexai: true,
+      project: GOOGLE_CLOUD_PROJECT,
+      location: GOOGLE_CLOUD_LOCATION,
+    });
+    await client.models.generateContent({
+      model: 'gemini-1.5-flash',
+      contents: 'high',
+      config: {systemInstruction: 'I say high you say low.'},
+    });
+    console.info(
+      'Vertex AI should use application default credentials when no auth options are provided\n',
+    );
+  });
   it('Vertex AI should allow user provided googleAuth objects', async () => {
     const googleAuthOptions: GoogleAuthOptions = {
-      credentials:
-          {client_email: 'test-sa@appspot.gserviceaccount.com', private_key: ''}
+      credentials: {
+        client_email: 'test-sa@appspot.gserviceaccount.com',
+        private_key: '',
+      },
     };
     const client = new Client({
       vertexai: true,
@@ -132,19 +133,20 @@ describe('generateContent', () => {
       googleAuthOptions: googleAuthOptions,
     });
     try {
-      const response = await client.models.generateContent({
+      await client.models.generateContent({
         model: 'gemini-1.5-flash',
         contents: 'why is the sky blue?',
         config: {maxOutputTokens: 20, candidateCount: 1},
       });
-      console.info(
-          'Vertex AI should allow user provided googleAuth objects\n',
-      );
+      console.info('Vertex AI should allow user provided googleAuth objects\n');
     } catch (error: any) {
       // When a service account is passed in via client_email, a private_key
       // field is required.
-      expect(error.message.includes(
-          'The incoming JSON object does not contain a private_key field'));
+      expect(
+        error.message.includes(
+          'The incoming JSON object does not contain a private_key field',
+        ),
+      );
     }
   });
 });
@@ -162,7 +164,7 @@ describe('generateContentStream', () => {
     console.info(
       'ML Dev should stream generate content with specified parameters',
     );
-    for await (let chunk of response) {
+    for await (const chunk of response) {
       expect(chunk.text()).toBeDefined();
       console.info(`stream chunk ${i}`, chunk.text());
       expect(chunk.candidates!.length).toBe(
@@ -179,40 +181,37 @@ describe('generateContentStream', () => {
     );
   });
 
-  it('Vertex AI should stream generate content with specified parameters',
-     async () => {
-       const client = new Client({
-         vertexai: true,
-         project: GOOGLE_CLOUD_PROJECT,
-         location: GOOGLE_CLOUD_LOCATION,
-       });
-       const response = await client.models.generateContentStream({
-         model: 'gemini-1.5-flash',
-         contents: 'why is the sky blue?',
-         config: {candidateCount: 1, maxOutputTokens: 200},
-       });
-       let i = 1;
-       let finalChunk: any;
-       console.info(
-           'Vertex AI should stream generate content with specified parameters',
-       );
-       for await (const chunk of response) {
-         console.info(`stream chunk ${i}`, chunk.text());
-         expect(chunk.candidates!.length)
-             .toBe(
-                 1,
-                 'Expected 1 candidate got ' + chunk.candidates!.length,
-             );
-         i++;
-         finalChunk = chunk;
-       }
-       expect(finalChunk.usageMetadata.candidatesTokenCount)
-           .toBeLessThanOrEqual(
-               250,  // sometimes backend returns a little more than 200 tokens
-               'Expected candidatesTokenCount to be less than or equal to 250, got ' +
-                   finalChunk.usageMetadata.candidatesTokenCount,
-           );
-     });
+  it('Vertex AI should stream generate content with specified parameters', async () => {
+    const client = new Client({
+      vertexai: true,
+      project: GOOGLE_CLOUD_PROJECT,
+      location: GOOGLE_CLOUD_LOCATION,
+    });
+    const response = await client.models.generateContentStream({
+      model: 'gemini-1.5-flash',
+      contents: 'why is the sky blue?',
+      config: {candidateCount: 1, maxOutputTokens: 200},
+    });
+    let i = 1;
+    let finalChunk: any;
+    console.info(
+      'Vertex AI should stream generate content with specified parameters',
+    );
+    for await (const chunk of response) {
+      console.info(`stream chunk ${i}`, chunk.text());
+      expect(chunk.candidates!.length).toBe(
+        1,
+        'Expected 1 candidate got ' + chunk.candidates!.length,
+      );
+      i++;
+      finalChunk = chunk;
+    }
+    expect(finalChunk.usageMetadata.candidatesTokenCount).toBeLessThanOrEqual(
+      250, // sometimes backend returns a little more than 200 tokens
+      'Expected candidatesTokenCount to be less than or equal to 250, got ' +
+        finalChunk.usageMetadata.candidatesTokenCount,
+    );
+  });
 
   it('ML Dev should stream generate content with system instruction', async () => {
     const client = new Client({vertexai: false, apiKey: GOOGLE_API_KEY});
@@ -221,7 +220,7 @@ describe('generateContentStream', () => {
       contents: 'high',
       config: {
         systemInstruction:
-            'I say high you say low, and then tell me why is the sky blue.',
+          'I say high you say low, and then tell me why is the sky blue.',
         candidateCount: 1,
         maxOutputTokens: 200,
       },
@@ -247,45 +246,42 @@ describe('generateContentStream', () => {
     );
   });
 
-  it('Vertex AI should stream generate content with system instruction',
-     async () => {
-       const client = new Client({
-         vertexai: true,
-         project: GOOGLE_CLOUD_PROJECT,
-         location: GOOGLE_CLOUD_LOCATION,
-       });
-       const response = await client.models.generateContentStream({
-         model: 'gemini-1.5-flash',
-         contents: 'high',
-         config: {
-           systemInstruction:
-               'I say high you say low, then tell me why is the sky blue.',
-           maxOutputTokens: 200,
-           candidateCount: 1,
-         },
-       });
-       let i = 1;
-       let finalChunk: any;
-       console.info(
-           'Vertex AI should stream generate content with system instruction',
-       );
-       for await (const chunk of response) {
-         console.info(`stream chunk ${i}`, chunk.text());
-         expect(chunk.candidates!.length)
-             .toBe(
-                 1,
-                 'Expected 1 candidate got ' + chunk.candidates!.length,
-             );
-         i++;
-         finalChunk = chunk;
-       }
-       expect(finalChunk.usageMetadata.candidatesTokenCount)
-           .toBeLessThanOrEqual(
-               250,  // sometimes backend returns a little more than 200 tokens
-               'Expected candidatesTokenCount to be less than or equal to 250, got ' +
-                   finalChunk.usageMetadata.candidatesTokenCount,
-           );
-     });
+  it('Vertex AI should stream generate content with system instruction', async () => {
+    const client = new Client({
+      vertexai: true,
+      project: GOOGLE_CLOUD_PROJECT,
+      location: GOOGLE_CLOUD_LOCATION,
+    });
+    const response = await client.models.generateContentStream({
+      model: 'gemini-1.5-flash',
+      contents: 'high',
+      config: {
+        systemInstruction:
+          'I say high you say low, then tell me why is the sky blue.',
+        maxOutputTokens: 200,
+        candidateCount: 1,
+      },
+    });
+    let i = 1;
+    let finalChunk: any;
+    console.info(
+      'Vertex AI should stream generate content with system instruction',
+    );
+    for await (const chunk of response) {
+      console.info(`stream chunk ${i}`, chunk.text());
+      expect(chunk.candidates!.length).toBe(
+        1,
+        'Expected 1 candidate got ' + chunk.candidates!.length,
+      );
+      i++;
+      finalChunk = chunk;
+    }
+    expect(finalChunk.usageMetadata.candidatesTokenCount).toBeLessThanOrEqual(
+      250, // sometimes backend returns a little more than 200 tokens
+      'Expected candidatesTokenCount to be less than or equal to 250, got ' +
+        finalChunk.usageMetadata.candidatesTokenCount,
+    );
+  });
 });
 
 describe('generateImages', () => {
@@ -296,14 +292,14 @@ describe('generateImages', () => {
       prompt: 'Robot holding a red skateboard',
       config: {numberOfImages: 1, outputMimeType: 'image/jpeg'},
     });
-    expect(response?.generatedImages!.length)
-        .toBe(
-            1,
-            'Expected 1 generated image got ' +
-                response?.generatedImages!.length,
-        );
-    expect(response?.generatedImages?.[0]?.image?.imageBytes)
-        .toEqual(jasmine.anything(), 'Expected image bytes to be non-empty');
+    expect(response?.generatedImages!.length).toBe(
+      1,
+      'Expected 1 generated image got ' + response?.generatedImages!.length,
+    );
+    expect(response?.generatedImages?.[0]?.image?.imageBytes).toEqual(
+      jasmine.anything(),
+      'Expected image bytes to be non-empty',
+    );
   });
 
   it('Vertex AI should generate images with specified parameters', async () => {
@@ -317,14 +313,14 @@ describe('generateImages', () => {
       prompt: 'Robot holding a red skateboard',
       config: {numberOfImages: 1, outputMimeType: 'image/jpeg'},
     });
-    expect(response?.generatedImages!.length)
-        .toBe(
-            1,
-            'Expected 1 generated image got ' +
-                response?.generatedImages!.length,
-        );
-    expect(response?.generatedImages?.[0]?.image?.imageBytes)
-        .toEqual(jasmine.anything(), 'Expected image bytes to be non-empty');
+    expect(response?.generatedImages!.length).toBe(
+      1,
+      'Expected 1 generated image got ' + response?.generatedImages!.length,
+    );
+    expect(response?.generatedImages?.[0]?.image?.imageBytes).toEqual(
+      jasmine.anything(),
+      'Expected image bytes to be non-empty',
+    );
   });
 });
 
@@ -335,7 +331,7 @@ describe('test async performance', () => {
   it('generate content should complete in less than 10 seconds', async () => {
     const client = new Client({vertexai: false, apiKey: GOOGLE_API_KEY});
     async function firstAsyncFunc() {
-      const response1 = client.models.generateContent({
+      client.models.generateContent({
         model: 'gemini-1.5-flash',
         contents: 'high',
         config: {
@@ -345,7 +341,7 @@ describe('test async performance', () => {
       await new Promise((resolve) => setTimeout(resolve, 5000)); // artificially add 5 seconds delay
     }
     async function secondAsyncFunc() {
-      const response2 = client.models.generateContent({
+      client.models.generateContent({
         model: 'gemini-1.5-flash',
         contents: 'high',
         config: {
@@ -356,10 +352,7 @@ describe('test async performance', () => {
     }
     const startTime = performance.now(); // Record start time
     try {
-      const [firstResult, secondResult] = await Promise.all([
-        firstAsyncFunc(),
-        secondAsyncFunc(),
-      ]);
+      await Promise.all([firstAsyncFunc(), secondAsyncFunc()]);
     } catch (e) {
       fail('Test failed due to error: ' + e);
     } finally {
@@ -375,7 +368,7 @@ describe('test async performance', () => {
   it('stream generate content should complete in less than 10 seconds', async () => {
     const client = new Client({vertexai: false, apiKey: GOOGLE_API_KEY});
     async function firstAsyncFunc() {
-      const response1 = client.models.generateContentStream({
+      client.models.generateContentStream({
         model: 'gemini-1.5-flash',
         contents: 'high',
         config: {
@@ -385,7 +378,7 @@ describe('test async performance', () => {
       await new Promise((resolve) => setTimeout(resolve, 5000)); // artificially add 5 seconds delay
     }
     async function secondAsyncFunc() {
-      const response2 = client.models.generateContentStream({
+      client.models.generateContentStream({
         model: 'gemini-1.5-flash',
         contents: 'high',
         config: {
@@ -396,10 +389,7 @@ describe('test async performance', () => {
     }
     const startTime = performance.now(); // Record start time
     try {
-      const [firstResult, secondResult] = await Promise.all([
-        firstAsyncFunc(),
-        secondAsyncFunc(),
-      ]);
+      await Promise.all([firstAsyncFunc(), secondAsyncFunc()]);
     } catch (e) {
       fail('Test failed due to error: ' + e);
     } finally {
@@ -419,7 +409,7 @@ describe('test forward compatibility', () => {
     const client = new Client({
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
-      httpOptions: {apiVersion: 'v1alpha'}
+      httpOptions: {apiVersion: 'v1alpha'},
     });
     const response = await client.models.generateContent({
       model: 'gemini-2.0-flash-thinking-exp',
@@ -427,13 +417,13 @@ describe('test forward compatibility', () => {
       config: {
         maxOutputTokens: 20,
         candidateCount: 1,
-        thinkingConfig: {includeThoughts: true}
+        thinkingConfig: {includeThoughts: true},
       },
     });
-    expect(JSON.stringify(response))
-        .not.toContain(
-            '"thought":true',
-            'Expected response to not contain field "thought');
+    expect(JSON.stringify(response)).not.toContain(
+      '"thought":true',
+      'Expected response to not contain field "thought',
+    );
   });
 });
 
@@ -445,14 +435,13 @@ describe('countTokens', () => {
       model: 'gemini-1.5-flash',
       contents: 'The quick brown fox jumps over the lazy dog.',
     });
-    expect(response!.totalTokens ?? 0)
-        .toBeGreaterThan(
-            0,
-            'Expected totalTokens to be nonzero, got ' + response.totalTokens,
-        );
+    expect(response!.totalTokens ?? 0).toBeGreaterThan(
+      0,
+      'Expected totalTokens to be nonzero, got ' + response.totalTokens,
+    );
     console.info(
-        'ML Dev should count tokens with specified parameters\n',
-        JSON.stringify(response),
+      'ML Dev should count tokens with specified parameters\n',
+      JSON.stringify(response),
     );
   });
 
@@ -467,11 +456,10 @@ describe('countTokens', () => {
       model: 'gemini-1.5-flash',
       contents: 'The quick brown fox jumps over the lazy dog.',
     });
-    expect(response!.totalTokens ?? 0)
-        .toBeGreaterThan(
-            0,
-            'Expected totalTokens to be nonzero, got ' + response.totalTokens,
-        );
+    expect(response!.totalTokens ?? 0).toBeGreaterThan(
+      0,
+      'Expected totalTokens to be nonzero, got ' + response.totalTokens,
+    );
     console.info(
       'Vertex AI should count tokens with specified parameters\n',
       JSON.stringify(response),
@@ -491,14 +479,13 @@ describe('embedContent', () => {
       model: 'text-embedding-004',
       contents: 'Hello world',
     });
-    expect(response!.embeddings!.length)
-        .toBeGreaterThan(
-            0,
-            'Expected embeddings to be nonempty, got ' +
-                response!.embeddings!.length);
+    expect(response!.embeddings!.length).toBeGreaterThan(
+      0,
+      'Expected embeddings to be nonempty, got ' + response!.embeddings!.length,
+    );
     console.info(
-        'Vertex AI should embed content with specified parameters\n',
-        JSON.stringify(response),
+      'Vertex AI should embed content with specified parameters\n',
+      JSON.stringify(response),
     );
   });
 });
@@ -515,12 +502,10 @@ describe('computeTokens', () => {
       model: 'gemini-1.5-flash',
       contents: 'The quick brown fox jumps over the lazy dog.',
     });
-    expect(response!.tokensInfo!.length)
-        .toBeGreaterThan(
-            0,
-            'Expected tokensInfo to be nonempty, got ' +
-                response!.tokensInfo!.length,
-        );
+    expect(response!.tokensInfo!.length).toBeGreaterThan(
+      0,
+      'Expected tokensInfo to be nonempty, got ' + response!.tokensInfo!.length,
+    );
     console.info(
       'Vertex AI should compute tokens with specified parameters\n',
       JSON.stringify(response),
@@ -538,32 +523,29 @@ describe('cachedContent', () => {
 
     const cachedContent1: Part = {
       fileData: {
-        fileUri: "gs://cloud-samples-data/generative-ai/pdf/2403.05530.pdf",
-        mimeType: "application/pdf",
+        fileUri: 'gs://cloud-samples-data/generative-ai/pdf/2403.05530.pdf',
+        mimeType: 'application/pdf',
       },
     };
 
     const cachedContent2: Part = {
       fileData: {
-        fileUri: "gs://cloud-samples-data/generative-ai/pdf/2312.11805v3.pdf",
-        mimeType: "application/pdf",
+        fileUri: 'gs://cloud-samples-data/generative-ai/pdf/2312.11805v3.pdf',
+        mimeType: 'application/pdf',
       },
     };
 
-    const cache = await client.caches.create(
-        {
-          model: 'gemini-1.5-pro-002',
-          config: {contents: [cachedContent1, cachedContent2]}
-        },
-    );
+    const cache = await client.caches.create({
+      model: 'gemini-1.5-pro-002',
+      config: {contents: [cachedContent1, cachedContent2]},
+    });
     expect(cache.name).toBeDefined();
 
     const getResponse = await client.caches.get({name: cache.name ?? ''});
-    expect(getResponse.name)
-        .toBe(
-            cache.name,
-            'Expected getResponse to contain the created cache name.',
-        );
+    expect(getResponse.name).toBe(
+      cache.name,
+      'Expected getResponse to contain the created cache name.',
+    );
   });
 
   it('Vertex AI should return list of caches', async () => {
@@ -574,27 +556,27 @@ describe('cachedContent', () => {
     });
 
     const no_config_response = await client.caches.list();
-    const with_config_response =
-        await client.caches.list({config: {pageSize: 2}});
+    const with_config_response = await client.caches.list({
+      config: {pageSize: 2},
+    });
 
     expect(no_config_response.len()).toBeGreaterThan(0);
     expect(with_config_response).toBeGreaterThan(0);
-  })
+  });
 });
 
 describe('files', () => {
   it('ML Dev should list files with specified parameters', async () => {
     const client = new Client({vertexai: false, apiKey: GOOGLE_API_KEY});
     const response = await client.files.list({config: {'pageSize': 2}});
-    expect(response!.len() ?? 0)
-        .toBeGreaterThan(
-            0,
-            'Expected at least one file has more than 2 pages, got ' +
-                response!.len(),
-        );
+    expect(response!.len() ?? 0).toBeGreaterThan(
+      0,
+      'Expected at least one file has more than 2 pages, got ' +
+        response!.len(),
+    );
     console.info(
-        'ML Dev should list files with specified parameters\n',
-        JSON.stringify(response),
+      'ML Dev should list files with specified parameters\n',
+      JSON.stringify(response),
     );
   });
 });

@@ -4,8 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Auth } from '../src/_auth';
-import { AUTHORIZATION_HEADER, GOOGLE_API_KEY_HEADER } from '../src/node/_node_auth';
+import {Auth} from '../src/_auth';
+import {
+  AUTHORIZATION_HEADER,
+  GOOGLE_API_KEY_HEADER,
+} from '../src/node/_node_auth';
 
 /**
  * A mock implementation of the Auth interface for testing purposes.

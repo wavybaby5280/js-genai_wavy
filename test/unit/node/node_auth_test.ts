@@ -4,17 +4,22 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { GoogleAuth, GoogleAuthOptions } from 'google-auth-library';
+import {GoogleAuth, GoogleAuthOptions} from 'google-auth-library';
 
-import { AUTHORIZATION_HEADER, GOOGLE_API_KEY_HEADER, NodeAuth } from '../../../src/node/_node_auth';
+import {
+  AUTHORIZATION_HEADER,
+  GOOGLE_API_KEY_HEADER,
+  NodeAuth,
+} from '../../../src/node/_node_auth';
 
-const REQUIRED_VERTEX_AI_SCOPE = 'https://www.googleapis.com/auth/cloud-platform';
+const REQUIRED_VERTEX_AI_SCOPE =
+  'https://www.googleapis.com/auth/cloud-platform';
 
 describe('NodeAuth', () => {
   it('should throw an error if the scopes do not include the required scope when custom scopes are provided', () => {
     const customScope = 'https://www.googleapis.com/auth/other-scope';
-    const authOptions: GoogleAuthOptions = { scopes: [customScope] };
-    expect(() => new NodeAuth({ googleAuthOptions: authOptions })).toThrowError(
+    const authOptions: GoogleAuthOptions = {scopes: [customScope]};
+    expect(() => new NodeAuth({googleAuthOptions: authOptions})).toThrowError(
       `Invalid auth scopes. Scopes must include: ${REQUIRED_VERTEX_AI_SCOPE}`,
     );
   });
@@ -52,7 +57,7 @@ describe('addAuthHeaders', () => {
 
   it('should add an x-goog-api-key header if apiKey is provided', async () => {
     const apiKey = 'test-api-key';
-    const nodeAuth = new NodeAuth({ apiKey: apiKey });
+    const nodeAuth = new NodeAuth({apiKey: apiKey});
     const headers = new Headers();
 
     await nodeAuth.addAuthHeaders(headers);
@@ -62,7 +67,7 @@ describe('addAuthHeaders', () => {
 
   it('should not add an x-goog-api-key header if it already exists', async () => {
     const apiKey = 'test-api-key';
-    const nodeAuth = new NodeAuth({ apiKey: apiKey });
+    const nodeAuth = new NodeAuth({apiKey: apiKey});
     const headers = new Headers();
     headers.append(GOOGLE_API_KEY_HEADER, 'Existing Key');
 
@@ -73,7 +78,7 @@ describe('addAuthHeaders', () => {
 
   it('should not call googleAuth.getAccessToken if apiKey is provided', async () => {
     const apiKey = 'test-api-key';
-    const nodeAuth = new NodeAuth({ apiKey: apiKey });
+    const nodeAuth = new NodeAuth({apiKey: apiKey});
     const headers = new Headers();
 
     await nodeAuth.addAuthHeaders(headers);

@@ -10,8 +10,10 @@ import {WebSocket, WebSocketCallbacks, WebSocketFactory} from '../_websocket';
 
 export class NodeWebSocketFactory implements WebSocketFactory {
   create(
-      url: string, headers: Record<string, string>,
-      callbacks: WebSocketCallbacks): WebSocket {
+    url: string,
+    headers: Record<string, string>,
+    callbacks: WebSocketCallbacks,
+  ): WebSocket {
     return new NodeWebSocket(url, headers, callbacks);
   }
 }
@@ -20,9 +22,10 @@ export class NodeWebSocket implements WebSocket {
   private ws?: NodeWs;
 
   constructor(
-      private readonly url: string,
-      private readonly headers: Record<string, string>,
-      private readonly callbacks: WebSocketCallbacks) {}
+    private readonly url: string,
+    private readonly headers: Record<string, string>,
+    private readonly callbacks: WebSocketCallbacks,
+  ) {}
 
   connect(): void {
     this.ws = new NodeWs(this.url);
@@ -49,7 +52,7 @@ export class NodeWebSocket implements WebSocket {
     this.ws.close();
   }
 
-  setOnMessageCallback(callback: any) {
+  setOnMessageCallback(callback: (e: any) => void) {
     if (this.ws === undefined) {
       throw new Error('WebSocket is not connected');
     }
