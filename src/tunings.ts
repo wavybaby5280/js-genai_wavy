@@ -41,11 +41,8 @@ export class Tunings extends BaseModule {
     let response: Promise<types.TuningJob>;
     let path: string = '';
     let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['name'] = params.name;
-    kwargs['config'] = params.config;
     if (this.apiClient.isVertexAI()) {
-      body = getTuningJobParametersToVertex(this.apiClient, kwargs);
+      body = getTuningJobParametersToVertex(this.apiClient, params);
       path = common.formatMap('{name}', body['_url']);
       delete body['config'];
       response = this.apiClient.get(
@@ -61,7 +58,7 @@ export class Tunings extends BaseModule {
         return resp as types.TuningJob;
       });
     } else {
-      body = getTuningJobParametersToMldev(this.apiClient, kwargs);
+      body = getTuningJobParametersToMldev(this.apiClient, params);
       path = common.formatMap('{name}', body['_url']);
       delete body['config'];
       response = this.apiClient.get(
@@ -85,10 +82,8 @@ export class Tunings extends BaseModule {
     let response: Promise<types.ListTuningJobsResponse>;
     let path: string = '';
     let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['config'] = params.config;
     if (this.apiClient.isVertexAI()) {
-      body = listTuningJobsParametersToVertex(this.apiClient, kwargs);
+      body = listTuningJobsParametersToVertex(this.apiClient, params);
       path = common.formatMap('tuningJobs', body['_url']);
       delete body['config'];
       response = this.apiClient.get(
@@ -108,7 +103,7 @@ export class Tunings extends BaseModule {
         return typed_resp;
       });
     } else {
-      body = listTuningJobsParametersToMldev(this.apiClient, kwargs);
+      body = listTuningJobsParametersToMldev(this.apiClient, params);
       path = common.formatMap('tunedModels', body['_url']);
       delete body['config'];
       response = this.apiClient.get(

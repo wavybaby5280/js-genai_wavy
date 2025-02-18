@@ -50,10 +50,8 @@ export class Files extends BaseModule {
     let response: Promise<types.ListFilesResponse>;
     let path: string = '';
     let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['config'] = params.config;
     if (this.apiClient.isVertexAI()) {
-      body = listFilesParametersToVertex(this.apiClient, kwargs);
+      body = listFilesParametersToVertex(this.apiClient, params);
       path = common.formatMap('None', body['_url']);
       delete body['config'];
       response = this.apiClient.get(
@@ -70,7 +68,7 @@ export class Files extends BaseModule {
         return typed_resp;
       });
     } else {
-      body = listFilesParametersToMldev(this.apiClient, kwargs);
+      body = listFilesParametersToMldev(this.apiClient, params);
       path = common.formatMap('files', body['_url']);
       delete body['config'];
       response = this.apiClient.get(
@@ -93,11 +91,8 @@ export class Files extends BaseModule {
     let response: Promise<types.File>;
     let path: string = '';
     let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['name'] = params.name;
-    kwargs['config'] = params.config;
     if (this.apiClient.isVertexAI()) {
-      body = getFileParametersToVertex(this.apiClient, kwargs);
+      body = getFileParametersToVertex(this.apiClient, params);
       path = common.formatMap('None', body['_url']);
       delete body['config'];
       response = this.apiClient.get(
@@ -113,7 +108,7 @@ export class Files extends BaseModule {
         return resp as types.File;
       });
     } else {
-      body = getFileParametersToMldev(this.apiClient, kwargs);
+      body = getFileParametersToMldev(this.apiClient, params);
       path = common.formatMap('files/{file}', body['_url']);
       delete body['config'];
       response = this.apiClient.get(

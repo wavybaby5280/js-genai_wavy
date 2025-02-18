@@ -119,12 +119,8 @@ export class Models extends BaseModule {
     let response: Promise<types.GenerateContentResponse>;
     let path: string = '';
     let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['model'] = params.model;
-    kwargs['contents'] = params.contents;
-    kwargs['config'] = params.config;
     if (this.apiClient.isVertexAI()) {
-      body = generateContentParametersToVertex(this.apiClient, kwargs);
+      body = generateContentParametersToVertex(this.apiClient, params);
       path = common.formatMap('{model}:generateContent', body['_url']);
       delete body['config'];
       response = this.apiClient.post(
@@ -144,7 +140,7 @@ export class Models extends BaseModule {
         return typed_resp;
       });
     } else {
-      body = generateContentParametersToMldev(this.apiClient, kwargs);
+      body = generateContentParametersToMldev(this.apiClient, params);
       path = common.formatMap('{model}:generateContent', body['_url']);
       delete body['config'];
       response = this.apiClient.post(
@@ -172,12 +168,8 @@ export class Models extends BaseModule {
     let response: Promise<AsyncGenerator<types.GenerateContentResponse>>;
     let path: string = '';
     let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['model'] = params.model;
-    kwargs['contents'] = params.contents;
-    kwargs['config'] = params.config;
     if (this.apiClient.isVertexAI()) {
-      body = generateContentParametersToVertex(this.apiClient, kwargs);
+      body = generateContentParametersToVertex(this.apiClient, params);
       path = common.formatMap(
         '{model}:streamGenerateContent?alt=sse',
         body['_url'],
@@ -200,7 +192,7 @@ export class Models extends BaseModule {
         }
       });
     } else {
-      body = generateContentParametersToMldev(this.apiClient, kwargs);
+      body = generateContentParametersToMldev(this.apiClient, params);
       path = common.formatMap(
         '{model}:streamGenerateContent?alt=sse',
         body['_url'],
@@ -254,12 +246,8 @@ export class Models extends BaseModule {
     let response: Promise<types.EmbedContentResponse>;
     let path: string = '';
     let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['model'] = params.model;
-    kwargs['contents'] = params.contents;
-    kwargs['config'] = params.config;
     if (this.apiClient.isVertexAI()) {
-      body = embedContentParametersToVertex(this.apiClient, kwargs);
+      body = embedContentParametersToVertex(this.apiClient, params);
       path = common.formatMap('{model}:predict', body['_url']);
       delete body['config'];
       response = this.apiClient.post(
@@ -279,7 +267,7 @@ export class Models extends BaseModule {
         return typed_resp;
       });
     } else {
-      body = embedContentParametersToMldev(this.apiClient, kwargs);
+      body = embedContentParametersToMldev(this.apiClient, params);
       path = common.formatMap('{model}:batchEmbedContents', body['_url']);
       delete body['config'];
       response = this.apiClient.post(
@@ -325,12 +313,8 @@ export class Models extends BaseModule {
     let response: Promise<types.GenerateImagesResponse>;
     let path: string = '';
     let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['model'] = params.model;
-    kwargs['prompt'] = params.prompt;
-    kwargs['config'] = params.config;
     if (this.apiClient.isVertexAI()) {
-      body = generateImagesParametersToVertex(this.apiClient, kwargs);
+      body = generateImagesParametersToVertex(this.apiClient, params);
       path = common.formatMap('{model}:predict', body['_url']);
       delete body['config'];
       response = this.apiClient.post(
@@ -350,7 +334,7 @@ export class Models extends BaseModule {
         return typed_resp;
       });
     } else {
-      body = generateImagesParametersToMldev(this.apiClient, kwargs);
+      body = generateImagesParametersToMldev(this.apiClient, params);
       path = common.formatMap('{model}:predict', body['_url']);
       delete body['config'];
       response = this.apiClient.post(
@@ -396,12 +380,8 @@ export class Models extends BaseModule {
     let response: Promise<types.CountTokensResponse>;
     let path: string = '';
     let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['model'] = params.model;
-    kwargs['contents'] = params.contents;
-    kwargs['config'] = params.config;
     if (this.apiClient.isVertexAI()) {
-      body = countTokensParametersToVertex(this.apiClient, kwargs);
+      body = countTokensParametersToVertex(this.apiClient, params);
       path = common.formatMap('{model}:countTokens', body['_url']);
       delete body['config'];
       response = this.apiClient.post(
@@ -418,7 +398,7 @@ export class Models extends BaseModule {
         return typed_resp;
       });
     } else {
-      body = countTokensParametersToMldev(this.apiClient, kwargs);
+      body = countTokensParametersToMldev(this.apiClient, params);
       path = common.formatMap('{model}:countTokens', body['_url']);
       delete body['config'];
       response = this.apiClient.post(
@@ -463,12 +443,8 @@ export class Models extends BaseModule {
     let response: Promise<types.ComputeTokensResponse>;
     let path: string = '';
     let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['model'] = params.model;
-    kwargs['contents'] = params.contents;
-    kwargs['config'] = params.config;
     if (this.apiClient.isVertexAI()) {
-      body = computeTokensParametersToVertex(this.apiClient, kwargs);
+      body = computeTokensParametersToVertex(this.apiClient, params);
       path = common.formatMap('{model}:computeTokens', body['_url']);
       delete body['config'];
       response = this.apiClient.post(
@@ -488,7 +464,7 @@ export class Models extends BaseModule {
         return typed_resp;
       });
     } else {
-      body = computeTokensParametersToMldev(this.apiClient, kwargs);
+      body = computeTokensParametersToMldev(this.apiClient, params);
       path = common.formatMap('None', body['_url']);
       delete body['config'];
       response = this.apiClient.post(

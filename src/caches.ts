@@ -35,11 +35,8 @@ export class Caches extends BaseModule {
     let response: Promise<types.CachedContent>;
     let path: string = '';
     let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['model'] = params.model;
-    kwargs['config'] = params.config;
     if (this.apiClient.isVertexAI()) {
-      body = createCachedContentParametersToVertex(this.apiClient, kwargs);
+      body = createCachedContentParametersToVertex(this.apiClient, params);
       path = common.formatMap('cachedContents', body['_url']);
       delete body['config'];
       response = this.apiClient.post(
@@ -55,7 +52,7 @@ export class Caches extends BaseModule {
         return resp as types.CachedContent;
       });
     } else {
-      body = createCachedContentParametersToMldev(this.apiClient, kwargs);
+      body = createCachedContentParametersToMldev(this.apiClient, params);
       path = common.formatMap('cachedContents', body['_url']);
       delete body['config'];
       response = this.apiClient.post(
@@ -79,11 +76,8 @@ export class Caches extends BaseModule {
     let response: Promise<types.CachedContent>;
     let path: string = '';
     let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['name'] = params.name;
-    kwargs['config'] = params.config;
     if (this.apiClient.isVertexAI()) {
-      body = getCachedContentParametersToVertex(this.apiClient, kwargs);
+      body = getCachedContentParametersToVertex(this.apiClient, params);
       path = common.formatMap('{name}', body['_url']);
       delete body['config'];
       response = this.apiClient.get(
@@ -99,7 +93,7 @@ export class Caches extends BaseModule {
         return resp as types.CachedContent;
       });
     } else {
-      body = getCachedContentParametersToMldev(this.apiClient, kwargs);
+      body = getCachedContentParametersToMldev(this.apiClient, params);
       path = common.formatMap('{name}', body['_url']);
       delete body['config'];
       response = this.apiClient.get(
@@ -123,11 +117,8 @@ export class Caches extends BaseModule {
     let response: Promise<types.DeleteCachedContentResponse>;
     let path: string = '';
     let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['name'] = params.name;
-    kwargs['config'] = params.config;
     if (this.apiClient.isVertexAI()) {
-      body = deleteCachedContentParametersToVertex(this.apiClient, kwargs);
+      body = deleteCachedContentParametersToVertex(this.apiClient, params);
       path = common.formatMap('{name}', body['_url']);
       delete body['config'];
       response = this.apiClient.delete(
@@ -147,7 +138,7 @@ export class Caches extends BaseModule {
         return typed_resp;
       });
     } else {
-      body = deleteCachedContentParametersToMldev(this.apiClient, kwargs);
+      body = deleteCachedContentParametersToMldev(this.apiClient, params);
       path = common.formatMap('{name}', body['_url']);
       delete body['config'];
       response = this.apiClient.delete(
@@ -175,11 +166,8 @@ export class Caches extends BaseModule {
     let response: Promise<types.CachedContent>;
     let path: string = '';
     let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['name'] = params.name;
-    kwargs['config'] = params.config;
     if (this.apiClient.isVertexAI()) {
-      body = updateCachedContentParametersToVertex(this.apiClient, kwargs);
+      body = updateCachedContentParametersToVertex(this.apiClient, params);
       path = common.formatMap('{name}', body['_url']);
       delete body['config'];
       response = this.apiClient.patch(
@@ -195,7 +183,7 @@ export class Caches extends BaseModule {
         return resp as types.CachedContent;
       });
     } else {
-      body = updateCachedContentParametersToMldev(this.apiClient, kwargs);
+      body = updateCachedContentParametersToMldev(this.apiClient, params);
       path = common.formatMap('{name}', body['_url']);
       delete body['config'];
       response = this.apiClient.patch(
@@ -219,10 +207,8 @@ export class Caches extends BaseModule {
     let response: Promise<types.ListCachedContentsResponse>;
     let path: string = '';
     let body: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['config'] = params.config;
     if (this.apiClient.isVertexAI()) {
-      body = listCachedContentsParametersToVertex(this.apiClient, kwargs);
+      body = listCachedContentsParametersToVertex(this.apiClient, params);
       path = common.formatMap('cachedContents', body['_url']);
       delete body['config'];
       response = this.apiClient.get(
@@ -242,7 +228,7 @@ export class Caches extends BaseModule {
         return typed_resp;
       });
     } else {
-      body = listCachedContentsParametersToMldev(this.apiClient, kwargs);
+      body = listCachedContentsParametersToMldev(this.apiClient, params);
       path = common.formatMap('cachedContents', body['_url']);
       delete body['config'];
       response = this.apiClient.get(
