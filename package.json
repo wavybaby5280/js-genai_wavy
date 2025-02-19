@@ -8,7 +8,8 @@
     "unit-test": "jasmine dist/test/unit/**/*_test.js dist/test/unit/*_test.js",
     "system-test": "jasmine dist/test/system/**/*_test.js",
     "table-test": "jasmine dist/test/table_test.js",
-    "docs": "typedoc"
+    "docs": "typedoc",
+    "format": "prettier '**/*.ts' --write"
   },
   "engines": {
     "node": ">=18.0.0"
