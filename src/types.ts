@@ -810,10 +810,10 @@ export interface GenerateContentConfig {
 export interface GenerateContentParameters {
   /** ID of the model to use. For a list of models, see `Google models
     <https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models>`_. */
-  model?: string;
+  model: string;
   /** Content of the request.
    */
-  contents?: ContentListUnion;
+  contents: ContentListUnion;
   /** Configuration that contains optional model parameters.
    */
   config?: GenerateContentConfig;
@@ -1121,10 +1121,10 @@ export interface EmbedContentConfig {
 export interface EmbedContentParameters {
   /** ID of the model to use. For a list of models, see `Google models
     <https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models>`_. */
-  model?: string;
+  model: string;
   /** The content to embed. Only the `parts.text` fields will be counted.
    */
-  contents?: ContentListUnion;
+  contents: ContentListUnion;
   /** Configuration that contains optional parameters.
    */
   config?: EmbedContentConfig;
@@ -1231,10 +1231,10 @@ export interface GenerateImagesConfig {
 export interface GenerateImagesParameters {
   /** ID of the model to use. For a list of models, see `Google models
     <https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models>`_. */
-  model?: string;
+  model: string;
   /** Text prompt that typically describes the images to output.
    */
-  prompt?: string;
+  prompt: string;
   /** Configuration for generating images.
    */
   config?: GenerateImagesConfig;
@@ -1331,9 +1331,9 @@ export interface CountTokensConfig {
 export interface CountTokensParameters {
   /** ID of the model to use. For a list of models, see `Google models
     <https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models>`_. */
-  model?: string;
+  model: string;
   /** Input content. */
-  contents?: ContentListUnion;
+  contents: ContentListUnion;
   /** Configuration for counting tokens. */
   config?: CountTokensConfig;
 }
@@ -1356,9 +1356,9 @@ export interface ComputeTokensConfig {
 export interface ComputeTokensParameters {
   /** ID of the model to use. For a list of models, see `Google models
     <https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models>`_. */
-  model?: string;
+  model: string;
   /** Input content. */
-  contents?: ContentListUnion;
+  contents: ContentListUnion;
   /** Optional parameters for the request.
    */
   config?: ComputeTokensConfig;
@@ -1388,7 +1388,7 @@ export interface GetTuningJobConfig {
 
 /** Parameters for the get method. */
 export interface GetTuningJobParameters {
-  name?: string;
+  name: string;
   /** Optional parameters for the request. */
   config?: GetTuningJobConfig;
 }
@@ -1688,7 +1688,7 @@ export interface CreateCachedContentConfig {
 /** Parameters for caches.create method. */
 export interface CreateCachedContentParameters {
   /** ID of the model to use. Example: gemini-1.5-flash */
-  model?: string;
+  model: string;
   /** Configuration that contains optional parameters.
    */
   config?: CreateCachedContentConfig;
@@ -1736,7 +1736,7 @@ export interface GetCachedContentConfig {
 export interface GetCachedContentParameters {
   /** The server-generated resource name of the cached content.
    */
-  name?: string;
+  name: string;
   /** Optional parameters for the request.
    */
   config?: GetCachedContentConfig;
@@ -1752,7 +1752,7 @@ export interface DeleteCachedContentConfig {
 export interface DeleteCachedContentParameters {
   /** The server-generated resource name of the cached content.
    */
-  name?: string;
+  name: string;
   /** Optional parameters for the request.
    */
   config?: DeleteCachedContentConfig;
@@ -1774,7 +1774,7 @@ export interface UpdateCachedContentConfig {
 export interface UpdateCachedContentParameters {
   /** The server-generated resource name of the cached content.
    */
-  name?: string;
+  name: string;
   /** Configuration that contains optional parameters.
    */
   config?: UpdateCachedContentConfig;
@@ -1875,7 +1875,7 @@ export interface GetFileConfig {
 /** Generates the parameters for the get method. */
 export interface GetFileParameters {
   /** The name identifier for the file to retrieve. */
-  name?: string;
+  name: string;
   /** Used to override the default configuration. */
   config?: GetFileConfig;
 }
@@ -1972,11 +1972,11 @@ export interface UpscaleImageConfig {
 /** User-facing config UpscaleImageParameters. */
 export interface UpscaleImageParameters {
   /** The model to use. */
-  model?: string;
+  model: string;
   /** The input image to upscale. */
-  image?: Image;
+  image: Image;
   /** The factor to upscale the image (x2 or x4). */
-  upscaleFactor?: string;
+  upscaleFactor: string;
   /** Configuration for upscaling. */
   config?: UpscaleImageConfig;
 }
