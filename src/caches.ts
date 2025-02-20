@@ -18,6 +18,17 @@ export class Caches extends BaseModule {
     super();
   }
 
+  /**
+   * Lists cached content configurations.
+   *
+   * @example
+   * ```ts
+   * const cachedContents = await client.caches.list({config: {'pageSize': 2}});
+   * for (const cachedContent of cachedContents) {
+   *   console.log(cachedContent);
+   * }
+   * ```
+   */
   list = async (
     params: types.ListCachedContentsParameters = {},
   ): Promise<Pager<types.CachedContent>> => {
@@ -29,6 +40,24 @@ export class Caches extends BaseModule {
     );
   };
 
+  /**
+   * Creates cached content, this call will initialize the cached content in
+   * the data storage, and users need to pay for the cache data storage.
+   *
+   * @example
+   * ```ts
+   * const contents = ...; // Initialize the content to cache.
+   * const response = await client.caches.create({
+   *   model: 'gemini-1.5-flash',
+   *   config: {
+   *    'contents': contents,
+   *    'displayName': 'test cache',
+   *    'systemInstruction': 'What is the sum of the two pdfs?',
+   *    'ttl': '86400s',
+   *  }
+   * });
+   * ```
+   */
   async create(
     params: types.CreateCachedContentParameters,
   ): Promise<types.CachedContent> {
@@ -70,6 +99,14 @@ export class Caches extends BaseModule {
     }
   }
 
+  /**
+   * Gets cached content configurations.
+   *
+   * @example
+   * ```ts
+   * await client.caches.get({name: 'gemini-1.5-flash'});
+   * ```
+   */
   async get(
     params: types.GetCachedContentParameters,
   ): Promise<types.CachedContent> {
@@ -111,6 +148,14 @@ export class Caches extends BaseModule {
     }
   }
 
+  /**
+   * Deletes cached content.
+   *
+   * @example
+   * ```ts
+   * await client.caches.delete({name: 'gemini-1.5-flash'});
+   * ```
+   */
   async delete(
     params: types.DeleteCachedContentParameters,
   ): Promise<types.DeleteCachedContentResponse> {
@@ -160,6 +205,17 @@ export class Caches extends BaseModule {
     }
   }
 
+  /**
+   * Updates cached content configurations.
+   *
+   * @example
+   * ```ts
+   * const response = await client.caches.update({
+   *   name: 'gemini-1.5-flash',
+   *   config: {'ttl': '7600s'}
+   * });
+   * ```
+   */
   async update(
     params: types.UpdateCachedContentParameters,
   ): Promise<types.CachedContent> {
