@@ -35,6 +35,12 @@ export class Tunings extends BaseModule {
     );
   };
 
+  /**
+   * Gets a TuningJob.
+   *
+   * @param name - The resource name of the tuning job.
+   * @return - A TuningJob object.
+   */
   private async getInternal(
     params: types.GetTuningJobParameters,
   ): Promise<types.TuningJob> {
@@ -76,6 +82,12 @@ export class Tunings extends BaseModule {
     }
   }
 
+  /**
+   * Lists tuning jobs.
+   *
+   * @param config - The configuration for the list request.
+   * @return - A list of tuning jobs.
+   */
   private async listInternal(
     params: types.ListTuningJobsParameters,
   ): Promise<types.ListTuningJobsResponse> {
