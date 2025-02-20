@@ -1,0 +1,14 @@
+{
+  "name": "google-genai-samples",
+  "version": "1.0.0",
+  "description": "Samples for using the @google/genai package",
+  "type": "module",
+  "author": "",
+  "license": "Apache-2.0",
+  "scripts": {
+	  "build": "tsc"
+  },
+  "dependencies": {
+    "@google/genai": "file:.."
+  }
+}

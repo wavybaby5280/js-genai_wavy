@@ -2,7 +2,7 @@
   "name": "@google/genai",
   "version": "0.1.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/src/index.js",
   "scripts": {
     "build": "tsc",
     "unit-test": "jasmine dist/test/unit/**/*_test.js dist/test/unit/*_test.js",
