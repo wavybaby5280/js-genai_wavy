@@ -170,8 +170,8 @@ describe('sendMessageStream invalid response', () => {
       Promise.resolve(mockStreamResponse()),
     );
     const chat = client.chats.create('gemini-1.5-flash', {}, []);
-    let response = await chat.sendMessageStream('send message 1');
-    response = await chat.sendMessageStream('send message 2');
+    await chat.sendMessageStream('send message 1');
+    await chat.sendMessageStream('send message 2');
     expect(modelsModule.generateContentStream).toHaveBeenCalledWith({
       model: 'gemini-1.5-flash',
       contents: [{role: 'user', parts: [{text: 'send message 1'}]}],

@@ -16,7 +16,9 @@ export function formatMap(
 
   // Replace each placeholder with its corresponding value from the valueMap
   return templateString.replace(regex, (match, key) => {
+    /* eslint no-prototype-builtins: 0 */
     if (valueMap.hasOwnProperty(key)) {
+      /* eslint no-prototype-builtins: 1 */
       return valueMap[key];
     } else {
       // Handle missing keys

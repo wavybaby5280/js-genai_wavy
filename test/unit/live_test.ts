@@ -149,7 +149,7 @@ describe('live', () => {
 
     const session = await live.connect('models/gemini-2.0-flash-exp', {});
 
-    let websocketFactorySpyCall = websocketFactorySpy.calls.all()[0];
+    const websocketFactorySpyCall = websocketFactorySpy.calls.all()[0];
     expect(websocketFactorySpyCall.args[0]).toBe(
       'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=test-api-key',
     );
@@ -176,7 +176,7 @@ describe('live', () => {
       JSON.stringify(websocketFactorySpyCall.args[2].onclose.toString()),
     ).toBe('"function (e) { }"');
     expect(websocket.connect).toHaveBeenCalled();
-    let websocketSpyCall = websocketSpy.calls.all()[0];
+    const websocketSpyCall = websocketSpy.calls.all()[0];
     expect(websocketSpyCall.args[0]).toBe(
       '{"setup":{"model":"models/gemini-2.0-flash-exp"}}',
     );

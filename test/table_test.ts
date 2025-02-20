@@ -194,7 +194,7 @@ function normalizeKey(key: string) {
   }
 }
 
-function normalizeHeaders(headers?: Headers, ignoreAuthorizationHeader = true) {
+function normalizeHeaders(headers?: Headers) {
   const headersObject: {[key: string]: string} = {};
   if (headers) {
     for (const [key, value] of headers.entries()) {

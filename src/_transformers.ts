@@ -104,7 +104,7 @@ export function tContentsForEmbed(
   }
   if (apiClient.isVertexAI() && Array.isArray(origin)) {
     return origin.flatMap((item) => {
-      let content = tContent(apiClient, item as types.ContentUnion);
+      const content = tContent(apiClient, item as types.ContentUnion);
       if (
         content.parts &&
         content.parts.length > 0 &&
@@ -115,7 +115,7 @@ export function tContentsForEmbed(
       return [];
     });
   } else if (apiClient.isVertexAI()) {
-    let content = tContent(apiClient, origin as types.ContentUnion);
+    const content = tContent(apiClient, origin as types.ContentUnion);
     if (
       content.parts &&
       content.parts.length > 0 &&

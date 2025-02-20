@@ -290,7 +290,7 @@ describe('createPart usability functions', () => {
 
 describe('createUserContent', () => {
   it('should throw an error when partOrString is number type', () => {
-    // @ts-ignore
+    // @ts-expect-error: Expected to throw an error.
     expect(() => createUserContent(123)).toThrow(
       new Error('partOrString must be a Part object, string, or array'),
     );
@@ -301,7 +301,7 @@ describe('createUserContent', () => {
     );
   });
   it('should throw an error when partOrString array contains unsupported type', () => {
-    // @ts-ignore
+    // @ts-expect-error: Expected to throw an error.
     expect(() => createUserContent([123])).toThrow(
       new Error('element in PartUnion must be a Part object or string'),
     );
@@ -345,7 +345,7 @@ describe('createUserContent', () => {
 });
 describe('createModelContent', () => {
   it('should throw an error when partOrString is number type', () => {
-    // @ts-ignore
+    // @ts-expect-error: Expected to throw an error.
     expect(() => createModelContent(123)).toThrow(
       new Error('partOrString must be a Part object, string, or array'),
     );
@@ -356,7 +356,7 @@ describe('createModelContent', () => {
     );
   });
   it('should throw an error when partOrString array contains unsupported type', () => {
-    // @ts-ignore
+    // @ts-expect-error: Expected to throw an error.
     expect(() => createModelContent([123])).toThrow(
       new Error('element in PartUnion must be a Part object or string'),
     );

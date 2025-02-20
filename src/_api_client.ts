@@ -338,19 +338,19 @@ export class ApiClient {
     baseHttpOptions: HttpOptions,
     requestHttpOptions: HttpOptions,
   ): HttpOptions {
-    let patchedHttpOptions = JSON.parse(
+    const patchedHttpOptions = JSON.parse(
       JSON.stringify(baseHttpOptions),
     ) as HttpOptions;
 
     for (const [key, value] of Object.entries(requestHttpOptions)) {
       // Records compile to objects.
       if (typeof value === 'object') {
-        // @ts-ignore TS2345TS7053: Element implicitly has an 'any' type because
+        // @ts-expect-error TS2345TS7053: Element implicitly has an 'any' type because
         // expression of type 'string' can't be used to index type
         // 'HttpOptions'.
         patchedHttpOptions[key] = {...patchedHttpOptions[key], ...value};
       } else if (value) {
-        // @ts-ignore TS2345TS7053: Element implicitly has an 'any' type because
+        // @ts-expect-error TS2345TS7053: Element implicitly has an 'any' type because
         // expression of type 'string' can't be used to index type
         // 'HttpOptions'.
         patchedHttpOptions[key] = value;

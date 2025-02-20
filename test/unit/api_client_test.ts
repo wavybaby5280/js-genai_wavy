@@ -195,7 +195,7 @@ describe('processStreamResponse', () => {
 
     let count = 0;
     const expectedText = ['One', 'Two', 'Three'];
-    for await (let chunkResponse of streamResponse) {
+    for await (const chunkResponse of streamResponse) {
       expect(chunkResponse.text()).toEqual(expectedText[count]);
       count++;
     }
@@ -562,9 +562,9 @@ describe('ApiClient', () => {
       );
       await client.post('test-path', {});
       const fetchArgs = fetchSpy.calls.allArgs();
-      // @ts-ignore TS2532: Object is possibly 'undefined'.
+      // @ts-expect-error TS2532: Object is possibly 'undefined'.
       expect(fetchArgs[0][1].signal instanceof AbortSignal).toBeTrue();
-      // @ts-ignore TS2532: Object is possibly 'undefined'.
+      // @ts-expect-error TS2532: Object is possibly 'undefined'.
       expect(fetchArgs[0][1].signal.aborted).toBeFalse();
     });
     it('should apply requestHttpOptions when provided', async () => {
@@ -821,9 +821,9 @@ describe('ApiClient', () => {
       );
       await client.postStream('test-path', {});
       const fetchArgs = fetchSpy.calls.first().args;
-      // @ts-ignore TS2532: Object is possibly 'undefined'.
+      // @ts-expect-error TS2532: Object is possibly 'undefined'.
       expect(fetchArgs[1].signal instanceof AbortSignal).toBeTrue();
-      // @ts-ignore TS2532: Object is possibly 'undefined'.
+      // @ts-expect-error TS2532: Object is possibly 'undefined'.
       expect(fetchArgs[1].signal.aborted).toBeFalse();
     });
     it('should apply requestHttpOptions when provided', async () => {
@@ -831,7 +831,6 @@ describe('ApiClient', () => {
         auth: new FakeAuth('test-api-key'),
         apiKey: 'test-api-key',
       });
-      const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
       const fetchSpy = spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(
           new Response(
@@ -869,7 +868,6 @@ describe('ApiClient', () => {
         apiKey: 'test-api-key',
         vertexai: true,
       });
-      const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
       const fetchSpy = spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(
           new Response(
