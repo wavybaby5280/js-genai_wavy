@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "description": "",
   "main": "dist/src/index.js",
+  "exports": {
+    ".": "./dist/src/index.js",
+    "./node": "./dist/src/node/index.js"
+  },
   "scripts": {
     "build": "tsc",
     "unit-test": "jasmine dist/test/unit/**/*_test.js dist/test/unit/*_test.js",

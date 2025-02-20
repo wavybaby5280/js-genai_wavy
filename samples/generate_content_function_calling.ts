@@ -4,11 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import {
-  Client,
   FunctionCallingConfigMode,
   FunctionDeclaration,
   Type,
 } from '@google/genai';
+import {Client} from '@google/genai/node';
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
