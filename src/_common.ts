@@ -61,7 +61,35 @@ export function setValueByPath(
     }
     data = data[key] as Record<string, any>;
   }
-  data[keys[keys.length - 1]] = value;
+
+  const existingData = data[keys[keys.length - 1]];
+  // If there is an existing value, merge, not overwrite.
+  if (existingData !== undefined) {
+    // Don't overwrite existing non-empty value with new empty value.
+    // This is triggered when handling tuning datasets.
+    if (!value || Object.keys(value).length === 0) {
+      return;
+    }
+    // Don't fail when overwriting value with same value
+    if (value === existingData) {
+      return;
+    }
+    // Instead of overwriting dictionary with another dictionary, merge them.
+    // This is important for handling training and validation datasets in tuning.
+    if (
+      typeof existingData === 'object' &&
+      typeof value === 'object' &&
+      existingData !== value
+    ) {
+      Object.assign(existingData, value);
+    } else {
+      throw new Error(
+        `Cannot set value for an existing key. Key: ${keys[keys.length - 1]}; Existing value: ${existingData}; New value: ${value}.`,
+      );
+    }
+  } else {
+    data[keys[keys.length - 1]] = value;
+  }
 }
 
 export function getValueByPath(data: object | any, keys: string[]): any | null {

@@ -407,10 +407,13 @@ function loadTestTableForMode(
   const parts = testTableFile.testMethod!.split('.');
   const moduleName: string = snakeToCamel(parts[0]);
   let methodName: string = snakeToCamel(parts[1]);
-  // Test the _list method since the replay files expect the list response
-  // instead of the Pager wrapper.
+  // Test internal methods since the replay files expect the internal response.
   if (methodName === 'list') {
-    methodName = '_list';
+    methodName = 'listInternal';
+  } else if (methodName === 'tune' && client.vertexai) {
+    methodName = 'tuneInternal';
+  } else if (methodName === 'tune' && !client.vertexai) {
+    methodName = 'tuneMldevInternal';
   }
   const method = getTestTableMethod(client, moduleName, methodName);
 

@@ -18,12 +18,30 @@ export class Tunings extends BaseModule {
     super();
   }
 
+  /**
+   * Gets a TuningJob.
+   *
+   * @param name - The resource name of the tuning job.
+   * @return - A TuningJob object.
+   *
+   * @experimental - The SDK's tuning implementation is experimental, and may
+   * change in future versions.
+   */
   get = async (
     params: types.GetTuningJobParameters,
   ): Promise<types.TuningJob> => {
     return await this.getInternal(params);
   };
 
+  /**
+   * Lists tuning jobs.
+   *
+   * @param config - The configuration for the list request.
+   * @return - A list of tuning jobs.
+   *
+   * @experimental - The SDK's tuning implementation is experimental, and may
+   * change in future versions.
+   */
   list = async (
     params: types.ListTuningJobsParameters = {},
   ): Promise<Pager<types.TuningJob>> => {
@@ -36,11 +54,42 @@ export class Tunings extends BaseModule {
   };
 
   /**
-   * Gets a TuningJob.
+   * Creates a supervised fine-tuning job.
    *
-   * @param name - The resource name of the tuning job.
-   * @return - A TuningJob object.
+   * @param params - The parameters for the tuning job.
+   * @return - A TuningJob operation.
+   *
+   * @experimental - The SDK's tuning implementation is experimental, and may
+   * change in future versions.
    */
+  tune = async (
+    params: types.CreateTuningJobParameters,
+  ): Promise<types.TuningJob> => {
+    if (this.apiClient.isVertexAI()) {
+      return await this.tuneInternal(params);
+    } else {
+      const operation = await this.tuneMldevInternal(params);
+      let tunedModelName = '';
+      if (
+        operation['metadata'] !== undefined &&
+        operation['metadata']['tunedModel'] !== undefined
+      ) {
+        tunedModelName = operation['metadata']['tunedModel'];
+      } else if (
+        operation['name'] !== undefined &&
+        operation['name'].includes('/operations/')
+      ) {
+        tunedModelName = operation['name'].split('/operations/')[0];
+      }
+      const tuningJob: types.TuningJob = {
+        name: tunedModelName,
+        state: types.JobState.JOB_STATE_QUEUED,
+      };
+
+      return tuningJob;
+    }
+  };
+
   private async getInternal(
     params: types.GetTuningJobParameters,
   ): Promise<types.TuningJob> {
@@ -82,12 +131,6 @@ export class Tunings extends BaseModule {
     }
   }
 
-  /**
-   * Lists tuning jobs.
-   *
-   * @param config - The configuration for the list request.
-   * @return - A list of tuning jobs.
-   */
   private async listInternal(
     params: types.ListTuningJobsParameters,
   ): Promise<types.ListTuningJobsResponse> {
@@ -133,6 +176,88 @@ export class Tunings extends BaseModule {
         const typedResp = new types.ListTuningJobsResponse();
         Object.assign(typedResp, resp);
         return typedResp;
+      });
+    }
+  }
+
+  private async tuneInternal(
+    params: types.CreateTuningJobParameters,
+  ): Promise<types.TuningJob> {
+    let response: Promise<types.TuningJob>;
+    let path: string = '';
+    let body: Record<string, any> = {};
+    if (this.apiClient.isVertexAI()) {
+      body = createTuningJobParametersToVertex(this.apiClient, params);
+      path = common.formatMap('tuningJobs', body['_url']);
+      delete body['config'];
+      response = this.apiClient.post(
+        path,
+        body,
+        undefined,
+        params.config?.httpOptions,
+      );
+
+      return response.then((apiResponse) => {
+        const resp = tuningJobFromVertex(this.apiClient, apiResponse);
+
+        return resp as types.TuningJob;
+      });
+    } else {
+      body = createTuningJobParametersToMldev(this.apiClient, params);
+      path = common.formatMap('None', body['_url']);
+      delete body['config'];
+      response = this.apiClient.post(
+        path,
+        body,
+        undefined,
+        params.config?.httpOptions,
+      );
+
+      return response.then((apiResponse) => {
+        const resp = tuningJobFromMldev(this.apiClient, apiResponse);
+
+        return resp as types.TuningJob;
+      });
+    }
+  }
+
+  private async tuneMldevInternal(
+    params: types.CreateTuningJobParameters,
+  ): Promise<types.Operation> {
+    let response: Promise<types.Operation>;
+    let path: string = '';
+    let body: Record<string, any> = {};
+    if (this.apiClient.isVertexAI()) {
+      body = createTuningJobParametersToVertex(this.apiClient, params);
+      path = common.formatMap('None', body['_url']);
+      delete body['config'];
+      response = this.apiClient.post(
+        path,
+        body,
+        undefined,
+        params.config?.httpOptions,
+      );
+
+      return response.then((apiResponse) => {
+        const resp = operationFromVertex(this.apiClient, apiResponse);
+
+        return resp as types.Operation;
+      });
+    } else {
+      body = createTuningJobParametersToMldev(this.apiClient, params);
+      path = common.formatMap('tunedModels', body['_url']);
+      delete body['config'];
+      response = this.apiClient.post(
+        path,
+        body,
+        undefined,
+        params.config?.httpOptions,
+      );
+
+      return response.then((apiResponse) => {
+        const resp = operationFromMldev(this.apiClient, apiResponse);
+
+        return resp as types.Operation;
       });
     }
   }
@@ -284,6 +409,388 @@ function listTuningJobsParametersToVertex(
       toObject,
       ['config'],
       listTuningJobsConfigToVertex(apiClient, fromConfig, toObject),
+    );
+  }
+
+  return toObject;
+}
+
+function tuningExampleToMldev(
+  apiClient: ApiClient,
+  fromObject: types.TuningExample,
+  parentObject?: Record<string, any>,
+): Record<string, any> {
+  const toObject: Record<string, any> = {};
+
+  const fromTextInput = common.getValueByPath(fromObject, ['textInput']);
+  if (fromTextInput !== undefined && fromTextInput !== null) {
+    common.setValueByPath(toObject, ['textInput'], fromTextInput);
+  }
+
+  const fromOutput = common.getValueByPath(fromObject, ['output']);
+  if (fromOutput !== undefined && fromOutput !== null) {
+    common.setValueByPath(toObject, ['output'], fromOutput);
+  }
+
+  return toObject;
+}
+
+function tuningExampleToVertex(
+  apiClient: ApiClient,
+  fromObject: types.TuningExample,
+  parentObject?: Record<string, any>,
+): Record<string, any> {
+  const toObject: Record<string, any> = {};
+
+  if (common.getValueByPath(fromObject, ['textInput']) !== undefined) {
+    throw new Error('textInput parameter is not supported in Vertex AI.');
+  }
+
+  if (common.getValueByPath(fromObject, ['output']) !== undefined) {
+    throw new Error('output parameter is not supported in Vertex AI.');
+  }
+
+  return toObject;
+}
+
+function tuningDatasetToMldev(
+  apiClient: ApiClient,
+  fromObject: types.TuningDataset,
+  parentObject?: Record<string, any>,
+): Record<string, any> {
+  const toObject: Record<string, any> = {};
+
+  if (common.getValueByPath(fromObject, ['gcsUri']) !== undefined) {
+    throw new Error('gcsUri parameter is not supported in Gemini API.');
+  }
+
+  const fromExamples = common.getValueByPath(fromObject, ['examples']);
+  if (fromExamples !== undefined && fromExamples !== null) {
+    common.setValueByPath(
+      toObject,
+      ['examples', 'examples'],
+      fromExamples.map((item: any) => {
+        return tuningExampleToMldev(apiClient, item, toObject);
+      }),
+    );
+  }
+
+  return toObject;
+}
+
+function tuningDatasetToVertex(
+  apiClient: ApiClient,
+  fromObject: types.TuningDataset,
+  parentObject?: Record<string, any>,
+): Record<string, any> {
+  const toObject: Record<string, any> = {};
+
+  const fromGcsUri = common.getValueByPath(fromObject, ['gcsUri']);
+  if (
+    parentObject !== undefined &&
+    fromGcsUri !== undefined &&
+    fromGcsUri !== null
+  ) {
+    common.setValueByPath(
+      parentObject,
+      ['supervisedTuningSpec', 'trainingDatasetUri'],
+      fromGcsUri,
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['examples']) !== undefined) {
+    throw new Error('examples parameter is not supported in Vertex AI.');
+  }
+
+  return toObject;
+}
+
+function tuningValidationDatasetToMldev(
+  apiClient: ApiClient,
+  fromObject: types.TuningValidationDataset,
+  parentObject?: Record<string, any>,
+): Record<string, any> {
+  const toObject: Record<string, any> = {};
+
+  if (common.getValueByPath(fromObject, ['gcsUri']) !== undefined) {
+    throw new Error('gcsUri parameter is not supported in Gemini API.');
+  }
+
+  return toObject;
+}
+
+function tuningValidationDatasetToVertex(
+  apiClient: ApiClient,
+  fromObject: types.TuningValidationDataset,
+  parentObject?: Record<string, any>,
+): Record<string, any> {
+  const toObject: Record<string, any> = {};
+
+  const fromGcsUri = common.getValueByPath(fromObject, ['gcsUri']);
+  if (fromGcsUri !== undefined && fromGcsUri !== null) {
+    common.setValueByPath(toObject, ['validationDatasetUri'], fromGcsUri);
+  }
+
+  return toObject;
+}
+
+function createTuningJobConfigToMldev(
+  apiClient: ApiClient,
+  fromObject: types.CreateTuningJobConfig,
+  parentObject?: Record<string, any>,
+): Record<string, any> {
+  const toObject: Record<string, any> = {};
+
+  if (common.getValueByPath(fromObject, ['validationDataset']) !== undefined) {
+    throw new Error(
+      'validationDataset parameter is not supported in Gemini API.',
+    );
+  }
+
+  const fromTunedModelDisplayName = common.getValueByPath(fromObject, [
+    'tunedModelDisplayName',
+  ]);
+  if (
+    parentObject !== undefined &&
+    fromTunedModelDisplayName !== undefined &&
+    fromTunedModelDisplayName !== null
+  ) {
+    common.setValueByPath(
+      parentObject,
+      ['displayName'],
+      fromTunedModelDisplayName,
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['description']) !== undefined) {
+    throw new Error('description parameter is not supported in Gemini API.');
+  }
+
+  const fromEpochCount = common.getValueByPath(fromObject, ['epochCount']);
+  if (
+    parentObject !== undefined &&
+    fromEpochCount !== undefined &&
+    fromEpochCount !== null
+  ) {
+    common.setValueByPath(
+      parentObject,
+      ['tuningTask', 'hyperparameters', 'epochCount'],
+      fromEpochCount,
+    );
+  }
+
+  const fromLearningRateMultiplier = common.getValueByPath(fromObject, [
+    'learningRateMultiplier',
+  ]);
+  if (
+    fromLearningRateMultiplier !== undefined &&
+    fromLearningRateMultiplier !== null
+  ) {
+    common.setValueByPath(
+      toObject,
+      ['tuningTask', 'hyperparameters', 'learningRateMultiplier'],
+      fromLearningRateMultiplier,
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['adapterSize']) !== undefined) {
+    throw new Error('adapterSize parameter is not supported in Gemini API.');
+  }
+
+  const fromBatchSize = common.getValueByPath(fromObject, ['batchSize']);
+  if (
+    parentObject !== undefined &&
+    fromBatchSize !== undefined &&
+    fromBatchSize !== null
+  ) {
+    common.setValueByPath(
+      parentObject,
+      ['tuningTask', 'hyperparameters', 'batchSize'],
+      fromBatchSize,
+    );
+  }
+
+  const fromLearningRate = common.getValueByPath(fromObject, ['learningRate']);
+  if (
+    parentObject !== undefined &&
+    fromLearningRate !== undefined &&
+    fromLearningRate !== null
+  ) {
+    common.setValueByPath(
+      parentObject,
+      ['tuningTask', 'hyperparameters', 'learningRate'],
+      fromLearningRate,
+    );
+  }
+
+  return toObject;
+}
+
+function createTuningJobConfigToVertex(
+  apiClient: ApiClient,
+  fromObject: types.CreateTuningJobConfig,
+  parentObject?: Record<string, any>,
+): Record<string, any> {
+  const toObject: Record<string, any> = {};
+
+  const fromValidationDataset = common.getValueByPath(fromObject, [
+    'validationDataset',
+  ]);
+  if (
+    parentObject !== undefined &&
+    fromValidationDataset !== undefined &&
+    fromValidationDataset !== null
+  ) {
+    common.setValueByPath(
+      parentObject,
+      ['supervisedTuningSpec'],
+      tuningValidationDatasetToVertex(
+        apiClient,
+        fromValidationDataset,
+        toObject,
+      ),
+    );
+  }
+
+  const fromTunedModelDisplayName = common.getValueByPath(fromObject, [
+    'tunedModelDisplayName',
+  ]);
+  if (
+    parentObject !== undefined &&
+    fromTunedModelDisplayName !== undefined &&
+    fromTunedModelDisplayName !== null
+  ) {
+    common.setValueByPath(
+      parentObject,
+      ['tunedModelDisplayName'],
+      fromTunedModelDisplayName,
+    );
+  }
+
+  const fromDescription = common.getValueByPath(fromObject, ['description']);
+  if (
+    parentObject !== undefined &&
+    fromDescription !== undefined &&
+    fromDescription !== null
+  ) {
+    common.setValueByPath(parentObject, ['description'], fromDescription);
+  }
+
+  const fromEpochCount = common.getValueByPath(fromObject, ['epochCount']);
+  if (
+    parentObject !== undefined &&
+    fromEpochCount !== undefined &&
+    fromEpochCount !== null
+  ) {
+    common.setValueByPath(
+      parentObject,
+      ['supervisedTuningSpec', 'hyperParameters', 'epochCount'],
+      fromEpochCount,
+    );
+  }
+
+  const fromLearningRateMultiplier = common.getValueByPath(fromObject, [
+    'learningRateMultiplier',
+  ]);
+  if (
+    fromLearningRateMultiplier !== undefined &&
+    fromLearningRateMultiplier !== null
+  ) {
+    common.setValueByPath(
+      toObject,
+      ['supervisedTuningSpec', 'hyperParameters', 'learningRateMultiplier'],
+      fromLearningRateMultiplier,
+    );
+  }
+
+  const fromAdapterSize = common.getValueByPath(fromObject, ['adapterSize']);
+  if (
+    parentObject !== undefined &&
+    fromAdapterSize !== undefined &&
+    fromAdapterSize !== null
+  ) {
+    common.setValueByPath(
+      parentObject,
+      ['supervisedTuningSpec', 'hyperParameters', 'adapterSize'],
+      fromAdapterSize,
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['batchSize']) !== undefined) {
+    throw new Error('batchSize parameter is not supported in Vertex AI.');
+  }
+
+  if (common.getValueByPath(fromObject, ['learningRate']) !== undefined) {
+    throw new Error('learningRate parameter is not supported in Vertex AI.');
+  }
+
+  return toObject;
+}
+
+function createTuningJobParametersToMldev(
+  apiClient: ApiClient,
+  fromObject: types.CreateTuningJobParameters,
+  parentObject?: Record<string, any>,
+): Record<string, any> {
+  const toObject: Record<string, any> = {};
+
+  const fromBaseModel = common.getValueByPath(fromObject, ['baseModel']);
+  if (fromBaseModel !== undefined && fromBaseModel !== null) {
+    common.setValueByPath(toObject, ['baseModel'], fromBaseModel);
+  }
+
+  const fromTrainingDataset = common.getValueByPath(fromObject, [
+    'trainingDataset',
+  ]);
+  if (fromTrainingDataset !== undefined && fromTrainingDataset !== null) {
+    common.setValueByPath(
+      toObject,
+      ['tuningTask', 'trainingData'],
+      tuningDatasetToMldev(apiClient, fromTrainingDataset, toObject),
+    );
+  }
+
+  const fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig !== undefined && fromConfig !== null) {
+    common.setValueByPath(
+      toObject,
+      ['config'],
+      createTuningJobConfigToMldev(apiClient, fromConfig, toObject),
+    );
+  }
+
+  return toObject;
+}
+
+function createTuningJobParametersToVertex(
+  apiClient: ApiClient,
+  fromObject: types.CreateTuningJobParameters,
+  parentObject?: Record<string, any>,
+): Record<string, any> {
+  const toObject: Record<string, any> = {};
+
+  const fromBaseModel = common.getValueByPath(fromObject, ['baseModel']);
+  if (fromBaseModel !== undefined && fromBaseModel !== null) {
+    common.setValueByPath(toObject, ['baseModel'], fromBaseModel);
+  }
+
+  const fromTrainingDataset = common.getValueByPath(fromObject, [
+    'trainingDataset',
+  ]);
+  if (fromTrainingDataset !== undefined && fromTrainingDataset !== null) {
+    common.setValueByPath(
+      toObject,
+      ['supervisedTuningSpec', 'trainingDatasetUri'],
+      tuningDatasetToVertex(apiClient, fromTrainingDataset, toObject),
+    );
+  }
+
+  const fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig !== undefined && fromConfig !== null) {
+    common.setValueByPath(
+      toObject,
+      ['config'],
+      createTuningJobConfigToVertex(apiClient, fromConfig, toObject),
     );
   }
 
@@ -632,6 +1139,76 @@ function listTuningJobsResponseFromVertex(
         return tuningJobFromVertex(apiClient, item, toObject);
       }),
     );
+  }
+
+  return toObject;
+}
+
+function operationFromMldev(
+  apiClient: ApiClient,
+  fromObject: types.Operation,
+  parentObject?: Record<string, any>,
+): Record<string, any> {
+  const toObject: Record<string, any> = {};
+
+  const fromName = common.getValueByPath(fromObject, ['name']);
+  if (fromName !== undefined && fromName !== null) {
+    common.setValueByPath(toObject, ['name'], fromName);
+  }
+
+  const fromMetadata = common.getValueByPath(fromObject, ['metadata']);
+  if (fromMetadata !== undefined && fromMetadata !== null) {
+    common.setValueByPath(toObject, ['metadata'], fromMetadata);
+  }
+
+  const fromDone = common.getValueByPath(fromObject, ['done']);
+  if (fromDone !== undefined && fromDone !== null) {
+    common.setValueByPath(toObject, ['done'], fromDone);
+  }
+
+  const fromError = common.getValueByPath(fromObject, ['error']);
+  if (fromError !== undefined && fromError !== null) {
+    common.setValueByPath(toObject, ['error'], fromError);
+  }
+
+  const fromResponse = common.getValueByPath(fromObject, ['response']);
+  if (fromResponse !== undefined && fromResponse !== null) {
+    common.setValueByPath(toObject, ['response'], fromResponse);
+  }
+
+  return toObject;
+}
+
+function operationFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.Operation,
+  parentObject?: Record<string, any>,
+): Record<string, any> {
+  const toObject: Record<string, any> = {};
+
+  const fromName = common.getValueByPath(fromObject, ['name']);
+  if (fromName !== undefined && fromName !== null) {
+    common.setValueByPath(toObject, ['name'], fromName);
+  }
+
+  const fromMetadata = common.getValueByPath(fromObject, ['metadata']);
+  if (fromMetadata !== undefined && fromMetadata !== null) {
+    common.setValueByPath(toObject, ['metadata'], fromMetadata);
+  }
+
+  const fromDone = common.getValueByPath(fromObject, ['done']);
+  if (fromDone !== undefined && fromDone !== null) {
+    common.setValueByPath(toObject, ['done'], fromDone);
+  }
+
+  const fromError = common.getValueByPath(fromObject, ['error']);
+  if (fromError !== undefined && fromError !== null) {
+    common.setValueByPath(toObject, ['error'], fromError);
+  }
+
+  const fromResponse = common.getValueByPath(fromObject, ['response']);
+  if (fromResponse !== undefined && fromResponse !== null) {
+    common.setValueByPath(toObject, ['response'], fromResponse);
   }
 
   return toObject;

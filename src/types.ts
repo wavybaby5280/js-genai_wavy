@@ -1660,6 +1660,72 @@ export class ListTuningJobsResponse {
   tuningJobs?: TuningJob[];
 }
 
+export interface TuningExample {
+  /** Text model input. */
+  textInput?: string;
+  /** The expected model output. */
+  output?: string;
+}
+
+/** Supervised fine-tuning training dataset. */
+export interface TuningDataset {
+  /** GCS URI of the file containing training dataset in JSONL format. */
+  gcsUri?: string;
+  /** Inline examples with simple input/output text. */
+  examples?: TuningExample[];
+}
+
+export interface TuningValidationDataset {
+  /** GCS URI of the file containing validation dataset in JSONL format. */
+  gcsUri?: string;
+}
+
+/** Supervised fine-tuning job creation request - optional fields. */
+export interface CreateTuningJobConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+  /** Cloud Storage path to file containing training dataset for tuning. The dataset must be formatted as a JSONL file. */
+  validationDataset?: TuningValidationDataset;
+  /** The display name of the tuned Model. The name can be up to 128 characters long and can consist of any UTF-8 characters. */
+  tunedModelDisplayName?: string;
+  /** The description of the TuningJob */
+  description?: string;
+  /** Number of complete passes the model makes over the entire training dataset during training. */
+  epochCount?: number;
+  /** Multiplier for adjusting the default learning rate. */
+  learningRateMultiplier?: number;
+  /** Adapter size for tuning. */
+  adapterSize?: AdapterSize;
+  /** The batch size hyperparameter for tuning. If not set, a default of 4 or 16 will be used based on the number of training examples. */
+  batchSize?: number;
+  /** The learning rate hyperparameter for tuning. If not set, a default of 0.001 or 0.0002 will be calculated based on the number of training examples. */
+  learningRate?: number;
+}
+
+/** Supervised fine-tuning job creation parameters - optional fields. */
+export interface CreateTuningJobParameters {
+  /** The base model that is being tuned, e.g., "gemini-1.0-pro-002". */
+  baseModel: string;
+  /** Cloud Storage path to file containing training dataset for tuning. The dataset must be formatted as a JSONL file. */
+  trainingDataset: TuningDataset;
+  /** Configuration for the tuning job. */
+  config?: CreateTuningJobConfig;
+}
+
+/** A long-running operation. */
+export interface Operation {
+  /** The server-assigned name, which is only unique within the same service that originally returns it. If you use the default HTTP mapping, the `name` should be a resource name ending with `operations/{unique_id}`. */
+  name?: string;
+  /** Service-specific metadata associated with the operation. It typically contains progress information and common metadata such as create time. Some services might not provide such metadata.  Any method that returns a long-running operation should document the metadata type, if any. */
+  metadata?: Record<string, any>;
+  /** If the value is `false`, it means the operation is still in progress. If `true`, the operation is completed, and either `error` or `response` is available. */
+  done?: boolean;
+  /** The error result of the operation in case of failure or cancellation. */
+  error?: Record<string, any>;
+  /** The normal response of the operation in case of success. */
+  response?: Record<string, any>;
+}
+
 /** Optional configuration for cached content creation. */
 export interface CreateCachedContentConfig {
   /** Used to override HTTP request options. */
