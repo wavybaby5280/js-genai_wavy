@@ -377,6 +377,10 @@ function loadTestFiles(): string[] {
   const replayPath =
     google3Path + '/google/cloud/aiplatform/sdk/genai/replays/tests';
 
+  if (!fs.existsSync(replayPath)) {
+    throw new Error(`Replay path does not exist ${replayPath}.`)
+  }
+
   const testFiles: string[] = [];
   const files = walk(replayPath);
 
@@ -452,7 +456,13 @@ const replayTests: TestInfo[] = [];
 const apiTests: TestInfo[] = [];
 
 function loadTests() {
-  const testFiles = loadTestFiles();
+  let testFiles: string[];
+  try {
+    testFiles = loadTestFiles();
+  } catch (e) {
+    console.warn(e);
+    return;
+  }
   const mode = getTestMode();
   for (const testFileName of testFiles) {
     const data = fs.readFileSync(testFileName, 'utf8');

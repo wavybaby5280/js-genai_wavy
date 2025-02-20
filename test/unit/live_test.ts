@@ -79,12 +79,6 @@ describe('live', () => {
     );
     expect(onopenString).toContain('onopenResolve();');
     expect(
-      JSON.stringify(websocketFactorySpyCall.args[2].onmessage.toString()),
-    ).toBe('"function (e) { }"');
-    expect(
-      JSON.stringify(websocketFactorySpyCall.args[2].onerror.toString()),
-    ).toBe('"function (e) { }"');
-    expect(
       JSON.stringify(websocketFactorySpyCall.args[2].onclose.toString()),
     ).toBe('"function (e) { }"');
     expect(session).toBeDefined();
@@ -166,9 +160,6 @@ describe('live', () => {
       '(_a = callbacks === null || callbacks === void 0 ? void 0 : callbacks.onopen) === null || _a === void 0 ? void 0 : _a.call(callbacks);',
     );
     expect(onopenString).toContain('onopenResolve();');
-    expect(
-      JSON.stringify(websocketFactorySpyCall.args[2].onmessage.toString()),
-    ).toBe('"function (e) { }"');
     expect(
       JSON.stringify(websocketFactorySpyCall.args[2].onerror.toString()),
     ).toBe('"function (e) { }"');

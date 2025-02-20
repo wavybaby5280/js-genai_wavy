@@ -618,10 +618,45 @@ export class Live {
    @experimental
   */
 export class Session {
+  onmessage?: ((msg: types.LiveServerMessage) => void);
+
   constructor(
-    private readonly conn: WebSocket,
-    private readonly apiClient: ApiClient,
-  ) {}
+      readonly conn: WebSocket,
+      private readonly apiClient: ApiClient,
+  ) {
+    conn.setOnMessageCallback((event: any) => {
+      try {
+        void this.handleMessage(event);
+      } catch (e) {
+        console.error(e);
+      }
+    });
+  }
+
+  private async handleMessage(event: any) {
+    if (!this.onmessage) {
+      return;
+    }
+    let serverMessage: Record<string, any> = {};
+    let data: any;
+    if (typeof event.data === 'string') {
+      data = JSON.parse(event.data);
+    } else {
+      data = JSON.parse(await event.data.text());
+    }
+    if (this.apiClient.isVertexAI()) {
+      serverMessage = liveServerMessageFromVertex(
+          this.apiClient,
+          data,
+      );
+    } else {
+      serverMessage = liveServerMessageFromMldev(
+          this.apiClient,
+          data,
+      );
+    }
+    this.onmessage(serverMessage);
+  }
 
   private parseClientMessage(
     apiClient: ApiClient,
@@ -771,33 +806,6 @@ export class Session {
       turnComplete,
     );
     this.conn.send(JSON.stringify(clientMessage));
-  }
-
-  /**
-     Reads a LiveServerMessage from the websocket connection.
-
-     @experimental
-   */
-  async receive(): Promise<types.LiveServerMessage> {
-    // Create a promise that resolves when a message is actually received.
-    return new Promise((resolve: any) => {
-      this.conn.setOnMessageCallback((event: any) => {
-        let serverMessage: Record<string, any> = {};
-        if (this.apiClient.isVertexAI()) {
-          serverMessage = liveServerMessageFromVertex(
-            this.apiClient,
-            JSON.parse(event.data),
-          );
-        } else {
-          serverMessage = liveServerMessageFromMldev(
-            this.apiClient,
-            JSON.parse(event.data),
-          );
-        }
-
-        resolve(serverMessage);
-      });
-    });
   }
 
   /**
