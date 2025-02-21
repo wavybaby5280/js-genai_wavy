@@ -23,5 +23,17 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
-    - run: npm run format
-    - run: npm run lint
+    - name: Run format
+      run: npm run format
+    - name: Check format result
+      if: ${{ failure() }}
+      run: |
+        echo "Formatting failed. To resolve this issue, please run `npm run format` on your change."
+        exit 1
+    - name: Run linting
+      run: npm run lint
+    - name: Check lint result
+      if: ${{ failure() }}
+      run: |
+        echo "Linting failed. To resolve this issue, please run `npm run lint-fix` on your change."
+        exit 1
