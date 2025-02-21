@@ -617,11 +617,11 @@ export class Live {
    @experimental
   */
 export class Session {
-  onmessage?: ((msg: types.LiveServerMessage) => void);
+  onmessage?: (msg: types.LiveServerMessage) => void;
 
   constructor(
-      readonly conn: WebSocket,
-      private readonly apiClient: ApiClient,
+    readonly conn: WebSocket,
+    private readonly apiClient: ApiClient,
   ) {
     conn.setOnMessageCallback((event: any) => {
       try {
@@ -644,15 +644,9 @@ export class Session {
       data = JSON.parse(event.data);
     }
     if (this.apiClient.isVertexAI()) {
-      serverMessage = liveServerMessageFromVertex(
-          this.apiClient,
-          data,
-      );
+      serverMessage = liveServerMessageFromVertex(this.apiClient, data);
     } else {
-      serverMessage = liveServerMessageFromMldev(
-          this.apiClient,
-          data,
-      );
+      serverMessage = liveServerMessageFromMldev(this.apiClient, data);
     }
     this.onmessage(serverMessage);
   }

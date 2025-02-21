@@ -222,72 +222,55 @@ export class ApiClient {
 
   get(
     path: string,
-    requestObject: any,
-    respType?: any,
+    requestObject: Record<string, unknown>,
     requestHttpOptions?: HttpOptions,
+    // any will be replaced with the full http response.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<any> {
-    return this.request(
-      path,
-      requestObject,
-      'GET',
-      respType,
-      requestHttpOptions,
-    );
+    return this.request(path, requestObject, 'GET', requestHttpOptions);
   }
 
   post(
     path: string,
-    requestObject: any,
-    respType?: any,
+    requestObject: Record<string, unknown>,
     requestHttpOptions?: HttpOptions,
+    // any will be replaced with the full http response.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<any> {
-    return this.request(
-      path,
-      requestObject,
-      'POST',
-      respType,
-      requestHttpOptions,
-    );
+    return this.request(path, requestObject, 'POST', requestHttpOptions);
   }
 
   patch(
     path: string,
-    requestObject: any,
-    respType?: any,
+    requestObject: Record<string, unknown>,
     requestHttpOptions?: HttpOptions,
+    // any will be replaced with the full http response.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<any> {
-    return this.request(
-      path,
-      requestObject,
-      'PATCH',
-      respType,
-      requestHttpOptions,
-    );
+    return this.request(path, requestObject, 'PATCH', requestHttpOptions);
   }
 
   delete(
     path: string,
-    requestObject: any,
-    respType?: any,
+    requestObject: Record<string, unknown>,
     requestHttpOptions?: HttpOptions,
+    // any will be replaced with the full http response.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<any> {
-    return this.request(
-      path,
-      requestObject,
-      'DELETE',
-      respType,
-      requestHttpOptions,
-    );
+    return this.request(path, requestObject, 'DELETE', requestHttpOptions);
   }
 
   private async request(
     path: string,
-    requestJson: any,
+    requestJson: Record<string, unknown>,
     httpMethod: 'GET' | 'POST' | 'PATCH' | 'DELETE',
-    respType?: any,
     requestHttpOptions?: HttpOptions,
+    // any will be replaced with the full http response.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<any> {
     // Copy the json locally so as to not modify the user provided one.
+    // request json could be any request.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const localRequestJson: any = JSON.parse(JSON.stringify(requestJson));
     // _url is a special dict for populating the url.
     delete localRequestJson._url;
@@ -361,12 +344,15 @@ export class ApiClient {
 
   async postStream(
     path: string,
-    requestJson: any,
-    chunkType?: any,
+    requestJson: Record<string, unknown>,
     requestHttpOptions?: HttpOptions,
+    // any will be replaced with the full http response.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<any> {
     // _url is a special dict for populating the url.
-    delete requestJson._url;
+    if (requestJson && '_url' in requestJson) {
+      delete requestJson['_url'];
+    }
 
     let patchedHttpOptions = this.clientOptions.httpOptions!;
     if (requestHttpOptions) {
@@ -391,7 +377,7 @@ export class ApiClient {
       requestInit,
       patchedHttpOptions,
     );
-    return this.streamApiCall(url, requestInit, 'POST', chunkType);
+    return this.streamApiCall(url, requestInit, 'POST');
   }
 
   private async includeExtraHttpOptionsToRequestInit(
@@ -412,6 +398,8 @@ export class ApiClient {
     url: URL,
     requestInit: RequestInit,
     httpMethod: 'GET' | 'POST' | 'PATCH' | 'DELETE',
+    // any will be replaced with the full http response.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<any> {
     return this.apiCall(url.toString(), {
       ...requestInit,
@@ -434,7 +422,8 @@ export class ApiClient {
     url: URL,
     requestInit: RequestInit,
     httpMethod: 'GET' | 'POST' | 'PATCH' | 'DELETE',
-    chunkType: any,
+    // any will be replaced with the full http response.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<AsyncGenerator<any>> {
     return this.apiCall(url.toString(), {
       ...requestInit,
@@ -442,7 +431,7 @@ export class ApiClient {
     })
       .then(async (response) => {
         await throwErrorIfNotOK(response, url.toString(), requestInit);
-        return this.processStreamResponse(response, chunkType);
+        return this.processStreamResponse(response);
       })
       .catch((e) => {
         if (e instanceof Error) {
@@ -455,7 +444,8 @@ export class ApiClient {
 
   async *processStreamResponse(
     response: Response,
-    chunkType: any,
+    // any will be replaced with the full http response.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): AsyncGenerator<any> {
     const reader = response?.body?.getReader();
     const decoder = new TextDecoder('utf-8');
@@ -480,13 +470,7 @@ export class ApiClient {
           const processedChunkString = match[1];
           try {
             const chunkData = JSON.parse(processedChunkString);
-            if (chunkType) {
-              const typedChunk = new chunkType();
-              Object.assign(typedChunk, chunkData);
-              yield typedChunk;
-            } else {
-              yield chunkData;
-            }
+            yield chunkData;
             buffer = buffer.slice(match[0].length);
             match = buffer.match(responseLineRE);
           } catch (e) {
@@ -513,8 +497,8 @@ export class ApiClient {
     });
   }
 
-  getDefaultHeaders(): Record<string, any> {
-    const headers: Record<string, any> = {};
+  getDefaultHeaders(): Record<string, string> {
+    const headers: Record<string, string> = {};
 
     const versionHeaderValue =
       LIBRARY_LABEL + ' ' + this.clientOptions.userAgentExtra;
@@ -551,7 +535,7 @@ async function throwErrorIfNotOK(
   if (!response.ok) {
     const status: number = response.status;
     const statusText: string = response.statusText;
-    let errorBody: any;
+    let errorBody: Record<string, unknown>;
     if (response.headers.get('content-type')?.includes('application/json')) {
       errorBody = await response.json();
     } else {

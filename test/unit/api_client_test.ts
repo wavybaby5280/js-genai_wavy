@@ -77,10 +77,7 @@ describe('processStreamResponse', () => {
     });
     const response = new Response(readableStream);
 
-    const generator = apiClient.processStreamResponse(
-      response,
-      types.GenerateContentResponse,
-    );
+    const generator = apiClient.processStreamResponse(response);
 
     await expectAsync(generator.next()).toBeRejectedWithError(
       'Incomplete JSON segment at the end: invalid chunk',
@@ -101,17 +98,14 @@ describe('processStreamResponse', () => {
     });
     const response = new Response(readableStream);
 
-    const generator = apiClient.processStreamResponse(
-      response,
-      types.GenerateContentResponse,
-    );
+    const generator = apiClient.processStreamResponse(response);
 
     await expectAsync(generator.next()).toBeRejectedWithError(
       'Incomplete JSON segment at the end: data: invalid chunk',
     );
   });
 
-  it('should yield the parsed chunk data', async () => {
+  it('should yield the json chunk data', async () => {
     const validChunk1 =
       'data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"},"finishReason": "STOP","index": 0}],"usageMetadata": {"promptTokenCount": 8,"candidatesTokenCount": 1,"totalTokenCount": 9}}\n\n';
     const validChunk2 =
@@ -131,38 +125,30 @@ describe('processStreamResponse', () => {
         },
       });
       const response = new Response(readableStream);
-      const expectedResponse: types.GenerateContentResponse =
-        Object.setPrototypeOf(
+      const expectedResponse = {
+        candidates: [
           {
-            candidates: [
-              {
-                content: {
-                  parts: [
-                    {
-                      text: 'The',
-                    },
-                  ],
-                  role: 'model',
+            content: {
+              parts: [
+                {
+                  text: 'The',
                 },
-                finishReason: 'STOP' as types.FinishReason,
-                index: 0,
-              },
-            ],
-            usageMetadata: {
-              promptTokenCount: 8,
-              candidatesTokenCount: 1,
-              totalTokenCount: 9,
+              ],
+              role: 'model',
             },
+            finishReason: 'STOP' as types.FinishReason,
+            index: 0,
           },
-          types.GenerateContentResponse.prototype,
-        );
-      const generator = apiClient.processStreamResponse(
-        response,
-        types.GenerateContentResponse,
-      );
+        ],
+        usageMetadata: {
+          promptTokenCount: 8,
+          candidatesTokenCount: 1,
+          totalTokenCount: 9,
+        },
+      };
+      const generator = apiClient.processStreamResponse(response);
       const result = await generator.next();
-      const value: types.GenerateContentResponse = result.value;
-      expect(value).toEqual(expectedResponse);
+      expect(result.value).toEqual(expectedResponse);
     }
   });
 
@@ -188,15 +174,14 @@ describe('processStreamResponse', () => {
     });
     const response = new Response(readableStream);
 
-    const streamResponse = await apiClient.processStreamResponse(
-      response,
-      (types as any)?.GenerateContentResponse,
-    );
+    const streamResponse = await apiClient.processStreamResponse(response);
 
     let count = 0;
     const expectedText = ['One', 'Two', 'Three'];
-    for await (const chunkResponse of streamResponse) {
-      expect(chunkResponse.text()).toEqual(expectedText[count]);
+    for await (const jsonChunk of streamResponse) {
+      const typedChunk = new types.GenerateContentResponse();
+      Object.assign(typedChunk, jsonChunk);
+      expect(typedChunk.text()).toEqual(expectedText[count]);
       count++;
     }
     expect(count).toEqual(3);
@@ -219,38 +204,30 @@ describe('processStreamResponse', () => {
       },
     });
     const response = new Response(readableStream);
-    const expectedResponse: types.GenerateContentResponse =
-      Object.setPrototypeOf(
+    const expectedResponse = {
+      candidates: [
         {
-          candidates: [
-            {
-              content: {
-                parts: [
-                  {
-                    text: 'The',
-                  },
-                ],
-                role: 'model',
+          content: {
+            parts: [
+              {
+                text: 'The',
               },
-              finishReason: types.FinishReason.STOP,
-              index: 0,
-            },
-          ],
-          usageMetadata: {
-            promptTokenCount: 8,
-            candidatesTokenCount: 1,
-            totalTokenCount: 9,
+            ],
+            role: 'model',
           },
+          finishReason: types.FinishReason.STOP,
+          index: 0,
         },
-        types.GenerateContentResponse.prototype,
-      );
-    const generator = apiClient.processStreamResponse(
-      response,
-      types.GenerateContentResponse,
-    );
+      ],
+      usageMetadata: {
+        promptTokenCount: 8,
+        candidatesTokenCount: 1,
+        totalTokenCount: 9,
+      },
+    };
+    const generator = apiClient.processStreamResponse(response);
     const result = await generator.next();
-    const value: types.GenerateContentResponse = result.value;
-    expect(value).toEqual(expectedResponse);
+    expect(result.value).toEqual(expectedResponse);
   });
 });
 
@@ -583,7 +560,7 @@ describe('ApiClient', () => {
       );
       const timeoutSpy = spyOn(global, 'setTimeout');
 
-      await client.get('test-path', requestJson, undefined, {
+      await client.get('test-path', requestJson, {
         baseUrl: 'https://custom-request-base-url.googleapis.com',
         apiVersion: 'v1alpha',
         timeout: 1001,
@@ -649,7 +626,7 @@ describe('ApiClient', () => {
       );
       const timeoutSpy = spyOn(global, 'setTimeout');
 
-      await client.get('test-path', requestJson, undefined, {
+      await client.get('test-path', requestJson, {
         headers: {'google-custom-header': 'custom-header-value'},
         timeout: 1001,
         apiVersion: 'v1alpha',
@@ -697,7 +674,7 @@ describe('ApiClient', () => {
       );
       const timeoutSpy = spyOn(global, 'setTimeout');
 
-      await client.get('test-path', requestJson, undefined, {
+      await client.get('test-path', requestJson, {
         baseUrl: 'https://custom-request-base-url.googleapis.com',
         apiVersion: 'v1alpha',
         timeout: 1002,
@@ -841,12 +818,16 @@ describe('ApiClient', () => {
       );
       const timeoutSpy = spyOn(global, 'setTimeout');
 
-      await client.postStream('test-path', {}, undefined, {
-        baseUrl: 'https://custom-request-base-url.googleapis.com',
-        headers: {'google-custom-header': 'custom-header-value'},
-        apiVersion: 'v1alpha',
-        timeout: 1001,
-      });
+      await client.postStream(
+        'test-path',
+        {},
+        {
+          baseUrl: 'https://custom-request-base-url.googleapis.com',
+          headers: {'google-custom-header': 'custom-header-value'},
+          apiVersion: 'v1alpha',
+          timeout: 1001,
+        },
+      );
 
       const fetchArgs = fetchSpy.calls.first().args;
       const requestInit = fetchArgs[1] as RequestInit;
@@ -877,7 +858,7 @@ describe('ApiClient', () => {
         ),
       );
 
-      await client.postStream('test-path', {}, undefined);
+      await client.postStream('test-path', {});
 
       const fetchArgs = fetchSpy.calls.first().args;
       const requestInit = fetchArgs[1] as RequestInit;
@@ -906,7 +887,7 @@ describe('ApiClient', () => {
       );
       const timeoutSpy = spyOn(global, 'setTimeout');
 
-      await client.postStream('test-path', requestJson, undefined, {
+      await client.postStream('test-path', requestJson, {
         headers: {'google-custom-header': 'custom-header-value'},
         timeout: 1001,
         apiVersion: 'v1alpha',
@@ -948,7 +929,7 @@ describe('ApiClient', () => {
       );
       const timeoutSpy = spyOn(global, 'setTimeout');
 
-      await client.postStream('test-path', requestJson, undefined, {
+      await client.postStream('test-path', requestJson, {
         baseUrl: 'https://custom-request-base-url.googleapis.com',
         apiVersion: 'v1alpha',
         timeout: 1002,
@@ -971,7 +952,7 @@ describe('ApiClient', () => {
         'https://custom-request-base-url.googleapis.com/v1alpha/test-path?alt=sse',
       );
 
-      await client.postStream('test-path', requestJson, undefined);
+      await client.postStream('test-path', requestJson);
 
       const secondFetchArgs = fetchSpy.calls.mostRecent().args;
       const secondRequestInit = fetchArgs[1] as RequestInit;

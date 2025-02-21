@@ -68,12 +68,7 @@ export class Caches extends BaseModule {
       body = createCachedContentParametersToVertex(this.apiClient, params);
       path = common.formatMap('cachedContents', body['_url']);
       delete body['config'];
-      response = this.apiClient.post(
-        path,
-        body,
-        undefined,
-        params.config?.httpOptions,
-      );
+      response = this.apiClient.post(path, body, params.config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = cachedContentFromVertex(this.apiClient, apiResponse);
@@ -84,12 +79,7 @@ export class Caches extends BaseModule {
       body = createCachedContentParametersToMldev(this.apiClient, params);
       path = common.formatMap('cachedContents', body['_url']);
       delete body['config'];
-      response = this.apiClient.post(
-        path,
-        body,
-        undefined,
-        params.config?.httpOptions,
-      );
+      response = this.apiClient.post(path, body, params.config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = cachedContentFromMldev(this.apiClient, apiResponse);
@@ -117,12 +107,7 @@ export class Caches extends BaseModule {
       body = getCachedContentParametersToVertex(this.apiClient, params);
       path = common.formatMap('{name}', body['_url']);
       delete body['config'];
-      response = this.apiClient.get(
-        path,
-        body,
-        undefined,
-        params.config?.httpOptions,
-      );
+      response = this.apiClient.get(path, body, params.config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = cachedContentFromVertex(this.apiClient, apiResponse);
@@ -133,12 +118,7 @@ export class Caches extends BaseModule {
       body = getCachedContentParametersToMldev(this.apiClient, params);
       path = common.formatMap('{name}', body['_url']);
       delete body['config'];
-      response = this.apiClient.get(
-        path,
-        body,
-        undefined,
-        params.config?.httpOptions,
-      );
+      response = this.apiClient.get(path, body, params.config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = cachedContentFromMldev(this.apiClient, apiResponse);
@@ -166,12 +146,7 @@ export class Caches extends BaseModule {
       body = deleteCachedContentParametersToVertex(this.apiClient, params);
       path = common.formatMap('{name}', body['_url']);
       delete body['config'];
-      response = this.apiClient.delete(
-        path,
-        body,
-        types.DeleteCachedContentResponse,
-        params.config?.httpOptions,
-      );
+      response = this.apiClient.delete(path, body, params.config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = deleteCachedContentResponseFromVertex(
@@ -186,12 +161,7 @@ export class Caches extends BaseModule {
       body = deleteCachedContentParametersToMldev(this.apiClient, params);
       path = common.formatMap('{name}', body['_url']);
       delete body['config'];
-      response = this.apiClient.delete(
-        path,
-        body,
-        types.DeleteCachedContentResponse,
-        params.config?.httpOptions,
-      );
+      response = this.apiClient.delete(path, body, params.config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = deleteCachedContentResponseFromMldev(
@@ -226,12 +196,7 @@ export class Caches extends BaseModule {
       body = updateCachedContentParametersToVertex(this.apiClient, params);
       path = common.formatMap('{name}', body['_url']);
       delete body['config'];
-      response = this.apiClient.patch(
-        path,
-        body,
-        undefined,
-        params.config?.httpOptions,
-      );
+      response = this.apiClient.patch(path, body, params.config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = cachedContentFromVertex(this.apiClient, apiResponse);
@@ -242,12 +207,7 @@ export class Caches extends BaseModule {
       body = updateCachedContentParametersToMldev(this.apiClient, params);
       path = common.formatMap('{name}', body['_url']);
       delete body['config'];
-      response = this.apiClient.patch(
-        path,
-        body,
-        undefined,
-        params.config?.httpOptions,
-      );
+      response = this.apiClient.patch(path, body, params.config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = cachedContentFromMldev(this.apiClient, apiResponse);
@@ -267,12 +227,7 @@ export class Caches extends BaseModule {
       body = listCachedContentsParametersToVertex(this.apiClient, params);
       path = common.formatMap('cachedContents', body['_url']);
       delete body['config'];
-      response = this.apiClient.get(
-        path,
-        body,
-        types.ListCachedContentsResponse,
-        params.config?.httpOptions,
-      );
+      response = this.apiClient.get(path, body, params.config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = listCachedContentsResponseFromVertex(
@@ -287,12 +242,7 @@ export class Caches extends BaseModule {
       body = listCachedContentsParametersToMldev(this.apiClient, params);
       path = common.formatMap('cachedContents', body['_url']);
       delete body['config'];
-      response = this.apiClient.get(
-        path,
-        body,
-        types.ListCachedContentsResponse,
-        params.config?.httpOptions,
-      );
+      response = this.apiClient.get(path, body, params.config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = listCachedContentsResponseFromMldev(

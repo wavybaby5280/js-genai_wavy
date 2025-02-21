@@ -8,6 +8,10 @@
  * @fileoverview Pagers for the GenAI List APIs.
  */
 
+// Type of request, response and config are determined by the specific list
+// method.
+/*  eslint-disable @typescript-eslint/no-explicit-any */
+
 /** @internal */
 export enum PagedItem {
   PAGED_ITEM_BATCH_JOBS = 'batchJobs',

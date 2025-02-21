@@ -7,6 +7,7 @@
 import * as fs from 'fs';
 
 import {Client, ClientInitOptions} from './node/client';
+import * as types from './types';
 
 /**
  * Configuration options for initializing a `ReplayClient`.
@@ -19,7 +20,7 @@ import {Client, ClientInitOptions} from './node/client';
  */
 export interface ReplayClientInitOpts extends ClientInitOptions {
   replayFile?: string;
-  replayFileJson?: object;
+  replayFileJson?: Record<string, unknown>;
 }
 
 /**
@@ -27,18 +28,18 @@ export interface ReplayClientInitOpts extends ClientInitOptions {
  * mode, where the API responses are loaded and constructed from recorded files.
  */
 export class ReplayAPIClient extends Client {
-  private replayFile: any;
-  private replayFileJson: any;
+  private replayFile: string;
+  private replayFileJson: Record<string, unknown>;
 
   constructor(opts: ReplayClientInitOpts) {
     super(opts);
-    this.replayFile = null;
-    this.replayFileJson = null;
+    this.replayFile = '';
+    this.replayFileJson = {};
   }
 
   loadReplayFilename(
     replayFilePath: string,
-    testTableItem: any,
+    testTableItem: types.TestTableItem,
     testName: string,
   ) {
     const responseFilePath = replayFilePath.replace('_test_table', testName);
@@ -48,35 +49,56 @@ export class ReplayAPIClient extends Client {
     if (fs.existsSync(responseFilePath)) {
       this.replayFile = responseFilePath;
     } else {
-      const replayId = testTableItem['overrideReplayId'];
+      const replayId = testTableItem.overrideReplayId;
       this.replayFile = replayFilePath.replace(
         '_test_table',
         `${replayId}.${this.vertexai ? 'vertex' : 'mldev'}`,
       );
     }
-    this.replayFileJson = JSON.parse(
+    // json from replay file could be any response.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const localFileJson: any = JSON.parse(
       fs.readFileSync(this.replayFile, {encoding: 'utf8'}),
     );
+    if (localFileJson) {
+      this.replayFileJson = localFileJson;
+    }
   }
 
   getNumInteractions() {
-    return this.replayFileJson?.interactions.length;
+    if (Array.isArray(this.replayFileJson['interactions'])) {
+      return this.replayFileJson['interactions'].length;
+    } else {
+      throw new Error('Could not find interactions in replay file.');
+    }
   }
 
   getExpectedResponseFromReplayFile(interactionIndex: number) {
-    return this.replayFileJson.interactions[interactionIndex]?.response
-      ?.sdk_response_segments[0];
+    if (Array.isArray(this.replayFileJson['interactions'])) {
+      return this.replayFileJson['interactions'][interactionIndex]?.response
+        ?.sdk_response_segments[0];
+    } else {
+      throw new Error('Could not find interactions in replay file.');
+    }
   }
 
   getExpectedRequestFromReplayFile(interactionIndex: number) {
-    return this.replayFileJson.interactions[interactionIndex]?.request;
+    if (Array.isArray(this.replayFileJson['interactions'])) {
+      return this.replayFileJson['interactions'][interactionIndex]?.request;
+    } else {
+      throw new Error('Could not find interactions in replay file.');
+    }
   }
 
   /**
    * Sets all the interaction responses on the replay client using the fetch
    * spy.
    */
+  // mock could be anything.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setupReplayResponses(fetchSpy: any) {
+    // json from replay file could be any response.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const responseJson: any = JSON.parse(
       fs.readFileSync(this.replayFile, {encoding: 'utf8'}),
     );

@@ -123,12 +123,7 @@ export class Models extends BaseModule {
       body = generateContentParametersToVertex(this.apiClient, params);
       path = common.formatMap('{model}:generateContent', body['_url']);
       delete body['config'];
-      response = this.apiClient.post(
-        path,
-        body,
-        types.GenerateContentResponse,
-        params.config?.httpOptions,
-      );
+      response = this.apiClient.post(path, body, params.config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = generateContentResponseFromVertex(
@@ -143,12 +138,7 @@ export class Models extends BaseModule {
       body = generateContentParametersToMldev(this.apiClient, params);
       path = common.formatMap('{model}:generateContent', body['_url']);
       delete body['config'];
-      response = this.apiClient.post(
-        path,
-        body,
-        types.GenerateContentResponse,
-        params.config?.httpOptions,
-      );
+      response = this.apiClient.post(path, body, params.config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = generateContentResponseFromMldev(
@@ -178,7 +168,6 @@ export class Models extends BaseModule {
       response = this.apiClient.postStream(
         path,
         body,
-        types.GenerateContentResponse,
         params.config?.httpOptions,
       );
 
@@ -201,7 +190,6 @@ export class Models extends BaseModule {
       response = this.apiClient.postStream(
         path,
         body,
-        types.GenerateContentResponse,
         params.config?.httpOptions,
       );
 
@@ -250,12 +238,7 @@ export class Models extends BaseModule {
       body = embedContentParametersToVertex(this.apiClient, params);
       path = common.formatMap('{model}:predict', body['_url']);
       delete body['config'];
-      response = this.apiClient.post(
-        path,
-        body,
-        types.EmbedContentResponse,
-        params.config?.httpOptions,
-      );
+      response = this.apiClient.post(path, body, params.config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = embedContentResponseFromVertex(
@@ -270,12 +253,7 @@ export class Models extends BaseModule {
       body = embedContentParametersToMldev(this.apiClient, params);
       path = common.formatMap('{model}:batchEmbedContents', body['_url']);
       delete body['config'];
-      response = this.apiClient.post(
-        path,
-        body,
-        types.EmbedContentResponse,
-        params.config?.httpOptions,
-      );
+      response = this.apiClient.post(path, body, params.config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = embedContentResponseFromMldev(this.apiClient, apiResponse);
@@ -317,12 +295,7 @@ export class Models extends BaseModule {
       body = generateImagesParametersToVertex(this.apiClient, params);
       path = common.formatMap('{model}:predict', body['_url']);
       delete body['config'];
-      response = this.apiClient.post(
-        path,
-        body,
-        types.GenerateImagesResponse,
-        params.config?.httpOptions,
-      );
+      response = this.apiClient.post(path, body, params.config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = generateImagesResponseFromVertex(
@@ -337,12 +310,7 @@ export class Models extends BaseModule {
       body = generateImagesParametersToMldev(this.apiClient, params);
       path = common.formatMap('{model}:predict', body['_url']);
       delete body['config'];
-      response = this.apiClient.post(
-        path,
-        body,
-        types.GenerateImagesResponse,
-        params.config?.httpOptions,
-      );
+      response = this.apiClient.post(path, body, params.config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = generateImagesResponseFromMldev(
@@ -384,12 +352,7 @@ export class Models extends BaseModule {
       body = countTokensParametersToVertex(this.apiClient, params);
       path = common.formatMap('{model}:countTokens', body['_url']);
       delete body['config'];
-      response = this.apiClient.post(
-        path,
-        body,
-        types.CountTokensResponse,
-        params.config?.httpOptions,
-      );
+      response = this.apiClient.post(path, body, params.config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = countTokensResponseFromVertex(this.apiClient, apiResponse);
@@ -401,12 +364,7 @@ export class Models extends BaseModule {
       body = countTokensParametersToMldev(this.apiClient, params);
       path = common.formatMap('{model}:countTokens', body['_url']);
       delete body['config'];
-      response = this.apiClient.post(
-        path,
-        body,
-        types.CountTokensResponse,
-        params.config?.httpOptions,
-      );
+      response = this.apiClient.post(path, body, params.config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = countTokensResponseFromMldev(this.apiClient, apiResponse);
@@ -447,12 +405,7 @@ export class Models extends BaseModule {
       body = computeTokensParametersToVertex(this.apiClient, params);
       path = common.formatMap('{model}:computeTokens', body['_url']);
       delete body['config'];
-      response = this.apiClient.post(
-        path,
-        body,
-        types.ComputeTokensResponse,
-        params.config?.httpOptions,
-      );
+      response = this.apiClient.post(path, body, params.config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = computeTokensResponseFromVertex(
@@ -467,12 +420,7 @@ export class Models extends BaseModule {
       body = computeTokensParametersToMldev(this.apiClient, params);
       path = common.formatMap('None', body['_url']);
       delete body['config'];
-      response = this.apiClient.post(
-        path,
-        body,
-        types.ComputeTokensResponse,
-        params.config?.httpOptions,
-      );
+      response = this.apiClient.post(path, body, params.config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = computeTokensResponseFromMldev(

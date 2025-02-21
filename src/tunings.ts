@@ -100,12 +100,7 @@ export class Tunings extends BaseModule {
       body = getTuningJobParametersToVertex(this.apiClient, params);
       path = common.formatMap('{name}', body['_url']);
       delete body['config'];
-      response = this.apiClient.get(
-        path,
-        body,
-        undefined,
-        params.config?.httpOptions,
-      );
+      response = this.apiClient.get(path, body, params.config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = tuningJobFromVertex(this.apiClient, apiResponse);
@@ -116,12 +111,7 @@ export class Tunings extends BaseModule {
       body = getTuningJobParametersToMldev(this.apiClient, params);
       path = common.formatMap('{name}', body['_url']);
       delete body['config'];
-      response = this.apiClient.get(
-        path,
-        body,
-        undefined,
-        params.config?.httpOptions,
-      );
+      response = this.apiClient.get(path, body, params.config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = tuningJobFromMldev(this.apiClient, apiResponse);
@@ -141,12 +131,7 @@ export class Tunings extends BaseModule {
       body = listTuningJobsParametersToVertex(this.apiClient, params);
       path = common.formatMap('tuningJobs', body['_url']);
       delete body['config'];
-      response = this.apiClient.get(
-        path,
-        body,
-        types.ListTuningJobsResponse,
-        params.config?.httpOptions,
-      );
+      response = this.apiClient.get(path, body, params.config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = listTuningJobsResponseFromVertex(
@@ -161,12 +146,7 @@ export class Tunings extends BaseModule {
       body = listTuningJobsParametersToMldev(this.apiClient, params);
       path = common.formatMap('tunedModels', body['_url']);
       delete body['config'];
-      response = this.apiClient.get(
-        path,
-        body,
-        types.ListTuningJobsResponse,
-        params.config?.httpOptions,
-      );
+      response = this.apiClient.get(path, body, params.config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = listTuningJobsResponseFromMldev(
@@ -190,12 +170,7 @@ export class Tunings extends BaseModule {
       body = createTuningJobParametersToVertex(this.apiClient, params);
       path = common.formatMap('tuningJobs', body['_url']);
       delete body['config'];
-      response = this.apiClient.post(
-        path,
-        body,
-        undefined,
-        params.config?.httpOptions,
-      );
+      response = this.apiClient.post(path, body, params.config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = tuningJobFromVertex(this.apiClient, apiResponse);
@@ -206,12 +181,7 @@ export class Tunings extends BaseModule {
       body = createTuningJobParametersToMldev(this.apiClient, params);
       path = common.formatMap('None', body['_url']);
       delete body['config'];
-      response = this.apiClient.post(
-        path,
-        body,
-        undefined,
-        params.config?.httpOptions,
-      );
+      response = this.apiClient.post(path, body, params.config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = tuningJobFromMldev(this.apiClient, apiResponse);
@@ -231,12 +201,7 @@ export class Tunings extends BaseModule {
       body = createTuningJobParametersToVertex(this.apiClient, params);
       path = common.formatMap('None', body['_url']);
       delete body['config'];
-      response = this.apiClient.post(
-        path,
-        body,
-        undefined,
-        params.config?.httpOptions,
-      );
+      response = this.apiClient.post(path, body, params.config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = operationFromVertex(this.apiClient, apiResponse);
@@ -247,12 +212,7 @@ export class Tunings extends BaseModule {
       body = createTuningJobParametersToMldev(this.apiClient, params);
       path = common.formatMap('tunedModels', body['_url']);
       delete body['config'];
-      response = this.apiClient.post(
-        path,
-        body,
-        undefined,
-        params.config?.httpOptions,
-      );
+      response = this.apiClient.post(path, body, params.config?.httpOptions);
 
       return response.then((apiResponse) => {
         const resp = operationFromMldev(this.apiClient, apiResponse);

@@ -378,7 +378,7 @@ function loadTestFiles(): string[] {
     google3Path + '/google/cloud/aiplatform/sdk/genai/replays/tests';
 
   if (!fs.existsSync(replayPath)) {
-    throw new Error(`Replay path does not exist ${replayPath}.`)
+    throw new Error(`Replay path does not exist ${replayPath}.`);
   }
 
   const testFiles: string[] = [];
