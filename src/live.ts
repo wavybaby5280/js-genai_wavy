@@ -546,8 +546,7 @@ export class Live {
     const websocketBaseUrl = this.apiClient.getWebsocketBaseUrl();
     const apiVersion = this.apiClient.getApiVersion();
     let url: string;
-    const headers = new Headers();
-    headers.append('Content-Type', 'application/json');
+    const headers = mapToHeaders(this.apiClient.getDefaultHeaders());
     if (this.apiClient.isVertexAI()) {
       url = `${websocketBaseUrl}/ws/google.cloud.aiplatform.${
         apiVersion
@@ -639,10 +638,10 @@ export class Session {
     }
     let serverMessage: Record<string, any> = {};
     let data: any;
-    if (typeof event.data === 'string') {
-      data = JSON.parse(event.data);
-    } else {
+    if (event.data instanceof Blob) {
       data = JSON.parse(await event.data.text());
+    } else {
+      data = JSON.parse(event.data);
     }
     if (this.apiClient.isVertexAI()) {
       serverMessage = liveServerMessageFromVertex(
@@ -827,4 +826,15 @@ function headersToMap(headers: Headers): Record<string, string> {
     headerMap[key] = value;
   });
   return headerMap;
+}
+
+// Converts a "map" object to a headers object. We use this as the Auth
+// interface works with Headers objects while the API client default headers
+// returns a map.
+function mapToHeaders(map: Record<string, string>): Headers {
+  const headers = new Headers();
+  for (const [key, value] of Object.entries(map)) {
+    headers.append(key, value);
+  }
+  return headers;
 }

@@ -513,7 +513,7 @@ export class ApiClient {
     });
   }
 
-  private getDefaultHeaders(): Record<string, any> {
+  getDefaultHeaders(): Record<string, any> {
     const headers: Record<string, any> = {};
 
     const versionHeaderValue =
