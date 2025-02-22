@@ -123,7 +123,11 @@ export class Models extends BaseModule {
       body = generateContentParametersToVertex(this.apiClient, params);
       path = common.formatMap('{model}:generateContent', body['_url']);
       delete body['config'];
-      response = this.apiClient.post(path, body, params.config?.httpOptions);
+      response = this.apiClient
+        .post(path, body, params.config?.httpOptions)
+        .then((httpResponse) => {
+          return httpResponse.json();
+        });
 
       return response.then((apiResponse) => {
         const resp = generateContentResponseFromVertex(
@@ -138,7 +142,11 @@ export class Models extends BaseModule {
       body = generateContentParametersToMldev(this.apiClient, params);
       path = common.formatMap('{model}:generateContent', body['_url']);
       delete body['config'];
-      response = this.apiClient.post(path, body, params.config?.httpOptions);
+      response = this.apiClient
+        .post(path, body, params.config?.httpOptions)
+        .then((httpResponse) => {
+          return httpResponse.json();
+        });
 
       return response.then((apiResponse) => {
         const resp = generateContentResponseFromMldev(
@@ -165,11 +173,11 @@ export class Models extends BaseModule {
         body['_url'],
       );
       delete body['config'];
-      response = this.apiClient.postStream(
-        path,
-        body,
-        params.config?.httpOptions,
-      );
+      response = this.apiClient
+        .postStream(path, body, params.config?.httpOptions)
+        .then((httpResponse) => {
+          return httpResponse.json();
+        });
 
       const apiClient = this.apiClient;
       return response.then(async function* (apiResponse: any) {
@@ -187,11 +195,11 @@ export class Models extends BaseModule {
         body['_url'],
       );
       delete body['config'];
-      response = this.apiClient.postStream(
-        path,
-        body,
-        params.config?.httpOptions,
-      );
+      response = this.apiClient
+        .postStream(path, body, params.config?.httpOptions)
+        .then((httpResponse) => {
+          return httpResponse.json();
+        });
 
       const apiClient = this.apiClient;
       return response.then(async function* (apiResponse: any) {
@@ -238,7 +246,11 @@ export class Models extends BaseModule {
       body = embedContentParametersToVertex(this.apiClient, params);
       path = common.formatMap('{model}:predict', body['_url']);
       delete body['config'];
-      response = this.apiClient.post(path, body, params.config?.httpOptions);
+      response = this.apiClient
+        .post(path, body, params.config?.httpOptions)
+        .then((httpResponse) => {
+          return httpResponse.json();
+        });
 
       return response.then((apiResponse) => {
         const resp = embedContentResponseFromVertex(
@@ -253,7 +265,11 @@ export class Models extends BaseModule {
       body = embedContentParametersToMldev(this.apiClient, params);
       path = common.formatMap('{model}:batchEmbedContents', body['_url']);
       delete body['config'];
-      response = this.apiClient.post(path, body, params.config?.httpOptions);
+      response = this.apiClient
+        .post(path, body, params.config?.httpOptions)
+        .then((httpResponse) => {
+          return httpResponse.json();
+        });
 
       return response.then((apiResponse) => {
         const resp = embedContentResponseFromMldev(this.apiClient, apiResponse);
@@ -295,7 +311,11 @@ export class Models extends BaseModule {
       body = generateImagesParametersToVertex(this.apiClient, params);
       path = common.formatMap('{model}:predict', body['_url']);
       delete body['config'];
-      response = this.apiClient.post(path, body, params.config?.httpOptions);
+      response = this.apiClient
+        .post(path, body, params.config?.httpOptions)
+        .then((httpResponse) => {
+          return httpResponse.json();
+        });
 
       return response.then((apiResponse) => {
         const resp = generateImagesResponseFromVertex(
@@ -310,7 +330,11 @@ export class Models extends BaseModule {
       body = generateImagesParametersToMldev(this.apiClient, params);
       path = common.formatMap('{model}:predict', body['_url']);
       delete body['config'];
-      response = this.apiClient.post(path, body, params.config?.httpOptions);
+      response = this.apiClient
+        .post(path, body, params.config?.httpOptions)
+        .then((httpResponse) => {
+          return httpResponse.json();
+        });
 
       return response.then((apiResponse) => {
         const resp = generateImagesResponseFromMldev(
@@ -352,7 +376,11 @@ export class Models extends BaseModule {
       body = countTokensParametersToVertex(this.apiClient, params);
       path = common.formatMap('{model}:countTokens', body['_url']);
       delete body['config'];
-      response = this.apiClient.post(path, body, params.config?.httpOptions);
+      response = this.apiClient
+        .post(path, body, params.config?.httpOptions)
+        .then((httpResponse) => {
+          return httpResponse.json();
+        });
 
       return response.then((apiResponse) => {
         const resp = countTokensResponseFromVertex(this.apiClient, apiResponse);
@@ -364,7 +392,11 @@ export class Models extends BaseModule {
       body = countTokensParametersToMldev(this.apiClient, params);
       path = common.formatMap('{model}:countTokens', body['_url']);
       delete body['config'];
-      response = this.apiClient.post(path, body, params.config?.httpOptions);
+      response = this.apiClient
+        .post(path, body, params.config?.httpOptions)
+        .then((httpResponse) => {
+          return httpResponse.json();
+        });
 
       return response.then((apiResponse) => {
         const resp = countTokensResponseFromMldev(this.apiClient, apiResponse);
@@ -405,7 +437,11 @@ export class Models extends BaseModule {
       body = computeTokensParametersToVertex(this.apiClient, params);
       path = common.formatMap('{model}:computeTokens', body['_url']);
       delete body['config'];
-      response = this.apiClient.post(path, body, params.config?.httpOptions);
+      response = this.apiClient
+        .post(path, body, params.config?.httpOptions)
+        .then((httpResponse) => {
+          return httpResponse.json();
+        });
 
       return response.then((apiResponse) => {
         const resp = computeTokensResponseFromVertex(
@@ -420,7 +456,11 @@ export class Models extends BaseModule {
       body = computeTokensParametersToMldev(this.apiClient, params);
       path = common.formatMap('None', body['_url']);
       delete body['config'];
-      response = this.apiClient.post(path, body, params.config?.httpOptions);
+      response = this.apiClient
+        .post(path, body, params.config?.httpOptions)
+        .then((httpResponse) => {
+          return httpResponse.json();
+        });
 
       return response.then((apiResponse) => {
         const resp = computeTokensResponseFromMldev(
