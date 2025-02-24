@@ -9,9 +9,9 @@
   },
   "scripts": {
     "build": "tsc",
-    "unit-test": "jasmine dist/test/unit/**/*_test.js dist/test/unit/*_test.js",
-    "system-test": "jasmine dist/test/system/**/*_test.js",
-    "table-test": "jasmine dist/test/table_test.js",
+    "unit-test": "ts-node node_modules/jasmine/bin/jasmine dist/test/unit/**/*_test.js test/unit/*_test.ts",
+    "system-test": "ts-node node_modules/jasmine/bin/jasmine test/system/**/*_test.ts",
+    "table-test": "ts-node node_modules/jasmine/bin/jasmine test/table_test.ts",
     "docs": "typedoc",
     "format": "prettier '**/*.ts' '**/*.mjs' '**/*.json' --write",
     "lint": "eslint '**/*.ts'",
@@ -34,6 +34,7 @@
     "nyc": "^17.1.0",
     "prettier": "3.3.3",
     "prettier-plugin-organize-imports": "^4.1.0",
+    "ts-node": "^10.9.2",
     "typedoc": "^0.27.0",
     "typescript": "~5.2.0",
     "typescript-eslint": "8.24.1"
