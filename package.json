@@ -15,7 +15,8 @@
     "docs": "typedoc",
     "format": "prettier '**/*.ts' --write",
     "lint": "eslint '**/*.ts'",
-    "lint-fix": "eslint --fix '**/*.ts'"
+    "lint-fix": "eslint --fix '**/*.ts'",
+    "generate-report": "./test/generate_report.sh"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -32,6 +33,7 @@
     "gts": "^5.2.0",
     "jasmine": "^5.5.0",
     "jasmine-reporters": "^2.4.0",
+    "nyc": "^17.1.0",
     "prettier": "3.3.3",
     "prettier-plugin-organize-imports": "^4.1.0",
     "typedoc": "^0.27.0",
