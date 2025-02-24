@@ -2108,7 +2108,7 @@ export interface RawReferenceImage {
   referenceImage?: Image;
   /** The id of the reference image. */
   referenceId?: number;
-  /** The type of the reference image. */
+  /** The type of the reference image. Only set by the SDK. */
   referenceType?: string;
 }
 
@@ -2140,7 +2140,7 @@ export interface MaskReferenceImage {
   referenceImage?: Image;
   /** The id of the reference image. */
   referenceId?: number;
-  /** The type of the reference image. */
+  /** The type of the reference image. Only set by the SDK. */
   referenceType?: string;
   /** Configuration for the mask reference image. */
   config?: MaskReferenceConfig;
@@ -2171,7 +2171,7 @@ export interface ControlReferenceImage {
   referenceImage?: Image;
   /** The id of the reference image. */
   referenceId?: number;
-  /** The type of the reference image. */
+  /** The type of the reference image. Only set by the SDK. */
   referenceType?: string;
   /** Configuration for the control reference image. */
   config?: ControlReferenceConfig;
@@ -2196,7 +2196,7 @@ export interface StyleReferenceImage {
   referenceImage?: Image;
   /** The id of the reference image. */
   referenceId?: number;
-  /** The type of the reference image. */
+  /** The type of the reference image. Only set by the SDK. */
   referenceType?: string;
   /** Configuration for the style reference image. */
   config?: StyleReferenceConfig;
@@ -2223,7 +2223,7 @@ export interface SubjectReferenceImage {
   referenceImage?: Image;
   /** The id of the reference image. */
   referenceId?: number;
-  /** The type of the reference image. */
+  /** The type of the reference image. Only set by the SDK. */
   referenceType?: string;
   /** Configuration for the subject reference image. */
   config?: SubjectReferenceConfig;
