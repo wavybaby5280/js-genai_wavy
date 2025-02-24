@@ -6,7 +6,13 @@
 
 import {ApiClient} from '../../src/_api_client';
 import {FakeAuth} from '../../src/_fake_auth';
-import {tContents, tModel, tSchema, tSpeechConfig, tTool} from '../../src/_transformers';
+import {
+  tContents,
+  tModel,
+  tSchema,
+  tSpeechConfig,
+  tTool,
+} from '../../src/_transformers';
 
 describe('tModel', () => {
   it('empty string', () => {
@@ -155,19 +161,17 @@ describe('tContents', () => {
 
   it('single content', () => {
     expect(
-      tContents(
-        new ApiClient({auth: new FakeAuth()}),
-        {parts: [{text: 'What is your name?'}]},
-      ),
+      tContents(new ApiClient({auth: new FakeAuth()}), {
+        parts: [{text: 'What is your name?'}],
+      }),
     ).toEqual([{parts: [{text: 'What is your name?'}]}]);
-  })
+  });
 
   it('single part', () => {
     expect(
-      tContents(
-        new ApiClient({auth: new FakeAuth()}),
-        {text: 'What is your name?'},
-      ),
+      tContents(new ApiClient({auth: new FakeAuth()}), {
+        text: 'What is your name?',
+      }),
     ).toEqual([{role: 'user', parts: [{text: 'What is your name?'}]}]);
   });
 
@@ -179,77 +183,57 @@ describe('tContents', () => {
 
   it('list of parts and strings', () => {
     expect(
-      tContents(
-        new ApiClient({auth: new FakeAuth()}),
-        [
-          'What is your name?',
-          {text: 'How do I call you?'},
-          'How is the weather?',
-        ],
-      ),
+      tContents(new ApiClient({auth: new FakeAuth()}), [
+        'What is your name?',
+        {text: 'How do I call you?'},
+        'How is the weather?',
+      ]),
     ).toEqual([
       {
         role: 'user',
         parts: [
           {text: 'What is your name?'},
           {text: 'How do I call you?'},
-          {text: 'How is the weather?'}
-        ]
+          {text: 'How is the weather?'},
+        ],
       },
     ]);
   });
 
   it('list of contents', () => {
     expect(
-      tContents(
-        new ApiClient({auth: new FakeAuth()}),
-        [
-          {parts: [{text: 'What is your name?'}]},
-          {role: 'user', parts: [{text: 'How do I call you?'}]},
-        ],
-      ),
+      tContents(new ApiClient({auth: new FakeAuth()}), [
+        {parts: [{text: 'What is your name?'}]},
+        {role: 'user', parts: [{text: 'How do I call you?'}]},
+      ]),
     ).toEqual([
       {parts: [{text: 'What is your name?'}]},
       {
         role: 'user',
-        parts: [
-          {text: 'How do I call you?'},
-        ],
+        parts: [{text: 'How do I call you?'}],
       },
     ]);
   });
 
   it('list of part union in list', () => {
     expect(
-      tContents(
-        new ApiClient({auth: new FakeAuth()}),
-        [
-          {parts: [{text: 'What is your name?'}]},
-          {text: 'How do I call you?'},
-          'How is the weather?',
-          [
-            'Why is the sky blue?',
-            {text: 'How high is the sky?'},
-          ],
-          'Is moon a sphere?',
-          {text: 'What is the other side of the moon?'},
-        ],
-      )
+      tContents(new ApiClient({auth: new FakeAuth()}), [
+        {parts: [{text: 'What is your name?'}]},
+        {text: 'How do I call you?'},
+        'How is the weather?',
+        ['Why is the sky blue?', {text: 'How high is the sky?'}],
+        'Is moon a sphere?',
+        {text: 'What is the other side of the moon?'},
+      ]),
     ).toEqual([
       {parts: [{text: 'What is your name?'}]},
       {
         role: 'user',
-        parts: [
-          {text: 'How do I call you?'},
-          {text: 'How is the weather?'},
-        ]
+        parts: [{text: 'How do I call you?'}, {text: 'How is the weather?'}],
       },
       {
         role: 'user',
-        parts: [
-          {text: 'Why is the sky blue?'},
-          {text: 'How high is the sky?'},
-        ]
+        parts: [{text: 'Why is the sky blue?'}, {text: 'How high is the sky?'}],
       },
       {
         role: 'user',
@@ -257,7 +241,7 @@ describe('tContents', () => {
           {text: 'Is moon a sphere?'},
           {text: 'What is the other side of the moon?'},
         ],
-      }
+      },
     ]);
   });
 

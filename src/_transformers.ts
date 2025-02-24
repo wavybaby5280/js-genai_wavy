@@ -166,7 +166,7 @@ export function tContents(
   if (
     origin === null ||
     origin === undefined ||
-    Array.isArray(origin) && origin.length === 0
+    (Array.isArray(origin) && origin.length === 0)
   ) {
     throw new Error('contents are required');
   }
@@ -181,7 +181,8 @@ export function tContents(
       // @ts-expect-error: if _isContent(item) is true, item is a Content
       result.push(item);
     } else if (
-      (typeof item === 'string' || typeof item === 'object') && !Array.isArray(item)
+      (typeof item === 'string' || typeof item === 'object') &&
+      !Array.isArray(item)
     ) {
       // @ts-expect-error: item in this branch is a PartUnion
       accumulatedParts.push(item);

@@ -13,7 +13,7 @@
     "system-test": "jasmine dist/test/system/**/*_test.js",
     "table-test": "jasmine dist/test/table_test.js",
     "docs": "typedoc",
-    "format": "prettier '**/*.ts' --write",
+    "format": "prettier '**/*.ts' '**/*.mjs' '**/*.json' --write",
     "lint": "eslint '**/*.ts'",
     "lint-fix": "eslint --fix '**/*.ts'",
     "generate-report": "./test/generate_report.sh"
