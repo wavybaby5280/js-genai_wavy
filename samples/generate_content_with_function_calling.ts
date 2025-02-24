@@ -10,13 +10,13 @@ import {
 } from '@google/genai';
 import {Client} from '@google/genai/node';
 
-const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
 
 async function generateContentFromMLDev() {
-  const client = new Client({vertexai: false, apiKey: GOOGLE_API_KEY});
+  const client = new Client({vertexai: false, apiKey: GEMINI_API_KEY});
 
   const controlLightFunctionDeclaration: FunctionDeclaration = {
     name: 'controlLight',
@@ -39,7 +39,7 @@ async function generateContentFromMLDev() {
     },
   };
   const response = await client.models.generateContent({
-    model: 'gemini-2.0-flash-exp',
+    model: 'gemini-2.0-flash',
     contents: 'Dim the lights so the room feels cozy and warm.',
     config: {
       tools: [{functionDeclarations: [controlLightFunctionDeclaration]}],
@@ -52,7 +52,7 @@ async function generateContentFromMLDev() {
     },
   });
 
-  console.debug(JSON.stringify(response));
+  console.debug(JSON.stringify(response.functionCalls()));
 }
 
 async function generateContentFromVertexAI() {
@@ -83,7 +83,7 @@ async function generateContentFromVertexAI() {
     },
   };
   const response = await client.models.generateContent({
-    model: 'gemini-2.0-flash-exp',
+    model: 'gemini-2.0-flash',
     contents: 'Dim the lights so the room feels cozy and warm.',
     config: {
       tools: [{functionDeclarations: [controlLightFunctionDeclaration]}],
@@ -96,7 +96,7 @@ async function generateContentFromVertexAI() {
     },
   });
 
-  console.debug(JSON.stringify(response));
+  console.debug(JSON.stringify(response.functionCalls()));
 }
 
 async function main() {

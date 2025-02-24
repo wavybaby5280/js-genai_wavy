@@ -16,7 +16,7 @@ npm run build
 The samples use key and project settings from environment variables, set the following environment variables prior to invoking samples:
 
 ```sh
-export GOOGLE_API_KEY=<GEMINI_KEY>
+export GEMINI_API_KEY=<GEMINI_KEY>
 export GOOGLE_CLOUD_PROJECT=<GOOGLE_CLOUD_PROJECT>
 export GOOGLE_CLOUD_LOCATION=<GCP_REGION>
 ```
@@ -24,5 +24,5 @@ export GOOGLE_CLOUD_LOCATION=<GCP_REGION>
 Now you can run the compiled samples, e.g:
 
 ```sh
-node build/generate_content_text.js
+node build/generate_content_with_text.js
 ```
