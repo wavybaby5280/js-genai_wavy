@@ -48,13 +48,13 @@ export class Models extends BaseModule {
    *
    * @example
    * ```ts
-   * const response = await client.models.generateContent(
-   *   'gemini-1.5-flash-002',
-   *   'why is the sky blue?',
-   *   {
+   * const response = await client.models.generateContent({
+   *   model: 'gemini-1.5-flash-002',
+   *   contents: 'why is the sky blue?',
+   *   config: {
    *     candidateCount: 2,
    *   }
-   * );
+   * });
    * console.log(response);
    * ```
    */
@@ -95,13 +95,13 @@ export class Models extends BaseModule {
    *
    * @example
    * ```ts
-   * const response = await client.models.generateContentStream(
-   *   'gemini-1.5-flash-002',
-   *   'why is the sky blue?',
-   *   {
+   * const response = await client.models.generateContentStream({
+   *   model: 'gemini-1.5-flash-002',
+   *   contents: 'why is the sky blue?',
+   *   config: {
    *     maxOutputTokens: 200,
    *   }
-   * );
+   * });
    * for await (const chunk of response) {
    *   console.log(chunk);
    * }
@@ -223,16 +223,16 @@ export class Models extends BaseModule {
    *
    * @example
    * ```ts
-   * const response = await client.models.embedContent(
-   *  'text-embedding-004',
-   *  [
+   * const response = await client.models.embedContent({
+   *  model: 'text-embedding-004',
+   *  contents: [
    *    'What is your name?',
    *    'What is your favorite color?',
    *  ],
-   *  {
+   *  config: {
    *    outputDimensionality: 64,
    *  },
-   * );
+   * });
    * console.log(response);
    * ```
    */
@@ -290,14 +290,14 @@ export class Models extends BaseModule {
    *
    * @example
    * ```ts
-   * const response = await client.models.generateImages(
-   *  'imagen-3.0-generate-002',
-   *  'Robot holding a red skateboard',
-   *  {
+   * const response = await client.models.generateImages({
+   *  model: 'imagen-3.0-generate-002',
+   *  prompt: 'Robot holding a red skateboard',
+   *  config: {
    *    numberOfImages: 1,
    *    includeRaiReason: true,
    *  },
-   * );
+   * });
    * console.log(response?.generatedImages?.[0]?.image?.imageBytes);
    * ```
    */
@@ -359,10 +359,10 @@ export class Models extends BaseModule {
    *
    * @example
    * ```ts
-   * const response = await client.models.countTokens(
-   *  'gemini-1.5-flash',
-   *  'The quick brown fox jumps over the lazy dog.'
-   * );
+   * const response = await client.models.countTokens({
+   *  model: 'gemini-1.5-flash',
+   *  contents: 'The quick brown fox jumps over the lazy dog.'
+   * });
    * console.log(response);
    * ```
    */
@@ -420,10 +420,10 @@ export class Models extends BaseModule {
    *
    * @example
    * ```ts
-   * const response = await client.models.computeTokens(
-   *  'gemini-1.5-flash',
-   *  'What is your name?'
-   * );
+   * const response = await client.models.computeTokens({
+   *  model: 'gemini-1.5-flash',
+   *  contents: 'What is your name?'
+   * });
    * console.log(response);
    * ```
    */
