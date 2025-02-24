@@ -6,13 +6,7 @@
 
 import {ApiClient} from '../../src/_api_client';
 import {FakeAuth} from '../../src/_fake_auth';
-import {
-  tContents,
-  tModel,
-  tSchema,
-  tSpeechConfig,
-  tTool,
-} from '../../src/_transformers';
+import {tModel, tSchema, tSpeechConfig, tTool} from '../../src/_transformers';
 
 describe('tModel', () => {
   it('empty string', () => {
@@ -142,120 +136,5 @@ describe('tSchema', () => {
     expect(
       tSchema(new ApiClient({auth: new FakeAuth(), vertexai: true}), schema),
     ).toEqual(schema);
-  });
-});
-
-describe('tContents', () => {
-  it('contents null', () => {
-    expect(() => {
-      // @ts-expect-error: escaping to test error
-      tContents(new ApiClient({auth: new FakeAuth()}), null);
-    }).toThrowError('contents are required');
-  });
-
-  it('contents empty list', () => {
-    expect(() => {
-      tContents(new ApiClient({auth: new FakeAuth()}), []);
-    }).toThrowError('contents are required');
-  });
-
-  it('single content', () => {
-    expect(
-      tContents(new ApiClient({auth: new FakeAuth()}), {
-        parts: [{text: 'What is your name?'}],
-      }),
-    ).toEqual([{parts: [{text: 'What is your name?'}]}]);
-  });
-
-  it('single part', () => {
-    expect(
-      tContents(new ApiClient({auth: new FakeAuth()}), {
-        text: 'What is your name?',
-      }),
-    ).toEqual([{role: 'user', parts: [{text: 'What is your name?'}]}]);
-  });
-
-  it('single string', () => {
-    expect(
-      tContents(new ApiClient({auth: new FakeAuth()}), 'What is your name?'),
-    ).toEqual([{role: 'user', parts: [{text: 'What is your name?'}]}]);
-  });
-
-  it('list of parts and strings', () => {
-    expect(
-      tContents(new ApiClient({auth: new FakeAuth()}), [
-        'What is your name?',
-        {text: 'How do I call you?'},
-        'How is the weather?',
-      ]),
-    ).toEqual([
-      {
-        role: 'user',
-        parts: [
-          {text: 'What is your name?'},
-          {text: 'How do I call you?'},
-          {text: 'How is the weather?'},
-        ],
-      },
-    ]);
-  });
-
-  it('list of contents', () => {
-    expect(
-      tContents(new ApiClient({auth: new FakeAuth()}), [
-        {parts: [{text: 'What is your name?'}]},
-        {role: 'user', parts: [{text: 'How do I call you?'}]},
-      ]),
-    ).toEqual([
-      {parts: [{text: 'What is your name?'}]},
-      {
-        role: 'user',
-        parts: [{text: 'How do I call you?'}],
-      },
-    ]);
-  });
-
-  it('list of part union in list', () => {
-    expect(
-      tContents(new ApiClient({auth: new FakeAuth()}), [
-        {parts: [{text: 'What is your name?'}]},
-        {text: 'How do I call you?'},
-        'How is the weather?',
-        ['Why is the sky blue?', {text: 'How high is the sky?'}],
-        'Is moon a sphere?',
-        {text: 'What is the other side of the moon?'},
-      ]),
-    ).toEqual([
-      {parts: [{text: 'What is your name?'}]},
-      {
-        role: 'user',
-        parts: [{text: 'How do I call you?'}, {text: 'How is the weather?'}],
-      },
-      {
-        role: 'user',
-        parts: [{text: 'Why is the sky blue?'}, {text: 'How high is the sky?'}],
-      },
-      {
-        role: 'user',
-        parts: [
-          {text: 'Is moon a sphere?'},
-          {text: 'What is the other side of the moon?'},
-        ],
-      },
-    ]);
-  });
-
-  it('unsupported type in list', () => {
-    expect(() => {
-      // @ts-expect-error: escaping to test error
-      tContents(new ApiClient({auth: new FakeAuth()}), [123]);
-    }).toThrowError('Unsupported content type: number');
-  });
-
-  it('Unsupported single type', () => {
-    expect(() => {
-      // @ts-expect-error: escaping to test error
-      tContents(new ApiClient({auth: new FakeAuth()}), 123);
-    }).toThrowError('Unsupported part type: number');
   });
 });

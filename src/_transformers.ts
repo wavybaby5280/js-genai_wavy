@@ -79,16 +79,6 @@ export function tParts(
   return [tPart(apiClient, origin)!];
 }
 
-function _isContent(origin: unknown): boolean {
-  return (
-    origin !== null &&
-    origin !== undefined &&
-    typeof origin === 'object' &&
-    'parts' in origin &&
-    Array.isArray(origin.parts)
-  );
-}
-
 export function tContent(
   apiClient: ApiClient,
   origin?: types.ContentUnion,
@@ -96,8 +86,7 @@ export function tContent(
   if (!origin) {
     throw new Error('ContentUnion is required');
   }
-  if (_isContent(origin)) {
-    // @ts-expect-error: _isContent is a utility function that checks if the origin is a Content.
+  if (typeof origin === 'object' && 'parts' in origin) {
     return origin;
   }
   return {
@@ -144,60 +133,17 @@ export function tContentsForEmbed(
   return [tContent(apiClient, origin as types.ContentUnion)!];
 }
 
-function _appendAccumulatedPartsAsContent(
-  apiClient: ApiClient,
-  result: types.Content[],
-  accumulatedParts: types.PartUnion[],
-) {
-  if (!accumulatedParts.length) {
-    return;
-  }
-  result.push({
-    role: 'user',
-    parts: tParts(apiClient, accumulatedParts),
-  });
-  accumulatedParts.length = 0; // Clear the array in place.
-}
-
 export function tContents(
   apiClient: ApiClient,
   origin: types.ContentListUnion,
 ): types.Content[] {
-  if (
-    origin === null ||
-    origin === undefined ||
-    (Array.isArray(origin) && origin.length === 0)
-  ) {
-    throw new Error('contents are required');
+  if (!origin) {
+    return [];
   }
-  if (!Array.isArray(origin)) {
-    return [tContent(apiClient, origin)];
+  if (Array.isArray(origin)) {
+    return origin.map((item) => tContent(apiClient, item));
   }
-  const result: types.Content[] = [];
-  const accumulatedParts: types.PartUnion[] = [];
-  for (const item of origin) {
-    if (_isContent(item)) {
-      _appendAccumulatedPartsAsContent(apiClient, result, accumulatedParts);
-      // @ts-expect-error: if _isContent(item) is true, item is a Content
-      result.push(item);
-    } else if (
-      (typeof item === 'string' || typeof item === 'object') &&
-      !Array.isArray(item)
-    ) {
-      // @ts-expect-error: item in this branch is a PartUnion
-      accumulatedParts.push(item);
-    } else if (Array.isArray(item)) {
-      _appendAccumulatedPartsAsContent(apiClient, result, accumulatedParts);
-      result.push({
-        role: 'user',
-        parts: tParts(apiClient, item),
-      });
-    } else {
-      throw new Error(`Unsupported content type: ${typeof item}`);
-    }
-  }
-  _appendAccumulatedPartsAsContent(apiClient, result, accumulatedParts);
-  return result;
+  return [tContent(apiClient, origin)];
 }
 
 export function processSchema(apiClient: ApiClient, schema: types.Schema) {
