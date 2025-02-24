@@ -29,7 +29,7 @@ export interface WebSocket {
    */
   // TODO: b/395958466 - Update WebSocket implementations to be callback based
   // and remove this method.
-  setOnMessageCallback(callback: any): void;
+  setOnMessageCallback(callback: (e: any) => void): void;
 }
 
 export interface WebSocketFactory {

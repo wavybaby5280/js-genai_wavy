@@ -2397,6 +2397,16 @@ export interface LiveConnectConfig {
   tools?: Tool[];
 }
 
+/** Parameters for connecting to the live API. */
+export interface LiveConnectParameters {
+  /** ID of the model to use. For a list of models, see `Google models
+    <https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models>`_. */
+  model: string;
+  /** Optional configuration parameters for the request.
+   */
+  config?: LiveConnectConfig;
+}
+
 export type PartUnion = Part | string;
 
 export type PartListUnion = PartUnion[] | PartUnion;

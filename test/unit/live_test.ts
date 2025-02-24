@@ -39,7 +39,7 @@ class FakeWebSocket implements WebSocket {
   close(): void {
     this.callbacks.onclose('');
   }
-  setOnMessageCallback(callback: any): void {
+  setOnMessageCallback(callback: (e: MessageEvent) => void): void {
     this.callbacks.onmessage = callback;
   }
 }
@@ -59,7 +59,7 @@ describe('live', () => {
     ).and.callThrough();
 
     // Default callbacks are used.
-    const session = await live.connect('models/gemini-2.0-flash-exp', {});
+    const session = await live.connect({model: 'models/gemini-2.0-flash-exp'});
 
     const websocketFactorySpyCall = websocketFactorySpy.calls.all()[0];
     expect(websocketFactorySpyCall.args[0]).toBe(
@@ -77,7 +77,7 @@ describe('live', () => {
     expect(onopenString).toContain(
       '(_a = callbacks === null || callbacks === void 0 ? void 0 : callbacks.onopen) === null || _a === void 0 ? void 0 : _a.call(callbacks);',
     );
-    expect(onopenString).toContain('onopenResolve();');
+    expect(onopenString).toContain('onopenResolve({});');
     expect(
       JSON.stringify(websocketFactorySpyCall.args[2].onclose.toString()),
     ).toBe('"function (e) { }"');
@@ -94,19 +94,20 @@ describe('live', () => {
 
     try {
       await live.connect(
-        'models/gemini-2.0-flash-exp',
-        {},
+        {model: 'models/gemini-2.0-flash-exp'},
         {
           onopen: () => {
             throw new Error('custom onopen error');
           },
-          onmessage: (e: any) => {},
-          onerror: (e: any) => {},
-          onclose: (e: any) => {},
+          onmessage: (e: MessageEvent) => {},
+          onerror: (e: ErrorEvent) => {},
+          onclose: (e: CloseEvent) => {},
         },
       );
-    } catch (e: any) {
-      expect(e.message).toBe('custom onopen error');
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        expect(e.message).toBe('custom onopen error');
+      }
     }
   });
 
@@ -123,9 +124,9 @@ describe('live', () => {
       {},
       {
         onopen: function () {},
-        onmessage: function (e: any) {},
-        onerror: function (e: any) {},
-        onclose: function (e: any) {},
+        onmessage: function (e: MessageEvent) {},
+        onerror: function (e: ErrorEvent) {},
+        onclose: function (e: CloseEvent) {},
       },
     );
     spyOn(websocket, 'connect').and.callThrough();
@@ -141,7 +142,7 @@ describe('live', () => {
       },
     );
 
-    const session = await live.connect('models/gemini-2.0-flash-exp', {});
+    const session = await live.connect({model: 'models/gemini-2.0-flash-exp'});
 
     const websocketFactorySpyCall = websocketFactorySpy.calls.all()[0];
     expect(websocketFactorySpyCall.args[0]).toBe(
@@ -159,7 +160,7 @@ describe('live', () => {
     expect(onopenString).toContain(
       '(_a = callbacks === null || callbacks === void 0 ? void 0 : callbacks.onopen) === null || _a === void 0 ? void 0 : _a.call(callbacks);',
     );
-    expect(onopenString).toContain('onopenResolve();');
+    expect(onopenString).toContain('onopenResolve({});');
     expect(
       JSON.stringify(websocketFactorySpyCall.args[2].onerror.toString()),
     ).toBe('"function (e) { }"');

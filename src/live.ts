@@ -30,10 +30,9 @@ const FUNCTION_RESPONSE_REQUIRES_ID =
 
 function liveConnectConfigToMldev(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  fromObject: types.LiveConnectConfig,
+): types.LiveClientSetup {
+  const toObject: types.LiveClientSetup = {};
 
   const fromGenerationConfig = common.getValueByPath(fromObject, [
     'generationConfig',
@@ -78,7 +77,7 @@ function liveConnectConfigToMldev(
     common.setValueByPath(
       toObject,
       ['tools'],
-      fromTools.map((item: any) => {
+      fromTools.map((item: types.Tool) => {
         return toolToMldev(apiClient, item, toObject);
       }),
     );
@@ -89,10 +88,9 @@ function liveConnectConfigToMldev(
 
 function liveConnectConfigToVertex(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  fromObject: types.LiveConnectConfig,
+): types.LiveClientSetup {
+  const toObject: types.LiveClientSetup = {};
 
   const fromGenerationConfig = common.getValueByPath(fromObject, [
     'generationConfig',
@@ -144,7 +142,7 @@ function liveConnectConfigToVertex(
     common.setValueByPath(
       toObject,
       ['tools'],
-      fromTools.map((item: any) => {
+      fromTools.map((item: types.Tool) => {
         return toolToVertex(apiClient, item, toObject);
       }),
     );
@@ -155,17 +153,16 @@ function liveConnectConfigToVertex(
 
 function liveConnectParametersToMldev(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  fromObject: types.LiveConnectParameters,
+): types.LiveClientMessage {
+  const toObject: types.LiveClientMessage = {};
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig !== undefined) {
     common.setValueByPath(
       toObject,
       ['setup'],
-      liveConnectConfigToMldev(apiClient, fromConfig, toObject),
+      liveConnectConfigToMldev(apiClient, fromConfig),
     );
   }
 
@@ -179,17 +176,16 @@ function liveConnectParametersToMldev(
 
 function liveConnectParametersToVertex(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  fromObject: types.LiveConnectParameters,
+): types.LiveClientMessage {
+  const toObject: types.LiveClientMessage = {};
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig !== undefined) {
     common.setValueByPath(
       toObject,
       ['setup'],
-      liveConnectConfigToVertex(apiClient, fromConfig, toObject),
+      liveConnectConfigToVertex(apiClient, fromConfig),
     );
   }
 
@@ -201,32 +197,11 @@ function liveConnectParametersToVertex(
   return toObject;
 }
 
-function liveServerSetupCompleteFromMldev(
+function liveServerContentFromMldev(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
-
-  return toObject;
-}
-
-function liveServerSetupCompleteFromVertex(
-  apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
-
-  return toObject;
-}
-
-function liveServercontentFromMldev(
-  apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  fromObject: types.LiveServerContent,
+): types.LiveServerContent {
+  const toObject: types.LiveServerContent = {};
 
   const fromModelTurn = common.getValueByPath(fromObject, ['modelTurn']);
   if (fromModelTurn !== undefined) {
@@ -250,12 +225,11 @@ function liveServercontentFromMldev(
   return toObject;
 }
 
-function liveServercontentFromVertex(
+function liveServerContentFromVertex(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  fromObject: types.LiveServerContent,
+): types.LiveServerContent {
+  const toObject: types.LiveServerContent = {};
 
   const fromModelTurn = common.getValueByPath(fromObject, ['modelTurn']);
   if (fromModelTurn !== undefined) {
@@ -281,10 +255,9 @@ function liveServercontentFromVertex(
 
 function functionCallFromMldev(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  fromObject: types.FunctionCall,
+): types.FunctionCall {
+  const toObject: types.FunctionCall = {};
 
   const fromId = common.getValueByPath(fromObject, ['id']);
   if (fromId !== undefined) {
@@ -306,10 +279,9 @@ function functionCallFromMldev(
 
 function functionCallFromVertex(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  fromObject: types.FunctionCall,
+): types.FunctionCall {
+  const toObject: types.FunctionCall = {};
 
   const fromArgs = common.getValueByPath(fromObject, ['args']);
   if (fromArgs !== undefined) {
@@ -326,10 +298,9 @@ function functionCallFromVertex(
 
 function liveServerToolCallFromMldev(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  fromObject: types.LiveServerToolCall,
+): types.LiveServerToolCall {
+  const toObject: types.LiveServerToolCall = {};
 
   const fromFunctionCalls = common.getValueByPath(fromObject, [
     'functionCalls',
@@ -338,8 +309,8 @@ function liveServerToolCallFromMldev(
     common.setValueByPath(
       toObject,
       ['functionCalls'],
-      fromFunctionCalls.map((item: any) => {
-        return functionCallFromMldev(apiClient, item, toObject);
+      fromFunctionCalls.map((item: types.FunctionCall) => {
+        return functionCallFromMldev(apiClient, item);
       }),
     );
   }
@@ -349,10 +320,9 @@ function liveServerToolCallFromMldev(
 
 function liveServerToolCallFromVertex(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  fromObject: types.LiveServerToolCall,
+): types.LiveServerToolCall {
+  const toObject: types.LiveServerToolCall = {};
 
   const fromFunctionCalls = common.getValueByPath(fromObject, [
     'functionCalls',
@@ -361,8 +331,8 @@ function liveServerToolCallFromVertex(
     common.setValueByPath(
       toObject,
       ['functionCalls'],
-      fromFunctionCalls.map((item: any) => {
-        return functionCallFromVertex(apiClient, item, toObject);
+      fromFunctionCalls.map((item: types.FunctionCall) => {
+        return functionCallFromVertex(apiClient, item);
       }),
     );
   }
@@ -372,10 +342,9 @@ function liveServerToolCallFromVertex(
 
 function liveServerToolCallCancellationFromMldev(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  fromObject: types.LiveServerToolCallCancellation,
+): types.LiveServerToolCallCancellation {
+  const toObject: types.LiveServerToolCallCancellation = {};
 
   const fromIds = common.getValueByPath(fromObject, ['ids']);
   if (fromIds !== undefined) {
@@ -387,10 +356,9 @@ function liveServerToolCallCancellationFromMldev(
 
 function liveServerToolCallCancellationFromVertex(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  fromObject: types.LiveServerToolCallCancellation,
+): types.LiveServerToolCallCancellation {
+  const toObject: types.LiveServerToolCallCancellation = {};
 
   const fromIds = common.getValueByPath(fromObject, ['ids']);
   if (fromIds !== undefined) {
@@ -402,20 +370,15 @@ function liveServerToolCallCancellationFromVertex(
 
 function liveServerMessageFromMldev(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  fromObject: types.LiveServerMessage,
+): types.LiveServerMessage {
+  const toObject: types.LiveServerMessage = {};
 
   const fromSetupComplete = common.getValueByPath(fromObject, [
     'setupComplete',
   ]);
   if (fromSetupComplete !== undefined) {
-    common.setValueByPath(
-      toObject,
-      ['setupComplete'],
-      liveServerSetupCompleteFromMldev(apiClient, fromSetupComplete, toObject),
-    );
+    common.setValueByPath(toObject, ['setupComplete'], fromSetupComplete);
   }
 
   const fromServerContent = common.getValueByPath(fromObject, [
@@ -425,7 +388,7 @@ function liveServerMessageFromMldev(
     common.setValueByPath(
       toObject,
       ['serverContent'],
-      liveServercontentFromMldev(apiClient, fromServerContent, toObject),
+      liveServerContentFromMldev(apiClient, fromServerContent),
     );
   }
 
@@ -434,7 +397,7 @@ function liveServerMessageFromMldev(
     common.setValueByPath(
       toObject,
       ['toolCall'],
-      liveServerToolCallFromMldev(apiClient, fromToolCall, toObject),
+      liveServerToolCallFromMldev(apiClient, fromToolCall),
     );
   }
 
@@ -448,7 +411,6 @@ function liveServerMessageFromMldev(
       liveServerToolCallCancellationFromMldev(
         apiClient,
         fromToolCallCancellation,
-        toObject,
       ),
     );
   }
@@ -458,20 +420,15 @@ function liveServerMessageFromMldev(
 
 function liveServerMessageFromVertex(
   apiClient: ApiClient,
-  fromObject: any,
-  parentObject?: any,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  fromObject: types.LiveServerMessage,
+): types.LiveServerMessage {
+  const toObject: types.LiveServerMessage = {};
 
   const fromSetupComplete = common.getValueByPath(fromObject, [
     'setupComplete',
   ]);
   if (fromSetupComplete !== undefined) {
-    common.setValueByPath(
-      toObject,
-      ['setupComplete'],
-      liveServerSetupCompleteFromVertex(apiClient, fromSetupComplete, toObject),
-    );
+    common.setValueByPath(toObject, ['setupComplete'], fromSetupComplete);
   }
 
   const fromServerContent = common.getValueByPath(fromObject, [
@@ -481,7 +438,7 @@ function liveServerMessageFromVertex(
     common.setValueByPath(
       toObject,
       ['serverContent'],
-      liveServercontentFromVertex(apiClient, fromServerContent, toObject),
+      liveServerContentFromVertex(apiClient, fromServerContent),
     );
   }
 
@@ -490,7 +447,7 @@ function liveServerMessageFromVertex(
     common.setValueByPath(
       toObject,
       ['toolCall'],
-      liveServerToolCallFromVertex(apiClient, fromToolCall, toObject),
+      liveServerToolCallFromVertex(apiClient, fromToolCall),
     );
   }
 
@@ -504,7 +461,6 @@ function liveServerMessageFromVertex(
       liveServerToolCallCancellationFromVertex(
         apiClient,
         fromToolCallCancellation,
-        toObject,
       ),
     );
   }
@@ -539,8 +495,7 @@ export class Live {
          events (e.g. connection errors).
     */
   async connect(
-    model: string,
-    config: types.LiveConnectConfig,
+    params: types.LiveConnectParameters,
     callbacks?: WebSocketCallbacks,
   ): Promise<Session> {
     const websocketBaseUrl = this.apiClient.getWebsocketBaseUrl();
@@ -559,21 +514,21 @@ export class Live {
       }.GenerativeService.BidiGenerateContent?key=${apiKey}`;
     }
 
-    let onopenResolve: () => void;
-    const onopenPromise = new Promise((resolve: any) => {
+    let onopenResolve: (value: unknown) => void = () => {};
+    const onopenPromise = new Promise((resolve: (value: unknown) => void) => {
       onopenResolve = resolve;
     });
 
     const onopenAwaitedCallback = function () {
       callbacks?.onopen?.();
-      onopenResolve();
+      onopenResolve({});
     };
 
     const websocketCallbacks: WebSocketCallbacks = {
       onopen: onopenAwaitedCallback,
-      onmessage: callbacks?.onmessage ?? function (e: any) {},
-      onerror: callbacks?.onerror ?? function (e: any) {},
-      onclose: callbacks?.onclose ?? function (e: any) {},
+      onmessage: callbacks?.onmessage ?? function(e: MessageEvent) {},
+      onerror: callbacks?.onerror ?? function(e: ErrorEvent) {},
+      onclose: callbacks?.onclose ?? function(e: CloseEvent) {},
     };
 
     const conn = this.webSocketFactory.create(
@@ -585,7 +540,7 @@ export class Live {
     // Wait for the websocket to open before sending requests.
     await onopenPromise;
 
-    let transformedModel = t.tModel(this.apiClient, model);
+    let transformedModel = t.tModel(this.apiClient, params.model);
     if (
       this.apiClient.isVertexAI() &&
       transformedModel.startsWith('publishers/')
@@ -596,14 +551,21 @@ export class Live {
         `projects/${project}/locations/${location}/` + transformedModel;
     }
 
-    let clientMessage: Record<string, any> = {};
-    const kwargs: Record<string, any> = {};
-    kwargs['model'] = transformedModel;
-    kwargs['config'] = config;
+    let clientMessage: types.LiveClientMessage = {};
+    const liveConnectParameters: types.LiveConnectParameters = {
+      model: transformedModel,
+      config: params.config,
+    };
     if (this.apiClient.isVertexAI()) {
-      clientMessage = liveConnectParametersToVertex(this.apiClient, kwargs);
+      clientMessage = liveConnectParametersToVertex(
+        this.apiClient,
+        liveConnectParameters,
+      );
     } else {
-      clientMessage = liveConnectParametersToMldev(this.apiClient, kwargs);
+      clientMessage = liveConnectParametersToMldev(
+        this.apiClient,
+        liveConnectParameters,
+      );
     }
 
     conn.send(JSON.stringify(clientMessage));
@@ -623,7 +585,7 @@ export class Session {
     readonly conn: WebSocket,
     private readonly apiClient: ApiClient,
   ) {
-    conn.setOnMessageCallback((event: any) => {
+    conn.setOnMessageCallback((event: MessageEvent) => {
       try {
         void this.handleMessage(event);
       } catch (e) {
@@ -632,16 +594,16 @@ export class Session {
     });
   }
 
-  private async handleMessage(event: any) {
+  private async handleMessage(event: MessageEvent) {
     if (!this.onmessage) {
       return;
     }
-    let serverMessage: Record<string, any> = {};
-    let data: any;
+    let serverMessage: types.LiveServerMessage;
+    let data: types.LiveServerMessage;
     if (event.data instanceof Blob) {
-      data = JSON.parse(await event.data.text());
+      data = JSON.parse(await event.data.text()) as types.LiveServerMessage;
     } else {
-      data = JSON.parse(event.data);
+      data = JSON.parse(event.data) as types.LiveServerMessage;
     }
     if (this.apiClient.isVertexAI()) {
       serverMessage = liveServerMessageFromVertex(this.apiClient, data);
@@ -661,7 +623,7 @@ export class Session {
       | types.FunctionResponse
       | types.FunctionResponse[],
     turnComplete: boolean = false,
-  ): Record<string, any> {
+  ): types.LiveClientMessage {
     if (typeof input === 'object' && input !== null && 'setup' in input) {
       throw new Error(
         "Message type 'setup' is not supported in send(). Use connect() instead.",
@@ -682,7 +644,7 @@ export class Session {
       input = [input];
     }
 
-    let clientMessage: Record<string, any> = input;
+    let clientMessage: types.LiveClientMessage = {};
     if (
       Array.isArray(input) &&
       input.some(
@@ -691,19 +653,20 @@ export class Session {
       )
     ) {
       // ToolResponse.FunctionResponse
-      clientMessage = {toolResponse: {functionResponses: input}};
+      clientMessage = {
+        toolResponse: {functionResponses: input as types.FunctionResponse[]},
+      };
     } else if (
       Array.isArray(input) &&
       input.some((c) => typeof c === 'string')
     ) {
-      const toObject: Record<string, any> = {};
       const contents = apiClient.isVertexAI()
         ? t
             .tContents(apiClient, input as types.ContentListUnion)
-            .map((item) => contentToVertex(apiClient, item, toObject))
+            .map((item) => contentToVertex(apiClient, item, {}))
         : t
             .tContents(apiClient, input as types.ContentListUnion)
-            .map((item) => contentToMldev(apiClient, item, toObject));
+            .map((item) => contentToMldev(apiClient, item, {}));
 
       clientMessage = {
         clientContent: {turns: contents, turnComplete: turnComplete},
@@ -713,7 +676,7 @@ export class Session {
       input !== null &&
       'content' in input
     ) {
-      clientMessage = {clientContent: input};
+      clientMessage = {clientContent: input as types.LiveClientContent};
     } else if (
       typeof input === 'object' &&
       input !== null &&
@@ -766,7 +729,7 @@ export class Session {
       }
       clientMessage = {
         toolResponse: {
-          functionResponses: input.map((c) => c),
+          functionResponses: input.map((c) => c as types.FunctionResponse),
         },
       };
     } else {
@@ -793,7 +756,7 @@ export class Session {
       | types.FunctionResponse[],
     turnComplete: boolean = false,
   ) {
-    const clientMessage: Record<string, any> = this.parseClientMessage(
+    const clientMessage: types.LiveClientMessage = this.parseClientMessage(
       this.apiClient,
       message,
       turnComplete,
