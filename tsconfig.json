@@ -3,9 +3,11 @@
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": ".",
-    "module": "commonjs",
-    "target": "es6",
+    "module": "es2020",
+    "target": "es2017",
+    "declaration": true,
     "strict": true,
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "lib": ["es2022", "dom", "dom.iterable"]
   },

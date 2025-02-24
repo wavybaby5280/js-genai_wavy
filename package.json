@@ -2,13 +2,24 @@
   "name": "@google/genai",
   "version": "0.1.0",
   "description": "",
-  "main": "dist/src/index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "typings": "dist/genai.d.ts",
   "exports": {
-    ".": "./dist/src/index.js",
-    "./node": "./dist/src/node/index.js"
+    ".": {
+      "types": "./dist/genai.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.js"
+    },
+    "./node": {
+      "types": "./dist/node/node.d.ts",
+      "require": "./dist/node/index.js",
+      "default": "./dist/node/index.js"
+    }
   },
   "scripts": {
-    "build": "tsc",
+    "build": "rollup -c && api-extractor run --local --verbose && api-extractor run -c api-extractor.node.json --local --verbose",
     "unit-test": "ts-node node_modules/jasmine/bin/jasmine dist/test/unit/**/*_test.js test/unit/*_test.ts",
     "system-test": "ts-node node_modules/jasmine/bin/jasmine test/system/**/*_test.ts",
     "table-test": "ts-node node_modules/jasmine/bin/jasmine test/table_test.ts",
@@ -23,6 +34,8 @@
   },
   "devDependencies": {
     "@eslint/js": "9.20.0",
+    "@microsoft/api-extractor": "^7.50.1",
+    "@rollup/plugin-json": "^6.1.0",
     "@types/jasmine": "^5.1.2",
     "@types/node": "^20.9.0",
     "@types/unist": "^3.0.3",
@@ -34,7 +47,9 @@
     "nyc": "^17.1.0",
     "prettier": "3.3.3",
     "prettier-plugin-organize-imports": "^4.1.0",
+    "rollup-plugin-typescript2": "^0.36.0",
     "ts-node": "^10.9.2",
+    "tslib": "^2.8.1",
     "typedoc": "^0.27.0",
     "typescript": "~5.2.0",
     "typescript-eslint": "8.24.1"
