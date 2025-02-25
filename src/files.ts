@@ -52,8 +52,8 @@ export class Files extends BaseModule {
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
       const body = listFilesParametersToVertex(this.apiClient, params);
-      path = common.formatMap('None', body['_url']);
-      queryParams = body['_query'];
+      path = common.formatMap('None', body['_url'] as Record<string, unknown>);
+      queryParams = body['_query'] as Record<string, string>;
       delete body['config'];
       delete body['_url'];
       delete body['_query'];
@@ -78,8 +78,8 @@ export class Files extends BaseModule {
       });
     } else {
       const body = listFilesParametersToMldev(this.apiClient, params);
-      path = common.formatMap('files', body['_url']);
-      queryParams = body['_query'];
+      path = common.formatMap('files', body['_url'] as Record<string, unknown>);
+      queryParams = body['_query'] as Record<string, string>;
       delete body['config'];
       delete body['_url'];
       delete body['_query'];
@@ -113,8 +113,8 @@ export class Files extends BaseModule {
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
       const body = createFileParametersToVertex(this.apiClient, params);
-      path = common.formatMap('', body['_url']);
-      queryParams = body['_query'];
+      path = common.formatMap('', body['_url'] as Record<string, unknown>);
+      queryParams = body['_query'] as Record<string, string>;
       delete body['config'];
       delete body['_url'];
       delete body['_query'];
@@ -139,8 +139,11 @@ export class Files extends BaseModule {
       });
     } else {
       const body = createFileParametersToMldev(this.apiClient, params);
-      path = common.formatMap('upload/v1beta/files', body['_url']);
-      queryParams = body['_query'];
+      path = common.formatMap(
+        'upload/v1beta/files',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
       delete body['config'];
       delete body['_url'];
       delete body['_query'];
@@ -172,8 +175,8 @@ export class Files extends BaseModule {
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
       const body = getFileParametersToVertex(this.apiClient, params);
-      path = common.formatMap('None', body['_url']);
-      queryParams = body['_query'];
+      path = common.formatMap('None', body['_url'] as Record<string, unknown>);
+      queryParams = body['_query'] as Record<string, string>;
       delete body['config'];
       delete body['_url'];
       delete body['_query'];
@@ -197,8 +200,11 @@ export class Files extends BaseModule {
       });
     } else {
       const body = getFileParametersToMldev(this.apiClient, params);
-      path = common.formatMap('files/{file}', body['_url']);
-      queryParams = body['_query'];
+      path = common.formatMap(
+        'files/{file}',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
       delete body['config'];
       delete body['_url'];
       delete body['_query'];
@@ -227,9 +233,9 @@ export class Files extends BaseModule {
 function listFilesConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.ListFilesConfig,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
   if (
@@ -255,9 +261,9 @@ function listFilesConfigToMldev(
 function listFilesConfigToVertex(
   apiClient: ApiClient,
   fromObject: types.ListFilesConfig,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
   if (
@@ -283,9 +289,9 @@ function listFilesConfigToVertex(
 function listFilesParametersToMldev(
   apiClient: ApiClient,
   fromObject: types.ListFilesParameters,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig !== undefined && fromConfig !== null) {
@@ -302,9 +308,9 @@ function listFilesParametersToMldev(
 function listFilesParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.ListFilesParameters,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   if (common.getValueByPath(fromObject, ['config']) !== undefined) {
     throw new Error('config parameter is not supported in Vertex AI.');
@@ -316,9 +322,9 @@ function listFilesParametersToVertex(
 function fileStatusToMldev(
   apiClient: ApiClient,
   fromObject: types.FileStatus,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromDetails = common.getValueByPath(fromObject, ['details']);
   if (fromDetails !== undefined && fromDetails !== null) {
@@ -341,9 +347,9 @@ function fileStatusToMldev(
 function fileStatusToVertex(
   apiClient: ApiClient,
   fromObject: types.FileStatus,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   if (common.getValueByPath(fromObject, ['details']) !== undefined) {
     throw new Error('details parameter is not supported in Vertex AI.');
@@ -363,9 +369,9 @@ function fileStatusToVertex(
 function fileToMldev(
   apiClient: ApiClient,
   fromObject: types.File,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined && fromName !== null) {
@@ -451,9 +457,9 @@ function fileToMldev(
 function fileToVertex(
   apiClient: ApiClient,
   fromObject: types.File,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   if (common.getValueByPath(fromObject, ['name']) !== undefined) {
     throw new Error('name parameter is not supported in Vertex AI.');
@@ -517,9 +523,9 @@ function fileToVertex(
 function createFileParametersToMldev(
   apiClient: ApiClient,
   fromObject: types.CreateFileParameters,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromFile = common.getValueByPath(fromObject, ['file']);
   if (fromFile !== undefined && fromFile !== null) {
@@ -541,9 +547,9 @@ function createFileParametersToMldev(
 function createFileParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.CreateFileParameters,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   if (common.getValueByPath(fromObject, ['file']) !== undefined) {
     throw new Error('file parameter is not supported in Vertex AI.');
@@ -559,9 +565,9 @@ function createFileParametersToVertex(
 function getFileParametersToMldev(
   apiClient: ApiClient,
   fromObject: types.GetFileParameters,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined && fromName !== null) {
@@ -583,9 +589,9 @@ function getFileParametersToMldev(
 function getFileParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.GetFileParameters,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   if (common.getValueByPath(fromObject, ['name']) !== undefined) {
     throw new Error('name parameter is not supported in Vertex AI.');
@@ -601,9 +607,9 @@ function getFileParametersToVertex(
 function fileStatusFromMldev(
   apiClient: ApiClient,
   fromObject: types.FileStatus,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromDetails = common.getValueByPath(fromObject, ['details']);
   if (fromDetails !== undefined && fromDetails !== null) {
@@ -626,9 +632,9 @@ function fileStatusFromMldev(
 function fileStatusFromVertex(
   apiClient: ApiClient,
   fromObject: types.FileStatus,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   return toObject;
 }
@@ -636,9 +642,9 @@ function fileStatusFromVertex(
 function fileFromMldev(
   apiClient: ApiClient,
   fromObject: types.File,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined && fromName !== null) {
@@ -724,9 +730,9 @@ function fileFromMldev(
 function fileFromVertex(
   apiClient: ApiClient,
   fromObject: types.File,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   return toObject;
 }
@@ -734,9 +740,9 @@ function fileFromVertex(
 function listFilesResponseFromMldev(
   apiClient: ApiClient,
   fromObject: types.ListFilesResponse,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromNextPageToken = common.getValueByPath(fromObject, [
     'nextPageToken',
@@ -747,13 +753,17 @@ function listFilesResponseFromMldev(
 
   const fromFiles = common.getValueByPath(fromObject, ['files']);
   if (fromFiles !== undefined && fromFiles !== null) {
-    common.setValueByPath(
-      toObject,
-      ['files'],
-      fromFiles.map((item: any) => {
-        return fileFromMldev(apiClient, item, toObject);
-      }),
-    );
+    if (Array.isArray(fromFiles)) {
+      common.setValueByPath(
+        toObject,
+        ['files'],
+        fromFiles.map((item) => {
+          return fileFromMldev(apiClient, item, toObject);
+        }),
+      );
+    } else {
+      common.setValueByPath(toObject, ['files'], fromFiles);
+    }
   }
 
   return toObject;
@@ -762,9 +772,9 @@ function listFilesResponseFromMldev(
 function listFilesResponseFromVertex(
   apiClient: ApiClient,
   fromObject: types.ListFilesResponse,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   return toObject;
 }
@@ -772,9 +782,9 @@ function listFilesResponseFromVertex(
 function createFileResponseFromMldev(
   apiClient: ApiClient,
   fromObject: types.CreateFileResponse,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromHttpHeaders = common.getValueByPath(fromObject, ['httpHeaders']);
   if (fromHttpHeaders !== undefined && fromHttpHeaders !== null) {
@@ -787,9 +797,9 @@ function createFileResponseFromMldev(
 function createFileResponseFromVertex(
   apiClient: ApiClient,
   fromObject: types.CreateFileResponse,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromHttpHeaders = common.getValueByPath(fromObject, ['httpHeaders']);
   if (fromHttpHeaders !== undefined && fromHttpHeaders !== null) {

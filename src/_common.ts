@@ -8,32 +8,30 @@ export class BaseModule {
   [key: string]: any;
 }
 export function formatMap(
-  templateString: string,
-  valueMap: Record<string, any>,
-): string {
+    templateString: string,
+    valueMap: Record<string, unknown>,
+    ): string {
   // Use a regular expression to find all placeholders in the template string
   const regex = /\{([^}]+)\}/g;
 
   // Replace each placeholder with its corresponding value from the valueMap
   return templateString.replace(regex, (match, key) => {
-    /* eslint no-prototype-builtins: 0 */
-    if (valueMap.hasOwnProperty(key)) {
-      /* eslint no-prototype-builtins: 1 */
-      return valueMap[key];
+    if (Object.prototype.hasOwnProperty.call(valueMap, key)) {
+      const value = valueMap[key];
+      // Convert the value to a string if it's not a string already
+      return value !== undefined && value !== null ? String(value) : '';
     } else {
       // Handle missing keys
-      throw new Error(`Key '${key}' not found in valueMap ${valueMap}`);
+      throw new Error(`Key '${key}' not found in valueMap.`);
     }
   });
 }
 
 export function setValueByPath(
-  data: Record<string, any>,
-  keys: string[],
-  value: any,
-): void {
+    data: Record<string, unknown>, keys: string[], value: unknown): void {
   for (let i = 0; i < keys.length - 1; i++) {
     const key = keys[i];
+
     if (key.endsWith('[]')) {
       const keyName = key.slice(0, -2);
       if (!(keyName in data)) {
@@ -41,77 +39,88 @@ export function setValueByPath(
           data[keyName] = Array.from({length: value.length}, () => ({}));
         } else {
           throw new Error(
-            `value ${value} must be a list given an array path ${key}`,
-          );
+              `Value ${value} must be a list given an array path ${key}`);
         }
       }
-      if (Array.isArray(value)) {
-        for (let j = 0; j < data[keyName].length; j++) {
-          setValueByPath(data[keyName][j], keys.slice(i + 1), value[j]);
-        }
-      } else {
-        for (const d of data[keyName]) {
-          setValueByPath(d, keys.slice(i + 1), value);
+
+      if (Array.isArray(data[keyName])) {
+        const arrayData = data[keyName] as Array<unknown>;
+
+        if (Array.isArray(value)) {
+          for (let j = 0; j < arrayData.length; j++) {
+            const entry = arrayData[j] as Record<string, unknown>;
+            setValueByPath(entry, keys.slice(i + 1), value[j]);
+          }
+        } else {
+          for (const d of arrayData) {
+            setValueByPath(
+                d as Record<string, unknown>, keys.slice(i + 1), value);
+          }
         }
       }
       return;
     }
+
     if (!data[key] || typeof data[key] !== 'object') {
       data[key] = {};
     }
-    data = data[key] as Record<string, any>;
+
+    data = data[key] as Record<string, unknown>;
   }
 
-  const existingData = data[keys[keys.length - 1]];
-  // If there is an existing value, merge, not overwrite.
+  const keyToSet = keys[keys.length - 1];
+  const existingData = data[keyToSet];
+
   if (existingData !== undefined) {
-    // Don't overwrite existing non-empty value with new empty value.
-    // This is triggered when handling tuning datasets.
-    if (!value || Object.keys(value).length === 0) {
+    if (!value ||
+        (typeof value === 'object' && Object.keys(value).length === 0)) {
       return;
     }
-    // Don't fail when overwriting value with same value
+
     if (value === existingData) {
       return;
     }
-    // Instead of overwriting dictionary with another dictionary, merge them.
-    // This is important for handling training and validation datasets in tuning.
-    if (
-      typeof existingData === 'object' &&
-      typeof value === 'object' &&
-      existingData !== value
-    ) {
+
+    if (typeof existingData === 'object' && typeof value === 'object' &&
+        existingData !== null && value !== null) {
       Object.assign(existingData, value);
     } else {
-      throw new Error(
-        `Cannot set value for an existing key. Key: ${keys[keys.length - 1]}; Existing value: ${existingData}; New value: ${value}.`,
-      );
+      throw new Error(`Cannot set value for an existing key. Key: ${
+          keyToSet}; Existing value: ${existingData}; New value: ${value}.`);
     }
   } else {
-    data[keys[keys.length - 1]] = value;
+    data[keyToSet] = value;
   }
 }
 
-export function getValueByPath(data: object | any, keys: string[]): any | null {
+export function getValueByPath(data: unknown, keys: string[]): unknown {
   try {
     if (keys.length === 1 && keys[0] === '_self') {
       return data;
     }
+
     for (let i = 0; i < keys.length; i++) {
+      if (typeof data !== 'object' || data === null) {
+        return undefined;
+      }
+
       const key = keys[i];
       if (key.endsWith('[]')) {
         const keyName = key.slice(0, -2);
         if (keyName in data) {
-          return data[keyName].map((d: any) =>
-            getValueByPath(d, keys.slice(i + 1)),
-          );
+          const arrayData = (data as Record<string, unknown>)[keyName];
+          if (!Array.isArray(arrayData)) {
+            return undefined;
+          }
+          return arrayData.map((d) => getValueByPath(d, keys.slice(i + 1)));
         } else {
           return undefined;
         }
       } else {
-        data = data[key];
+        data = (data as Record<string, unknown>)[key];
       }
     }
+
     return data;
   } catch (error) {
     if (error instanceof TypeError) {

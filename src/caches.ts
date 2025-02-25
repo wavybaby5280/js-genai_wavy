@@ -69,8 +69,11 @@ export class Caches extends BaseModule {
         this.apiClient,
         params,
       );
-      path = common.formatMap('cachedContents', body['_url']);
-      queryParams = body['_query'];
+      path = common.formatMap(
+        'cachedContents',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
       delete body['config'];
       delete body['_url'];
       delete body['_query'];
@@ -94,8 +97,11 @@ export class Caches extends BaseModule {
       });
     } else {
       const body = createCachedContentParametersToMldev(this.apiClient, params);
-      path = common.formatMap('cachedContents', body['_url']);
-      queryParams = body['_query'];
+      path = common.formatMap(
+        'cachedContents',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
       delete body['config'];
       delete body['_url'];
       delete body['_query'];
@@ -136,8 +142,11 @@ export class Caches extends BaseModule {
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
       const body = getCachedContentParametersToVertex(this.apiClient, params);
-      path = common.formatMap('{name}', body['_url']);
-      queryParams = body['_query'];
+      path = common.formatMap(
+        '{name}',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
       delete body['config'];
       delete body['_url'];
       delete body['_query'];
@@ -161,8 +170,11 @@ export class Caches extends BaseModule {
       });
     } else {
       const body = getCachedContentParametersToMldev(this.apiClient, params);
-      path = common.formatMap('{name}', body['_url']);
-      queryParams = body['_query'];
+      path = common.formatMap(
+        '{name}',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
       delete body['config'];
       delete body['_url'];
       delete body['_query'];
@@ -206,8 +218,11 @@ export class Caches extends BaseModule {
         this.apiClient,
         params,
       );
-      path = common.formatMap('{name}', body['_url']);
-      queryParams = body['_query'];
+      path = common.formatMap(
+        '{name}',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
       delete body['config'];
       delete body['_url'];
       delete body['_query'];
@@ -235,8 +250,11 @@ export class Caches extends BaseModule {
       });
     } else {
       const body = deleteCachedContentParametersToMldev(this.apiClient, params);
-      path = common.formatMap('{name}', body['_url']);
-      queryParams = body['_query'];
+      path = common.formatMap(
+        '{name}',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
       delete body['config'];
       delete body['_url'];
       delete body['_query'];
@@ -287,8 +305,11 @@ export class Caches extends BaseModule {
         this.apiClient,
         params,
       );
-      path = common.formatMap('{name}', body['_url']);
-      queryParams = body['_query'];
+      path = common.formatMap(
+        '{name}',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
       delete body['config'];
       delete body['_url'];
       delete body['_query'];
@@ -312,8 +333,11 @@ export class Caches extends BaseModule {
       });
     } else {
       const body = updateCachedContentParametersToMldev(this.apiClient, params);
-      path = common.formatMap('{name}', body['_url']);
-      queryParams = body['_query'];
+      path = common.formatMap(
+        '{name}',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
       delete body['config'];
       delete body['_url'];
       delete body['_query'];
@@ -346,8 +370,11 @@ export class Caches extends BaseModule {
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
       const body = listCachedContentsParametersToVertex(this.apiClient, params);
-      path = common.formatMap('cachedContents', body['_url']);
-      queryParams = body['_query'];
+      path = common.formatMap(
+        'cachedContents',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
       delete body['config'];
       delete body['_url'];
       delete body['_query'];
@@ -375,8 +402,11 @@ export class Caches extends BaseModule {
       });
     } else {
       const body = listCachedContentsParametersToMldev(this.apiClient, params);
-      path = common.formatMap('cachedContents', body['_url']);
-      queryParams = body['_query'];
+      path = common.formatMap(
+        'cachedContents',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
       delete body['config'];
       delete body['_url'];
       delete body['_query'];
@@ -409,9 +439,9 @@ export class Caches extends BaseModule {
 function partToMldev(
   apiClient: ApiClient,
   fromObject: types.Part,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   if (common.getValueByPath(fromObject, ['videoMetadata']) !== undefined) {
     throw new Error('videoMetadata parameter is not supported in Gemini API.');
@@ -476,9 +506,9 @@ function partToMldev(
 function partToVertex(
   apiClient: ApiClient,
   fromObject: types.Part,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromVideoMetadata = common.getValueByPath(fromObject, [
     'videoMetadata',
@@ -547,19 +577,23 @@ function partToVertex(
 export function contentToMldev(
   apiClient: ApiClient,
   fromObject: types.Content,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromParts = common.getValueByPath(fromObject, ['parts']);
   if (fromParts !== undefined && fromParts !== null) {
-    common.setValueByPath(
-      toObject,
-      ['parts'],
-      fromParts.map((item: any) => {
-        return partToMldev(apiClient, item, toObject);
-      }),
-    );
+    if (Array.isArray(fromParts)) {
+      common.setValueByPath(
+        toObject,
+        ['parts'],
+        fromParts.map((item) => {
+          return partToMldev(apiClient, item, toObject);
+        }),
+      );
+    } else {
+      common.setValueByPath(toObject, ['parts'], fromParts);
+    }
   }
 
   const fromRole = common.getValueByPath(fromObject, ['role']);
@@ -574,19 +608,23 @@ export function contentToMldev(
 export function contentToVertex(
   apiClient: ApiClient,
   fromObject: types.Content,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromParts = common.getValueByPath(fromObject, ['parts']);
   if (fromParts !== undefined && fromParts !== null) {
-    common.setValueByPath(
-      toObject,
-      ['parts'],
-      fromParts.map((item: any) => {
-        return partToVertex(apiClient, item, toObject);
-      }),
-    );
+    if (Array.isArray(fromParts)) {
+      common.setValueByPath(
+        toObject,
+        ['parts'],
+        fromParts.map((item) => {
+          return partToVertex(apiClient, item, toObject);
+        }),
+      );
+    } else {
+      common.setValueByPath(toObject, ['parts'], fromParts);
+    }
   }
 
   const fromRole = common.getValueByPath(fromObject, ['role']);
@@ -600,9 +638,9 @@ export function contentToVertex(
 function schemaToMldev(
   apiClient: ApiClient,
   fromObject: types.Schema,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   if (common.getValueByPath(fromObject, ['minItems']) !== undefined) {
     throw new Error('minItems parameter is not supported in Gemini API.');
@@ -708,9 +746,9 @@ function schemaToMldev(
 function schemaToVertex(
   apiClient: ApiClient,
   fromObject: types.Schema,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromMinItems = common.getValueByPath(fromObject, ['minItems']);
   if (fromMinItems !== undefined && fromMinItems !== null) {
@@ -834,9 +872,9 @@ function schemaToVertex(
 function functionDeclarationToMldev(
   apiClient: ApiClient,
   fromObject: types.FunctionDeclaration,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   if (common.getValueByPath(fromObject, ['response']) !== undefined) {
     throw new Error('response parameter is not supported in Gemini API.');
@@ -863,9 +901,9 @@ function functionDeclarationToMldev(
 function functionDeclarationToVertex(
   apiClient: ApiClient,
   fromObject: types.FunctionDeclaration,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromResponse = common.getValueByPath(fromObject, ['response']);
   if (fromResponse !== undefined && fromResponse !== null) {
@@ -897,9 +935,9 @@ function functionDeclarationToVertex(
 function googleSearchToMldev(
   apiClient: ApiClient,
   fromObject: types.GoogleSearch,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   return toObject;
 }
@@ -907,9 +945,9 @@ function googleSearchToMldev(
 function googleSearchToVertex(
   apiClient: ApiClient,
   fromObject: types.GoogleSearch,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   return toObject;
 }
@@ -917,9 +955,9 @@ function googleSearchToVertex(
 function dynamicRetrievalConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.DynamicRetrievalConfig,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromMode = common.getValueByPath(fromObject, ['mode']);
   if (fromMode !== undefined && fromMode !== null) {
@@ -939,9 +977,9 @@ function dynamicRetrievalConfigToMldev(
 function dynamicRetrievalConfigToVertex(
   apiClient: ApiClient,
   fromObject: types.DynamicRetrievalConfig,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromMode = common.getValueByPath(fromObject, ['mode']);
   if (fromMode !== undefined && fromMode !== null) {
@@ -961,9 +999,9 @@ function dynamicRetrievalConfigToVertex(
 function googleSearchRetrievalToMldev(
   apiClient: ApiClient,
   fromObject: types.GoogleSearchRetrieval,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromDynamicRetrievalConfig = common.getValueByPath(fromObject, [
     'dynamicRetrievalConfig',
@@ -989,9 +1027,9 @@ function googleSearchRetrievalToMldev(
 function googleSearchRetrievalToVertex(
   apiClient: ApiClient,
   fromObject: types.GoogleSearchRetrieval,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromDynamicRetrievalConfig = common.getValueByPath(fromObject, [
     'dynamicRetrievalConfig',
@@ -1018,9 +1056,9 @@ function googleSearchRetrievalToVertex(
 export function toolToMldev(
   apiClient: ApiClient,
   fromObject: types.Tool,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromFunctionDeclarations = common.getValueByPath(fromObject, [
     'functionDeclarations',
@@ -1029,13 +1067,21 @@ export function toolToMldev(
     fromFunctionDeclarations !== undefined &&
     fromFunctionDeclarations !== null
   ) {
-    common.setValueByPath(
-      toObject,
-      ['functionDeclarations'],
-      fromFunctionDeclarations.map((item: any) => {
-        return functionDeclarationToMldev(apiClient, item, toObject);
-      }),
-    );
+    if (Array.isArray(fromFunctionDeclarations)) {
+      common.setValueByPath(
+        toObject,
+        ['functionDeclarations'],
+        fromFunctionDeclarations.map((item) => {
+          return functionDeclarationToMldev(apiClient, item, toObject);
+        }),
+      );
+    } else {
+      common.setValueByPath(
+        toObject,
+        ['functionDeclarations'],
+        fromFunctionDeclarations,
+      );
+    }
   }
 
   if (common.getValueByPath(fromObject, ['retrieval']) !== undefined) {
@@ -1083,9 +1129,9 @@ export function toolToMldev(
 export function toolToVertex(
   apiClient: ApiClient,
   fromObject: types.Tool,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromFunctionDeclarations = common.getValueByPath(fromObject, [
     'functionDeclarations',
@@ -1094,13 +1140,21 @@ export function toolToVertex(
     fromFunctionDeclarations !== undefined &&
     fromFunctionDeclarations !== null
   ) {
-    common.setValueByPath(
-      toObject,
-      ['functionDeclarations'],
-      fromFunctionDeclarations.map((item: any) => {
-        return functionDeclarationToVertex(apiClient, item, toObject);
-      }),
-    );
+    if (Array.isArray(fromFunctionDeclarations)) {
+      common.setValueByPath(
+        toObject,
+        ['functionDeclarations'],
+        fromFunctionDeclarations.map((item) => {
+          return functionDeclarationToVertex(apiClient, item, toObject);
+        }),
+      );
+    } else {
+      common.setValueByPath(
+        toObject,
+        ['functionDeclarations'],
+        fromFunctionDeclarations,
+      );
+    }
   }
 
   const fromRetrieval = common.getValueByPath(fromObject, ['retrieval']);
@@ -1148,9 +1202,9 @@ export function toolToVertex(
 function functionCallingConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.FunctionCallingConfig,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromMode = common.getValueByPath(fromObject, ['mode']);
   if (fromMode !== undefined && fromMode !== null) {
@@ -1177,9 +1231,9 @@ function functionCallingConfigToMldev(
 function functionCallingConfigToVertex(
   apiClient: ApiClient,
   fromObject: types.FunctionCallingConfig,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromMode = common.getValueByPath(fromObject, ['mode']);
   if (fromMode !== undefined && fromMode !== null) {
@@ -1206,9 +1260,9 @@ function functionCallingConfigToVertex(
 function toolConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.ToolConfig,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromFunctionCallingConfig = common.getValueByPath(fromObject, [
     'functionCallingConfig',
@@ -1234,9 +1288,9 @@ function toolConfigToMldev(
 function toolConfigToVertex(
   apiClient: ApiClient,
   fromObject: types.ToolConfig,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromFunctionCallingConfig = common.getValueByPath(fromObject, [
     'functionCallingConfig',
@@ -1262,9 +1316,9 @@ function toolConfigToVertex(
 function createCachedContentConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.CreateCachedContentConfig,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromTtl = common.getValueByPath(fromObject, ['ttl']);
   if (parentObject !== undefined && fromTtl !== undefined && fromTtl !== null) {
@@ -1295,16 +1349,24 @@ function createCachedContentConfigToMldev(
     fromContents !== undefined &&
     fromContents !== null
   ) {
-    common.setValueByPath(
-      parentObject,
-      ['contents'],
-      t.tContents(
-        apiClient,
-        t.tContents(apiClient, fromContents).map((item: any) => {
-          return contentToMldev(apiClient, item, toObject);
-        }),
-      ),
-    );
+    if (Array.isArray(fromContents)) {
+      common.setValueByPath(
+        parentObject,
+        ['contents'],
+        t.tContents(
+          apiClient,
+          t.tContents(apiClient, fromContents).map((item) => {
+            return contentToMldev(apiClient, item, toObject);
+          }),
+        ),
+      );
+    } else {
+      common.setValueByPath(
+        parentObject,
+        ['contents'],
+        t.tContents(apiClient, fromContents),
+      );
+    }
   }
 
   const fromSystemInstruction = common.getValueByPath(fromObject, [
@@ -1332,13 +1394,17 @@ function createCachedContentConfigToMldev(
     fromTools !== undefined &&
     fromTools !== null
   ) {
-    common.setValueByPath(
-      parentObject,
-      ['tools'],
-      fromTools.map((item: any) => {
-        return toolToMldev(apiClient, item, toObject);
-      }),
-    );
+    if (Array.isArray(fromTools)) {
+      common.setValueByPath(
+        parentObject,
+        ['tools'],
+        fromTools.map((item) => {
+          return toolToMldev(apiClient, item, toObject);
+        }),
+      );
+    } else {
+      common.setValueByPath(parentObject, ['tools'], fromTools);
+    }
   }
 
   const fromToolConfig = common.getValueByPath(fromObject, ['toolConfig']);
@@ -1360,9 +1426,9 @@ function createCachedContentConfigToMldev(
 function createCachedContentConfigToVertex(
   apiClient: ApiClient,
   fromObject: types.CreateCachedContentConfig,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromTtl = common.getValueByPath(fromObject, ['ttl']);
   if (parentObject !== undefined && fromTtl !== undefined && fromTtl !== null) {
@@ -1393,16 +1459,24 @@ function createCachedContentConfigToVertex(
     fromContents !== undefined &&
     fromContents !== null
   ) {
-    common.setValueByPath(
-      parentObject,
-      ['contents'],
-      t.tContents(
-        apiClient,
-        t.tContents(apiClient, fromContents).map((item: any) => {
-          return contentToVertex(apiClient, item, toObject);
-        }),
-      ),
-    );
+    if (Array.isArray(fromContents)) {
+      common.setValueByPath(
+        parentObject,
+        ['contents'],
+        t.tContents(
+          apiClient,
+          t.tContents(apiClient, fromContents).map((item) => {
+            return contentToVertex(apiClient, item, toObject);
+          }),
+        ),
+      );
+    } else {
+      common.setValueByPath(
+        parentObject,
+        ['contents'],
+        t.tContents(apiClient, fromContents),
+      );
+    }
   }
 
   const fromSystemInstruction = common.getValueByPath(fromObject, [
@@ -1430,13 +1504,17 @@ function createCachedContentConfigToVertex(
     fromTools !== undefined &&
     fromTools !== null
   ) {
-    common.setValueByPath(
-      parentObject,
-      ['tools'],
-      fromTools.map((item: any) => {
-        return toolToVertex(apiClient, item, toObject);
-      }),
-    );
+    if (Array.isArray(fromTools)) {
+      common.setValueByPath(
+        parentObject,
+        ['tools'],
+        fromTools.map((item) => {
+          return toolToVertex(apiClient, item, toObject);
+        }),
+      );
+    } else {
+      common.setValueByPath(parentObject, ['tools'], fromTools);
+    }
   }
 
   const fromToolConfig = common.getValueByPath(fromObject, ['toolConfig']);
@@ -1458,9 +1536,9 @@ function createCachedContentConfigToVertex(
 function createCachedContentParametersToMldev(
   apiClient: ApiClient,
   fromObject: types.CreateCachedContentParameters,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromModel = common.getValueByPath(fromObject, ['model']);
   if (fromModel !== undefined && fromModel !== null) {
@@ -1486,9 +1564,9 @@ function createCachedContentParametersToMldev(
 function createCachedContentParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.CreateCachedContentParameters,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromModel = common.getValueByPath(fromObject, ['model']);
   if (fromModel !== undefined && fromModel !== null) {
@@ -1514,9 +1592,9 @@ function createCachedContentParametersToVertex(
 function getCachedContentParametersToMldev(
   apiClient: ApiClient,
   fromObject: types.GetCachedContentParameters,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined && fromName !== null) {
@@ -1538,9 +1616,9 @@ function getCachedContentParametersToMldev(
 function getCachedContentParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.GetCachedContentParameters,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined && fromName !== null) {
@@ -1562,9 +1640,9 @@ function getCachedContentParametersToVertex(
 function deleteCachedContentParametersToMldev(
   apiClient: ApiClient,
   fromObject: types.DeleteCachedContentParameters,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined && fromName !== null) {
@@ -1586,9 +1664,9 @@ function deleteCachedContentParametersToMldev(
 function deleteCachedContentParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.DeleteCachedContentParameters,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined && fromName !== null) {
@@ -1610,9 +1688,9 @@ function deleteCachedContentParametersToVertex(
 function updateCachedContentConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.UpdateCachedContentConfig,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromTtl = common.getValueByPath(fromObject, ['ttl']);
   if (parentObject !== undefined && fromTtl !== undefined && fromTtl !== null) {
@@ -1634,9 +1712,9 @@ function updateCachedContentConfigToMldev(
 function updateCachedContentConfigToVertex(
   apiClient: ApiClient,
   fromObject: types.UpdateCachedContentConfig,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromTtl = common.getValueByPath(fromObject, ['ttl']);
   if (parentObject !== undefined && fromTtl !== undefined && fromTtl !== null) {
@@ -1658,9 +1736,9 @@ function updateCachedContentConfigToVertex(
 function updateCachedContentParametersToMldev(
   apiClient: ApiClient,
   fromObject: types.UpdateCachedContentParameters,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined && fromName !== null) {
@@ -1686,9 +1764,9 @@ function updateCachedContentParametersToMldev(
 function updateCachedContentParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.UpdateCachedContentParameters,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined && fromName !== null) {
@@ -1714,9 +1792,9 @@ function updateCachedContentParametersToVertex(
 function listCachedContentsConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.ListCachedContentsConfig,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
   if (
@@ -1742,9 +1820,9 @@ function listCachedContentsConfigToMldev(
 function listCachedContentsConfigToVertex(
   apiClient: ApiClient,
   fromObject: types.ListCachedContentsConfig,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
   if (
@@ -1770,9 +1848,9 @@ function listCachedContentsConfigToVertex(
 function listCachedContentsParametersToMldev(
   apiClient: ApiClient,
   fromObject: types.ListCachedContentsParameters,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig !== undefined && fromConfig !== null) {
@@ -1789,9 +1867,9 @@ function listCachedContentsParametersToMldev(
 function listCachedContentsParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.ListCachedContentsParameters,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig !== undefined && fromConfig !== null) {
@@ -1808,9 +1886,9 @@ function listCachedContentsParametersToVertex(
 function cachedContentFromMldev(
   apiClient: ApiClient,
   fromObject: types.CachedContent,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined && fromName !== null) {
@@ -1855,9 +1933,9 @@ function cachedContentFromMldev(
 function cachedContentFromVertex(
   apiClient: ApiClient,
   fromObject: types.CachedContent,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined && fromName !== null) {
@@ -1902,9 +1980,9 @@ function cachedContentFromVertex(
 function deleteCachedContentResponseFromMldev(
   apiClient: ApiClient,
   fromObject: types.DeleteCachedContentResponse,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   return toObject;
 }
@@ -1912,9 +1990,9 @@ function deleteCachedContentResponseFromMldev(
 function deleteCachedContentResponseFromVertex(
   apiClient: ApiClient,
   fromObject: types.DeleteCachedContentResponse,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   return toObject;
 }
@@ -1922,9 +2000,9 @@ function deleteCachedContentResponseFromVertex(
 function listCachedContentsResponseFromMldev(
   apiClient: ApiClient,
   fromObject: types.ListCachedContentsResponse,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromNextPageToken = common.getValueByPath(fromObject, [
     'nextPageToken',
@@ -1937,13 +2015,17 @@ function listCachedContentsResponseFromMldev(
     'cachedContents',
   ]);
   if (fromCachedContents !== undefined && fromCachedContents !== null) {
-    common.setValueByPath(
-      toObject,
-      ['cachedContents'],
-      fromCachedContents.map((item: any) => {
-        return cachedContentFromMldev(apiClient, item, toObject);
-      }),
-    );
+    if (Array.isArray(fromCachedContents)) {
+      common.setValueByPath(
+        toObject,
+        ['cachedContents'],
+        fromCachedContents.map((item) => {
+          return cachedContentFromMldev(apiClient, item, toObject);
+        }),
+      );
+    } else {
+      common.setValueByPath(toObject, ['cachedContents'], fromCachedContents);
+    }
   }
 
   return toObject;
@@ -1952,9 +2034,9 @@ function listCachedContentsResponseFromMldev(
 function listCachedContentsResponseFromVertex(
   apiClient: ApiClient,
   fromObject: types.ListCachedContentsResponse,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromNextPageToken = common.getValueByPath(fromObject, [
     'nextPageToken',
@@ -1967,13 +2049,17 @@ function listCachedContentsResponseFromVertex(
     'cachedContents',
   ]);
   if (fromCachedContents !== undefined && fromCachedContents !== null) {
-    common.setValueByPath(
-      toObject,
-      ['cachedContents'],
-      fromCachedContents.map((item: any) => {
-        return cachedContentFromVertex(apiClient, item, toObject);
-      }),
-    );
+    if (Array.isArray(fromCachedContents)) {
+      common.setValueByPath(
+        toObject,
+        ['cachedContents'],
+        fromCachedContents.map((item) => {
+          return cachedContentFromVertex(apiClient, item, toObject);
+        }),
+      );
+    } else {
+      common.setValueByPath(toObject, ['cachedContents'], fromCachedContents);
+    }
   }
 
   return toObject;

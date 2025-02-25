@@ -32,7 +32,7 @@ function liveConnectConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.LiveConnectConfig,
 ): types.LiveClientSetup {
-  const toObject: types.LiveClientSetup = {};
+  const toObject: Record<string, unknown> = {};
 
   const fromGenerationConfig = common.getValueByPath(fromObject, [
     'generationConfig',
@@ -64,7 +64,7 @@ function liveConnectConfigToMldev(
   const fromSystemInstruction = common.getValueByPath(fromObject, [
     'systemInstruction',
   ]);
-  if (fromSystemInstruction !== undefined) {
+  if (fromSystemInstruction !== undefined && fromSystemInstruction !== null) {
     common.setValueByPath(
       toObject,
       ['systemInstruction'],
@@ -73,7 +73,8 @@ function liveConnectConfigToMldev(
   }
 
   const fromTools = common.getValueByPath(fromObject, ['tools']);
-  if (fromTools !== undefined && fromTools !== null) {
+  if (fromTools !== undefined && fromTools !== null &&
+      Array.isArray(fromTools)) {
     common.setValueByPath(
       toObject,
       ['tools'],
@@ -90,7 +91,7 @@ function liveConnectConfigToVertex(
   apiClient: ApiClient,
   fromObject: types.LiveConnectConfig,
 ): types.LiveClientSetup {
-  const toObject: types.LiveClientSetup = {};
+  const toObject: Record<string, unknown> = {};
 
   const fromGenerationConfig = common.getValueByPath(fromObject, [
     'generationConfig',
@@ -129,7 +130,7 @@ function liveConnectConfigToVertex(
   const fromSystemInstruction = common.getValueByPath(fromObject, [
     'systemInstruction',
   ]);
-  if (fromSystemInstruction !== undefined) {
+  if (fromSystemInstruction !== undefined && fromSystemInstruction !== null) {
     common.setValueByPath(
       toObject,
       ['systemInstruction'],
@@ -138,7 +139,8 @@ function liveConnectConfigToVertex(
   }
 
   const fromTools = common.getValueByPath(fromObject, ['tools']);
-  if (fromTools !== undefined && fromTools !== null) {
+  if (fromTools !== undefined && fromTools !== null &&
+      Array.isArray(fromTools)) {
     common.setValueByPath(
       toObject,
       ['tools'],
@@ -155,10 +157,10 @@ function liveConnectParametersToMldev(
   apiClient: ApiClient,
   fromObject: types.LiveConnectParameters,
 ): types.LiveClientMessage {
-  const toObject: types.LiveClientMessage = {};
+  const toObject: Record<string, unknown> = {};
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig !== undefined) {
+  if (fromConfig !== undefined && fromConfig !== null) {
     common.setValueByPath(
       toObject,
       ['setup'],
@@ -178,10 +180,10 @@ function liveConnectParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.LiveConnectParameters,
 ): types.LiveClientMessage {
-  const toObject: types.LiveClientMessage = {};
+  const toObject: Record<string, unknown> = {};
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig !== undefined) {
+  if (fromConfig !== undefined && fromConfig !== null) {
     common.setValueByPath(
       toObject,
       ['setup'],
@@ -201,10 +203,10 @@ function liveServerContentFromMldev(
   apiClient: ApiClient,
   fromObject: types.LiveServerContent,
 ): types.LiveServerContent {
-  const toObject: types.LiveServerContent = {};
+  const toObject: Record < string, unknown >= {};
 
   const fromModelTurn = common.getValueByPath(fromObject, ['modelTurn']);
-  if (fromModelTurn !== undefined) {
+  if (fromModelTurn !== undefined && fromModelTurn !== null) {
     common.setValueByPath(
       toObject,
       ['modelTurn'],
@@ -229,10 +231,10 @@ function liveServerContentFromVertex(
   apiClient: ApiClient,
   fromObject: types.LiveServerContent,
 ): types.LiveServerContent {
-  const toObject: types.LiveServerContent = {};
+  const toObject: Record<string, unknown> = {};
 
   const fromModelTurn = common.getValueByPath(fromObject, ['modelTurn']);
-  if (fromModelTurn !== undefined) {
+  if (fromModelTurn !== undefined && fromModelTurn !== null) {
     common.setValueByPath(
       toObject,
       ['modelTurn'],
@@ -257,7 +259,7 @@ function functionCallFromMldev(
   apiClient: ApiClient,
   fromObject: types.FunctionCall,
 ): types.FunctionCall {
-  const toObject: types.FunctionCall = {};
+  const toObject: Record<string, unknown> = {};
 
   const fromId = common.getValueByPath(fromObject, ['id']);
   if (fromId !== undefined) {
@@ -281,7 +283,7 @@ function functionCallFromVertex(
   apiClient: ApiClient,
   fromObject: types.FunctionCall,
 ): types.FunctionCall {
-  const toObject: types.FunctionCall = {};
+  const toObject: Record<string, unknown> = {};
 
   const fromArgs = common.getValueByPath(fromObject, ['args']);
   if (fromArgs !== undefined) {
@@ -300,12 +302,13 @@ function liveServerToolCallFromMldev(
   apiClient: ApiClient,
   fromObject: types.LiveServerToolCall,
 ): types.LiveServerToolCall {
-  const toObject: types.LiveServerToolCall = {};
+  const toObject: Record<string, unknown> = {};
 
   const fromFunctionCalls = common.getValueByPath(fromObject, [
     'functionCalls',
   ]);
-  if (fromFunctionCalls !== undefined && fromFunctionCalls !== null) {
+  if (fromFunctionCalls !== undefined && fromFunctionCalls !== null &&
+      Array.isArray(fromFunctionCalls)) {
     common.setValueByPath(
       toObject,
       ['functionCalls'],
@@ -322,12 +325,13 @@ function liveServerToolCallFromVertex(
   apiClient: ApiClient,
   fromObject: types.LiveServerToolCall,
 ): types.LiveServerToolCall {
-  const toObject: types.LiveServerToolCall = {};
+  const toObject: Record<string, unknown> = {};
 
   const fromFunctionCalls = common.getValueByPath(fromObject, [
     'functionCalls',
   ]);
-  if (fromFunctionCalls !== undefined && fromFunctionCalls !== null) {
+  if (fromFunctionCalls !== undefined && fromFunctionCalls !== null &&
+      Array.isArray(fromFunctionCalls)) {
     common.setValueByPath(
       toObject,
       ['functionCalls'],
@@ -344,7 +348,7 @@ function liveServerToolCallCancellationFromMldev(
   apiClient: ApiClient,
   fromObject: types.LiveServerToolCallCancellation,
 ): types.LiveServerToolCallCancellation {
-  const toObject: types.LiveServerToolCallCancellation = {};
+  const toObject: Record < string, unknown >= {};
 
   const fromIds = common.getValueByPath(fromObject, ['ids']);
   if (fromIds !== undefined) {
@@ -358,7 +362,7 @@ function liveServerToolCallCancellationFromVertex(
   apiClient: ApiClient,
   fromObject: types.LiveServerToolCallCancellation,
 ): types.LiveServerToolCallCancellation {
-  const toObject: types.LiveServerToolCallCancellation = {};
+  const toObject: Record<string, unknown> = {};
 
   const fromIds = common.getValueByPath(fromObject, ['ids']);
   if (fromIds !== undefined) {
@@ -372,7 +376,7 @@ function liveServerMessageFromMldev(
   apiClient: ApiClient,
   fromObject: types.LiveServerMessage,
 ): types.LiveServerMessage {
-  const toObject: types.LiveServerMessage = {};
+  const toObject: Record<string, unknown> = {};
 
   const fromSetupComplete = common.getValueByPath(fromObject, [
     'setupComplete',
@@ -384,7 +388,7 @@ function liveServerMessageFromMldev(
   const fromServerContent = common.getValueByPath(fromObject, [
     'serverContent',
   ]);
-  if (fromServerContent !== undefined) {
+  if (fromServerContent !== undefined && fromServerContent !== null) {
     common.setValueByPath(
       toObject,
       ['serverContent'],
@@ -393,7 +397,7 @@ function liveServerMessageFromMldev(
   }
 
   const fromToolCall = common.getValueByPath(fromObject, ['toolCall']);
-  if (fromToolCall !== undefined) {
+  if (fromToolCall !== undefined && fromToolCall !== null) {
     common.setValueByPath(
       toObject,
       ['toolCall'],
@@ -404,7 +408,8 @@ function liveServerMessageFromMldev(
   const fromToolCallCancellation = common.getValueByPath(fromObject, [
     'toolCallCancellation',
   ]);
-  if (fromToolCallCancellation !== undefined) {
+  if (fromToolCallCancellation !== undefined &&
+      fromToolCallCancellation !== null) {
     common.setValueByPath(
       toObject,
       ['toolCallCancellation'],
@@ -422,7 +427,7 @@ function liveServerMessageFromVertex(
   apiClient: ApiClient,
   fromObject: types.LiveServerMessage,
 ): types.LiveServerMessage {
-  const toObject: types.LiveServerMessage = {};
+  const toObject: Record < string, unknown >= {};
 
   const fromSetupComplete = common.getValueByPath(fromObject, [
     'setupComplete',
@@ -434,7 +439,7 @@ function liveServerMessageFromVertex(
   const fromServerContent = common.getValueByPath(fromObject, [
     'serverContent',
   ]);
-  if (fromServerContent !== undefined) {
+  if (fromServerContent !== undefined && fromServerContent !== null) {
     common.setValueByPath(
       toObject,
       ['serverContent'],
@@ -443,7 +448,7 @@ function liveServerMessageFromVertex(
   }
 
   const fromToolCall = common.getValueByPath(fromObject, ['toolCall']);
-  if (fromToolCall !== undefined) {
+  if (fromToolCall !== undefined && fromToolCall !== null) {
     common.setValueByPath(
       toObject,
       ['toolCall'],
@@ -454,7 +459,8 @@ function liveServerMessageFromVertex(
   const fromToolCallCancellation = common.getValueByPath(fromObject, [
     'toolCallCancellation',
   ]);
-  if (fromToolCallCancellation !== undefined) {
+  if (fromToolCallCancellation !== undefined &&
+      fromToolCallCancellation !== null) {
     common.setValueByPath(
       toObject,
       ['toolCallCancellation'],

@@ -98,8 +98,11 @@ export class Tunings extends BaseModule {
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
       const body = getTuningJobParametersToVertex(this.apiClient, params);
-      path = common.formatMap('{name}', body['_url']);
-      queryParams = body['_query'];
+      path = common.formatMap(
+        '{name}',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
       delete body['config'];
       delete body['_url'];
       delete body['_query'];
@@ -123,8 +126,11 @@ export class Tunings extends BaseModule {
       });
     } else {
       const body = getTuningJobParametersToMldev(this.apiClient, params);
-      path = common.formatMap('{name}', body['_url']);
-      queryParams = body['_query'];
+      path = common.formatMap(
+        '{name}',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
       delete body['config'];
       delete body['_url'];
       delete body['_query'];
@@ -157,8 +163,11 @@ export class Tunings extends BaseModule {
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
       const body = listTuningJobsParametersToVertex(this.apiClient, params);
-      path = common.formatMap('tuningJobs', body['_url']);
-      queryParams = body['_query'];
+      path = common.formatMap(
+        'tuningJobs',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
       delete body['config'];
       delete body['_url'];
       delete body['_query'];
@@ -186,8 +195,11 @@ export class Tunings extends BaseModule {
       });
     } else {
       const body = listTuningJobsParametersToMldev(this.apiClient, params);
-      path = common.formatMap('tunedModels', body['_url']);
-      queryParams = body['_query'];
+      path = common.formatMap(
+        'tunedModels',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
       delete body['config'];
       delete body['_url'];
       delete body['_query'];
@@ -224,8 +236,11 @@ export class Tunings extends BaseModule {
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
       const body = createTuningJobParametersToVertex(this.apiClient, params);
-      path = common.formatMap('tuningJobs', body['_url']);
-      queryParams = body['_query'];
+      path = common.formatMap(
+        'tuningJobs',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
       delete body['config'];
       delete body['_url'];
       delete body['_query'];
@@ -249,8 +264,8 @@ export class Tunings extends BaseModule {
       });
     } else {
       const body = createTuningJobParametersToMldev(this.apiClient, params);
-      path = common.formatMap('None', body['_url']);
-      queryParams = body['_query'];
+      path = common.formatMap('None', body['_url'] as Record<string, unknown>);
+      queryParams = body['_query'] as Record<string, string>;
       delete body['config'];
       delete body['_url'];
       delete body['_query'];
@@ -283,8 +298,8 @@ export class Tunings extends BaseModule {
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
       const body = createTuningJobParametersToVertex(this.apiClient, params);
-      path = common.formatMap('None', body['_url']);
-      queryParams = body['_query'];
+      path = common.formatMap('None', body['_url'] as Record<string, unknown>);
+      queryParams = body['_query'] as Record<string, string>;
       delete body['config'];
       delete body['_url'];
       delete body['_query'];
@@ -308,8 +323,11 @@ export class Tunings extends BaseModule {
       });
     } else {
       const body = createTuningJobParametersToMldev(this.apiClient, params);
-      path = common.formatMap('tunedModels', body['_url']);
-      queryParams = body['_query'];
+      path = common.formatMap(
+        'tunedModels',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
       delete body['config'];
       delete body['_url'];
       delete body['_query'];
@@ -338,9 +356,9 @@ export class Tunings extends BaseModule {
 function getTuningJobParametersToMldev(
   apiClient: ApiClient,
   fromObject: types.GetTuningJobParameters,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined && fromName !== null) {
@@ -358,9 +376,9 @@ function getTuningJobParametersToMldev(
 function getTuningJobParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.GetTuningJobParameters,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined && fromName !== null) {
@@ -378,9 +396,9 @@ function getTuningJobParametersToVertex(
 function listTuningJobsConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.ListTuningJobsConfig,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
   if (
@@ -415,9 +433,9 @@ function listTuningJobsConfigToMldev(
 function listTuningJobsConfigToVertex(
   apiClient: ApiClient,
   fromObject: types.ListTuningJobsConfig,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
   if (
@@ -452,9 +470,9 @@ function listTuningJobsConfigToVertex(
 function listTuningJobsParametersToMldev(
   apiClient: ApiClient,
   fromObject: types.ListTuningJobsParameters,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig !== undefined && fromConfig !== null) {
@@ -471,9 +489,9 @@ function listTuningJobsParametersToMldev(
 function listTuningJobsParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.ListTuningJobsParameters,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
   if (fromConfig !== undefined && fromConfig !== null) {
@@ -490,9 +508,9 @@ function listTuningJobsParametersToVertex(
 function tuningExampleToMldev(
   apiClient: ApiClient,
   fromObject: types.TuningExample,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromTextInput = common.getValueByPath(fromObject, ['textInput']);
   if (fromTextInput !== undefined && fromTextInput !== null) {
@@ -510,9 +528,9 @@ function tuningExampleToMldev(
 function tuningExampleToVertex(
   apiClient: ApiClient,
   fromObject: types.TuningExample,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   if (common.getValueByPath(fromObject, ['textInput']) !== undefined) {
     throw new Error('textInput parameter is not supported in Vertex AI.');
@@ -528,9 +546,9 @@ function tuningExampleToVertex(
 function tuningDatasetToMldev(
   apiClient: ApiClient,
   fromObject: types.TuningDataset,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   if (common.getValueByPath(fromObject, ['gcsUri']) !== undefined) {
     throw new Error('gcsUri parameter is not supported in Gemini API.');
@@ -538,13 +556,17 @@ function tuningDatasetToMldev(
 
   const fromExamples = common.getValueByPath(fromObject, ['examples']);
   if (fromExamples !== undefined && fromExamples !== null) {
-    common.setValueByPath(
-      toObject,
-      ['examples', 'examples'],
-      fromExamples.map((item: any) => {
-        return tuningExampleToMldev(apiClient, item, toObject);
-      }),
-    );
+    if (Array.isArray(fromExamples)) {
+      common.setValueByPath(
+        toObject,
+        ['examples', 'examples'],
+        fromExamples.map((item) => {
+          return tuningExampleToMldev(apiClient, item, toObject);
+        }),
+      );
+    } else {
+      common.setValueByPath(toObject, ['examples', 'examples'], fromExamples);
+    }
   }
 
   return toObject;
@@ -553,9 +575,9 @@ function tuningDatasetToMldev(
 function tuningDatasetToVertex(
   apiClient: ApiClient,
   fromObject: types.TuningDataset,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromGcsUri = common.getValueByPath(fromObject, ['gcsUri']);
   if (
@@ -580,9 +602,9 @@ function tuningDatasetToVertex(
 function tuningValidationDatasetToMldev(
   apiClient: ApiClient,
   fromObject: types.TuningValidationDataset,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   if (common.getValueByPath(fromObject, ['gcsUri']) !== undefined) {
     throw new Error('gcsUri parameter is not supported in Gemini API.');
@@ -594,9 +616,9 @@ function tuningValidationDatasetToMldev(
 function tuningValidationDatasetToVertex(
   apiClient: ApiClient,
   fromObject: types.TuningValidationDataset,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromGcsUri = common.getValueByPath(fromObject, ['gcsUri']);
   if (fromGcsUri !== undefined && fromGcsUri !== null) {
@@ -609,9 +631,9 @@ function tuningValidationDatasetToVertex(
 function createTuningJobConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.CreateTuningJobConfig,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   if (common.getValueByPath(fromObject, ['validationDataset']) !== undefined) {
     throw new Error(
@@ -701,9 +723,9 @@ function createTuningJobConfigToMldev(
 function createTuningJobConfigToVertex(
   apiClient: ApiClient,
   fromObject: types.CreateTuningJobConfig,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromValidationDataset = common.getValueByPath(fromObject, [
     'validationDataset',
@@ -802,9 +824,9 @@ function createTuningJobConfigToVertex(
 function createTuningJobParametersToMldev(
   apiClient: ApiClient,
   fromObject: types.CreateTuningJobParameters,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromBaseModel = common.getValueByPath(fromObject, ['baseModel']);
   if (fromBaseModel !== undefined && fromBaseModel !== null) {
@@ -837,9 +859,9 @@ function createTuningJobParametersToMldev(
 function createTuningJobParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.CreateTuningJobParameters,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromBaseModel = common.getValueByPath(fromObject, ['baseModel']);
   if (fromBaseModel !== undefined && fromBaseModel !== null) {
@@ -872,9 +894,9 @@ function createTuningJobParametersToVertex(
 function tunedModelFromMldev(
   apiClient: ApiClient,
   fromObject: types.TunedModel,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromModel = common.getValueByPath(fromObject, ['name']);
   if (fromModel !== undefined && fromModel !== null) {
@@ -892,9 +914,9 @@ function tunedModelFromMldev(
 function tunedModelFromVertex(
   apiClient: ApiClient,
   fromObject: types.TunedModel,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromModel = common.getValueByPath(fromObject, ['model']);
   if (fromModel !== undefined && fromModel !== null) {
@@ -912,9 +934,9 @@ function tunedModelFromVertex(
 function tuningJobFromMldev(
   apiClient: ApiClient,
   fromObject: types.TuningJob,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined && fromName !== null) {
@@ -1017,9 +1039,9 @@ function tuningJobFromMldev(
 function tuningJobFromVertex(
   apiClient: ApiClient,
   fromObject: types.TuningJob,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined && fromName !== null) {
@@ -1163,9 +1185,9 @@ function tuningJobFromVertex(
 function listTuningJobsResponseFromMldev(
   apiClient: ApiClient,
   fromObject: types.ListTuningJobsResponse,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromNextPageToken = common.getValueByPath(fromObject, [
     'nextPageToken',
@@ -1176,13 +1198,17 @@ function listTuningJobsResponseFromMldev(
 
   const fromTuningJobs = common.getValueByPath(fromObject, ['tunedModels']);
   if (fromTuningJobs !== undefined && fromTuningJobs !== null) {
-    common.setValueByPath(
-      toObject,
-      ['tuningJobs'],
-      fromTuningJobs.map((item: any) => {
-        return tuningJobFromMldev(apiClient, item, toObject);
-      }),
-    );
+    if (Array.isArray(fromTuningJobs)) {
+      common.setValueByPath(
+        toObject,
+        ['tuningJobs'],
+        fromTuningJobs.map((item) => {
+          return tuningJobFromMldev(apiClient, item, toObject);
+        }),
+      );
+    } else {
+      common.setValueByPath(toObject, ['tuningJobs'], fromTuningJobs);
+    }
   }
 
   return toObject;
@@ -1191,9 +1217,9 @@ function listTuningJobsResponseFromMldev(
 function listTuningJobsResponseFromVertex(
   apiClient: ApiClient,
   fromObject: types.ListTuningJobsResponse,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromNextPageToken = common.getValueByPath(fromObject, [
     'nextPageToken',
@@ -1204,13 +1230,17 @@ function listTuningJobsResponseFromVertex(
 
   const fromTuningJobs = common.getValueByPath(fromObject, ['tuningJobs']);
   if (fromTuningJobs !== undefined && fromTuningJobs !== null) {
-    common.setValueByPath(
-      toObject,
-      ['tuningJobs'],
-      fromTuningJobs.map((item: any) => {
-        return tuningJobFromVertex(apiClient, item, toObject);
-      }),
-    );
+    if (Array.isArray(fromTuningJobs)) {
+      common.setValueByPath(
+        toObject,
+        ['tuningJobs'],
+        fromTuningJobs.map((item) => {
+          return tuningJobFromVertex(apiClient, item, toObject);
+        }),
+      );
+    } else {
+      common.setValueByPath(toObject, ['tuningJobs'], fromTuningJobs);
+    }
   }
 
   return toObject;
@@ -1219,9 +1249,9 @@ function listTuningJobsResponseFromVertex(
 function operationFromMldev(
   apiClient: ApiClient,
   fromObject: types.Operation,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined && fromName !== null) {
@@ -1254,9 +1284,9 @@ function operationFromMldev(
 function operationFromVertex(
   apiClient: ApiClient,
   fromObject: types.Operation,
-  parentObject?: Record<string, any>,
-): Record<string, any> {
-  const toObject: Record<string, any> = {};
+  parentObject?: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
   if (fromName !== undefined && fromName !== null) {

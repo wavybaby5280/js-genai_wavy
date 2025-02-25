@@ -12,7 +12,7 @@ describe('tModel', () => {
   it('empty string', () => {
     expect(() => {
       tModel(new ApiClient({auth: new FakeAuth()}), '');
-    }).toThrowError('model is required');
+    }).toThrowError('model is required and must be a string');
   });
   it('returns model name for MLDev starting with models', () => {
     expect(
