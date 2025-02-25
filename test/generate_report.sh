@@ -34,12 +34,12 @@ UNIT=coverage-unit-test
 TABLE=coverage-table-test
 
 # TODO(b/398045499): Add live tests back to the coverage report.
-ALL_TESTS_IN_UNIT_EXCEPT_LIVE_TESTS=$(find dist/test/unit -type f -name "*_test.js" ! -name "live_test.js" )
+ALL_TESTS_IN_UNIT_EXCEPT_LIVE_TESTS=$(find test/unit/ -type f -name "*_test.ts" ! -name "live_test.ts" )
 
 # Generate the reports for each test suite separately to avoid covering each
 # other.
-nyc --reporter=json --report-dir=./${WORK_DIR}/${UNIT} jasmine dist/test/unit/**/*_test.js ${ALL_TESTS_IN_UNIT_EXCEPT_LIVE_TESTS}
-nyc --reporter=json --report-dir=./${WORK_DIR}/${TABLE} jasmine dist/test/table_test.js
+nyc --reporter=json --report-dir=./${WORK_DIR}/${UNIT} --require ts-node/register jasmine dist/test/unit/**/*_test.js ${ALL_TESTS_IN_UNIT_EXCEPT_LIVE_TESTS}
+nyc --reporter=json --report-dir=./${WORK_DIR}/${TABLE} --require ts-node/register jasmine test/table_test.ts
 
 # Move all the generated coverage reports to the same directory to merge reports.
 mv ./${WORK_DIR}/${UNIT}/coverage-final.json  ./${WORK_DIR}/${UNIT}-coverage-report.json
