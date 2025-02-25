@@ -526,9 +526,9 @@ export class Live {
 
     const websocketCallbacks: WebSocketCallbacks = {
       onopen: onopenAwaitedCallback,
-      onmessage: callbacks?.onmessage ?? function(e: MessageEvent) {},
-      onerror: callbacks?.onerror ?? function(e: ErrorEvent) {},
-      onclose: callbacks?.onclose ?? function(e: CloseEvent) {},
+      onmessage: callbacks?.onmessage ?? function (e: MessageEvent) {},
+      onerror: callbacks?.onerror ?? function (e: ErrorEvent) {},
+      onclose: callbacks?.onclose ?? function (e: CloseEvent) {},
     };
 
     const conn = this.webSocketFactory.create(

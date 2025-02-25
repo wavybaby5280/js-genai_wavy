@@ -197,19 +197,15 @@ export class Models extends BaseModule {
       delete body['_url'];
       delete body['_query'];
 
-      response = this.apiClient
-        .requestStream({
-          path: path,
-          queryParams: queryParams,
-          body: JSON.stringify(body),
-          httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-        })
-        .then((httpResponse) => {
-          return httpResponse.json();
-        });
-
       const apiClient = this.apiClient;
+      response = apiClient.requestStream({
+        path: path,
+        queryParams: queryParams,
+        body: JSON.stringify(body),
+        httpMethod: 'POST',
+        httpOptions: params.config?.httpOptions,
+      });
+
       return response.then(async function* (apiResponse: any) {
         for await (const chunk of apiResponse) {
           const resp = generateContentResponseFromVertex(apiClient, chunk);
@@ -229,19 +225,15 @@ export class Models extends BaseModule {
       delete body['_url'];
       delete body['_query'];
 
-      response = this.apiClient
-        .requestStream({
-          path: path,
-          queryParams: queryParams,
-          body: JSON.stringify(body),
-          httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-        })
-        .then((httpResponse) => {
-          return httpResponse.json();
-        });
-
       const apiClient = this.apiClient;
+      response = apiClient.requestStream({
+        path: path,
+        queryParams: queryParams,
+        body: JSON.stringify(body),
+        httpMethod: 'POST',
+        httpOptions: params.config?.httpOptions,
+      });
+
       return response.then(async function* (apiResponse: any) {
         for await (const chunk of apiResponse) {
           const resp = generateContentResponseFromMldev(apiClient, chunk);
