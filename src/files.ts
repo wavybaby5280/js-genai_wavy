@@ -49,13 +49,23 @@ export class Files extends BaseModule {
   ): Promise<types.ListFilesResponse> {
     let response: Promise<types.ListFilesResponse>;
     let path: string = '';
-    let body: Record<string, any> = {};
+    let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      body = listFilesParametersToVertex(this.apiClient, params);
+      const body = listFilesParametersToVertex(this.apiClient, params);
       path = common.formatMap('None', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .get(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'GET',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -67,11 +77,21 @@ export class Files extends BaseModule {
         return typedResp;
       });
     } else {
-      body = listFilesParametersToMldev(this.apiClient, params);
+      const body = listFilesParametersToMldev(this.apiClient, params);
       path = common.formatMap('files', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .get(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'GET',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -90,13 +110,23 @@ export class Files extends BaseModule {
   ): Promise<types.CreateFileResponse> {
     let response: Promise<types.CreateFileResponse>;
     let path: string = '';
-    let body: Record<string, any> = {};
+    let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      body = createFileParametersToVertex(this.apiClient, params);
+      const body = createFileParametersToVertex(this.apiClient, params);
       path = common.formatMap('', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .post(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -108,11 +138,21 @@ export class Files extends BaseModule {
         return typedResp;
       });
     } else {
-      body = createFileParametersToMldev(this.apiClient, params);
+      const body = createFileParametersToMldev(this.apiClient, params);
       path = common.formatMap('upload/v1beta/files', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .post(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -129,13 +169,23 @@ export class Files extends BaseModule {
   async get(params: types.GetFileParameters): Promise<types.File> {
     let response: Promise<types.File>;
     let path: string = '';
-    let body: Record<string, any> = {};
+    let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      body = getFileParametersToVertex(this.apiClient, params);
+      const body = getFileParametersToVertex(this.apiClient, params);
       path = common.formatMap('None', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .get(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'GET',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -146,11 +196,21 @@ export class Files extends BaseModule {
         return resp as types.File;
       });
     } else {
-      body = getFileParametersToMldev(this.apiClient, params);
+      const body = getFileParametersToMldev(this.apiClient, params);
       path = common.formatMap('files/{file}', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .get(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'GET',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });

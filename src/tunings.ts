@@ -95,13 +95,23 @@ export class Tunings extends BaseModule {
   ): Promise<types.TuningJob> {
     let response: Promise<types.TuningJob>;
     let path: string = '';
-    let body: Record<string, any> = {};
+    let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      body = getTuningJobParametersToVertex(this.apiClient, params);
+      const body = getTuningJobParametersToVertex(this.apiClient, params);
       path = common.formatMap('{name}', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .get(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'GET',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -112,11 +122,21 @@ export class Tunings extends BaseModule {
         return resp as types.TuningJob;
       });
     } else {
-      body = getTuningJobParametersToMldev(this.apiClient, params);
+      const body = getTuningJobParametersToMldev(this.apiClient, params);
       path = common.formatMap('{name}', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .get(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'GET',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -134,13 +154,23 @@ export class Tunings extends BaseModule {
   ): Promise<types.ListTuningJobsResponse> {
     let response: Promise<types.ListTuningJobsResponse>;
     let path: string = '';
-    let body: Record<string, any> = {};
+    let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      body = listTuningJobsParametersToVertex(this.apiClient, params);
+      const body = listTuningJobsParametersToVertex(this.apiClient, params);
       path = common.formatMap('tuningJobs', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .get(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'GET',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -155,11 +185,21 @@ export class Tunings extends BaseModule {
         return typedResp;
       });
     } else {
-      body = listTuningJobsParametersToMldev(this.apiClient, params);
+      const body = listTuningJobsParametersToMldev(this.apiClient, params);
       path = common.formatMap('tunedModels', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .get(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'GET',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -181,13 +221,23 @@ export class Tunings extends BaseModule {
   ): Promise<types.TuningJob> {
     let response: Promise<types.TuningJob>;
     let path: string = '';
-    let body: Record<string, any> = {};
+    let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      body = createTuningJobParametersToVertex(this.apiClient, params);
+      const body = createTuningJobParametersToVertex(this.apiClient, params);
       path = common.formatMap('tuningJobs', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .post(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -198,11 +248,21 @@ export class Tunings extends BaseModule {
         return resp as types.TuningJob;
       });
     } else {
-      body = createTuningJobParametersToMldev(this.apiClient, params);
+      const body = createTuningJobParametersToMldev(this.apiClient, params);
       path = common.formatMap('None', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .post(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -220,13 +280,23 @@ export class Tunings extends BaseModule {
   ): Promise<types.Operation> {
     let response: Promise<types.Operation>;
     let path: string = '';
-    let body: Record<string, any> = {};
+    let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      body = createTuningJobParametersToVertex(this.apiClient, params);
+      const body = createTuningJobParametersToVertex(this.apiClient, params);
       path = common.formatMap('None', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .post(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -237,11 +307,21 @@ export class Tunings extends BaseModule {
         return resp as types.Operation;
       });
     } else {
-      body = createTuningJobParametersToMldev(this.apiClient, params);
+      const body = createTuningJobParametersToMldev(this.apiClient, params);
       path = common.formatMap('tunedModels', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .post(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });

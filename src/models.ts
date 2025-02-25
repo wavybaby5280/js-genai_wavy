@@ -118,13 +118,23 @@ export class Models extends BaseModule {
   ): Promise<types.GenerateContentResponse> {
     let response: Promise<types.GenerateContentResponse>;
     let path: string = '';
-    let body: Record<string, any> = {};
+    let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      body = generateContentParametersToVertex(this.apiClient, params);
+      const body = generateContentParametersToVertex(this.apiClient, params);
       path = common.formatMap('{model}:generateContent', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .post(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -139,11 +149,21 @@ export class Models extends BaseModule {
         return typedResp;
       });
     } else {
-      body = generateContentParametersToMldev(this.apiClient, params);
+      const body = generateContentParametersToMldev(this.apiClient, params);
       path = common.formatMap('{model}:generateContent', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .post(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -165,16 +185,26 @@ export class Models extends BaseModule {
   ): Promise<AsyncGenerator<types.GenerateContentResponse>> {
     let response: Promise<AsyncGenerator<types.GenerateContentResponse>>;
     let path: string = '';
-    let body: Record<string, any> = {};
+    let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      body = generateContentParametersToVertex(this.apiClient, params);
+      const body = generateContentParametersToVertex(this.apiClient, params);
       path = common.formatMap(
         '{model}:streamGenerateContent?alt=sse',
         body['_url'],
       );
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .postStream(path, body, params.config?.httpOptions)
+        .requestStream({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -189,14 +219,24 @@ export class Models extends BaseModule {
         }
       });
     } else {
-      body = generateContentParametersToMldev(this.apiClient, params);
+      const body = generateContentParametersToMldev(this.apiClient, params);
       path = common.formatMap(
         '{model}:streamGenerateContent?alt=sse',
         body['_url'],
       );
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .postStream(path, body, params.config?.httpOptions)
+        .requestStream({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -241,13 +281,23 @@ export class Models extends BaseModule {
   ): Promise<types.EmbedContentResponse> {
     let response: Promise<types.EmbedContentResponse>;
     let path: string = '';
-    let body: Record<string, any> = {};
+    let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      body = embedContentParametersToVertex(this.apiClient, params);
+      const body = embedContentParametersToVertex(this.apiClient, params);
       path = common.formatMap('{model}:predict', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .post(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -262,11 +312,21 @@ export class Models extends BaseModule {
         return typedResp;
       });
     } else {
-      body = embedContentParametersToMldev(this.apiClient, params);
+      const body = embedContentParametersToMldev(this.apiClient, params);
       path = common.formatMap('{model}:batchEmbedContents', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .post(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -306,13 +366,23 @@ export class Models extends BaseModule {
   ): Promise<types.GenerateImagesResponse> {
     let response: Promise<types.GenerateImagesResponse>;
     let path: string = '';
-    let body: Record<string, any> = {};
+    let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      body = generateImagesParametersToVertex(this.apiClient, params);
+      const body = generateImagesParametersToVertex(this.apiClient, params);
       path = common.formatMap('{model}:predict', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .post(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -327,11 +397,21 @@ export class Models extends BaseModule {
         return typedResp;
       });
     } else {
-      body = generateImagesParametersToMldev(this.apiClient, params);
+      const body = generateImagesParametersToMldev(this.apiClient, params);
       path = common.formatMap('{model}:predict', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .post(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -371,13 +451,23 @@ export class Models extends BaseModule {
   ): Promise<types.CountTokensResponse> {
     let response: Promise<types.CountTokensResponse>;
     let path: string = '';
-    let body: Record<string, any> = {};
+    let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      body = countTokensParametersToVertex(this.apiClient, params);
+      const body = countTokensParametersToVertex(this.apiClient, params);
       path = common.formatMap('{model}:countTokens', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .post(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -389,11 +479,21 @@ export class Models extends BaseModule {
         return typedResp;
       });
     } else {
-      body = countTokensParametersToMldev(this.apiClient, params);
+      const body = countTokensParametersToMldev(this.apiClient, params);
       path = common.formatMap('{model}:countTokens', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .post(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -432,13 +532,23 @@ export class Models extends BaseModule {
   ): Promise<types.ComputeTokensResponse> {
     let response: Promise<types.ComputeTokensResponse>;
     let path: string = '';
-    let body: Record<string, any> = {};
+    let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      body = computeTokensParametersToVertex(this.apiClient, params);
+      const body = computeTokensParametersToVertex(this.apiClient, params);
       path = common.formatMap('{model}:computeTokens', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .post(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -453,11 +563,21 @@ export class Models extends BaseModule {
         return typedResp;
       });
     } else {
-      body = computeTokensParametersToMldev(this.apiClient, params);
+      const body = computeTokensParametersToMldev(this.apiClient, params);
       path = common.formatMap('None', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .post(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });

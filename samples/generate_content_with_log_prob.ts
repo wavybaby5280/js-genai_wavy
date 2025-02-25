@@ -46,12 +46,12 @@ async function generateContentFromVertexAI() {
 
 async function main() {
   if (GOOGLE_GENAI_USE_VERTEXAI) {
-    await generateContentFromVertexAI().catch(
-        (e) => console.error('got error', e),
+    await generateContentFromVertexAI().catch((e) =>
+      console.error('got error', e),
     );
   } else {
-    await generateContentFromMLDev().catch(
-        (e) => console.error('got error', e),
+    await generateContentFromMLDev().catch((e) =>
+      console.error('got error', e),
     );
   }
 }

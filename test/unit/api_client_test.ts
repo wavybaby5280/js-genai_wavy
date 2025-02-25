@@ -454,26 +454,6 @@ describe('ApiClient', () => {
   });
 
   describe('post/get methods', () => {
-    it('should delete _url from requestJson', async () => {
-      const client = new ApiClient({
-        auth: new FakeAuth('test-api-key'),
-        apiKey: 'test-api-key',
-      });
-      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
-        Promise.resolve(
-          new Response(
-            JSON.stringify(mockGenerateContentResponse),
-            fetchOkOptions,
-          ),
-        ),
-      );
-      const requestJson = {_url: 'some-url', data: 'test'};
-      await client.post('test-path', requestJson);
-      const requestInit = fetchSpy.calls.first().args[1] as RequestInit;
-      const body = requestInit.body as string;
-      const parsedBody: any = JSON.parse(body);
-      expect(parsedBody._url).toBeUndefined();
-    });
     it('should prepend base resource path if vertexai is true and path does not start with "projects/"', async () => {
       const client = new ApiClient({auth: new FakeAuth(), vertexai: true});
       spyOn(client, 'getBaseResourcePath').and.returnValue(
@@ -488,7 +468,11 @@ describe('ApiClient', () => {
           ),
         ),
       );
-      await client.post('test-path', requestJson);
+      await client.request({
+        path: 'test-path',
+        body: JSON.stringify(requestJson),
+        httpMethod: 'POST',
+      });
       expect(client.getBaseResourcePath).toHaveBeenCalled();
     });
     it('should append query parameters to URL', async () => {
@@ -496,7 +480,10 @@ describe('ApiClient', () => {
         auth: new FakeAuth('test-api-key'),
         apiKey: 'test-api-key',
       });
-      const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
+      const queryParams: Record<string, string> = {
+        'param1': 'value1',
+        'param2': 'value2',
+      };
       spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(
           new Response(
@@ -505,7 +492,11 @@ describe('ApiClient', () => {
           ),
         ),
       );
-      await client.get('test-path', requestJson);
+      await client.request({
+        path: 'test-path',
+        queryParams: queryParams,
+        httpMethod: 'GET',
+      });
       expect(global.fetch).toHaveBeenCalledWith(
         jasmine.stringMatching(/param1=value1&param2=value2/),
         jasmine.any(Object),
@@ -517,11 +508,17 @@ describe('ApiClient', () => {
         apiKey: 'test-api-key',
       });
       const requestJson: any = {data: 'test'};
-      await client.get('test-path', requestJson).catch((e) => {
-        expect(e.message).toEqual(
-          'Request body should be empty for GET request, but got: {"data":"test"}',
-        );
-      });
+      await client
+        .request({
+          path: 'test-path',
+          body: JSON.stringify(requestJson),
+          httpMethod: 'GET',
+        })
+        .catch((e) => {
+          expect(e.message).toEqual(
+            'Request body should be empty for GET request, but got: {"data":"test"}',
+          );
+        });
     });
     it('should include AbortSignal when timeout is set', async () => {
       const client = new ApiClient({
@@ -537,7 +534,7 @@ describe('ApiClient', () => {
           ),
         ),
       );
-      await client.post('test-path', {});
+      await client.request({path: 'test-path', httpMethod: 'POST'});
       const fetchArgs = fetchSpy.calls.allArgs();
       // @ts-expect-error TS2532: Object is possibly 'undefined'.
       expect(fetchArgs[0][1].signal instanceof AbortSignal).toBeTrue();
@@ -549,7 +546,10 @@ describe('ApiClient', () => {
         auth: new FakeAuth('test-api-key'),
         apiKey: 'test-api-key',
       });
-      const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
+      const queryParams: Record<string, string> = {
+        'param1': 'value1',
+        'param2': 'value2',
+      };
       const fetchSpy = spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(
           new Response(
@@ -560,11 +560,16 @@ describe('ApiClient', () => {
       );
       const timeoutSpy = spyOn(global, 'setTimeout');
 
-      await client.get('test-path', requestJson, {
-        baseUrl: 'https://custom-request-base-url.googleapis.com',
-        apiVersion: 'v1alpha',
-        timeout: 1001,
-        headers: {'google-custom-header': 'custom-header-value'},
+      await client.request({
+        path: 'test-path',
+        queryParams: queryParams,
+        httpMethod: 'GET',
+        httpOptions: {
+          baseUrl: 'https://custom-request-base-url.googleapis.com',
+          apiVersion: 'v1alpha',
+          timeout: 1001,
+          headers: {'google-custom-header': 'custom-header-value'},
+        },
       });
 
       const fetchArgs = fetchSpy.calls.first().args;
@@ -587,7 +592,10 @@ describe('ApiClient', () => {
         apiKey: 'test-api-key',
         vertexai: true,
       });
-      const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
+      const queryParams: Record<string, string> = {
+        'param1': 'value1',
+        'param2': 'value2',
+      };
       const fetchSpy = spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(
           new Response(
@@ -597,7 +605,11 @@ describe('ApiClient', () => {
         ),
       );
 
-      await client.get('test-path', requestJson);
+      await client.request({
+        path: 'test-path',
+        queryParams: queryParams,
+        httpMethod: 'GET',
+      });
 
       const fetchArgs = fetchSpy.calls.first().args;
       const requestInit = fetchArgs[1] as RequestInit;
@@ -615,7 +627,10 @@ describe('ApiClient', () => {
           baseUrl: 'https://custom-client-base-url.googleapis.com',
         },
       });
-      const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
+      const queryParams: Record<string, string> = {
+        'param1': 'value1',
+        'param2': 'value2',
+      };
       const fetchSpy = spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(
           new Response(
@@ -626,10 +641,15 @@ describe('ApiClient', () => {
       );
       const timeoutSpy = spyOn(global, 'setTimeout');
 
-      await client.get('test-path', requestJson, {
-        headers: {'google-custom-header': 'custom-header-value'},
-        timeout: 1001,
-        apiVersion: 'v1alpha',
+      await client.request({
+        path: 'test-path',
+        queryParams: queryParams,
+        httpMethod: 'GET',
+        httpOptions: {
+          headers: {'google-custom-header': 'custom-header-value'},
+          timeout: 1001,
+          apiVersion: 'v1alpha',
+        },
       });
 
       const fetchArgs = fetchSpy.calls.first().args;
@@ -657,7 +677,10 @@ describe('ApiClient', () => {
           headers: {'google-custom-header': 'custom-header-value'},
         },
       });
-      const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
+      const queryParams: Record<string, string> = {
+        'param1': 'value1',
+        'param2': 'value2',
+      };
       const fetchSpy = spyOn(global, 'fetch').and.returnValues(
         Promise.resolve(
           new Response(
@@ -674,11 +697,16 @@ describe('ApiClient', () => {
       );
       const timeoutSpy = spyOn(global, 'setTimeout');
 
-      await client.get('test-path', requestJson, {
-        baseUrl: 'https://custom-request-base-url.googleapis.com',
-        apiVersion: 'v1alpha',
-        timeout: 1002,
-        headers: {'google-custom-header': 'custom-header-request-value'},
+      await client.request({
+        path: 'test-path',
+        queryParams: queryParams,
+        httpOptions: {
+          baseUrl: 'https://custom-request-base-url.googleapis.com',
+          apiVersion: 'v1alpha',
+          timeout: 1002,
+          headers: {'google-custom-header': 'custom-header-request-value'},
+        },
+        httpMethod: 'GET',
       });
 
       const fetchArgs = fetchSpy.calls.mostRecent().args;
@@ -697,7 +725,11 @@ describe('ApiClient', () => {
         'https://custom-request-base-url.googleapis.com/v1alpha/test-path?param1=value1&param2=value2',
       );
 
-      await client.get('test-path', requestJson);
+      await client.request({
+        path: 'test-path',
+        queryParams: queryParams,
+        httpMethod: 'GET',
+      });
 
       const secondFetchArgs = fetchSpy.calls.mostRecent().args;
       const secondRequestInit = fetchArgs[1] as RequestInit;
@@ -738,14 +770,16 @@ describe('ApiClient', () => {
           ),
         ),
       );
-      await client.post(
-        'test-path/shouldBeUsedVersion',
-        {data: 'test'},
-        {
+      const json = {data: 'test'};
+      await client.request({
+        path: 'test-path/shouldBeUsedVersion',
+        body: JSON.stringify(json),
+        httpOptions: {
           apiVersion: '',
           headers: {'google-custom-header': 'custom-header-request-value'},
         },
-      );
+        httpMethod: 'POST',
+      });
       expect(global.fetch).toHaveBeenCalledWith(
         'https://custom-client-base-url.googleapis.com/test-path/shouldBeUsedVersion',
         jasmine.any(Object),
@@ -773,14 +807,17 @@ describe('ApiClient', () => {
       );
       spyOn(global, 'fetch').and.returnValue(Promise.resolve(customResponse));
 
-      const postResponse = await client.post('test-path', {});
+      const postResponse = await client.request({
+        path: 'test-path',
+        httpMethod: 'GET',
+      });
 
       expect(postResponse instanceof types.HttpResponse).toBeTrue();
       expect(postResponse.headers).toEqual(customHeaders);
       expect(postResponse.headers?.['x-custom-header']).toBe('custom-value');
     });
   });
-  describe('postStream', () => {
+  describe('requestStream', () => {
     it('should throw ServerError if response is 500', async () => {
       const client = new ApiClient({
         auth: new FakeAuth('test-api-key'),
@@ -789,9 +826,11 @@ describe('ApiClient', () => {
       spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(new Response(JSON.stringify({}), fetch500Options)),
       );
-      await client.postStream('test-path', {}).catch((e) => {
-        expect(e.name).toEqual('ServerError');
-      });
+      await client
+        .requestStream({path: 'test-path', httpMethod: 'POST'})
+        .catch((e) => {
+          expect(e.name).toEqual('ServerError');
+        });
     });
     it('should throw ClientError if response is 400', async () => {
       const client = new ApiClient({
@@ -801,9 +840,11 @@ describe('ApiClient', () => {
       spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(new Response(JSON.stringify({}), fetch400Options)),
       );
-      await client.postStream('test-path', {}).catch((e) => {
-        expect(e.name).toEqual('ClientError');
-      });
+      await client
+        .requestStream({path: 'test-path', httpMethod: 'POST'})
+        .catch((e) => {
+          expect(e.name).toEqual('ClientError');
+        });
     });
     it('should yield data if response is ok', async () => {
       const validChunk1 =
@@ -827,7 +868,10 @@ describe('ApiClient', () => {
         apiKey: 'test-api-key',
       });
       spyOn(global, 'fetch').and.returnValue(Promise.resolve(response));
-      const generator = await client.postStream('test-path', {});
+      const generator = await client.requestStream({
+        path: 'test-path',
+        httpMethod: 'POST',
+      });
       const result = await generator.next();
       expect(result.value).toEqual({
         candidates: [
@@ -858,7 +902,7 @@ describe('ApiClient', () => {
           ),
         ),
       );
-      await client.postStream('test-path', {});
+      await client.requestStream({path: 'test-path', httpMethod: 'POST'});
       const fetchArgs = fetchSpy.calls.first().args;
       // @ts-expect-error TS2532: Object is possibly 'undefined'.
       expect(fetchArgs[1].signal instanceof AbortSignal).toBeTrue();
@@ -880,16 +924,16 @@ describe('ApiClient', () => {
       );
       const timeoutSpy = spyOn(global, 'setTimeout');
 
-      await client.postStream(
-        'test-path',
-        {},
-        {
+      await client.requestStream({
+        path: 'test-path',
+        httpMethod: 'POST',
+        httpOptions: {
           baseUrl: 'https://custom-request-base-url.googleapis.com',
           headers: {'google-custom-header': 'custom-header-value'},
           apiVersion: 'v1alpha',
           timeout: 1001,
         },
-      );
+      });
 
       const fetchArgs = fetchSpy.calls.first().args;
       const requestInit = fetchArgs[1] as RequestInit;
@@ -920,7 +964,7 @@ describe('ApiClient', () => {
         ),
       );
 
-      await client.postStream('test-path', {});
+      await client.requestStream({path: 'test-path', httpMethod: 'POST'});
 
       const fetchArgs = fetchSpy.calls.first().args;
       const requestInit = fetchArgs[1] as RequestInit;
@@ -938,7 +982,7 @@ describe('ApiClient', () => {
           baseUrl: 'https://custom-client-base-url.googleapis.com',
         },
       });
-      const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
+      const queryParams = {'param1': 'value1', 'param2': 'value2'};
       const fetchSpy = spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(
           new Response(
@@ -949,10 +993,15 @@ describe('ApiClient', () => {
       );
       const timeoutSpy = spyOn(global, 'setTimeout');
 
-      await client.postStream('test-path', requestJson, {
-        headers: {'google-custom-header': 'custom-header-value'},
-        timeout: 1001,
-        apiVersion: 'v1alpha',
+      await client.requestStream({
+        path: 'test-path',
+        queryParams: queryParams,
+        httpOptions: {
+          headers: {'google-custom-header': 'custom-header-value'},
+          timeout: 1001,
+          apiVersion: 'v1alpha',
+        },
+        httpMethod: 'GET',
       });
 
       const fetchArgs = fetchSpy.calls.first().args;
@@ -980,7 +1029,10 @@ describe('ApiClient', () => {
           headers: {'google-custom-header': 'custom-header-value'},
         },
       });
-      const requestJson: any = {_query: {param1: 'value1', param2: 'value2'}};
+      const queryParams: Record<string, string> = {
+        'param1': 'value1',
+        'param2': 'value2',
+      };
       const fetchSpy = spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(
           new Response(
@@ -991,11 +1043,16 @@ describe('ApiClient', () => {
       );
       const timeoutSpy = spyOn(global, 'setTimeout');
 
-      await client.postStream('test-path', requestJson, {
-        baseUrl: 'https://custom-request-base-url.googleapis.com',
-        apiVersion: 'v1alpha',
-        timeout: 1002,
-        headers: {'google-custom-header': 'custom-header-request-value'},
+      await client.requestStream({
+        path: 'test-path',
+        queryParams: queryParams,
+        httpMethod: 'POST',
+        httpOptions: {
+          baseUrl: 'https://custom-request-base-url.googleapis.com',
+          apiVersion: 'v1alpha',
+          timeout: 1002,
+          headers: {'google-custom-header': 'custom-header-request-value'},
+        },
       });
 
       const fetchArgs = fetchSpy.calls.mostRecent().args;
@@ -1014,7 +1071,11 @@ describe('ApiClient', () => {
         'https://custom-request-base-url.googleapis.com/v1alpha/test-path?alt=sse',
       );
 
-      await client.postStream('test-path', requestJson);
+      await client.requestStream({
+        path: 'test-path',
+        queryParams: queryParams,
+        httpMethod: 'POST',
+      });
 
       const secondFetchArgs = fetchSpy.calls.mostRecent().args;
       const secondRequestInit = fetchArgs[1] as RequestInit;

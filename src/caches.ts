@@ -63,13 +63,26 @@ export class Caches extends BaseModule {
   ): Promise<types.CachedContent> {
     let response: Promise<types.CachedContent>;
     let path: string = '';
-    let body: Record<string, any> = {};
+    let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      body = createCachedContentParametersToVertex(this.apiClient, params);
+      const body = createCachedContentParametersToVertex(
+        this.apiClient,
+        params,
+      );
       path = common.formatMap('cachedContents', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .post(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -80,11 +93,21 @@ export class Caches extends BaseModule {
         return resp as types.CachedContent;
       });
     } else {
-      body = createCachedContentParametersToMldev(this.apiClient, params);
+      const body = createCachedContentParametersToMldev(this.apiClient, params);
       path = common.formatMap('cachedContents', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .post(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -110,13 +133,23 @@ export class Caches extends BaseModule {
   ): Promise<types.CachedContent> {
     let response: Promise<types.CachedContent>;
     let path: string = '';
-    let body: Record<string, any> = {};
+    let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      body = getCachedContentParametersToVertex(this.apiClient, params);
+      const body = getCachedContentParametersToVertex(this.apiClient, params);
       path = common.formatMap('{name}', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .get(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'GET',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -127,11 +160,21 @@ export class Caches extends BaseModule {
         return resp as types.CachedContent;
       });
     } else {
-      body = getCachedContentParametersToMldev(this.apiClient, params);
+      const body = getCachedContentParametersToMldev(this.apiClient, params);
       path = common.formatMap('{name}', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .get(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'GET',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -157,13 +200,26 @@ export class Caches extends BaseModule {
   ): Promise<types.DeleteCachedContentResponse> {
     let response: Promise<types.DeleteCachedContentResponse>;
     let path: string = '';
-    let body: Record<string, any> = {};
+    let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      body = deleteCachedContentParametersToVertex(this.apiClient, params);
+      const body = deleteCachedContentParametersToVertex(
+        this.apiClient,
+        params,
+      );
       path = common.formatMap('{name}', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .delete(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'DELETE',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -178,11 +234,21 @@ export class Caches extends BaseModule {
         return typedResp;
       });
     } else {
-      body = deleteCachedContentParametersToMldev(this.apiClient, params);
+      const body = deleteCachedContentParametersToMldev(this.apiClient, params);
       path = common.formatMap('{name}', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .delete(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'DELETE',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -215,13 +281,26 @@ export class Caches extends BaseModule {
   ): Promise<types.CachedContent> {
     let response: Promise<types.CachedContent>;
     let path: string = '';
-    let body: Record<string, any> = {};
+    let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      body = updateCachedContentParametersToVertex(this.apiClient, params);
+      const body = updateCachedContentParametersToVertex(
+        this.apiClient,
+        params,
+      );
       path = common.formatMap('{name}', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .patch(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'PATCH',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -232,11 +311,21 @@ export class Caches extends BaseModule {
         return resp as types.CachedContent;
       });
     } else {
-      body = updateCachedContentParametersToMldev(this.apiClient, params);
+      const body = updateCachedContentParametersToMldev(this.apiClient, params);
       path = common.formatMap('{name}', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .patch(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'PATCH',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -254,13 +343,23 @@ export class Caches extends BaseModule {
   ): Promise<types.ListCachedContentsResponse> {
     let response: Promise<types.ListCachedContentsResponse>;
     let path: string = '';
-    let body: Record<string, any> = {};
+    let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      body = listCachedContentsParametersToVertex(this.apiClient, params);
+      const body = listCachedContentsParametersToVertex(this.apiClient, params);
       path = common.formatMap('cachedContents', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .get(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'GET',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });
@@ -275,11 +374,21 @@ export class Caches extends BaseModule {
         return typedResp;
       });
     } else {
-      body = listCachedContentsParametersToMldev(this.apiClient, params);
+      const body = listCachedContentsParametersToMldev(this.apiClient, params);
       path = common.formatMap('cachedContents', body['_url']);
+      queryParams = body['_query'];
       delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
       response = this.apiClient
-        .get(path, body, params.config?.httpOptions)
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'GET',
+          httpOptions: params.config?.httpOptions,
+        })
         .then((httpResponse) => {
           return httpResponse.json();
         });

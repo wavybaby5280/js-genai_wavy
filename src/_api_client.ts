@@ -94,6 +94,36 @@ export interface ApiClientInitOptions {
 }
 
 /**
+ * Represents the necessary information to send a request to an API endpoint.
+ * This interface defines the structure for constructing and executing HTTP
+ * requests.
+ */
+export interface HttpRequest {
+  /**
+   * URL path from the modules, this path is appended to the base API URL to
+   * form the complete request URL.
+   */
+  path: string;
+  /**
+   * Optional query parameters to be appended to the request URL.
+   */
+  queryParams?: Record<string, string>;
+  /**
+   * Optional request body in json string format, GET request doesn't need a
+   * request body.
+   */
+  body?: string;
+  /**
+   * The HTTP method to be used for the request.
+   */
+  httpMethod: 'GET' | 'POST' | 'PATCH' | 'DELETE';
+  /**
+   * Optional set of customizable configuration for HTTP requests.
+   */
+  httpOptions?: HttpOptions;
+}
+
+/**
  * The ApiClient class is used to send requests to the Gemini API or Vertex AI
  * endpoints.
  */
@@ -220,96 +250,43 @@ export class ApiClient {
     }
   }
 
-  get(
-    path: string,
-    requestObject: Record<string, unknown>,
-    requestHttpOptions?: HttpOptions,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ): Promise<HttpResponse> {
-    return this.request(path, requestObject, 'GET', requestHttpOptions);
-  }
-
-  post(
-    path: string,
-    requestObject: Record<string, unknown>,
-    requestHttpOptions?: HttpOptions,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ): Promise<HttpResponse> {
-    return this.request(path, requestObject, 'POST', requestHttpOptions);
-  }
-
-  patch(
-    path: string,
-    requestObject: Record<string, unknown>,
-    requestHttpOptions?: HttpOptions,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ): Promise<HttpResponse> {
-    return this.request(path, requestObject, 'PATCH', requestHttpOptions);
-  }
-
-  delete(
-    path: string,
-    requestObject: Record<string, unknown>,
-    requestHttpOptions?: HttpOptions,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ): Promise<HttpResponse> {
-    return this.request(path, requestObject, 'DELETE', requestHttpOptions);
-  }
-
-  private async request(
-    path: string,
-    requestJson: Record<string, unknown>,
-    httpMethod: 'GET' | 'POST' | 'PATCH' | 'DELETE',
-    requestHttpOptions?: HttpOptions,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ): Promise<HttpResponse> {
-    // Copy the json locally so as to not modify the user provided one.
-    // request json could be any request.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const localRequestJson: any = JSON.parse(JSON.stringify(requestJson));
-    // _url is a special dict for populating the url.
-    delete localRequestJson._url;
-
+  async request(request: HttpRequest): Promise<HttpResponse> {
     let patchedHttpOptions = this.clientOptions.httpOptions!;
-    if (requestHttpOptions) {
+    if (request.httpOptions) {
       patchedHttpOptions = this.patchHttpOptions(
         this.clientOptions.httpOptions!,
-        requestHttpOptions,
+        request.httpOptions,
       );
     }
-
+    let path = request.path;
     if (this.clientOptions.vertexai && !path.startsWith('projects/')) {
       path = `${this.getBaseResourcePath()}/${path}`;
     }
     const url = new URL(
       `${this.getRequestUrlInternal(patchedHttpOptions)}/${path}`,
     );
-    if (localRequestJson._query) {
-      for (const [key, value] of Object.entries(localRequestJson._query)) {
+    if (request.queryParams) {
+      for (const [key, value] of Object.entries(request.queryParams)) {
         url.searchParams.append(key, String(value));
       }
-      delete localRequestJson._query;
-    }
-    if (localRequestJson.config) {
-      Object.assign(localRequestJson, localRequestJson.config);
-      delete localRequestJson.config;
     }
     let requestInit: RequestInit = {};
-    const body = JSON.stringify(localRequestJson);
-    if (httpMethod === 'GET') {
-      if (body !== '{}') {
+    if (request.httpMethod === 'GET') {
+      if (request.body && request.body !== '{}') {
         throw new Error(
-          `Request body should be empty for GET request, but got: ${body}`,
+          `Request body should be empty for GET request, but got: ${
+            request.body
+          }`,
         );
       }
     } else {
-      requestInit.body = body;
+      requestInit.body = request.body;
     }
     requestInit = await this.includeExtraHttpOptionsToRequestInit(
       requestInit,
       patchedHttpOptions,
     );
-    return this.unaryApiCall(url, requestInit, httpMethod);
+    return this.unaryApiCall(url, requestInit, request.httpMethod);
   }
 
   private patchHttpOptions(
@@ -337,26 +314,19 @@ export class ApiClient {
     return patchedHttpOptions;
   }
 
-  async postStream(
-    path: string,
-    requestJson: Record<string, unknown>,
-    requestHttpOptions?: HttpOptions,
-    // any will be replaced with the full http response.
+  async requestStream(
+    request: HttpRequest,
+    // TODO: Replace with HttpResponse.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<any> {
-    // _url is a special dict for populating the url.
-    if (requestJson && '_url' in requestJson) {
-      delete requestJson['_url'];
-    }
-
     let patchedHttpOptions = this.clientOptions.httpOptions!;
-    if (requestHttpOptions) {
+    if (request.httpOptions) {
       patchedHttpOptions = this.patchHttpOptions(
         this.clientOptions.httpOptions!,
-        requestHttpOptions,
+        request.httpOptions,
       );
     }
-
+    let path: string = request.path;
     if (this.clientOptions.vertexai && !path.startsWith('projects/')) {
       path = `${this.getBaseResourcePath()}/${path}`;
     }
@@ -367,12 +337,12 @@ export class ApiClient {
       url.searchParams.set('alt', 'sse');
     }
     let requestInit: RequestInit = {};
-    requestInit.body = JSON.stringify(requestJson);
+    requestInit.body = request.body;
     requestInit = await this.includeExtraHttpOptionsToRequestInit(
       requestInit,
       patchedHttpOptions,
     );
-    return this.streamApiCall(url, requestInit, 'POST');
+    return this.streamApiCall(url, requestInit, request.httpMethod);
   }
 
   private async includeExtraHttpOptionsToRequestInit(
@@ -416,7 +386,7 @@ export class ApiClient {
     url: URL,
     requestInit: RequestInit,
     httpMethod: 'GET' | 'POST' | 'PATCH' | 'DELETE',
-    // any will be replaced with the full http response.
+    // TODO: Replace with HttpResponse.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<AsyncGenerator<any>> {
     return this.apiCall(url.toString(), {
@@ -438,7 +408,7 @@ export class ApiClient {
 
   async *processStreamResponse(
     response: Response,
-    // any will be replaced with the full http response.
+    // TODO: Replace with HttpResponse.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): AsyncGenerator<any> {
     const reader = response?.body?.getReader();
