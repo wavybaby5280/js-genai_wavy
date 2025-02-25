@@ -1,4 +1,5 @@
 {
+  "private": true,
   "name": "@google/genai",
   "version": "0.1.0",
   "description": "",
@@ -20,6 +21,7 @@
   },
   "scripts": {
     "build": "rollup -c && api-extractor run --local --verbose && api-extractor run -c api-extractor.node.json --local --verbose",
+    "build-prod": "rollup -c && api-extractor run --verbose && api-extractor run -c api-extractor.node.json --verbose",
     "unit-test": "ts-node node_modules/jasmine/bin/jasmine dist/test/unit/**/*_test.js test/unit/*_test.ts",
     "system-test": "ts-node node_modules/jasmine/bin/jasmine test/system/**/*_test.ts",
     "table-test": "ts-node node_modules/jasmine/bin/jasmine test/table_test.ts",
@@ -32,6 +34,19 @@
   "engines": {
     "node": ">=18.0.0"
   },
+  "files": [
+    "dist/genai.d.ts",
+    "dist/index.js",
+    "dist/index.js.map",
+    "dist/index.mjs",
+    "dist/index.mjs.map",
+    "dist/node/index.js",
+    "dist/node/index.js.map",
+    "dist/node/index.mjs",
+    "dist/node/index.mjs.map",
+    "dist/node/node.d.ts",
+    "node/package.json"
+  ],
   "devDependencies": {
     "@eslint/js": "9.20.0",
     "@microsoft/api-extractor": "^7.50.1",
