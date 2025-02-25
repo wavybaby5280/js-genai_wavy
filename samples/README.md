@@ -1,4 +1,4 @@
-# Usage samples for `@google/genai`
+# Usage samples for `@google/genai/node`
 
 To run the samples first build the SDK and the samples, from the repository root:
 

@@ -24,7 +24,7 @@ export default [
   {
     input: 'src/index.ts',
     output: {
-      file: pkg.exports['.']['import'],
+      file: pkg.exports['./web']['import'],
       format: 'es',
       sourcemap: true,
     },
@@ -36,7 +36,7 @@ export default [
   {
     input: 'src/index.ts',
     output: {
-      file: pkg.exports['.']['require'],
+      file: pkg.exports['./web']['require'],
       format: 'cjs',
       sourcemap: true,
     },

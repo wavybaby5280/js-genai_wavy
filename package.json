@@ -6,7 +6,7 @@
   "module": "dist/index.mjs",
   "typings": "dist/genai.d.ts",
   "exports": {
-    ".": {
+    "./web": {
       "types": "./dist/genai.d.ts",
       "require": "./dist/index.js",
       "import": "./dist/index.mjs",

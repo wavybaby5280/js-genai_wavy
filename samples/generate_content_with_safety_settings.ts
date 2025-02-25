@@ -3,8 +3,12 @@
  * Copyright 2024 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
-import {HarmBlockMethod, HarmBlockThreshold, HarmCategory} from '@google/genai';
-import {NodeClient} from '@google/genai/node';
+import {
+  HarmBlockMethod,
+  HarmBlockThreshold,
+  HarmCategory,
+  NodeClient,
+} from '@google/genai/node';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;

@@ -2,7 +2,7 @@
  * API Extractor configuration for the node subpackage.
  * This configuration extends the one in api-extractor.json and changes
  * input and output paths.
-*/
+ */
 {
   "extends": "./api-extractor.json",
 

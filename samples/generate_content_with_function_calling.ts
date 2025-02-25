@@ -6,9 +6,9 @@
 import {
   FunctionCallingConfigMode,
   FunctionDeclaration,
+  NodeClient,
   Type,
-} from '@google/genai';
-import {NodeClient} from '@google/genai/node';
+} from '@google/genai/node';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
