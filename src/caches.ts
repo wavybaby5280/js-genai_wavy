@@ -439,7 +439,6 @@ export class Caches extends BaseModule {
 function partToMldev(
   apiClient: ApiClient,
   fromObject: types.Part,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -506,7 +505,6 @@ function partToMldev(
 function partToVertex(
   apiClient: ApiClient,
   fromObject: types.Part,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -577,7 +575,6 @@ function partToVertex(
 export function contentToMldev(
   apiClient: ApiClient,
   fromObject: types.Content,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -588,7 +585,7 @@ export function contentToMldev(
         toObject,
         ['parts'],
         fromParts.map((item) => {
-          return partToMldev(apiClient, item, toObject);
+          return partToMldev(apiClient, item);
         }),
       );
     } else {
@@ -608,7 +605,6 @@ export function contentToMldev(
 export function contentToVertex(
   apiClient: ApiClient,
   fromObject: types.Content,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -619,7 +615,7 @@ export function contentToVertex(
         toObject,
         ['parts'],
         fromParts.map((item) => {
-          return partToVertex(apiClient, item, toObject);
+          return partToVertex(apiClient, item);
         }),
       );
     } else {
@@ -638,7 +634,6 @@ export function contentToVertex(
 function schemaToMldev(
   apiClient: ApiClient,
   fromObject: types.Schema,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -746,7 +741,6 @@ function schemaToMldev(
 function schemaToVertex(
   apiClient: ApiClient,
   fromObject: types.Schema,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -872,7 +866,6 @@ function schemaToVertex(
 function functionDeclarationToMldev(
   apiClient: ApiClient,
   fromObject: types.FunctionDeclaration,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -901,7 +894,6 @@ function functionDeclarationToMldev(
 function functionDeclarationToVertex(
   apiClient: ApiClient,
   fromObject: types.FunctionDeclaration,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -910,7 +902,7 @@ function functionDeclarationToVertex(
     common.setValueByPath(
       toObject,
       ['response'],
-      schemaToVertex(apiClient, fromResponse, toObject),
+      schemaToVertex(apiClient, fromResponse),
     );
   }
 
@@ -935,7 +927,6 @@ function functionDeclarationToVertex(
 function googleSearchToMldev(
   apiClient: ApiClient,
   fromObject: types.GoogleSearch,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -945,7 +936,6 @@ function googleSearchToMldev(
 function googleSearchToVertex(
   apiClient: ApiClient,
   fromObject: types.GoogleSearch,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -955,7 +945,6 @@ function googleSearchToVertex(
 function dynamicRetrievalConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.DynamicRetrievalConfig,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -977,7 +966,6 @@ function dynamicRetrievalConfigToMldev(
 function dynamicRetrievalConfigToVertex(
   apiClient: ApiClient,
   fromObject: types.DynamicRetrievalConfig,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -999,7 +987,6 @@ function dynamicRetrievalConfigToVertex(
 function googleSearchRetrievalToMldev(
   apiClient: ApiClient,
   fromObject: types.GoogleSearchRetrieval,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1013,11 +1000,7 @@ function googleSearchRetrievalToMldev(
     common.setValueByPath(
       toObject,
       ['dynamicRetrievalConfig'],
-      dynamicRetrievalConfigToMldev(
-        apiClient,
-        fromDynamicRetrievalConfig,
-        toObject,
-      ),
+      dynamicRetrievalConfigToMldev(apiClient, fromDynamicRetrievalConfig),
     );
   }
 
@@ -1027,7 +1010,6 @@ function googleSearchRetrievalToMldev(
 function googleSearchRetrievalToVertex(
   apiClient: ApiClient,
   fromObject: types.GoogleSearchRetrieval,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1041,11 +1023,7 @@ function googleSearchRetrievalToVertex(
     common.setValueByPath(
       toObject,
       ['dynamicRetrievalConfig'],
-      dynamicRetrievalConfigToVertex(
-        apiClient,
-        fromDynamicRetrievalConfig,
-        toObject,
-      ),
+      dynamicRetrievalConfigToVertex(apiClient, fromDynamicRetrievalConfig),
     );
   }
 
@@ -1056,7 +1034,6 @@ function googleSearchRetrievalToVertex(
 export function toolToMldev(
   apiClient: ApiClient,
   fromObject: types.Tool,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1072,7 +1049,7 @@ export function toolToMldev(
         toObject,
         ['functionDeclarations'],
         fromFunctionDeclarations.map((item) => {
-          return functionDeclarationToMldev(apiClient, item, toObject);
+          return functionDeclarationToMldev(apiClient, item);
         }),
       );
     } else {
@@ -1093,7 +1070,7 @@ export function toolToMldev(
     common.setValueByPath(
       toObject,
       ['googleSearch'],
-      googleSearchToMldev(apiClient, fromGoogleSearch, toObject),
+      googleSearchToMldev(apiClient, fromGoogleSearch),
     );
   }
 
@@ -1107,11 +1084,7 @@ export function toolToMldev(
     common.setValueByPath(
       toObject,
       ['googleSearchRetrieval'],
-      googleSearchRetrievalToMldev(
-        apiClient,
-        fromGoogleSearchRetrieval,
-        toObject,
-      ),
+      googleSearchRetrievalToMldev(apiClient, fromGoogleSearchRetrieval),
     );
   }
 
@@ -1129,7 +1102,6 @@ export function toolToMldev(
 export function toolToVertex(
   apiClient: ApiClient,
   fromObject: types.Tool,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1145,7 +1117,7 @@ export function toolToVertex(
         toObject,
         ['functionDeclarations'],
         fromFunctionDeclarations.map((item) => {
-          return functionDeclarationToVertex(apiClient, item, toObject);
+          return functionDeclarationToVertex(apiClient, item);
         }),
       );
     } else {
@@ -1167,7 +1139,7 @@ export function toolToVertex(
     common.setValueByPath(
       toObject,
       ['googleSearch'],
-      googleSearchToVertex(apiClient, fromGoogleSearch, toObject),
+      googleSearchToVertex(apiClient, fromGoogleSearch),
     );
   }
 
@@ -1181,11 +1153,7 @@ export function toolToVertex(
     common.setValueByPath(
       toObject,
       ['googleSearchRetrieval'],
-      googleSearchRetrievalToVertex(
-        apiClient,
-        fromGoogleSearchRetrieval,
-        toObject,
-      ),
+      googleSearchRetrievalToVertex(apiClient, fromGoogleSearchRetrieval),
     );
   }
 
@@ -1202,7 +1170,6 @@ export function toolToVertex(
 function functionCallingConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.FunctionCallingConfig,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1231,7 +1198,6 @@ function functionCallingConfigToMldev(
 function functionCallingConfigToVertex(
   apiClient: ApiClient,
   fromObject: types.FunctionCallingConfig,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1260,7 +1226,6 @@ function functionCallingConfigToVertex(
 function toolConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.ToolConfig,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1274,11 +1239,7 @@ function toolConfigToMldev(
     common.setValueByPath(
       toObject,
       ['functionCallingConfig'],
-      functionCallingConfigToMldev(
-        apiClient,
-        fromFunctionCallingConfig,
-        toObject,
-      ),
+      functionCallingConfigToMldev(apiClient, fromFunctionCallingConfig),
     );
   }
 
@@ -1288,7 +1249,6 @@ function toolConfigToMldev(
 function toolConfigToVertex(
   apiClient: ApiClient,
   fromObject: types.ToolConfig,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1302,11 +1262,7 @@ function toolConfigToVertex(
     common.setValueByPath(
       toObject,
       ['functionCallingConfig'],
-      functionCallingConfigToVertex(
-        apiClient,
-        fromFunctionCallingConfig,
-        toObject,
-      ),
+      functionCallingConfigToVertex(apiClient, fromFunctionCallingConfig),
     );
   }
 
@@ -1316,7 +1272,7 @@ function toolConfigToVertex(
 function createCachedContentConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.CreateCachedContentConfig,
-  parentObject?: Record<string, unknown>,
+  parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1356,7 +1312,7 @@ function createCachedContentConfigToMldev(
         t.tContents(
           apiClient,
           t.tContents(apiClient, fromContents).map((item) => {
-            return contentToMldev(apiClient, item, toObject);
+            return contentToMldev(apiClient, item);
           }),
         ),
       );
@@ -1380,11 +1336,7 @@ function createCachedContentConfigToMldev(
     common.setValueByPath(
       parentObject,
       ['systemInstruction'],
-      contentToMldev(
-        apiClient,
-        t.tContent(apiClient, fromSystemInstruction),
-        toObject,
-      ),
+      contentToMldev(apiClient, t.tContent(apiClient, fromSystemInstruction)),
     );
   }
 
@@ -1399,7 +1351,7 @@ function createCachedContentConfigToMldev(
         parentObject,
         ['tools'],
         fromTools.map((item) => {
-          return toolToMldev(apiClient, item, toObject);
+          return toolToMldev(apiClient, item);
         }),
       );
     } else {
@@ -1416,7 +1368,7 @@ function createCachedContentConfigToMldev(
     common.setValueByPath(
       parentObject,
       ['toolConfig'],
-      toolConfigToMldev(apiClient, fromToolConfig, toObject),
+      toolConfigToMldev(apiClient, fromToolConfig),
     );
   }
 
@@ -1426,7 +1378,7 @@ function createCachedContentConfigToMldev(
 function createCachedContentConfigToVertex(
   apiClient: ApiClient,
   fromObject: types.CreateCachedContentConfig,
-  parentObject?: Record<string, unknown>,
+  parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1466,7 +1418,7 @@ function createCachedContentConfigToVertex(
         t.tContents(
           apiClient,
           t.tContents(apiClient, fromContents).map((item) => {
-            return contentToVertex(apiClient, item, toObject);
+            return contentToVertex(apiClient, item);
           }),
         ),
       );
@@ -1490,11 +1442,7 @@ function createCachedContentConfigToVertex(
     common.setValueByPath(
       parentObject,
       ['systemInstruction'],
-      contentToVertex(
-        apiClient,
-        t.tContent(apiClient, fromSystemInstruction),
-        toObject,
-      ),
+      contentToVertex(apiClient, t.tContent(apiClient, fromSystemInstruction)),
     );
   }
 
@@ -1509,7 +1457,7 @@ function createCachedContentConfigToVertex(
         parentObject,
         ['tools'],
         fromTools.map((item) => {
-          return toolToVertex(apiClient, item, toObject);
+          return toolToVertex(apiClient, item);
         }),
       );
     } else {
@@ -1526,7 +1474,7 @@ function createCachedContentConfigToVertex(
     common.setValueByPath(
       parentObject,
       ['toolConfig'],
-      toolConfigToVertex(apiClient, fromToolConfig, toObject),
+      toolConfigToVertex(apiClient, fromToolConfig),
     );
   }
 
@@ -1536,7 +1484,6 @@ function createCachedContentConfigToVertex(
 function createCachedContentParametersToMldev(
   apiClient: ApiClient,
   fromObject: types.CreateCachedContentParameters,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1564,7 +1511,6 @@ function createCachedContentParametersToMldev(
 function createCachedContentParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.CreateCachedContentParameters,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1592,7 +1538,6 @@ function createCachedContentParametersToVertex(
 function getCachedContentParametersToMldev(
   apiClient: ApiClient,
   fromObject: types.GetCachedContentParameters,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1616,7 +1561,6 @@ function getCachedContentParametersToMldev(
 function getCachedContentParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.GetCachedContentParameters,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1640,7 +1584,6 @@ function getCachedContentParametersToVertex(
 function deleteCachedContentParametersToMldev(
   apiClient: ApiClient,
   fromObject: types.DeleteCachedContentParameters,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1664,7 +1607,6 @@ function deleteCachedContentParametersToMldev(
 function deleteCachedContentParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.DeleteCachedContentParameters,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1688,7 +1630,7 @@ function deleteCachedContentParametersToVertex(
 function updateCachedContentConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.UpdateCachedContentConfig,
-  parentObject?: Record<string, unknown>,
+  parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1712,7 +1654,7 @@ function updateCachedContentConfigToMldev(
 function updateCachedContentConfigToVertex(
   apiClient: ApiClient,
   fromObject: types.UpdateCachedContentConfig,
-  parentObject?: Record<string, unknown>,
+  parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1736,7 +1678,6 @@ function updateCachedContentConfigToVertex(
 function updateCachedContentParametersToMldev(
   apiClient: ApiClient,
   fromObject: types.UpdateCachedContentParameters,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1764,7 +1705,6 @@ function updateCachedContentParametersToMldev(
 function updateCachedContentParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.UpdateCachedContentParameters,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1792,7 +1732,7 @@ function updateCachedContentParametersToVertex(
 function listCachedContentsConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.ListCachedContentsConfig,
-  parentObject?: Record<string, unknown>,
+  parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1820,7 +1760,7 @@ function listCachedContentsConfigToMldev(
 function listCachedContentsConfigToVertex(
   apiClient: ApiClient,
   fromObject: types.ListCachedContentsConfig,
-  parentObject?: Record<string, unknown>,
+  parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1848,7 +1788,6 @@ function listCachedContentsConfigToVertex(
 function listCachedContentsParametersToMldev(
   apiClient: ApiClient,
   fromObject: types.ListCachedContentsParameters,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1867,7 +1806,6 @@ function listCachedContentsParametersToMldev(
 function listCachedContentsParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.ListCachedContentsParameters,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1886,7 +1824,6 @@ function listCachedContentsParametersToVertex(
 function cachedContentFromMldev(
   apiClient: ApiClient,
   fromObject: types.CachedContent,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1933,7 +1870,6 @@ function cachedContentFromMldev(
 function cachedContentFromVertex(
   apiClient: ApiClient,
   fromObject: types.CachedContent,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1980,7 +1916,6 @@ function cachedContentFromVertex(
 function deleteCachedContentResponseFromMldev(
   apiClient: ApiClient,
   fromObject: types.DeleteCachedContentResponse,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1990,7 +1925,6 @@ function deleteCachedContentResponseFromMldev(
 function deleteCachedContentResponseFromVertex(
   apiClient: ApiClient,
   fromObject: types.DeleteCachedContentResponse,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2000,7 +1934,6 @@ function deleteCachedContentResponseFromVertex(
 function listCachedContentsResponseFromMldev(
   apiClient: ApiClient,
   fromObject: types.ListCachedContentsResponse,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2020,7 +1953,7 @@ function listCachedContentsResponseFromMldev(
         toObject,
         ['cachedContents'],
         fromCachedContents.map((item) => {
-          return cachedContentFromMldev(apiClient, item, toObject);
+          return cachedContentFromMldev(apiClient, item);
         }),
       );
     } else {
@@ -2034,7 +1967,6 @@ function listCachedContentsResponseFromMldev(
 function listCachedContentsResponseFromVertex(
   apiClient: ApiClient,
   fromObject: types.ListCachedContentsResponse,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2054,7 +1986,7 @@ function listCachedContentsResponseFromVertex(
         toObject,
         ['cachedContents'],
         fromCachedContents.map((item) => {
-          return cachedContentFromVertex(apiClient, item, toObject);
+          return cachedContentFromVertex(apiClient, item);
         }),
       );
     } else {

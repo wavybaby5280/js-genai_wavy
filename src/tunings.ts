@@ -356,7 +356,6 @@ export class Tunings extends BaseModule {
 function getTuningJobParametersToMldev(
   apiClient: ApiClient,
   fromObject: types.GetTuningJobParameters,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -376,7 +375,6 @@ function getTuningJobParametersToMldev(
 function getTuningJobParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.GetTuningJobParameters,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -396,7 +394,7 @@ function getTuningJobParametersToVertex(
 function listTuningJobsConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.ListTuningJobsConfig,
-  parentObject?: Record<string, unknown>,
+  parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -433,7 +431,7 @@ function listTuningJobsConfigToMldev(
 function listTuningJobsConfigToVertex(
   apiClient: ApiClient,
   fromObject: types.ListTuningJobsConfig,
-  parentObject?: Record<string, unknown>,
+  parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -470,7 +468,6 @@ function listTuningJobsConfigToVertex(
 function listTuningJobsParametersToMldev(
   apiClient: ApiClient,
   fromObject: types.ListTuningJobsParameters,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -489,7 +486,6 @@ function listTuningJobsParametersToMldev(
 function listTuningJobsParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.ListTuningJobsParameters,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -508,7 +504,6 @@ function listTuningJobsParametersToVertex(
 function tuningExampleToMldev(
   apiClient: ApiClient,
   fromObject: types.TuningExample,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -528,7 +523,6 @@ function tuningExampleToMldev(
 function tuningExampleToVertex(
   apiClient: ApiClient,
   fromObject: types.TuningExample,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -546,7 +540,6 @@ function tuningExampleToVertex(
 function tuningDatasetToMldev(
   apiClient: ApiClient,
   fromObject: types.TuningDataset,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -561,7 +554,7 @@ function tuningDatasetToMldev(
         toObject,
         ['examples', 'examples'],
         fromExamples.map((item) => {
-          return tuningExampleToMldev(apiClient, item, toObject);
+          return tuningExampleToMldev(apiClient, item);
         }),
       );
     } else {
@@ -575,7 +568,7 @@ function tuningDatasetToMldev(
 function tuningDatasetToVertex(
   apiClient: ApiClient,
   fromObject: types.TuningDataset,
-  parentObject?: Record<string, unknown>,
+  parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -602,7 +595,6 @@ function tuningDatasetToVertex(
 function tuningValidationDatasetToMldev(
   apiClient: ApiClient,
   fromObject: types.TuningValidationDataset,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -616,7 +608,6 @@ function tuningValidationDatasetToMldev(
 function tuningValidationDatasetToVertex(
   apiClient: ApiClient,
   fromObject: types.TuningValidationDataset,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -631,7 +622,7 @@ function tuningValidationDatasetToVertex(
 function createTuningJobConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.CreateTuningJobConfig,
-  parentObject?: Record<string, unknown>,
+  parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -723,7 +714,7 @@ function createTuningJobConfigToMldev(
 function createTuningJobConfigToVertex(
   apiClient: ApiClient,
   fromObject: types.CreateTuningJobConfig,
-  parentObject?: Record<string, unknown>,
+  parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -738,11 +729,7 @@ function createTuningJobConfigToVertex(
     common.setValueByPath(
       parentObject,
       ['supervisedTuningSpec'],
-      tuningValidationDatasetToVertex(
-        apiClient,
-        fromValidationDataset,
-        toObject,
-      ),
+      tuningValidationDatasetToVertex(apiClient, fromValidationDataset),
     );
   }
 
@@ -824,7 +811,6 @@ function createTuningJobConfigToVertex(
 function createTuningJobParametersToMldev(
   apiClient: ApiClient,
   fromObject: types.CreateTuningJobParameters,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -840,7 +826,7 @@ function createTuningJobParametersToMldev(
     common.setValueByPath(
       toObject,
       ['tuningTask', 'trainingData'],
-      tuningDatasetToMldev(apiClient, fromTrainingDataset, toObject),
+      tuningDatasetToMldev(apiClient, fromTrainingDataset),
     );
   }
 
@@ -859,7 +845,6 @@ function createTuningJobParametersToMldev(
 function createTuningJobParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.CreateTuningJobParameters,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -894,7 +879,6 @@ function createTuningJobParametersToVertex(
 function tunedModelFromMldev(
   apiClient: ApiClient,
   fromObject: types.TunedModel,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -914,7 +898,6 @@ function tunedModelFromMldev(
 function tunedModelFromVertex(
   apiClient: ApiClient,
   fromObject: types.TunedModel,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -934,7 +917,6 @@ function tunedModelFromVertex(
 function tuningJobFromMldev(
   apiClient: ApiClient,
   fromObject: types.TuningJob,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -993,7 +975,7 @@ function tuningJobFromMldev(
     common.setValueByPath(
       toObject,
       ['tunedModel'],
-      tunedModelFromMldev(apiClient, fromTunedModel, toObject),
+      tunedModelFromMldev(apiClient, fromTunedModel),
     );
   }
 
@@ -1039,7 +1021,6 @@ function tuningJobFromMldev(
 function tuningJobFromVertex(
   apiClient: ApiClient,
   fromObject: types.TuningJob,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1097,7 +1078,7 @@ function tuningJobFromVertex(
     common.setValueByPath(
       toObject,
       ['tunedModel'],
-      tunedModelFromVertex(apiClient, fromTunedModel, toObject),
+      tunedModelFromVertex(apiClient, fromTunedModel),
     );
   }
 
@@ -1185,7 +1166,6 @@ function tuningJobFromVertex(
 function listTuningJobsResponseFromMldev(
   apiClient: ApiClient,
   fromObject: types.ListTuningJobsResponse,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1203,7 +1183,7 @@ function listTuningJobsResponseFromMldev(
         toObject,
         ['tuningJobs'],
         fromTuningJobs.map((item) => {
-          return tuningJobFromMldev(apiClient, item, toObject);
+          return tuningJobFromMldev(apiClient, item);
         }),
       );
     } else {
@@ -1217,7 +1197,6 @@ function listTuningJobsResponseFromMldev(
 function listTuningJobsResponseFromVertex(
   apiClient: ApiClient,
   fromObject: types.ListTuningJobsResponse,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1235,7 +1214,7 @@ function listTuningJobsResponseFromVertex(
         toObject,
         ['tuningJobs'],
         fromTuningJobs.map((item) => {
-          return tuningJobFromVertex(apiClient, item, toObject);
+          return tuningJobFromVertex(apiClient, item);
         }),
       );
     } else {
@@ -1249,7 +1228,6 @@ function listTuningJobsResponseFromVertex(
 function operationFromMldev(
   apiClient: ApiClient,
   fromObject: types.Operation,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -1284,7 +1262,6 @@ function operationFromMldev(
 function operationFromVertex(
   apiClient: ApiClient,
   fromObject: types.Operation,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 

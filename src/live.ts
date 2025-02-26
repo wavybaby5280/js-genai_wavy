@@ -66,9 +66,9 @@ function liveConnectConfigToMldev(
   ]);
   if (fromSystemInstruction !== undefined && fromSystemInstruction !== null) {
     common.setValueByPath(
-      toObject,
-      ['systemInstruction'],
-      contentToMldev(apiClient, fromSystemInstruction, toObject),
+        toObject,
+        ['systemInstruction'],
+        contentToMldev(apiClient, fromSystemInstruction),
     );
   }
 
@@ -79,11 +79,11 @@ function liveConnectConfigToMldev(
     Array.isArray(fromTools)
   ) {
     common.setValueByPath(
-      toObject,
-      ['tools'],
-      fromTools.map((item: types.Tool) => {
-        return toolToMldev(apiClient, item, toObject);
-      }),
+        toObject,
+        ['tools'],
+        fromTools.map((item: types.Tool) => {
+          return toolToMldev(apiClient, item);
+        }),
     );
   }
 
@@ -135,9 +135,9 @@ function liveConnectConfigToVertex(
   ]);
   if (fromSystemInstruction !== undefined && fromSystemInstruction !== null) {
     common.setValueByPath(
-      toObject,
-      ['systemInstruction'],
-      contentToVertex(apiClient, fromSystemInstruction, toObject),
+        toObject,
+        ['systemInstruction'],
+        contentToVertex(apiClient, fromSystemInstruction),
     );
   }
 
@@ -148,11 +148,11 @@ function liveConnectConfigToVertex(
     Array.isArray(fromTools)
   ) {
     common.setValueByPath(
-      toObject,
-      ['tools'],
-      fromTools.map((item: types.Tool) => {
-        return toolToVertex(apiClient, item, toObject);
-      }),
+        toObject,
+        ['tools'],
+        fromTools.map((item: types.Tool) => {
+          return toolToVertex(apiClient, item);
+        }),
     );
   }
 
@@ -214,9 +214,9 @@ function liveServerContentFromMldev(
   const fromModelTurn = common.getValueByPath(fromObject, ['modelTurn']);
   if (fromModelTurn !== undefined && fromModelTurn !== null) {
     common.setValueByPath(
-      toObject,
-      ['modelTurn'],
-      contentFromMldev(apiClient, fromModelTurn, toObject),
+        toObject,
+        ['modelTurn'],
+        contentFromMldev(apiClient, fromModelTurn),
     );
   }
 
@@ -242,9 +242,9 @@ function liveServerContentFromVertex(
   const fromModelTurn = common.getValueByPath(fromObject, ['modelTurn']);
   if (fromModelTurn !== undefined && fromModelTurn !== null) {
     common.setValueByPath(
-      toObject,
-      ['modelTurn'],
-      contentFromVertex(apiClient, fromModelTurn, toObject),
+        toObject,
+        ['modelTurn'],
+        contentFromVertex(apiClient, fromModelTurn),
     );
   }
 
@@ -682,13 +682,11 @@ export class Session {
       Array.isArray(input) &&
       input.some((c) => typeof c === 'string')
     ) {
-      const contents = apiClient.isVertexAI()
-        ? t
-            .tContents(apiClient, input as types.ContentListUnion)
-            .map((item) => contentToVertex(apiClient, item, {}))
-        : t
-            .tContents(apiClient, input as types.ContentListUnion)
-            .map((item) => contentToMldev(apiClient, item, {}));
+      const contents = apiClient.isVertexAI() ?
+          t.tContents(apiClient, input as types.ContentListUnion)
+              .map((item) => contentToVertex(apiClient, item)) :
+          t.tContents(apiClient, input as types.ContentListUnion)
+              .map((item) => contentToMldev(apiClient, item));
 
       clientMessage = {
         clientContent: {turns: contents, turnComplete: turnComplete},

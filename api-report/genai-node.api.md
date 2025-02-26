@@ -180,12 +180,12 @@ export type ContentListUnion = ContentUnion[] | ContentUnion;
 // Warning: (ae-internal-missing-underscore) The name "contentToMldev" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function contentToMldev(apiClient: ApiClient, fromObject: types.Content, parentObject?: Record<string, unknown>): Record<string, unknown>;
+export function contentToMldev(apiClient: ApiClient, fromObject: types.Content): Record<string, unknown>;
 
 // Warning: (ae-internal-missing-underscore) The name "contentToVertex" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function contentToVertex(apiClient: ApiClient, fromObject: types.Content, parentObject?: Record<string, unknown>): Record<string, unknown>;
+export function contentToVertex(apiClient: ApiClient, fromObject: types.Content): Record<string, unknown>;
 
 // @public (undocumented)
 export type ContentUnion = Content | PartUnion[] | PartUnion;
@@ -1580,12 +1580,12 @@ export type ToolListUnion = Tool[] | Function[];
 // Warning: (ae-internal-missing-underscore) The name "toolToMldev" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function toolToMldev(apiClient: ApiClient, fromObject: types.Tool, parentObject?: Record<string, unknown>): Record<string, unknown>;
+export function toolToMldev(apiClient: ApiClient, fromObject: types.Tool): Record<string, unknown>;
 
 // Warning: (ae-internal-missing-underscore) The name "toolToVertex" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function toolToVertex(apiClient: ApiClient, fromObject: types.Tool, parentObject?: Record<string, unknown>): Record<string, unknown>;
+export function toolToVertex(apiClient: ApiClient, fromObject: types.Tool): Record<string, unknown>;
 
 // @public (undocumented)
 export interface TunedModel {

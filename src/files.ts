@@ -233,7 +233,7 @@ export class Files extends BaseModule {
 function listFilesConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.ListFilesConfig,
-  parentObject?: Record<string, unknown>,
+  parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -261,7 +261,7 @@ function listFilesConfigToMldev(
 function listFilesConfigToVertex(
   apiClient: ApiClient,
   fromObject: types.ListFilesConfig,
-  parentObject?: Record<string, unknown>,
+  parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -289,7 +289,6 @@ function listFilesConfigToVertex(
 function listFilesParametersToMldev(
   apiClient: ApiClient,
   fromObject: types.ListFilesParameters,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -308,7 +307,6 @@ function listFilesParametersToMldev(
 function listFilesParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.ListFilesParameters,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -322,7 +320,6 @@ function listFilesParametersToVertex(
 function fileStatusToMldev(
   apiClient: ApiClient,
   fromObject: types.FileStatus,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -347,7 +344,6 @@ function fileStatusToMldev(
 function fileStatusToVertex(
   apiClient: ApiClient,
   fromObject: types.FileStatus,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -369,7 +365,6 @@ function fileStatusToVertex(
 function fileToMldev(
   apiClient: ApiClient,
   fromObject: types.File,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -447,7 +442,7 @@ function fileToMldev(
     common.setValueByPath(
       toObject,
       ['error'],
-      fileStatusToMldev(apiClient, fromError, toObject),
+      fileStatusToMldev(apiClient, fromError),
     );
   }
 
@@ -457,7 +452,6 @@ function fileToMldev(
 function fileToVertex(
   apiClient: ApiClient,
   fromObject: types.File,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -523,17 +517,12 @@ function fileToVertex(
 function createFileParametersToMldev(
   apiClient: ApiClient,
   fromObject: types.CreateFileParameters,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   const fromFile = common.getValueByPath(fromObject, ['file']);
   if (fromFile !== undefined && fromFile !== null) {
-    common.setValueByPath(
-      toObject,
-      ['file'],
-      fileToMldev(apiClient, fromFile, toObject),
-    );
+    common.setValueByPath(toObject, ['file'], fileToMldev(apiClient, fromFile));
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
@@ -547,7 +536,6 @@ function createFileParametersToMldev(
 function createFileParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.CreateFileParameters,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -565,7 +553,6 @@ function createFileParametersToVertex(
 function getFileParametersToMldev(
   apiClient: ApiClient,
   fromObject: types.GetFileParameters,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -589,7 +576,6 @@ function getFileParametersToMldev(
 function getFileParametersToVertex(
   apiClient: ApiClient,
   fromObject: types.GetFileParameters,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -607,7 +593,6 @@ function getFileParametersToVertex(
 function fileStatusFromMldev(
   apiClient: ApiClient,
   fromObject: types.FileStatus,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -632,7 +617,6 @@ function fileStatusFromMldev(
 function fileStatusFromVertex(
   apiClient: ApiClient,
   fromObject: types.FileStatus,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -642,7 +626,6 @@ function fileStatusFromVertex(
 function fileFromMldev(
   apiClient: ApiClient,
   fromObject: types.File,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -720,7 +703,7 @@ function fileFromMldev(
     common.setValueByPath(
       toObject,
       ['error'],
-      fileStatusFromMldev(apiClient, fromError, toObject),
+      fileStatusFromMldev(apiClient, fromError),
     );
   }
 
@@ -730,7 +713,6 @@ function fileFromMldev(
 function fileFromVertex(
   apiClient: ApiClient,
   fromObject: types.File,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -740,7 +722,6 @@ function fileFromVertex(
 function listFilesResponseFromMldev(
   apiClient: ApiClient,
   fromObject: types.ListFilesResponse,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -758,7 +739,7 @@ function listFilesResponseFromMldev(
         toObject,
         ['files'],
         fromFiles.map((item) => {
-          return fileFromMldev(apiClient, item, toObject);
+          return fileFromMldev(apiClient, item);
         }),
       );
     } else {
@@ -772,7 +753,6 @@ function listFilesResponseFromMldev(
 function listFilesResponseFromVertex(
   apiClient: ApiClient,
   fromObject: types.ListFilesResponse,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -782,7 +762,6 @@ function listFilesResponseFromVertex(
 function createFileResponseFromMldev(
   apiClient: ApiClient,
   fromObject: types.CreateFileResponse,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -797,7 +776,6 @@ function createFileResponseFromMldev(
 function createFileResponseFromVertex(
   apiClient: ApiClient,
   fromObject: types.CreateFileResponse,
-  parentObject?: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
