@@ -1027,6 +1027,12 @@ export class GenerateContentResponse {
   /** Response variations returned by the model.
    */
   candidates?: Candidate[];
+  /** Timestamp when the request is made to the server.
+   */
+  createTime?: string;
+  /** Identifier for each response.
+   */
+  responseId?: string;
   /** Output only. The model version used to generate the response. */
   modelVersion?: string;
   /** Output only. Content filter results for a prompt sent in the request. Note: Sent only in the first stream chunk. Only happens when no candidates were generated due to content violations. */

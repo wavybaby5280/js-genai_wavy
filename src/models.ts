@@ -3725,6 +3725,16 @@ function generateContentResponseFromVertex(
     }
   }
 
+  const fromCreateTime = common.getValueByPath(fromObject, ['createTime']);
+  if (fromCreateTime !== undefined && fromCreateTime !== null) {
+    common.setValueByPath(toObject, ['createTime'], fromCreateTime);
+  }
+
+  const fromResponseId = common.getValueByPath(fromObject, ['responseId']);
+  if (fromResponseId !== undefined && fromResponseId !== null) {
+    common.setValueByPath(toObject, ['responseId'], fromResponseId);
+  }
+
   const fromModelVersion = common.getValueByPath(fromObject, ['modelVersion']);
   if (fromModelVersion !== undefined && fromModelVersion !== null) {
     common.setValueByPath(toObject, ['modelVersion'], fromModelVersion);
