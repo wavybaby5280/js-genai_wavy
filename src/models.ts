@@ -2554,6 +2554,19 @@ function generateImagesConfigToMldev(
     );
   }
 
+  const fromAspectRatio = common.getValueByPath(fromObject, ['aspectRatio']);
+  if (
+    parentObject !== undefined &&
+    fromAspectRatio !== undefined &&
+    fromAspectRatio !== null
+  ) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'aspectRatio'],
+      fromAspectRatio,
+    );
+  }
+
   const fromGuidanceScale = common.getValueByPath(fromObject, [
     'guidanceScale',
   ]);
@@ -2680,19 +2693,6 @@ function generateImagesConfigToMldev(
     throw new Error('addWatermark parameter is not supported in Gemini API.');
   }
 
-  const fromAspectRatio = common.getValueByPath(fromObject, ['aspectRatio']);
-  if (
-    parentObject !== undefined &&
-    fromAspectRatio !== undefined &&
-    fromAspectRatio !== null
-  ) {
-    common.setValueByPath(
-      parentObject,
-      ['parameters', 'aspectRatio'],
-      fromAspectRatio,
-    );
-  }
-
   if (common.getValueByPath(fromObject, ['enhancePrompt']) !== undefined) {
     throw new Error('enhancePrompt parameter is not supported in Gemini API.');
   }
@@ -2747,6 +2747,19 @@ function generateImagesConfigToVertex(
       parentObject,
       ['parameters', 'sampleCount'],
       fromNumberOfImages,
+    );
+  }
+
+  const fromAspectRatio = common.getValueByPath(fromObject, ['aspectRatio']);
+  if (
+    parentObject !== undefined &&
+    fromAspectRatio !== undefined &&
+    fromAspectRatio !== null
+  ) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'aspectRatio'],
+      fromAspectRatio,
     );
   }
 
@@ -2887,19 +2900,6 @@ function generateImagesConfigToVertex(
       parentObject,
       ['parameters', 'addWatermark'],
       fromAddWatermark,
-    );
-  }
-
-  const fromAspectRatio = common.getValueByPath(fromObject, ['aspectRatio']);
-  if (
-    parentObject !== undefined &&
-    fromAspectRatio !== undefined &&
-    fromAspectRatio !== null
-  ) {
-    common.setValueByPath(
-      parentObject,
-      ['parameters', 'aspectRatio'],
-      fromAspectRatio,
     );
   }
 

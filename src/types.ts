@@ -1190,6 +1190,9 @@ export interface GenerateImagesConfig {
   /** Number of images to generate.
    */
   numberOfImages?: number;
+  /** Aspect ratio of the generated images.
+   */
+  aspectRatio?: string;
   /** Controls how much the model adheres to the text prompt. Large
       values increase output and prompt alignment, but may compromise image
       quality.
@@ -1225,9 +1228,6 @@ export interface GenerateImagesConfig {
   /** Whether to add a watermark to the generated images.
    */
   addWatermark?: boolean;
-  /** Aspect ratio of the generated images.
-   */
-  aspectRatio?: string;
   /** Whether to use the prompt rewriting logic.
    */
   enhancePrompt?: boolean;
