@@ -7,7 +7,7 @@
 import {ApiClient} from './_api_client';
 import * as types from './types';
 
-export function tModel(apiClient: ApiClient, model: string|unknown): string {
+export function tModel(apiClient: ApiClient, model: string | unknown): string {
   if (!model || typeof model !== 'string') {
     throw new Error('model is required and must be a string');
   }
@@ -35,7 +35,9 @@ export function tModel(apiClient: ApiClient, model: string|unknown): string {
 }
 
 export function tCachesModel(
-    apiClient: ApiClient, model: string|unknown): string {
+  apiClient: ApiClient,
+  model: string | unknown,
+): string {
   const transformedModel = tModel(apiClient, model as string);
   if (!transformedModel) {
     return '';
@@ -206,7 +208,9 @@ export function tTool(apiClient: ApiClient, tool: types.Tool): types.Tool {
 }
 
 export function tTools(
-    apiClient: ApiClient, tool: types.Tool[]|unknown): types.Tool[] {
+  apiClient: ApiClient,
+  tool: types.Tool[] | unknown,
+): types.Tool[] {
   if (!Array.isArray(tool)) {
     throw new Error('tool is required and must be an array of Tools');
   }
@@ -294,7 +298,9 @@ function resourceName(
 }
 
 export function tCachedContentName(
-    apiClient: ApiClient, name: string|unknown): string {
+  apiClient: ApiClient,
+  name: string | unknown,
+): string {
   if (typeof name !== 'string') {
     throw new Error('name must be a string');
   }
@@ -302,7 +308,9 @@ export function tCachedContentName(
 }
 
 export function tTuningJobStatus(
-    apiClient: ApiClient, status: string|unknown): string {
+  apiClient: ApiClient,
+  status: string | unknown,
+): string {
   switch (status) {
     case 'STATE_UNSPECIFIED':
       return 'JOB_STATE_UNSPECIFIED';
@@ -318,7 +326,9 @@ export function tTuningJobStatus(
 }
 
 export function tBytes(
-    apiClient: ApiClient, fromImageBytes: string|unknown): string {
+  apiClient: ApiClient,
+  fromImageBytes: string | unknown,
+): string {
   if (typeof fromImageBytes !== 'string') {
     throw new Error('fromImageBytes must be a string');
   }
@@ -326,7 +336,9 @@ export function tBytes(
   return fromImageBytes;
 }
 export function tFileName(
-    apiClient: ApiClient, fromName: string|unknown): string {
+  apiClient: ApiClient,
+  fromName: string | unknown,
+): string {
   if (typeof fromName !== 'string') {
     throw new Error('fromName must be a string');
   }

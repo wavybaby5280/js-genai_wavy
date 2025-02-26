@@ -8,9 +8,9 @@ export class BaseModule {
   [key: string]: any;
 }
 export function formatMap(
-    templateString: string,
-    valueMap: Record<string, unknown>,
-    ): string {
+  templateString: string,
+  valueMap: Record<string, unknown>,
+): string {
   // Use a regular expression to find all placeholders in the template string
   const regex = /\{([^}]+)\}/g;
 
@@ -28,7 +28,10 @@ export function formatMap(
 }
 
 export function setValueByPath(
-    data: Record<string, unknown>, keys: string[], value: unknown): void {
+  data: Record<string, unknown>,
+  keys: string[],
+  value: unknown,
+): void {
   for (let i = 0; i < keys.length - 1; i++) {
     const key = keys[i];
 
@@ -39,7 +42,8 @@ export function setValueByPath(
           data[keyName] = Array.from({length: value.length}, () => ({}));
         } else {
           throw new Error(
-              `Value ${value} must be a list given an array path ${key}`);
+            `Value ${value} must be a list given an array path ${key}`,
+          );
         }
       }
 
@@ -54,7 +58,10 @@ export function setValueByPath(
         } else {
           for (const d of arrayData) {
             setValueByPath(
-                d as Record<string, unknown>, keys.slice(i + 1), value);
+              d as Record<string, unknown>,
+              keys.slice(i + 1),
+              value,
+            );
           }
         }
       }
@@ -72,8 +79,10 @@ export function setValueByPath(
   const existingData = data[keyToSet];
 
   if (existingData !== undefined) {
-    if (!value ||
-        (typeof value === 'object' && Object.keys(value).length === 0)) {
+    if (
+      !value ||
+      (typeof value === 'object' && Object.keys(value).length === 0)
+    ) {
       return;
     }
 
@@ -81,12 +90,19 @@ export function setValueByPath(
       return;
     }
 
-    if (typeof existingData === 'object' && typeof value === 'object' &&
-        existingData !== null && value !== null) {
+    if (
+      typeof existingData === 'object' &&
+      typeof value === 'object' &&
+      existingData !== null &&
+      value !== null
+    ) {
       Object.assign(existingData, value);
     } else {
-      throw new Error(`Cannot set value for an existing key. Key: ${
-          keyToSet}; Existing value: ${existingData}; New value: ${value}.`);
+      throw new Error(
+        `Cannot set value for an existing key. Key: ${
+          keyToSet
+        }; Existing value: ${existingData}; New value: ${value}.`,
+      );
     }
   } else {
     data[keyToSet] = value;
