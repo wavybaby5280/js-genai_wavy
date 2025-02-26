@@ -102,6 +102,21 @@ export interface HttpRequest {
   /**
    * URL path from the modules, this path is appended to the base API URL to
    * form the complete request URL.
+   *
+   * If you wish to set full URL, use httpOptions.baseUrl instead. Example to
+   * set full URL in the request:
+   *
+   * const request: HttpRequest = {
+   *   path: '',
+   *   httpOptions: {
+   *     baseUrl: 'https://<custom-full-url>',
+   *     apiVersion: '',
+   *   },
+   *   httpMethod: 'GET',
+   * };
+   *
+   * The result URL will be: https://<custom-full-url>
+   *
    */
   path: string;
   /**
@@ -250,6 +265,20 @@ export class ApiClient {
     }
   }
 
+  constructUrl(path: string, httpOptions: HttpOptions): URL {
+    const urlElement: Array<string> =
+        [this.getRequestUrlInternal(httpOptions)];
+    if (this.clientOptions.vertexai && !path.startsWith('projects/')) {
+      urlElement.push(this.getBaseResourcePath());
+    }
+    if (path !== '') {
+      urlElement.push(path);
+    }
+    const url = new URL(`${urlElement.join('/')}`);
+
+    return url;
+  }
+
   async request(request: HttpRequest): Promise<HttpResponse> {
     let patchedHttpOptions = this.clientOptions.httpOptions!;
     if (request.httpOptions) {
@@ -258,13 +287,8 @@ export class ApiClient {
         request.httpOptions,
       );
     }
-    let path = request.path;
-    if (this.clientOptions.vertexai && !path.startsWith('projects/')) {
-      path = `${this.getBaseResourcePath()}/${path}`;
-    }
-    const url = new URL(
-      `${this.getRequestUrlInternal(patchedHttpOptions)}/${path}`,
-    );
+
+    const url = this.constructUrl(request.path, patchedHttpOptions);
     if (request.queryParams) {
       for (const [key, value] of Object.entries(request.queryParams)) {
         url.searchParams.append(key, String(value));
@@ -326,13 +350,8 @@ export class ApiClient {
         request.httpOptions,
       );
     }
-    let path: string = request.path;
-    if (this.clientOptions.vertexai && !path.startsWith('projects/')) {
-      path = `${this.getBaseResourcePath()}/${path}`;
-    }
-    const url = new URL(
-      `${this.getRequestUrlInternal(patchedHttpOptions)}/${path}`,
-    );
+
+    const url = this.constructUrl(request.path, patchedHttpOptions);
     if (!url.searchParams.has('alt') || url.searchParams.get('alt') !== 'sse') {
       url.searchParams.set('alt', 'sse');
     }
