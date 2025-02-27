@@ -2912,46 +2912,17 @@ function generateImagesParametersToVertex(
 function countTokensConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.CountTokensConfig,
-  parentObject: Record<string, unknown>,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromSystemInstruction = common.getValueByPath(fromObject, [
-    'systemInstruction',
-  ]);
-  if (
-    parentObject !== undefined &&
-    fromSystemInstruction !== undefined &&
-    fromSystemInstruction !== null
-  ) {
-    common.setValueByPath(
-      parentObject,
-      ['generateContentRequest', 'systemInstruction'],
-      contentToMldev(apiClient, t.tContent(apiClient, fromSystemInstruction)),
+  if (common.getValueByPath(fromObject, ['systemInstruction']) !== undefined) {
+    throw new Error(
+      'systemInstruction parameter is not supported in Gemini API.',
     );
   }
 
-  const fromTools = common.getValueByPath(fromObject, ['tools']);
-  if (
-    parentObject !== undefined &&
-    fromTools !== undefined &&
-    fromTools !== null
-  ) {
-    if (Array.isArray(fromTools)) {
-      common.setValueByPath(
-        parentObject,
-        ['generateContentRequest', 'tools'],
-        fromTools.map((item) => {
-          return toolToMldev(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(
-        parentObject,
-        ['generateContentRequest', 'tools'],
-        fromTools,
-      );
-    }
+  if (common.getValueByPath(fromObject, ['tools']) !== undefined) {
+    throw new Error('tools parameter is not supported in Gemini API.');
   }
 
   if (common.getValueByPath(fromObject, ['generationConfig']) !== undefined) {
@@ -3064,7 +3035,7 @@ function countTokensParametersToMldev(
     common.setValueByPath(
       toObject,
       ['config'],
-      countTokensConfigToMldev(apiClient, fromConfig, toObject),
+      countTokensConfigToMldev(apiClient, fromConfig),
     );
   }
 
