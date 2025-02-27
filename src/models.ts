@@ -10,7 +10,6 @@ import {ApiClient} from './_api_client';
 import * as common from './_common';
 import {BaseModule} from './_common';
 import * as t from './_transformers';
-import {PagedItem, Pager} from './pagers';
 import * as types from './types';
 
 export class Models extends BaseModule {
