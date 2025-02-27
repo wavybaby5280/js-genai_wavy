@@ -515,6 +515,30 @@ export class Live {
          provided, default no-op callbacks will be used. Generally, prefer to
          provide explicit callbacks to allow for proper handling of websocket
          events (e.g. connection errors).
+
+     @example
+     ```ts
+     const session = await client.live.connect({
+       model: 'gemini-2.0-flash-exp',
+       config: {
+         responseModalities: [Modality.AUDIO],
+       },
+       callbacks: {
+         onopen: () => {
+           console.log('Connected to the socket.');
+         },
+         onmessage: (e: MessageEvent) => {
+           console.log('Received message from the server: %s\n', debug(e.data));
+         },
+         onerror: (e: ErrorEvent) => {
+           console.log('Error occurred: %s\n', debug(e.error));
+         },
+         onclose: (e: CloseEvent) => {
+           console.log('Connection closed.');
+         },
+       },
+     });
+     ```
     */
   async connect(
     params: types.LiveConnectParameters,
@@ -765,6 +789,18 @@ export class Session {
      Transmits a message over the established websocket connection.
 
      @experimental
+
+     @example
+     ```ts
+     const session = await client.live.connect({
+       model: 'gemini-2.0-flash-exp',
+       config: {
+         responseModalities: [Modality.AUDIO],
+       }
+     });
+
+     session.send('Hello world!');
+     ```
    */
   send(
     message:
@@ -788,6 +824,18 @@ export class Session {
      Close terminates the websocket connection.
 
      @experimental
+
+     @example
+     ```ts
+     const session = await client.live.connect({
+       model: 'gemini-2.0-flash-exp',
+       config: {
+         responseModalities: [Modality.AUDIO],
+       }
+     });
+
+     session.close();
+     ```
    */
   close() {
     this.conn.close();
