@@ -8,7 +8,7 @@ import {
   WebSocketCallbacks,
   WebSocketFactory,
   WebSocket as Ws,
-} from './_websocket';
+} from '../_websocket';
 
 export class BrowserWebSocketFactory implements WebSocketFactory {
   create(

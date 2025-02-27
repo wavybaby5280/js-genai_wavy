@@ -4,16 +4,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {ApiClient} from './_api_client';
+import {ApiClient} from '../_api_client';
+import {Caches} from '../caches';
+import {Chats} from '../chats';
+import {Files} from '../files';
+import {Live} from '../live';
+import {Models} from '../models';
+import {Tunings} from '../tunings';
+import {HttpOptions} from '../types';
 import {BrowserWebSocketFactory} from './_browser_websocket';
 import {WebAuth} from './_web_auth';
-import {Caches} from './caches';
-import {Chats} from './chats';
-import {Files} from './files';
-import {Live} from './live';
-import {Models} from './models';
-import {Tunings} from './tunings';
-import {HttpOptions} from './types';
 
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
 

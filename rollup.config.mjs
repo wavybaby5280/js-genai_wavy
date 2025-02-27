@@ -24,7 +24,7 @@ export default [
   {
     input: 'src/index.ts',
     output: {
-      file: pkg.exports['./web']['import'],
+      file: pkg.exports['.']['import'],
       format: 'es',
       sourcemap: true,
     },
@@ -36,7 +36,7 @@ export default [
   {
     input: 'src/index.ts',
     output: {
-      file: pkg.exports['./web']['require'],
+      file: pkg.exports['.']['require'],
       format: 'cjs',
       sourcemap: true,
     },
@@ -50,6 +50,18 @@ export default [
     output: {
       file: pkg.exports['./node']['require'],
       format: 'cjs',
+      sourcemap: true,
+    },
+    plugins: rollupPlugins,
+    external: externalDeps,
+  },
+
+  // The `web/` module, ES module only (dist/web/index.js)
+  {
+    input: 'src/web/index.ts',
+    output: {
+      file: pkg.exports['./web']['import'],
+      format: 'es',
       sourcemap: true,
     },
     plugins: rollupPlugins,

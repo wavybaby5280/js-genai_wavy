@@ -266,8 +266,7 @@ export class ApiClient {
   }
 
   constructUrl(path: string, httpOptions: HttpOptions): URL {
-    const urlElement: Array<string> =
-        [this.getRequestUrlInternal(httpOptions)];
+    const urlElement: Array<string> = [this.getRequestUrlInternal(httpOptions)];
     if (this.clientOptions.vertexai && !path.startsWith('projects/')) {
       urlElement.push(this.getBaseResourcePath());
     }

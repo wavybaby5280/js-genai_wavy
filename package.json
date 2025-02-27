@@ -7,11 +7,26 @@
   "module": "dist/index.mjs",
   "typings": "dist/genai.d.ts",
   "exports": {
-    "./web": {
+    ".": {
+      "browser": {
+        "types": "./dist/web/web.d.ts",
+        "import": "./dist/web/index.mjs",
+        "default": "./dist/web/index.mjs"
+      },
+      "node": {
+        "types": "./dist/node/node.d.ts",
+        "require": "./dist/node/index.js",
+        "default": "./dist/node/index.js"
+      },
       "types": "./dist/genai.d.ts",
       "require": "./dist/index.js",
       "import": "./dist/index.mjs",
       "default": "./dist/index.js"
+    },
+    "./web": {
+      "types": "./dist/web/web.d.ts",
+      "import": "./dist/web/index.mjs",
+      "default": "./dist/web/index.mjs"
     },
     "./node": {
       "types": "./dist/node/node.d.ts",
@@ -20,9 +35,9 @@
     }
   },
   "scripts": {
-    "build": "rollup -c && api-extractor run --local --verbose && api-extractor run -c api-extractor.node.json --local --verbose",
-    "build-prod": "rollup -c && api-extractor run --verbose && api-extractor run -c api-extractor.node.json --verbose",
-    "unit-test": "ts-node node_modules/jasmine/bin/jasmine dist/test/unit/**/*_test.js test/unit/*_test.ts",
+    "build": "rollup -c && api-extractor run --local --verbose && api-extractor run -c api-extractor.node.json --local --verbose&& api-extractor run -c api-extractor.web.json --local --verbose",
+    "build-prod": "rollup -c && api-extractor run --verbose && api-extractor run -c api-extractor.node.json --verbose && api-extractor run -c api-extractor.web.json --verbose",
+    "unit-test": "ts-node node_modules/jasmine/bin/jasmine test/unit/**/*_test.ts test/unit/*_test.ts",
     "system-test": "ts-node node_modules/jasmine/bin/jasmine test/system/**/*_test.ts",
     "table-test": "ts-node node_modules/jasmine/bin/jasmine test/table_test.ts",
     "docs": "typedoc",
@@ -45,7 +60,13 @@
     "dist/node/index.mjs",
     "dist/node/index.mjs.map",
     "dist/node/node.d.ts",
-    "node/package.json"
+    "dist/web/index.js",
+    "dist/web/index.js.map",
+    "dist/web/index.mjs",
+    "dist/web/index.mjs.map",
+    "dist/web/node.d.ts",
+    "node/package.json",
+    "web/package.json"
   ],
   "devDependencies": {
     "@eslint/js": "9.20.0",

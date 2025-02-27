@@ -5,4 +5,4 @@
  */
 
 export * from '../index';
-export * from './node_client';
+export * from './web_client';
