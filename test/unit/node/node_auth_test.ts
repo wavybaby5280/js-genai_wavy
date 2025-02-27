@@ -24,6 +24,11 @@ describe('NodeAuth', () => {
     );
   });
 });
+
+interface NodeAuthWithGoogleAuth {
+  googleAuth: jasmine.SpyObj<GoogleAuth>;
+}
+
 describe('addAuthHeaders', () => {
   let googleAuthMock: jasmine.SpyObj<GoogleAuth>;
 
@@ -33,7 +38,7 @@ describe('addAuthHeaders', () => {
 
   it('should add an Authorization header with a Bearer token to the headers if it does not already exist', async () => {
     const nodeAuth = new NodeAuth({});
-    (nodeAuth as any).googleAuth = googleAuthMock; // Inject the mock
+    (nodeAuth as unknown as NodeAuthWithGoogleAuth).googleAuth = googleAuthMock; // Inject the mock
     const mockToken = 'test-token';
     googleAuthMock.getAccessToken.and.resolveTo(mockToken);
     const headers = new Headers();

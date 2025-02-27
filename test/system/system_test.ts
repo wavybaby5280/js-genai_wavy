@@ -8,7 +8,7 @@ import {fail} from 'assert';
 import {GoogleAuthOptions} from 'google-auth-library';
 
 import {NodeClient} from '../../src/node/node_client';
-import {Part} from '../../src/types';
+import {GenerateContentResponse, Part} from '../../src/types';
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
@@ -139,14 +139,16 @@ describe('generateContent', () => {
         config: {maxOutputTokens: 20, candidateCount: 1},
       });
       console.info('Vertex AI should allow user provided googleAuth objects\n');
-    } catch (error: any) {
-      // When a service account is passed in via client_email, a private_key
-      // field is required.
-      expect(
-        error.message.includes(
-          'The incoming JSON object does not contain a private_key field',
-        ),
-      );
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        // When a service account is passed in via client_email, a private_key
+        // field is required.
+        expect(
+          error.message.includes(
+            'The incoming JSON object does not contain a private_key field',
+          ),
+        );
+      }
     }
   });
 });
@@ -160,7 +162,7 @@ describe('generateContentStream', () => {
       config: {candidateCount: 1, maxOutputTokens: 200},
     });
     let i = 1;
-    let finalChunk: any;
+    let finalChunk: GenerateContentResponse | undefined = undefined;
     console.info(
       'ML Dev should stream generate content with specified parameters',
     );
@@ -174,10 +176,10 @@ describe('generateContentStream', () => {
       i++;
       finalChunk = chunk;
     }
-    expect(finalChunk.usageMetadata!.candidatesTokenCount).toBeLessThanOrEqual(
+    expect(finalChunk?.usageMetadata!.candidatesTokenCount).toBeLessThanOrEqual(
       250, // sometimes backend returns a little more than 200 tokens
       'Expected candidatesTokenCount to be less than or equal to 250, got ' +
-        finalChunk.usageMetadata!.candidatesTokenCount,
+        finalChunk?.usageMetadata!.candidatesTokenCount,
     );
   });
 
@@ -193,7 +195,7 @@ describe('generateContentStream', () => {
       config: {candidateCount: 1, maxOutputTokens: 200},
     });
     let i = 1;
-    let finalChunk: any;
+    let finalChunk: GenerateContentResponse | undefined = undefined;
     console.info(
       'Vertex AI should stream generate content with specified parameters',
     );
@@ -206,10 +208,10 @@ describe('generateContentStream', () => {
       i++;
       finalChunk = chunk;
     }
-    expect(finalChunk.usageMetadata.candidatesTokenCount).toBeLessThanOrEqual(
+    expect(finalChunk?.usageMetadata!.candidatesTokenCount).toBeLessThanOrEqual(
       250, // sometimes backend returns a little more than 200 tokens
       'Expected candidatesTokenCount to be less than or equal to 250, got ' +
-        finalChunk.usageMetadata.candidatesTokenCount,
+        finalChunk?.usageMetadata!.candidatesTokenCount,
     );
   });
 
@@ -226,7 +228,7 @@ describe('generateContentStream', () => {
       },
     });
     let i = 1;
-    let finalChunk: any;
+    let finalChunk: GenerateContentResponse | undefined = undefined;
     console.info(
       'ML Dev should stream generate content with system instruction',
     );
@@ -239,10 +241,10 @@ describe('generateContentStream', () => {
       i++;
       finalChunk = chunk;
     }
-    expect(finalChunk.usageMetadata.candidatesTokenCount).toBeLessThanOrEqual(
+    expect(finalChunk?.usageMetadata!.candidatesTokenCount).toBeLessThanOrEqual(
       250, // sometimes backend returns a little more than 200 tokens
       'Expected candidatesTokenCount to be less than or equal to 250, got ' +
-        finalChunk.usageMetadata.candidatesTokenCount,
+        finalChunk?.usageMetadata!.candidatesTokenCount,
     );
   });
 
@@ -263,7 +265,7 @@ describe('generateContentStream', () => {
       },
     });
     let i = 1;
-    let finalChunk: any;
+    let finalChunk: GenerateContentResponse | undefined = undefined;
     console.info(
       'Vertex AI should stream generate content with system instruction',
     );
@@ -276,10 +278,10 @@ describe('generateContentStream', () => {
       i++;
       finalChunk = chunk;
     }
-    expect(finalChunk.usageMetadata.candidatesTokenCount).toBeLessThanOrEqual(
+    expect(finalChunk?.usageMetadata!.candidatesTokenCount).toBeLessThanOrEqual(
       250, // sometimes backend returns a little more than 200 tokens
       'Expected candidatesTokenCount to be less than or equal to 250, got ' +
-        finalChunk.usageMetadata.candidatesTokenCount,
+        finalChunk?.usageMetadata!.candidatesTokenCount,
     );
   });
 });

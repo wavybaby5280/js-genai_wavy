@@ -30,24 +30,24 @@ function isBase64Encoded(str: string): boolean {
   try {
     const decoded = atob(str);
     return btoa(decoded) === str;
-  } catch (err) {
+  } catch {
     return false;
   }
 }
 
-function isObjectEmpty(obj: any) {
-  if (obj === undefined) {
+function isObjectEmpty(obj: unknown) {
+  if (obj == null) {
     return true;
   }
   if (typeof obj !== 'object') {
     return false;
   }
   for (const key of Object.keys(obj)) {
-    if (typeof obj[key] === 'object') {
-      if (!isObjectEmpty(obj[key])) {
+    if (typeof obj[key as keyof typeof obj] === 'object') {
+      if (!isObjectEmpty(obj[key as keyof typeof obj])) {
         return false;
       }
-    } else if (obj[key] !== undefined) {
+    } else if (obj[key as keyof typeof obj] !== undefined) {
       return false;
     }
   }
@@ -55,13 +55,13 @@ function isObjectEmpty(obj: any) {
 }
 
 function assertMessagesEqual(
-  actual: any,
-  expected: any,
+  actual: unknown,
+  expected: unknown,
   options?: {ignoreKeys?: string[]},
 ) {
   const {ignoreKeys = []} = options || {};
 
-  function assertDeepEqual(a: any, b: any) {
+  function assertDeepEqual(a: unknown, b: unknown) {
     if (typeof a !== typeof b) {
       // Possible that the type is bytes, which is represented in NodeJS as a
       // string.
@@ -82,7 +82,7 @@ function assertMessagesEqual(
       }
     }
 
-    if (typeof a === 'object') {
+    if (typeof a === 'object' && typeof b === 'object' && a && b) {
       const aKeys = Object.keys(a).filter((key) => !ignoreKeys.includes(key));
       const bKeys = Object.keys(b).filter((key) => !ignoreKeys.includes(key));
 
@@ -95,7 +95,7 @@ function assertMessagesEqual(
           continue;
         }
         try {
-          assertDeepEqual(a[key], b[key]);
+          assertDeepEqual(a[key as keyof typeof a], b[key as keyof typeof b]);
         } catch (e) {
           if (e instanceof Error) {
             let message = e.message;
@@ -104,10 +104,10 @@ function assertMessagesEqual(
               !message.includes('Unequal key trace')
             ) {
               message = `Unequal key value:\n a[${key}]: ${JSON.stringify(
-                a[key],
+                a[key as keyof typeof a],
                 null,
                 2,
-              )}\n b[${key}]: ${JSON.stringify(b[key], null, 2)}`;
+              )}\n b[${key}]: ${JSON.stringify(b[key as keyof typeof b], null, 2)}`;
             } else {
               message = `Unequal key trace (see cause for detals): ${key}`;
             }
@@ -120,7 +120,7 @@ function assertMessagesEqual(
       return;
     }
 
-    if (typeof a === 'string' && isBase64Encoded(a)) {
+    if (typeof a === 'string' && isBase64Encoded(a) && typeof b === 'string') {
       const aEncoded = snakeToCamel(websafeEncode(a));
       const bEncoded = snakeToCamel(websafeEncode(b));
       if (aEncoded !== bEncoded) {
@@ -131,7 +131,12 @@ function assertMessagesEqual(
       return;
     }
 
-    if (Date.parse(a)) {
+    if (
+      typeof a === 'string' &&
+      typeof b === 'string' &&
+      Date.parse(a) &&
+      Date.parse(b)
+    ) {
       if (Date.parse(a) !== Date.parse(b)) {
         throw new Error(`Unequal dates:\n a: ${a}\n b: ${b}`);
       }
@@ -224,11 +229,10 @@ function normalizeBody(body: string) {
     let parsedBody = JSON.parse(camelCaseBody);
     if (typeof parsedBody === 'object' && parsedBody !== null) {
       for (const key of Object.keys(parsedBody)) {
-        // JSON.parse return any type but we need to explicitly cast it to any
-        // to access the values by string key.
-        const value = (parsedBody as any)[key];
+        const value = (parsedBody as Record<string, unknown>)[key];
         if (typeof value === 'string') {
-          (parsedBody as any)[key] = redactProjectAndLocationPath(value);
+          (parsedBody as Record<string, string>)[key] =
+            redactProjectAndLocationPath(value);
         }
       }
       parsedBody = [parsedBody];
@@ -285,7 +289,7 @@ function walk(dir: string): string[] {
   ) as string[];
 }
 
-function normalizeParameters(parameters: any): any {
+function normalizeParameters(parameters: Record<string, unknown>): unknown {
   return JSON.parse(snakeToCamel(JSON.stringify(parameters)));
 }
 
