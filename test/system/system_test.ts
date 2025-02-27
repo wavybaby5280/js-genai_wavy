@@ -7,7 +7,7 @@
 import {fail} from 'assert';
 import {GoogleAuthOptions} from 'google-auth-library';
 
-import {NodeClient} from '../../src/node/node_client';
+import {Client} from '../../src/node/node_client';
 import {GenerateContentResponse, Part} from '../../src/types';
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
@@ -18,7 +18,7 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000; // 30 seconds
 
 describe('generateContent', () => {
   it('ML Dev should generate content with specified parameters', async () => {
-    const client = new NodeClient({vertexai: false, apiKey: GOOGLE_API_KEY});
+    const client = new Client({vertexai: false, apiKey: GOOGLE_API_KEY});
     const response = await client.models.generateContent({
       model: 'gemini-1.5-flash',
       contents: 'why is the sky blue?',
@@ -40,7 +40,7 @@ describe('generateContent', () => {
   });
 
   it('Vertex AI should generate content with specified parameters', async () => {
-    const client = new NodeClient({
+    const client = new Client({
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
@@ -66,7 +66,7 @@ describe('generateContent', () => {
   });
 
   it('ML Dev should generate content with system instruction', async () => {
-    const client = new NodeClient({vertexai: false, apiKey: GOOGLE_API_KEY});
+    const client = new Client({vertexai: false, apiKey: GOOGLE_API_KEY});
     const response = await client.models.generateContent({
       model: 'gemini-1.5-flash',
       contents: 'high',
@@ -84,7 +84,7 @@ describe('generateContent', () => {
   });
 
   it('Vertex AI should generate content with system instruction', async () => {
-    const client = new NodeClient({
+    const client = new Client({
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
@@ -105,7 +105,7 @@ describe('generateContent', () => {
     );
   });
   it('Vertex AI should use application default credentials when no auth options are provided', async () => {
-    const client = new NodeClient({
+    const client = new Client({
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
@@ -126,7 +126,7 @@ describe('generateContent', () => {
         private_key: '',
       },
     };
-    const client = new NodeClient({
+    const client = new Client({
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
@@ -155,7 +155,7 @@ describe('generateContent', () => {
 
 describe('generateContentStream', () => {
   it('ML Dev should stream generate content with specified parameters', async () => {
-    const client = new NodeClient({vertexai: false, apiKey: GOOGLE_API_KEY});
+    const client = new Client({vertexai: false, apiKey: GOOGLE_API_KEY});
     const response = await client.models.generateContentStream({
       model: 'gemini-1.5-flash',
       contents: 'why is the sky blue?',
@@ -184,7 +184,7 @@ describe('generateContentStream', () => {
   });
 
   it('Vertex AI should stream generate content with specified parameters', async () => {
-    const client = new NodeClient({
+    const client = new Client({
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
@@ -216,7 +216,7 @@ describe('generateContentStream', () => {
   });
 
   it('ML Dev should stream generate content with system instruction', async () => {
-    const client = new NodeClient({vertexai: false, apiKey: GOOGLE_API_KEY});
+    const client = new Client({vertexai: false, apiKey: GOOGLE_API_KEY});
     const response = await client.models.generateContentStream({
       model: 'gemini-1.5-flash',
       contents: 'high',
@@ -249,7 +249,7 @@ describe('generateContentStream', () => {
   });
 
   it('Vertex AI should stream generate content with system instruction', async () => {
-    const client = new NodeClient({
+    const client = new Client({
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
@@ -288,7 +288,7 @@ describe('generateContentStream', () => {
 
 describe('generateImages', () => {
   it('ML Dev should generate image with specified parameters', async () => {
-    const client = new NodeClient({vertexai: false, apiKey: GOOGLE_API_KEY});
+    const client = new Client({vertexai: false, apiKey: GOOGLE_API_KEY});
     const response = await client.models.generateImages({
       model: 'imagen-3.0-generate-002',
       prompt: 'Robot holding a red skateboard',
@@ -305,7 +305,7 @@ describe('generateImages', () => {
   });
 
   it('Vertex AI should generate images with specified parameters', async () => {
-    const client = new NodeClient({
+    const client = new Client({
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
@@ -331,7 +331,7 @@ describe('test async performance', () => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 15000; // 15 seconds
   });
   it('generate content should complete in less than 10 seconds', async () => {
-    const client = new NodeClient({vertexai: false, apiKey: GOOGLE_API_KEY});
+    const client = new Client({vertexai: false, apiKey: GOOGLE_API_KEY});
     async function firstAsyncFunc() {
       client.models.generateContent({
         model: 'gemini-1.5-flash',
@@ -368,7 +368,7 @@ describe('test async performance', () => {
     }
   });
   it('stream generate content should complete in less than 10 seconds', async () => {
-    const client = new NodeClient({vertexai: false, apiKey: GOOGLE_API_KEY});
+    const client = new Client({vertexai: false, apiKey: GOOGLE_API_KEY});
     async function firstAsyncFunc() {
       client.models.generateContentStream({
         model: 'gemini-1.5-flash',
@@ -408,7 +408,7 @@ describe('test async performance', () => {
 
 describe('test forward compatibility', () => {
   it('generate content should not return thought field', async () => {
-    const client = new NodeClient({
+    const client = new Client({
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
       httpOptions: {apiVersion: 'v1alpha'},
@@ -431,7 +431,7 @@ describe('test forward compatibility', () => {
 
 describe('countTokens', () => {
   it('ML Dev should count tokens with specified parameters', async () => {
-    const client = new NodeClient({vertexai: false, apiKey: GOOGLE_API_KEY});
+    const client = new Client({vertexai: false, apiKey: GOOGLE_API_KEY});
 
     const response = await client.models.countTokens({
       model: 'gemini-1.5-flash',
@@ -448,7 +448,7 @@ describe('countTokens', () => {
   });
 
   it('Vertex AI should count tokens with specified parameters', async () => {
-    const client = new NodeClient({
+    const client = new Client({
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
@@ -471,7 +471,7 @@ describe('countTokens', () => {
 
 describe('embedContent', () => {
   it('Vertex AI should embed content with specified parameters', async () => {
-    const client = new NodeClient({
+    const client = new Client({
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
@@ -494,7 +494,7 @@ describe('embedContent', () => {
 
 describe('computeTokens', () => {
   it('Vertex AI should compute tokens with specified parameters', async () => {
-    const client = new NodeClient({
+    const client = new Client({
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
@@ -517,7 +517,7 @@ describe('computeTokens', () => {
 
 describe('cachedContent', () => {
   it('Vertex AI should cache content with specified parameters', async () => {
-    const client = new NodeClient({
+    const client = new Client({
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
@@ -551,7 +551,7 @@ describe('cachedContent', () => {
   });
 
   it('Vertex AI should return list of caches', async () => {
-    const client = new NodeClient({
+    const client = new Client({
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
@@ -569,7 +569,7 @@ describe('cachedContent', () => {
 
 describe('files', () => {
   it('ML Dev should list files with specified parameters', async () => {
-    const client = new NodeClient({vertexai: false, apiKey: GOOGLE_API_KEY});
+    const client = new Client({vertexai: false, apiKey: GOOGLE_API_KEY});
     const response = await client.files.list({config: {'pageSize': 2}});
     expect(response!.len() ?? 0).toBeGreaterThan(
       0,

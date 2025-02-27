@@ -18,11 +18,11 @@ import {HttpOptions} from './types';
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
 
 /**
- * Options for initializing the WebClient. The client uses the parameters
+ * Options for initializing the Client. The client uses the parameters
  * for authentication purposes as well as to infer if SDK should send the
  * request to Vertex AI or Gemini API.
  */
-export interface WebClientInitOptions {
+export interface ClientInitOptions {
   /**
    * The API Key.
    */
@@ -75,7 +75,7 @@ export interface WebClientInitOptions {
     })
   ```
   */
-export class WebClient {
+export class Client {
   protected readonly apiClient: ApiClient;
   private readonly apiKey: string;
   public readonly vertexai: boolean;
@@ -87,7 +87,7 @@ export class WebClient {
   readonly caches: Caches;
   readonly files: Files;
 
-  constructor(options: WebClientInitOptions) {
+  constructor(options: ClientInitOptions) {
     this.vertexai = options.vertexai ?? false;
     this.apiKey = options.apiKey;
     this.apiVersion = options.apiVersion;

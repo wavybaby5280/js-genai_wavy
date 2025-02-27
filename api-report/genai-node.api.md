@@ -121,6 +121,33 @@ export interface CitationMetadata {
 }
 
 // @public
+export class Client {
+    constructor(options: ClientInitOptions);
+    // (undocumented)
+    [key: string]: any;
+    // (undocumented)
+    protected readonly apiClient: ApiClient;
+    // (undocumented)
+    readonly caches: Caches;
+    // (undocumented)
+    readonly chats: Chats;
+    // Warning: (ae-forgotten-export) The symbol "Files" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    readonly files: Files;
+    // (undocumented)
+    readonly live: Live;
+    // (undocumented)
+    readonly models: Models;
+    // Warning: (ae-forgotten-export) The symbol "Tunings" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    readonly tunings: Tunings;
+    // (undocumented)
+    readonly vertexai?: boolean;
+}
+
+// @public
 export interface ClientInitOptions {
     apiKey?: string;
     apiVersion?: string;
@@ -1180,33 +1207,6 @@ export class Models extends BaseModule {
     generateContent: (params: types.GenerateContentParameters) => Promise<types.GenerateContentResponse>;
     generateContentStream: (params: types.GenerateContentParameters) => Promise<AsyncGenerator<types.GenerateContentResponse>>;
     generateImages(params: types.GenerateImagesParameters): Promise<types.GenerateImagesResponse>;
-}
-
-// @public
-export class NodeClient {
-    constructor(options: ClientInitOptions);
-    // (undocumented)
-    [key: string]: any;
-    // (undocumented)
-    protected readonly apiClient: ApiClient;
-    // (undocumented)
-    readonly caches: Caches;
-    // (undocumented)
-    readonly chats: Chats;
-    // Warning: (ae-forgotten-export) The symbol "Files" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
-    readonly files: Files;
-    // (undocumented)
-    readonly live: Live;
-    // (undocumented)
-    readonly models: Models;
-    // Warning: (ae-forgotten-export) The symbol "Tunings" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
-    readonly tunings: Tunings;
-    // (undocumented)
-    readonly vertexai?: boolean;
 }
 
 // @public

@@ -6,7 +6,7 @@
 import {
   FunctionCallingConfigMode,
   FunctionDeclaration,
-  NodeClient,
+  Client,
   Type,
 } from '@google/genai/node';
 
@@ -16,7 +16,7 @@ const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
 
 async function generateContentFromMLDev() {
-  const client = new NodeClient({vertexai: false, apiKey: GEMINI_API_KEY});
+  const client = new Client({vertexai: false, apiKey: GEMINI_API_KEY});
 
   const controlLightFunctionDeclaration: FunctionDeclaration = {
     name: 'controlLight',
@@ -56,7 +56,7 @@ async function generateContentFromMLDev() {
 }
 
 async function generateContentFromVertexAI() {
-  const client = new NodeClient({
+  const client = new Client({
     vertexai: true,
     project: GOOGLE_CLOUD_PROJECT,
     location: GOOGLE_CLOUD_LOCATION,

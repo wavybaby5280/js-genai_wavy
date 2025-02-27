@@ -6,7 +6,7 @@
 
 import * as fs from 'fs';
 
-import {ClientInitOptions, NodeClient} from './node/node_client';
+import {ClientInitOptions, Client} from './node/node_client';
 import * as types from './types';
 
 /**
@@ -27,7 +27,7 @@ export interface ReplayClientInitOpts extends ClientInitOptions {
  * The ReplayAPIClient class is used to execute intergration tests in replay
  * mode, where the API responses are loaded and constructed from recorded files.
  */
-export class ReplayAPIClient extends NodeClient {
+export class ReplayAPIClient extends Client {
   private replayFile: string;
   private replayFileJson: Record<string, unknown>;
 

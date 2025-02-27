@@ -93,7 +93,7 @@ export interface ClientInitOptions {
   ```ts
     import * as genai from ("@google/genai/node");
 
-    const client = genai.NodeClient({apiKey: 'my-api-key'})
+    const client = genai.Client({apiKey: 'my-api-key'})
   ```
 
   Usage for the Vertex AI API:
@@ -101,12 +101,12 @@ export interface ClientInitOptions {
   ```ts
     import * as genai from ("@google/genai/node");
 
-    const client = genai.NodeClient({
+    const client = genai.Client({
         vertexai: true, project: 'my-project-id', location: 'us-central1'
     })
   ```
   */
-export class NodeClient {
+export class Client {
   [key: string]: any;
   protected readonly apiClient: ApiClient;
   private readonly apiKey?: string;
