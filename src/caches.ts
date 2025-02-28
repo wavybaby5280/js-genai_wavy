@@ -447,17 +447,14 @@ function partToMldev(
   }
 
   const fromThought = common.getValueByPath(fromObject, ['thought']);
-  if (fromThought !== undefined && fromThought !== null) {
+  if (fromThought != null) {
     common.setValueByPath(toObject, ['thought'], fromThought);
   }
 
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
     'codeExecutionResult',
   ]);
-  if (
-    fromCodeExecutionResult !== undefined &&
-    fromCodeExecutionResult !== null
-  ) {
+  if (fromCodeExecutionResult != null) {
     common.setValueByPath(
       toObject,
       ['codeExecutionResult'],
@@ -468,34 +465,34 @@ function partToMldev(
   const fromExecutableCode = common.getValueByPath(fromObject, [
     'executableCode',
   ]);
-  if (fromExecutableCode !== undefined && fromExecutableCode !== null) {
+  if (fromExecutableCode != null) {
     common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
   }
 
   const fromFileData = common.getValueByPath(fromObject, ['fileData']);
-  if (fromFileData !== undefined && fromFileData !== null) {
+  if (fromFileData != null) {
     common.setValueByPath(toObject, ['fileData'], fromFileData);
   }
 
   const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
-  if (fromFunctionCall !== undefined && fromFunctionCall !== null) {
+  if (fromFunctionCall != null) {
     common.setValueByPath(toObject, ['functionCall'], fromFunctionCall);
   }
 
   const fromFunctionResponse = common.getValueByPath(fromObject, [
     'functionResponse',
   ]);
-  if (fromFunctionResponse !== undefined && fromFunctionResponse !== null) {
+  if (fromFunctionResponse != null) {
     common.setValueByPath(toObject, ['functionResponse'], fromFunctionResponse);
   }
 
   const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
-  if (fromInlineData !== undefined && fromInlineData !== null) {
+  if (fromInlineData != null) {
     common.setValueByPath(toObject, ['inlineData'], fromInlineData);
   }
 
   const fromText = common.getValueByPath(fromObject, ['text']);
-  if (fromText !== undefined && fromText !== null) {
+  if (fromText != null) {
     common.setValueByPath(toObject, ['text'], fromText);
   }
 
@@ -511,22 +508,19 @@ function partToVertex(
   const fromVideoMetadata = common.getValueByPath(fromObject, [
     'videoMetadata',
   ]);
-  if (fromVideoMetadata !== undefined && fromVideoMetadata !== null) {
+  if (fromVideoMetadata != null) {
     common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
   }
 
   const fromThought = common.getValueByPath(fromObject, ['thought']);
-  if (fromThought !== undefined && fromThought !== null) {
+  if (fromThought != null) {
     common.setValueByPath(toObject, ['thought'], fromThought);
   }
 
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
     'codeExecutionResult',
   ]);
-  if (
-    fromCodeExecutionResult !== undefined &&
-    fromCodeExecutionResult !== null
-  ) {
+  if (fromCodeExecutionResult != null) {
     common.setValueByPath(
       toObject,
       ['codeExecutionResult'],
@@ -537,34 +531,34 @@ function partToVertex(
   const fromExecutableCode = common.getValueByPath(fromObject, [
     'executableCode',
   ]);
-  if (fromExecutableCode !== undefined && fromExecutableCode !== null) {
+  if (fromExecutableCode != null) {
     common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
   }
 
   const fromFileData = common.getValueByPath(fromObject, ['fileData']);
-  if (fromFileData !== undefined && fromFileData !== null) {
+  if (fromFileData != null) {
     common.setValueByPath(toObject, ['fileData'], fromFileData);
   }
 
   const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
-  if (fromFunctionCall !== undefined && fromFunctionCall !== null) {
+  if (fromFunctionCall != null) {
     common.setValueByPath(toObject, ['functionCall'], fromFunctionCall);
   }
 
   const fromFunctionResponse = common.getValueByPath(fromObject, [
     'functionResponse',
   ]);
-  if (fromFunctionResponse !== undefined && fromFunctionResponse !== null) {
+  if (fromFunctionResponse != null) {
     common.setValueByPath(toObject, ['functionResponse'], fromFunctionResponse);
   }
 
   const fromInlineData = common.getValueByPath(fromObject, ['inlineData']);
-  if (fromInlineData !== undefined && fromInlineData !== null) {
+  if (fromInlineData != null) {
     common.setValueByPath(toObject, ['inlineData'], fromInlineData);
   }
 
   const fromText = common.getValueByPath(fromObject, ['text']);
-  if (fromText !== undefined && fromText !== null) {
+  if (fromText != null) {
     common.setValueByPath(toObject, ['text'], fromText);
   }
 
@@ -579,7 +573,7 @@ export function contentToMldev(
   const toObject: Record<string, unknown> = {};
 
   const fromParts = common.getValueByPath(fromObject, ['parts']);
-  if (fromParts !== undefined && fromParts !== null) {
+  if (fromParts != null) {
     if (Array.isArray(fromParts)) {
       common.setValueByPath(
         toObject,
@@ -594,7 +588,7 @@ export function contentToMldev(
   }
 
   const fromRole = common.getValueByPath(fromObject, ['role']);
-  if (fromRole !== undefined && fromRole !== null) {
+  if (fromRole != null) {
     common.setValueByPath(toObject, ['role'], fromRole);
   }
 
@@ -609,7 +603,7 @@ export function contentToVertex(
   const toObject: Record<string, unknown> = {};
 
   const fromParts = common.getValueByPath(fromObject, ['parts']);
-  if (fromParts !== undefined && fromParts !== null) {
+  if (fromParts != null) {
     if (Array.isArray(fromParts)) {
       common.setValueByPath(
         toObject,
@@ -624,7 +618,7 @@ export function contentToVertex(
   }
 
   const fromRole = common.getValueByPath(fromObject, ['role']);
-  if (fromRole !== undefined && fromRole !== null) {
+  if (fromRole != null) {
     common.setValueByPath(toObject, ['role'], fromRole);
   }
 
@@ -648,7 +642,7 @@ function schemaToMldev(
   const fromPropertyOrdering = common.getValueByPath(fromObject, [
     'propertyOrdering',
   ]);
-  if (fromPropertyOrdering !== undefined && fromPropertyOrdering !== null) {
+  if (fromPropertyOrdering != null) {
     common.setValueByPath(toObject, ['propertyOrdering'], fromPropertyOrdering);
   }
 
@@ -701,37 +695,37 @@ function schemaToMldev(
   }
 
   const fromType = common.getValueByPath(fromObject, ['type']);
-  if (fromType !== undefined && fromType !== null) {
+  if (fromType != null) {
     common.setValueByPath(toObject, ['type'], fromType);
   }
 
   const fromDescription = common.getValueByPath(fromObject, ['description']);
-  if (fromDescription !== undefined && fromDescription !== null) {
+  if (fromDescription != null) {
     common.setValueByPath(toObject, ['description'], fromDescription);
   }
 
   const fromEnum = common.getValueByPath(fromObject, ['enum']);
-  if (fromEnum !== undefined && fromEnum !== null) {
+  if (fromEnum != null) {
     common.setValueByPath(toObject, ['enum'], fromEnum);
   }
 
   const fromFormat = common.getValueByPath(fromObject, ['format']);
-  if (fromFormat !== undefined && fromFormat !== null) {
+  if (fromFormat != null) {
     common.setValueByPath(toObject, ['format'], fromFormat);
   }
 
   const fromItems = common.getValueByPath(fromObject, ['items']);
-  if (fromItems !== undefined && fromItems !== null) {
+  if (fromItems != null) {
     common.setValueByPath(toObject, ['items'], fromItems);
   }
 
   const fromProperties = common.getValueByPath(fromObject, ['properties']);
-  if (fromProperties !== undefined && fromProperties !== null) {
+  if (fromProperties != null) {
     common.setValueByPath(toObject, ['properties'], fromProperties);
   }
 
   const fromRequired = common.getValueByPath(fromObject, ['required']);
-  if (fromRequired !== undefined && fromRequired !== null) {
+  if (fromRequired != null) {
     common.setValueByPath(toObject, ['required'], fromRequired);
   }
 
@@ -745,118 +739,118 @@ function schemaToVertex(
   const toObject: Record<string, unknown> = {};
 
   const fromMinItems = common.getValueByPath(fromObject, ['minItems']);
-  if (fromMinItems !== undefined && fromMinItems !== null) {
+  if (fromMinItems != null) {
     common.setValueByPath(toObject, ['minItems'], fromMinItems);
   }
 
   const fromExample = common.getValueByPath(fromObject, ['example']);
-  if (fromExample !== undefined && fromExample !== null) {
+  if (fromExample != null) {
     common.setValueByPath(toObject, ['example'], fromExample);
   }
 
   const fromPropertyOrdering = common.getValueByPath(fromObject, [
     'propertyOrdering',
   ]);
-  if (fromPropertyOrdering !== undefined && fromPropertyOrdering !== null) {
+  if (fromPropertyOrdering != null) {
     common.setValueByPath(toObject, ['propertyOrdering'], fromPropertyOrdering);
   }
 
   const fromPattern = common.getValueByPath(fromObject, ['pattern']);
-  if (fromPattern !== undefined && fromPattern !== null) {
+  if (fromPattern != null) {
     common.setValueByPath(toObject, ['pattern'], fromPattern);
   }
 
   const fromMinimum = common.getValueByPath(fromObject, ['minimum']);
-  if (fromMinimum !== undefined && fromMinimum !== null) {
+  if (fromMinimum != null) {
     common.setValueByPath(toObject, ['minimum'], fromMinimum);
   }
 
   const fromDefault = common.getValueByPath(fromObject, ['default']);
-  if (fromDefault !== undefined && fromDefault !== null) {
+  if (fromDefault != null) {
     common.setValueByPath(toObject, ['default'], fromDefault);
   }
 
   const fromAnyOf = common.getValueByPath(fromObject, ['anyOf']);
-  if (fromAnyOf !== undefined && fromAnyOf !== null) {
+  if (fromAnyOf != null) {
     common.setValueByPath(toObject, ['anyOf'], fromAnyOf);
   }
 
   const fromMaxLength = common.getValueByPath(fromObject, ['maxLength']);
-  if (fromMaxLength !== undefined && fromMaxLength !== null) {
+  if (fromMaxLength != null) {
     common.setValueByPath(toObject, ['maxLength'], fromMaxLength);
   }
 
   const fromTitle = common.getValueByPath(fromObject, ['title']);
-  if (fromTitle !== undefined && fromTitle !== null) {
+  if (fromTitle != null) {
     common.setValueByPath(toObject, ['title'], fromTitle);
   }
 
   const fromMinLength = common.getValueByPath(fromObject, ['minLength']);
-  if (fromMinLength !== undefined && fromMinLength !== null) {
+  if (fromMinLength != null) {
     common.setValueByPath(toObject, ['minLength'], fromMinLength);
   }
 
   const fromMinProperties = common.getValueByPath(fromObject, [
     'minProperties',
   ]);
-  if (fromMinProperties !== undefined && fromMinProperties !== null) {
+  if (fromMinProperties != null) {
     common.setValueByPath(toObject, ['minProperties'], fromMinProperties);
   }
 
   const fromMaxItems = common.getValueByPath(fromObject, ['maxItems']);
-  if (fromMaxItems !== undefined && fromMaxItems !== null) {
+  if (fromMaxItems != null) {
     common.setValueByPath(toObject, ['maxItems'], fromMaxItems);
   }
 
   const fromMaximum = common.getValueByPath(fromObject, ['maximum']);
-  if (fromMaximum !== undefined && fromMaximum !== null) {
+  if (fromMaximum != null) {
     common.setValueByPath(toObject, ['maximum'], fromMaximum);
   }
 
   const fromNullable = common.getValueByPath(fromObject, ['nullable']);
-  if (fromNullable !== undefined && fromNullable !== null) {
+  if (fromNullable != null) {
     common.setValueByPath(toObject, ['nullable'], fromNullable);
   }
 
   const fromMaxProperties = common.getValueByPath(fromObject, [
     'maxProperties',
   ]);
-  if (fromMaxProperties !== undefined && fromMaxProperties !== null) {
+  if (fromMaxProperties != null) {
     common.setValueByPath(toObject, ['maxProperties'], fromMaxProperties);
   }
 
   const fromType = common.getValueByPath(fromObject, ['type']);
-  if (fromType !== undefined && fromType !== null) {
+  if (fromType != null) {
     common.setValueByPath(toObject, ['type'], fromType);
   }
 
   const fromDescription = common.getValueByPath(fromObject, ['description']);
-  if (fromDescription !== undefined && fromDescription !== null) {
+  if (fromDescription != null) {
     common.setValueByPath(toObject, ['description'], fromDescription);
   }
 
   const fromEnum = common.getValueByPath(fromObject, ['enum']);
-  if (fromEnum !== undefined && fromEnum !== null) {
+  if (fromEnum != null) {
     common.setValueByPath(toObject, ['enum'], fromEnum);
   }
 
   const fromFormat = common.getValueByPath(fromObject, ['format']);
-  if (fromFormat !== undefined && fromFormat !== null) {
+  if (fromFormat != null) {
     common.setValueByPath(toObject, ['format'], fromFormat);
   }
 
   const fromItems = common.getValueByPath(fromObject, ['items']);
-  if (fromItems !== undefined && fromItems !== null) {
+  if (fromItems != null) {
     common.setValueByPath(toObject, ['items'], fromItems);
   }
 
   const fromProperties = common.getValueByPath(fromObject, ['properties']);
-  if (fromProperties !== undefined && fromProperties !== null) {
+  if (fromProperties != null) {
     common.setValueByPath(toObject, ['properties'], fromProperties);
   }
 
   const fromRequired = common.getValueByPath(fromObject, ['required']);
-  if (fromRequired !== undefined && fromRequired !== null) {
+  if (fromRequired != null) {
     common.setValueByPath(toObject, ['required'], fromRequired);
   }
 
@@ -874,17 +868,17 @@ function functionDeclarationToMldev(
   }
 
   const fromDescription = common.getValueByPath(fromObject, ['description']);
-  if (fromDescription !== undefined && fromDescription !== null) {
+  if (fromDescription != null) {
     common.setValueByPath(toObject, ['description'], fromDescription);
   }
 
   const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName !== undefined && fromName !== null) {
+  if (fromName != null) {
     common.setValueByPath(toObject, ['name'], fromName);
   }
 
   const fromParameters = common.getValueByPath(fromObject, ['parameters']);
-  if (fromParameters !== undefined && fromParameters !== null) {
+  if (fromParameters != null) {
     common.setValueByPath(toObject, ['parameters'], fromParameters);
   }
 
@@ -898,7 +892,7 @@ function functionDeclarationToVertex(
   const toObject: Record<string, unknown> = {};
 
   const fromResponse = common.getValueByPath(fromObject, ['response']);
-  if (fromResponse !== undefined && fromResponse !== null) {
+  if (fromResponse != null) {
     common.setValueByPath(
       toObject,
       ['response'],
@@ -907,17 +901,17 @@ function functionDeclarationToVertex(
   }
 
   const fromDescription = common.getValueByPath(fromObject, ['description']);
-  if (fromDescription !== undefined && fromDescription !== null) {
+  if (fromDescription != null) {
     common.setValueByPath(toObject, ['description'], fromDescription);
   }
 
   const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName !== undefined && fromName !== null) {
+  if (fromName != null) {
     common.setValueByPath(toObject, ['name'], fromName);
   }
 
   const fromParameters = common.getValueByPath(fromObject, ['parameters']);
-  if (fromParameters !== undefined && fromParameters !== null) {
+  if (fromParameters != null) {
     common.setValueByPath(toObject, ['parameters'], fromParameters);
   }
 
@@ -949,14 +943,14 @@ function dynamicRetrievalConfigToMldev(
   const toObject: Record<string, unknown> = {};
 
   const fromMode = common.getValueByPath(fromObject, ['mode']);
-  if (fromMode !== undefined && fromMode !== null) {
+  if (fromMode != null) {
     common.setValueByPath(toObject, ['mode'], fromMode);
   }
 
   const fromDynamicThreshold = common.getValueByPath(fromObject, [
     'dynamicThreshold',
   ]);
-  if (fromDynamicThreshold !== undefined && fromDynamicThreshold !== null) {
+  if (fromDynamicThreshold != null) {
     common.setValueByPath(toObject, ['dynamicThreshold'], fromDynamicThreshold);
   }
 
@@ -970,14 +964,14 @@ function dynamicRetrievalConfigToVertex(
   const toObject: Record<string, unknown> = {};
 
   const fromMode = common.getValueByPath(fromObject, ['mode']);
-  if (fromMode !== undefined && fromMode !== null) {
+  if (fromMode != null) {
     common.setValueByPath(toObject, ['mode'], fromMode);
   }
 
   const fromDynamicThreshold = common.getValueByPath(fromObject, [
     'dynamicThreshold',
   ]);
-  if (fromDynamicThreshold !== undefined && fromDynamicThreshold !== null) {
+  if (fromDynamicThreshold != null) {
     common.setValueByPath(toObject, ['dynamicThreshold'], fromDynamicThreshold);
   }
 
@@ -993,10 +987,7 @@ function googleSearchRetrievalToMldev(
   const fromDynamicRetrievalConfig = common.getValueByPath(fromObject, [
     'dynamicRetrievalConfig',
   ]);
-  if (
-    fromDynamicRetrievalConfig !== undefined &&
-    fromDynamicRetrievalConfig !== null
-  ) {
+  if (fromDynamicRetrievalConfig != null) {
     common.setValueByPath(
       toObject,
       ['dynamicRetrievalConfig'],
@@ -1016,10 +1007,7 @@ function googleSearchRetrievalToVertex(
   const fromDynamicRetrievalConfig = common.getValueByPath(fromObject, [
     'dynamicRetrievalConfig',
   ]);
-  if (
-    fromDynamicRetrievalConfig !== undefined &&
-    fromDynamicRetrievalConfig !== null
-  ) {
+  if (fromDynamicRetrievalConfig != null) {
     common.setValueByPath(
       toObject,
       ['dynamicRetrievalConfig'],
@@ -1040,10 +1028,7 @@ export function toolToMldev(
   const fromFunctionDeclarations = common.getValueByPath(fromObject, [
     'functionDeclarations',
   ]);
-  if (
-    fromFunctionDeclarations !== undefined &&
-    fromFunctionDeclarations !== null
-  ) {
+  if (fromFunctionDeclarations != null) {
     if (Array.isArray(fromFunctionDeclarations)) {
       common.setValueByPath(
         toObject,
@@ -1066,7 +1051,7 @@ export function toolToMldev(
   }
 
   const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
-  if (fromGoogleSearch !== undefined && fromGoogleSearch !== null) {
+  if (fromGoogleSearch != null) {
     common.setValueByPath(
       toObject,
       ['googleSearch'],
@@ -1077,10 +1062,7 @@ export function toolToMldev(
   const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
     'googleSearchRetrieval',
   ]);
-  if (
-    fromGoogleSearchRetrieval !== undefined &&
-    fromGoogleSearchRetrieval !== null
-  ) {
+  if (fromGoogleSearchRetrieval != null) {
     common.setValueByPath(
       toObject,
       ['googleSearchRetrieval'],
@@ -1091,7 +1073,7 @@ export function toolToMldev(
   const fromCodeExecution = common.getValueByPath(fromObject, [
     'codeExecution',
   ]);
-  if (fromCodeExecution !== undefined && fromCodeExecution !== null) {
+  if (fromCodeExecution != null) {
     common.setValueByPath(toObject, ['codeExecution'], fromCodeExecution);
   }
 
@@ -1108,10 +1090,7 @@ export function toolToVertex(
   const fromFunctionDeclarations = common.getValueByPath(fromObject, [
     'functionDeclarations',
   ]);
-  if (
-    fromFunctionDeclarations !== undefined &&
-    fromFunctionDeclarations !== null
-  ) {
+  if (fromFunctionDeclarations != null) {
     if (Array.isArray(fromFunctionDeclarations)) {
       common.setValueByPath(
         toObject,
@@ -1130,12 +1109,12 @@ export function toolToVertex(
   }
 
   const fromRetrieval = common.getValueByPath(fromObject, ['retrieval']);
-  if (fromRetrieval !== undefined && fromRetrieval !== null) {
+  if (fromRetrieval != null) {
     common.setValueByPath(toObject, ['retrieval'], fromRetrieval);
   }
 
   const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
-  if (fromGoogleSearch !== undefined && fromGoogleSearch !== null) {
+  if (fromGoogleSearch != null) {
     common.setValueByPath(
       toObject,
       ['googleSearch'],
@@ -1146,10 +1125,7 @@ export function toolToVertex(
   const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
     'googleSearchRetrieval',
   ]);
-  if (
-    fromGoogleSearchRetrieval !== undefined &&
-    fromGoogleSearchRetrieval !== null
-  ) {
+  if (fromGoogleSearchRetrieval != null) {
     common.setValueByPath(
       toObject,
       ['googleSearchRetrieval'],
@@ -1160,7 +1136,7 @@ export function toolToVertex(
   const fromCodeExecution = common.getValueByPath(fromObject, [
     'codeExecution',
   ]);
-  if (fromCodeExecution !== undefined && fromCodeExecution !== null) {
+  if (fromCodeExecution != null) {
     common.setValueByPath(toObject, ['codeExecution'], fromCodeExecution);
   }
 
@@ -1174,17 +1150,14 @@ function functionCallingConfigToMldev(
   const toObject: Record<string, unknown> = {};
 
   const fromMode = common.getValueByPath(fromObject, ['mode']);
-  if (fromMode !== undefined && fromMode !== null) {
+  if (fromMode != null) {
     common.setValueByPath(toObject, ['mode'], fromMode);
   }
 
   const fromAllowedFunctionNames = common.getValueByPath(fromObject, [
     'allowedFunctionNames',
   ]);
-  if (
-    fromAllowedFunctionNames !== undefined &&
-    fromAllowedFunctionNames !== null
-  ) {
+  if (fromAllowedFunctionNames != null) {
     common.setValueByPath(
       toObject,
       ['allowedFunctionNames'],
@@ -1202,17 +1175,14 @@ function functionCallingConfigToVertex(
   const toObject: Record<string, unknown> = {};
 
   const fromMode = common.getValueByPath(fromObject, ['mode']);
-  if (fromMode !== undefined && fromMode !== null) {
+  if (fromMode != null) {
     common.setValueByPath(toObject, ['mode'], fromMode);
   }
 
   const fromAllowedFunctionNames = common.getValueByPath(fromObject, [
     'allowedFunctionNames',
   ]);
-  if (
-    fromAllowedFunctionNames !== undefined &&
-    fromAllowedFunctionNames !== null
-  ) {
+  if (fromAllowedFunctionNames != null) {
     common.setValueByPath(
       toObject,
       ['allowedFunctionNames'],
@@ -1232,10 +1202,7 @@ function toolConfigToMldev(
   const fromFunctionCallingConfig = common.getValueByPath(fromObject, [
     'functionCallingConfig',
   ]);
-  if (
-    fromFunctionCallingConfig !== undefined &&
-    fromFunctionCallingConfig !== null
-  ) {
+  if (fromFunctionCallingConfig != null) {
     common.setValueByPath(
       toObject,
       ['functionCallingConfig'],
@@ -1255,10 +1222,7 @@ function toolConfigToVertex(
   const fromFunctionCallingConfig = common.getValueByPath(fromObject, [
     'functionCallingConfig',
   ]);
-  if (
-    fromFunctionCallingConfig !== undefined &&
-    fromFunctionCallingConfig !== null
-  ) {
+  if (fromFunctionCallingConfig != null) {
     common.setValueByPath(
       toObject,
       ['functionCallingConfig'],
@@ -1277,34 +1241,22 @@ function createCachedContentConfigToMldev(
   const toObject: Record<string, unknown> = {};
 
   const fromTtl = common.getValueByPath(fromObject, ['ttl']);
-  if (parentObject !== undefined && fromTtl !== undefined && fromTtl !== null) {
+  if (parentObject !== undefined && fromTtl != null) {
     common.setValueByPath(parentObject, ['ttl'], fromTtl);
   }
 
   const fromExpireTime = common.getValueByPath(fromObject, ['expireTime']);
-  if (
-    parentObject !== undefined &&
-    fromExpireTime !== undefined &&
-    fromExpireTime !== null
-  ) {
+  if (parentObject !== undefined && fromExpireTime != null) {
     common.setValueByPath(parentObject, ['expireTime'], fromExpireTime);
   }
 
   const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
-  if (
-    parentObject !== undefined &&
-    fromDisplayName !== undefined &&
-    fromDisplayName !== null
-  ) {
+  if (parentObject !== undefined && fromDisplayName != null) {
     common.setValueByPath(parentObject, ['displayName'], fromDisplayName);
   }
 
   const fromContents = common.getValueByPath(fromObject, ['contents']);
-  if (
-    parentObject !== undefined &&
-    fromContents !== undefined &&
-    fromContents !== null
-  ) {
+  if (parentObject !== undefined && fromContents != null) {
     if (Array.isArray(fromContents)) {
       common.setValueByPath(
         parentObject,
@@ -1328,11 +1280,7 @@ function createCachedContentConfigToMldev(
   const fromSystemInstruction = common.getValueByPath(fromObject, [
     'systemInstruction',
   ]);
-  if (
-    parentObject !== undefined &&
-    fromSystemInstruction !== undefined &&
-    fromSystemInstruction !== null
-  ) {
+  if (parentObject !== undefined && fromSystemInstruction != null) {
     common.setValueByPath(
       parentObject,
       ['systemInstruction'],
@@ -1341,11 +1289,7 @@ function createCachedContentConfigToMldev(
   }
 
   const fromTools = common.getValueByPath(fromObject, ['tools']);
-  if (
-    parentObject !== undefined &&
-    fromTools !== undefined &&
-    fromTools !== null
-  ) {
+  if (parentObject !== undefined && fromTools != null) {
     if (Array.isArray(fromTools)) {
       common.setValueByPath(
         parentObject,
@@ -1360,11 +1304,7 @@ function createCachedContentConfigToMldev(
   }
 
   const fromToolConfig = common.getValueByPath(fromObject, ['toolConfig']);
-  if (
-    parentObject !== undefined &&
-    fromToolConfig !== undefined &&
-    fromToolConfig !== null
-  ) {
+  if (parentObject !== undefined && fromToolConfig != null) {
     common.setValueByPath(
       parentObject,
       ['toolConfig'],
@@ -1383,34 +1323,22 @@ function createCachedContentConfigToVertex(
   const toObject: Record<string, unknown> = {};
 
   const fromTtl = common.getValueByPath(fromObject, ['ttl']);
-  if (parentObject !== undefined && fromTtl !== undefined && fromTtl !== null) {
+  if (parentObject !== undefined && fromTtl != null) {
     common.setValueByPath(parentObject, ['ttl'], fromTtl);
   }
 
   const fromExpireTime = common.getValueByPath(fromObject, ['expireTime']);
-  if (
-    parentObject !== undefined &&
-    fromExpireTime !== undefined &&
-    fromExpireTime !== null
-  ) {
+  if (parentObject !== undefined && fromExpireTime != null) {
     common.setValueByPath(parentObject, ['expireTime'], fromExpireTime);
   }
 
   const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
-  if (
-    parentObject !== undefined &&
-    fromDisplayName !== undefined &&
-    fromDisplayName !== null
-  ) {
+  if (parentObject !== undefined && fromDisplayName != null) {
     common.setValueByPath(parentObject, ['displayName'], fromDisplayName);
   }
 
   const fromContents = common.getValueByPath(fromObject, ['contents']);
-  if (
-    parentObject !== undefined &&
-    fromContents !== undefined &&
-    fromContents !== null
-  ) {
+  if (parentObject !== undefined && fromContents != null) {
     if (Array.isArray(fromContents)) {
       common.setValueByPath(
         parentObject,
@@ -1434,11 +1362,7 @@ function createCachedContentConfigToVertex(
   const fromSystemInstruction = common.getValueByPath(fromObject, [
     'systemInstruction',
   ]);
-  if (
-    parentObject !== undefined &&
-    fromSystemInstruction !== undefined &&
-    fromSystemInstruction !== null
-  ) {
+  if (parentObject !== undefined && fromSystemInstruction != null) {
     common.setValueByPath(
       parentObject,
       ['systemInstruction'],
@@ -1447,11 +1371,7 @@ function createCachedContentConfigToVertex(
   }
 
   const fromTools = common.getValueByPath(fromObject, ['tools']);
-  if (
-    parentObject !== undefined &&
-    fromTools !== undefined &&
-    fromTools !== null
-  ) {
+  if (parentObject !== undefined && fromTools != null) {
     if (Array.isArray(fromTools)) {
       common.setValueByPath(
         parentObject,
@@ -1466,11 +1386,7 @@ function createCachedContentConfigToVertex(
   }
 
   const fromToolConfig = common.getValueByPath(fromObject, ['toolConfig']);
-  if (
-    parentObject !== undefined &&
-    fromToolConfig !== undefined &&
-    fromToolConfig !== null
-  ) {
+  if (parentObject !== undefined && fromToolConfig != null) {
     common.setValueByPath(
       parentObject,
       ['toolConfig'],
@@ -1488,7 +1404,7 @@ function createCachedContentParametersToMldev(
   const toObject: Record<string, unknown> = {};
 
   const fromModel = common.getValueByPath(fromObject, ['model']);
-  if (fromModel !== undefined && fromModel !== null) {
+  if (fromModel != null) {
     common.setValueByPath(
       toObject,
       ['model'],
@@ -1497,7 +1413,7 @@ function createCachedContentParametersToMldev(
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig !== undefined && fromConfig !== null) {
+  if (fromConfig != null) {
     common.setValueByPath(
       toObject,
       ['config'],
@@ -1515,7 +1431,7 @@ function createCachedContentParametersToVertex(
   const toObject: Record<string, unknown> = {};
 
   const fromModel = common.getValueByPath(fromObject, ['model']);
-  if (fromModel !== undefined && fromModel !== null) {
+  if (fromModel != null) {
     common.setValueByPath(
       toObject,
       ['model'],
@@ -1524,7 +1440,7 @@ function createCachedContentParametersToVertex(
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig !== undefined && fromConfig !== null) {
+  if (fromConfig != null) {
     common.setValueByPath(
       toObject,
       ['config'],
@@ -1542,7 +1458,7 @@ function getCachedContentParametersToMldev(
   const toObject: Record<string, unknown> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName !== undefined && fromName !== null) {
+  if (fromName != null) {
     common.setValueByPath(
       toObject,
       ['_url', 'name'],
@@ -1551,7 +1467,7 @@ function getCachedContentParametersToMldev(
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig !== undefined && fromConfig !== null) {
+  if (fromConfig != null) {
     common.setValueByPath(toObject, ['config'], fromConfig);
   }
 
@@ -1565,7 +1481,7 @@ function getCachedContentParametersToVertex(
   const toObject: Record<string, unknown> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName !== undefined && fromName !== null) {
+  if (fromName != null) {
     common.setValueByPath(
       toObject,
       ['_url', 'name'],
@@ -1574,7 +1490,7 @@ function getCachedContentParametersToVertex(
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig !== undefined && fromConfig !== null) {
+  if (fromConfig != null) {
     common.setValueByPath(toObject, ['config'], fromConfig);
   }
 
@@ -1588,7 +1504,7 @@ function deleteCachedContentParametersToMldev(
   const toObject: Record<string, unknown> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName !== undefined && fromName !== null) {
+  if (fromName != null) {
     common.setValueByPath(
       toObject,
       ['_url', 'name'],
@@ -1597,7 +1513,7 @@ function deleteCachedContentParametersToMldev(
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig !== undefined && fromConfig !== null) {
+  if (fromConfig != null) {
     common.setValueByPath(toObject, ['config'], fromConfig);
   }
 
@@ -1611,7 +1527,7 @@ function deleteCachedContentParametersToVertex(
   const toObject: Record<string, unknown> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName !== undefined && fromName !== null) {
+  if (fromName != null) {
     common.setValueByPath(
       toObject,
       ['_url', 'name'],
@@ -1620,7 +1536,7 @@ function deleteCachedContentParametersToVertex(
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig !== undefined && fromConfig !== null) {
+  if (fromConfig != null) {
     common.setValueByPath(toObject, ['config'], fromConfig);
   }
 
@@ -1635,16 +1551,12 @@ function updateCachedContentConfigToMldev(
   const toObject: Record<string, unknown> = {};
 
   const fromTtl = common.getValueByPath(fromObject, ['ttl']);
-  if (parentObject !== undefined && fromTtl !== undefined && fromTtl !== null) {
+  if (parentObject !== undefined && fromTtl != null) {
     common.setValueByPath(parentObject, ['ttl'], fromTtl);
   }
 
   const fromExpireTime = common.getValueByPath(fromObject, ['expireTime']);
-  if (
-    parentObject !== undefined &&
-    fromExpireTime !== undefined &&
-    fromExpireTime !== null
-  ) {
+  if (parentObject !== undefined && fromExpireTime != null) {
     common.setValueByPath(parentObject, ['expireTime'], fromExpireTime);
   }
 
@@ -1659,16 +1571,12 @@ function updateCachedContentConfigToVertex(
   const toObject: Record<string, unknown> = {};
 
   const fromTtl = common.getValueByPath(fromObject, ['ttl']);
-  if (parentObject !== undefined && fromTtl !== undefined && fromTtl !== null) {
+  if (parentObject !== undefined && fromTtl != null) {
     common.setValueByPath(parentObject, ['ttl'], fromTtl);
   }
 
   const fromExpireTime = common.getValueByPath(fromObject, ['expireTime']);
-  if (
-    parentObject !== undefined &&
-    fromExpireTime !== undefined &&
-    fromExpireTime !== null
-  ) {
+  if (parentObject !== undefined && fromExpireTime != null) {
     common.setValueByPath(parentObject, ['expireTime'], fromExpireTime);
   }
 
@@ -1682,7 +1590,7 @@ function updateCachedContentParametersToMldev(
   const toObject: Record<string, unknown> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName !== undefined && fromName !== null) {
+  if (fromName != null) {
     common.setValueByPath(
       toObject,
       ['_url', 'name'],
@@ -1691,7 +1599,7 @@ function updateCachedContentParametersToMldev(
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig !== undefined && fromConfig !== null) {
+  if (fromConfig != null) {
     common.setValueByPath(
       toObject,
       ['config'],
@@ -1709,7 +1617,7 @@ function updateCachedContentParametersToVertex(
   const toObject: Record<string, unknown> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName !== undefined && fromName !== null) {
+  if (fromName != null) {
     common.setValueByPath(
       toObject,
       ['_url', 'name'],
@@ -1718,7 +1626,7 @@ function updateCachedContentParametersToVertex(
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig !== undefined && fromConfig !== null) {
+  if (fromConfig != null) {
     common.setValueByPath(
       toObject,
       ['config'],
@@ -1737,20 +1645,12 @@ function listCachedContentsConfigToMldev(
   const toObject: Record<string, unknown> = {};
 
   const fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
-  if (
-    parentObject !== undefined &&
-    fromPageSize !== undefined &&
-    fromPageSize !== null
-  ) {
+  if (parentObject !== undefined && fromPageSize != null) {
     common.setValueByPath(parentObject, ['_query', 'pageSize'], fromPageSize);
   }
 
   const fromPageToken = common.getValueByPath(fromObject, ['pageToken']);
-  if (
-    parentObject !== undefined &&
-    fromPageToken !== undefined &&
-    fromPageToken !== null
-  ) {
+  if (parentObject !== undefined && fromPageToken != null) {
     common.setValueByPath(parentObject, ['_query', 'pageToken'], fromPageToken);
   }
 
@@ -1765,20 +1665,12 @@ function listCachedContentsConfigToVertex(
   const toObject: Record<string, unknown> = {};
 
   const fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
-  if (
-    parentObject !== undefined &&
-    fromPageSize !== undefined &&
-    fromPageSize !== null
-  ) {
+  if (parentObject !== undefined && fromPageSize != null) {
     common.setValueByPath(parentObject, ['_query', 'pageSize'], fromPageSize);
   }
 
   const fromPageToken = common.getValueByPath(fromObject, ['pageToken']);
-  if (
-    parentObject !== undefined &&
-    fromPageToken !== undefined &&
-    fromPageToken !== null
-  ) {
+  if (parentObject !== undefined && fromPageToken != null) {
     common.setValueByPath(parentObject, ['_query', 'pageToken'], fromPageToken);
   }
 
@@ -1792,7 +1684,7 @@ function listCachedContentsParametersToMldev(
   const toObject: Record<string, unknown> = {};
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig !== undefined && fromConfig !== null) {
+  if (fromConfig != null) {
     common.setValueByPath(
       toObject,
       ['config'],
@@ -1810,7 +1702,7 @@ function listCachedContentsParametersToVertex(
   const toObject: Record<string, unknown> = {};
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
-  if (fromConfig !== undefined && fromConfig !== null) {
+  if (fromConfig != null) {
     common.setValueByPath(
       toObject,
       ['config'],
@@ -1828,39 +1720,39 @@ function cachedContentFromMldev(
   const toObject: Record<string, unknown> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName !== undefined && fromName !== null) {
+  if (fromName != null) {
     common.setValueByPath(toObject, ['name'], fromName);
   }
 
   const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
-  if (fromDisplayName !== undefined && fromDisplayName !== null) {
+  if (fromDisplayName != null) {
     common.setValueByPath(toObject, ['displayName'], fromDisplayName);
   }
 
   const fromModel = common.getValueByPath(fromObject, ['model']);
-  if (fromModel !== undefined && fromModel !== null) {
+  if (fromModel != null) {
     common.setValueByPath(toObject, ['model'], fromModel);
   }
 
   const fromCreateTime = common.getValueByPath(fromObject, ['createTime']);
-  if (fromCreateTime !== undefined && fromCreateTime !== null) {
+  if (fromCreateTime != null) {
     common.setValueByPath(toObject, ['createTime'], fromCreateTime);
   }
 
   const fromUpdateTime = common.getValueByPath(fromObject, ['updateTime']);
-  if (fromUpdateTime !== undefined && fromUpdateTime !== null) {
+  if (fromUpdateTime != null) {
     common.setValueByPath(toObject, ['updateTime'], fromUpdateTime);
   }
 
   const fromExpireTime = common.getValueByPath(fromObject, ['expireTime']);
-  if (fromExpireTime !== undefined && fromExpireTime !== null) {
+  if (fromExpireTime != null) {
     common.setValueByPath(toObject, ['expireTime'], fromExpireTime);
   }
 
   const fromUsageMetadata = common.getValueByPath(fromObject, [
     'usageMetadata',
   ]);
-  if (fromUsageMetadata !== undefined && fromUsageMetadata !== null) {
+  if (fromUsageMetadata != null) {
     common.setValueByPath(toObject, ['usageMetadata'], fromUsageMetadata);
   }
 
@@ -1874,39 +1766,39 @@ function cachedContentFromVertex(
   const toObject: Record<string, unknown> = {};
 
   const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName !== undefined && fromName !== null) {
+  if (fromName != null) {
     common.setValueByPath(toObject, ['name'], fromName);
   }
 
   const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
-  if (fromDisplayName !== undefined && fromDisplayName !== null) {
+  if (fromDisplayName != null) {
     common.setValueByPath(toObject, ['displayName'], fromDisplayName);
   }
 
   const fromModel = common.getValueByPath(fromObject, ['model']);
-  if (fromModel !== undefined && fromModel !== null) {
+  if (fromModel != null) {
     common.setValueByPath(toObject, ['model'], fromModel);
   }
 
   const fromCreateTime = common.getValueByPath(fromObject, ['createTime']);
-  if (fromCreateTime !== undefined && fromCreateTime !== null) {
+  if (fromCreateTime != null) {
     common.setValueByPath(toObject, ['createTime'], fromCreateTime);
   }
 
   const fromUpdateTime = common.getValueByPath(fromObject, ['updateTime']);
-  if (fromUpdateTime !== undefined && fromUpdateTime !== null) {
+  if (fromUpdateTime != null) {
     common.setValueByPath(toObject, ['updateTime'], fromUpdateTime);
   }
 
   const fromExpireTime = common.getValueByPath(fromObject, ['expireTime']);
-  if (fromExpireTime !== undefined && fromExpireTime !== null) {
+  if (fromExpireTime != null) {
     common.setValueByPath(toObject, ['expireTime'], fromExpireTime);
   }
 
   const fromUsageMetadata = common.getValueByPath(fromObject, [
     'usageMetadata',
   ]);
-  if (fromUsageMetadata !== undefined && fromUsageMetadata !== null) {
+  if (fromUsageMetadata != null) {
     common.setValueByPath(toObject, ['usageMetadata'], fromUsageMetadata);
   }
 
@@ -1940,14 +1832,14 @@ function listCachedContentsResponseFromMldev(
   const fromNextPageToken = common.getValueByPath(fromObject, [
     'nextPageToken',
   ]);
-  if (fromNextPageToken !== undefined && fromNextPageToken !== null) {
+  if (fromNextPageToken != null) {
     common.setValueByPath(toObject, ['nextPageToken'], fromNextPageToken);
   }
 
   const fromCachedContents = common.getValueByPath(fromObject, [
     'cachedContents',
   ]);
-  if (fromCachedContents !== undefined && fromCachedContents !== null) {
+  if (fromCachedContents != null) {
     if (Array.isArray(fromCachedContents)) {
       common.setValueByPath(
         toObject,
@@ -1973,14 +1865,14 @@ function listCachedContentsResponseFromVertex(
   const fromNextPageToken = common.getValueByPath(fromObject, [
     'nextPageToken',
   ]);
-  if (fromNextPageToken !== undefined && fromNextPageToken !== null) {
+  if (fromNextPageToken != null) {
     common.setValueByPath(toObject, ['nextPageToken'], fromNextPageToken);
   }
 
   const fromCachedContents = common.getValueByPath(fromObject, [
     'cachedContents',
   ]);
-  if (fromCachedContents !== undefined && fromCachedContents !== null) {
+  if (fromCachedContents != null) {
     if (Array.isArray(fromCachedContents)) {
       common.setValueByPath(
         toObject,

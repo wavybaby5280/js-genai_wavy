@@ -82,11 +82,11 @@ export class Chats {
    */
   create(params: types.CreateChatParameters) {
     return new Chat(
-        this.apiClient,
-        this.modelsModule,
-        params.model,
-        params.config,
-        params.history,
+      this.apiClient,
+      this.modelsModule,
+      params.model,
+      params.config,
+      params.history,
     );
   }
 }
@@ -101,11 +101,11 @@ export class Chat {
   private sendPromise: Promise<void> = Promise.resolve();
 
   constructor(
-      private readonly apiClient: ApiClient,
-      private readonly modelsModule: Models,
-      private readonly model: string,
-      private readonly config: types.GenerateContentConfig = {},
-      private readonly curatedHistory: types.Content[] = [],
+    private readonly apiClient: ApiClient,
+    private readonly modelsModule: Models,
+    private readonly model: string,
+    private readonly config: types.GenerateContentConfig = {},
+    private readonly curatedHistory: types.Content[] = [],
   ) {}
 
   /**
@@ -119,8 +119,8 @@ export class Chat {
    * @returns The model's response.
    */
   async sendMessage(
-      params: types.SendMessageParameters,
-      ): Promise<types.GenerateContentResponse> {
+    params: types.SendMessageParameters,
+  ): Promise<types.GenerateContentResponse> {
     await this.sendPromise;
     const inputContent = t.tContent(this.apiClient, params.message);
     const responsePromise = this.modelsModule.generateContent({
@@ -154,8 +154,8 @@ export class Chat {
    * @returns The model's response.
    */
   async sendMessageStream(
-      params: types.SendMessageParameters,
-      ): Promise<AsyncGenerator<types.GenerateContentResponse>> {
+    params: types.SendMessageParameters,
+  ): Promise<AsyncGenerator<types.GenerateContentResponse>> {
     await this.sendPromise;
     const inputContent = t.tContent(this.apiClient, params.message);
     const streamResponse = this.modelsModule.generateContentStream({
