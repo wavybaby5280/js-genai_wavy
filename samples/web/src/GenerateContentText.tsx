@@ -1,4 +1,4 @@
-import {Client} from '@google/genai/web';
+import {Client} from '@google/genai';
 import { useState, ChangeEvent } from 'react';
 import './App.css';
 
