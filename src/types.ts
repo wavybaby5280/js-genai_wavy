@@ -2309,7 +2309,7 @@ The following fields are supported:
       A `Tool` is a piece of code that enables the system to interact with
       external systems to perform an action, or set of actions, outside of
       knowledge and scope of the model. */
-  tools?: Tool[];
+  tools?: ToolListUnion;
 }
 
 /** Incremental update of the current conversation delivered from the client.
@@ -2400,7 +2400,7 @@ export interface LiveConnectConfig {
       A `Tool` is a piece of code that enables the system to interact with
       external systems to perform an action, or set of actions, outside of
       knowledge and scope of the model. */
-  tools?: Tool[];
+  tools?: ToolListUnion;
 }
 
 /** Parameters for connecting to the live API. */

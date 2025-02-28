@@ -1066,7 +1066,7 @@ export interface LiveClientSetup {
     generationConfig?: GenerationConfig;
     model?: string;
     systemInstruction?: Content;
-    tools?: Tool[];
+    tools?: ToolListUnion;
 }
 
 // @public
@@ -1080,7 +1080,7 @@ export interface LiveConnectConfig {
     responseModalities?: Modality[];
     speechConfig?: SpeechConfig;
     systemInstruction?: Content;
-    tools?: Tool[];
+    tools?: ToolListUnion;
 }
 
 // @public
