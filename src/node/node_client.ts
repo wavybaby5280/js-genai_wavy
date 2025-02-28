@@ -21,52 +21,65 @@ import {HttpOptions} from '../types';
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
 
 /**
- * Options for initializing the Client. The Client uses the parameters
- * for authentication purposes as well as to infer if SDK should send the
- * request to Vertex AI or Gemini API.
+ * Client configuration options.
+ *
+ * See {@link Client} for usage samples.
  */
 export interface ClientInitOptions {
-  // TODO: remove this once we split to separate web and node clients.
   /**
-   * The object used for adding authentication headers to API requests.
-   */
-  auth?: Auth;
-  /**
-   * Optional. The Google Cloud project ID for Vertex AI users.
-   * It is not the numeric project name.
-   * If not provided, SDK will try to resolve it from runtime environment.
-   */
-  project?: string;
-  /**
-   * Optional. The Google Cloud project location for Vertex AI users.
-   * If not provided, SDK will try to resolve it from runtime environment.
-   */
-  location?: string;
-  /**
-   * The API Key. This is required for Gemini API users.
-   */
-  apiKey?: string;
-  /**
-   * Optional. Set to true if you intend to call Vertex AI endpoints.
-   * If unset, default SDK behavior is to call Gemini API.
+   * Optional. Determines whether to create a Vertex AI or a Gemini Client.
+   *
+   * When true, a Vertex AI client will be created, using the [Google Vertex AI API](https://cloud.google.com/vertex-ai/docs/reference/rest).
+   * When false, a Gemini client will be created, using the [Google Gemini API](https://ai.google.dev/gemini-api/docs#rest)
+   * Set to true if you intend to call Vertex AI endpoints.
+   * If unset, default SDK behavior is to use the Gemini API service.
    */
   vertexai?: boolean;
   /**
-   * Optional. The API version for the endpoint.
+   * Optional. The Google Cloud project ID for Vertex AI clients.
+   *
+   * Only supported on Node runtimes, ignored on browser runtimes.
+   */
+  project?: string;
+  /**
+   * Optional. The Google Cloud project region for Vertex AI clients.
+   *
+   * Only supported on Node runtimes, ignored on browser runtimes.
+   *
+   */
+  location?: string;
+  /**
+   * The API Key, required for Gemini API clients.
+   *
+   * Required on browser runtimes.
+   */
+  apiKey?: string;
+  /**
+   * Optional. The API version to use.
    * If unset, SDK will choose a default api version.
    */
   apiVersion?: string;
   /**
-   * Optional. These are the authentication options provided by google-auth-library for Vertex AI users.
+   * Optional. These are the authentication options provided by google-auth-library for Vertex AI clients.
+   *
    * Complete list of authentication options are documented in the
    * GoogleAuthOptions interface:
    * https://github.com/googleapis/google-auth-library-nodejs/blob/main/src/auth/googleauth.ts.
+   *
+   * Only supported on Node runtimes, ignored on browser runtimes.
+   *
    */
   googleAuthOptions?: GoogleAuthOptions;
   /**
    * Optional. A set of customizable configuration for HTTP requests.
    */
   httpOptions?: HttpOptions;
+  // This is currently needed for teh table_tests.
+  // TODO: remove this once we refactor the table_test.
+  /**
+   * The object used for adding authentication headers to API requests.
+   */
+  auth?: Auth;
 }
 
 /**
