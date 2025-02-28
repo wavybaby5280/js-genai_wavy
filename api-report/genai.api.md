@@ -92,15 +92,15 @@ export interface Candidate {
 
 // @public
 export class Chat {
-    constructor(apiClient: ApiClient, modelsModule: Models, model: string, config: types.GenerateContentConfig, curatedHistory: types.Content[]);
-    sendMessage(message: types.PartListUnion): Promise<types.GenerateContentResponse>;
-    sendMessageStream(message: types.PartListUnion): Promise<AsyncGenerator<types.GenerateContentResponse>>;
+    constructor(apiClient: ApiClient, modelsModule: Models, model: string, config?: types.GenerateContentConfig, curatedHistory?: types.Content[]);
+    sendMessage(params: types.SendMessageParameters): Promise<types.GenerateContentResponse>;
+    sendMessageStream(params: types.SendMessageParameters): Promise<AsyncGenerator<types.GenerateContentResponse>>;
 }
 
 // @public
 export class Chats {
     constructor(modelsModule: Models, apiClient: ApiClient);
-    create(model: string, config?: types.GenerateContentConfig, history?: types.Content[]): Chat;
+    create(params: types.CreateChatParameters): Chat;
 }
 
 // @public
@@ -237,6 +237,13 @@ export interface CreateCachedContentConfig {
 // @public
 export interface CreateCachedContentParameters {
     config?: CreateCachedContentConfig;
+    model: string;
+}
+
+// @public
+export interface CreateChatParameters {
+    config?: GenerateContentConfig;
+    history?: Content[];
     model: string;
 }
 
@@ -1359,6 +1366,12 @@ export interface Segment {
     partIndex?: number;
     startIndex?: number;
     text?: string;
+}
+
+// @public
+export interface SendMessageParameters {
+    config?: GenerateContentConfig;
+    message: PartListUnion;
 }
 
 // @public

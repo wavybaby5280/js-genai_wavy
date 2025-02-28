@@ -7,7 +7,7 @@
 import {Client} from '../../src/node/node_client';
 import {Tool, Type} from '../../src/types';
 
-const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 
 const function_calling: Tool = {
@@ -34,8 +34,8 @@ describe('sendMessage', () => {
   const testCases = [
     {
       name: 'Google AI with text',
-      client: new Client({vertexai: false, apiKey: GOOGLE_API_KEY}),
-      model: 'gemini-1.5-flash',
+      client: new Client({vertexai: false, apiKey: GEMINI_API_KEY}),
+      model: 'gemini-2.0-flash',
       config: {},
       history: [],
       messages: ['why is the sky blue?'],
@@ -43,15 +43,15 @@ describe('sendMessage', () => {
     {
       name: 'Vertex AI with text',
       client: new Client({vertexai: true, project: GOOGLE_CLOUD_PROJECT}),
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.0-flash',
       config: {},
       history: [],
       messages: ['why is the sky blue?'],
     },
     {
       name: 'Google AI with config',
-      client: new Client({vertexai: false, apiKey: GOOGLE_API_KEY}),
-      model: 'gemini-1.5-flash',
+      client: new Client({vertexai: false, apiKey: GEMINI_API_KEY}),
+      model: 'gemini-2.0-flash',
       config: {temperature: 0.5, maxOutputTokens: 20},
       history: [],
       messages: ['why is the sky blue?'],
@@ -59,15 +59,15 @@ describe('sendMessage', () => {
     {
       name: 'Vertex AI with config',
       client: new Client({vertexai: true, project: GOOGLE_CLOUD_PROJECT}),
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.0-flash',
       config: {temperature: 0.5, maxOutputTokens: 20},
       history: [],
       messages: ['why is the sky blue?'],
     },
     {
       name: 'Google AI with history',
-      client: new Client({vertexai: false, apiKey: GOOGLE_API_KEY}),
-      model: 'gemini-1.5-flash',
+      client: new Client({vertexai: false, apiKey: GEMINI_API_KEY}),
+      model: 'gemini-2.0-flash',
       config: {},
       history: [
         {parts: [{text: 'a=5'}], role: 'user'},
@@ -78,7 +78,7 @@ describe('sendMessage', () => {
     {
       name: 'Vertex AI with history',
       client: new Client({vertexai: true, project: GOOGLE_CLOUD_PROJECT}),
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.0-flash',
       config: {},
       history: [
         {parts: [{text: 'a=5'}], role: 'user'},
@@ -88,8 +88,8 @@ describe('sendMessage', () => {
     },
     {
       name: 'Google AI multiple messages',
-      client: new Client({vertexai: false, apiKey: GOOGLE_API_KEY}),
-      model: 'gemini-1.5-flash',
+      client: new Client({vertexai: false, apiKey: GEMINI_API_KEY}),
+      model: 'gemini-2.0-flash',
       config: {},
       history: [],
       messages: [
@@ -100,7 +100,7 @@ describe('sendMessage', () => {
     {
       name: 'Vertex AI multilple messages',
       client: new Client({vertexai: true, project: GOOGLE_CLOUD_PROJECT}),
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.0-flash',
       config: {},
       history: [],
       messages: [
@@ -113,15 +113,15 @@ describe('sendMessage', () => {
   testCases.forEach(async (testCase) => {
     it(testCase.name, async () => {
       const client = testCase.client;
-      const chat = client.chats.create(
-        testCase.model,
-        testCase.config,
-        testCase.history,
-      );
+      const chat = client.chats.create({
+        model: testCase.model,
+        config: testCase.config,
+        history: testCase.history,
+      });
       for (const message of testCase.messages) {
-        const response = await chat.sendMessage(message);
+        const response = await chat.sendMessage({message});
         console.log('chat.sendMessage response: ', response.text());
-        expect(response.text).not.toBeNull();
+        expect(response.text()).not.toBeNull();
       }
     });
   });
@@ -129,13 +129,13 @@ describe('sendMessage', () => {
   testCases.forEach(async (testCase) => {
     it(testCase.name + ' stream', async () => {
       const client = testCase.client;
-      const chat = client.chats.create(
-        testCase.model,
-        testCase.config,
-        testCase.history,
-      );
+      const chat = client.chats.create({
+        model: testCase.model,
+        config: testCase.config,
+        history: testCase.history,
+      });
       for (const message of testCase.messages) {
-        const response = await chat.sendMessageStream(message);
+        const response = await chat.sendMessageStream({message});
         for await (const chunk of response) {
           console.log('chat.sendMessageStream response chunk: ', chunk.text());
           expect(chunk.text()).not.toBeNull();
@@ -145,12 +145,11 @@ describe('sendMessage', () => {
   });
 
   it('Google AI array of strings', async () => {
-    const client = new Client({vertexai: false, apiKey: GOOGLE_API_KEY});
-    const chat = client.chats.create('gemini-1.5-flash');
-    const response = await chat.sendMessage([
-      'why is the sky blue?',
-      'Can the sky appear in other colors?',
-    ]);
+    const client = new Client({vertexai: false, apiKey: GEMINI_API_KEY});
+    const chat = client.chats.create({model: 'gemini-2.0-flash'});
+    const response = await chat.sendMessage({
+      message: ['why is the sky blue?', 'Can the sky appear in other colors?'],
+    });
     console.log('chat.sendMessage response: ', response.text());
   });
 
@@ -159,11 +158,10 @@ describe('sendMessage', () => {
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
     });
-    const chat = client.chats.create('gemini-1.5-flash');
-    const response = await chat.sendMessage([
-      'why is the sky blue?',
-      'Can the sky appear in other colors?',
-    ]);
+    const chat = client.chats.create({model: 'gemini-2.0-flash'});
+    const response = await chat.sendMessage({
+      message: ['why is the sky blue?', 'Can the sky appear in other colors?'],
+    });
     console.log('chat.sendMessage response: ', response.text());
   });
 });
@@ -172,8 +170,8 @@ describe('chats function calling', () => {
   const testCases = [
     {
       name: 'Google AI with function calling',
-      client: new Client({vertexai: false, apiKey: GOOGLE_API_KEY}),
-      model: 'gemini-1.5-flash',
+      client: new Client({vertexai: false, apiKey: GEMINI_API_KEY}),
+      model: 'gemini-2.0-flash',
       config: {tools: [function_calling]},
       history: [],
       messages: ['what is the result of 100/2', 'what is the result of 50/2?'],
@@ -181,7 +179,7 @@ describe('chats function calling', () => {
     {
       name: 'Vertex AI with function calling',
       client: new Client({vertexai: true, project: GOOGLE_CLOUD_PROJECT}),
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.0-flash',
       config: {tools: [function_calling]},
       history: [],
       messages: ['what is the result of 100/2', 'what is the result of 50/2?'],
@@ -191,13 +189,13 @@ describe('chats function calling', () => {
   testCases.forEach(async (testCase) => {
     it(testCase.name, async () => {
       const client = testCase.client;
-      const chat = client.chats.create(
-        testCase.model,
-        testCase.config,
-        testCase.history,
-      );
+      const chat = client.chats.create({
+        model: testCase.model,
+        config: testCase.config,
+        history: testCase.history,
+      });
       for (const message of testCase.messages) {
-        const response = await chat.sendMessage(message);
+        const response = await chat.sendMessage({message});
         console.log(
           'chat.sendMessage function calls: ',
           response.functionCalls(),
@@ -210,13 +208,13 @@ describe('chats function calling', () => {
   testCases.forEach(async (testCase) => {
     it(testCase.name + ' stream', async () => {
       const client = testCase.client;
-      const chat = client.chats.create(
-        testCase.model,
-        testCase.config,
-        testCase.history,
-      );
+      const chat = client.chats.create({
+        model: testCase.model,
+        config: testCase.config,
+        history: testCase.history,
+      });
       for (const message of testCase.messages) {
-        const response = await chat.sendMessageStream(message);
+        const response = await chat.sendMessageStream({message});
         for await (const chunk of response) {
           console.log(
             'chat.sendMessageStream function calls: ',

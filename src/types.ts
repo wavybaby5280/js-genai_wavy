@@ -2413,6 +2413,54 @@ export interface LiveConnectParameters {
   config?: LiveConnectConfig;
 }
 
+/** Parameters for initializing a new chat session.
+
+  These parameters are used when creating a chat session with the
+  `chats.create()` method.
+   */
+export interface CreateChatParameters {
+  /** The name of the model to use for the chat session.
+
+      For example: 'gemini-2.0-flash', 'gemini-1.5-pro', etc. See gemini API
+      docs to find the available models.
+       */
+  model: string;
+  /** Config for the entire chat session.
+
+      This config applies to all requests within the session
+      unless overridden by a per-request `config` in `SendMessageParameters`.
+       */
+  config?: GenerateContentConfig;
+  /** The initial conversation history for the chat session.
+
+      This allows you to start the chat with a pre-existing history. The history
+      must be a list of `Content` alternating between 'user' and 'model' roles.
+      It should start with a 'user' message.
+       */
+  history?: Content[];
+}
+
+/** Parameters for sending a message within a chat session.
+
+  These parameters are used with the `chat.sendMessage()` method.
+   */
+export interface SendMessageParameters {
+  /** The message to send to the model.
+
+      The SDK will combine all parts into a single 'user' content to send to
+      the model.
+       */
+  message: PartListUnion;
+  /**  Config for this specific request.
+
+      Please note that the per-request config does not change the chat level
+      config, nor inherit from it. If you intend to use some values from the
+      chat's default config, you must explicitly copy them into this per-request
+      config.
+       */
+  config?: GenerateContentConfig;
+}
+
 export type PartUnion = Part | string;
 
 export type PartListUnion = PartUnion[] | PartUnion;

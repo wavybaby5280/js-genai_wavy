@@ -10,12 +10,9 @@ import {Models} from './models';
 import * as types from './types';
 
 /**
- * Validates the GenerateContentResponse.
- *
- * @param response The GenerateContentResponse to validate.
- * @returns True if the response is valid, false otherwise.
+ * Returns true if the response is valid, false otherwise.
  */
-function validateResponse(response: types.GenerateContentResponse): boolean {
+function isValidResponse(response: types.GenerateContentResponse): boolean {
   if (response.candidates == undefined || response.candidates.length === 0) {
     return false;
   }
@@ -38,12 +35,7 @@ function validateResponse(response: types.GenerateContentResponse): boolean {
 }
 
 /**
- * Processes the stream response and appends the valid response to the history.
- *
- * @param streamResponse The stream response to process.
- * @param curatedHistory The curated history of the conversation.
- * @param inputContent The input content which sends to the model.
- * @returns generator of the stream response.
+ * Processes the stream response and appends the valid contents to the history.
  */
 async function* processStreamResponse(
   streamResponse: AsyncGenerator<types.GenerateContentResponse>,
@@ -53,7 +45,7 @@ async function* processStreamResponse(
   const outputContent: types.Content[] = [];
   let finishReason: types.FinishReason | undefined = undefined;
   for await (const chunk of streamResponse) {
-    if (validateResponse(chunk)) {
+    if (isValidResponse(chunk)) {
       const content = chunk?.candidates?.[0]?.content;
       if (content !== undefined) {
         outputContent.push(content);
@@ -85,17 +77,17 @@ export class Chats {
   /**
    * Creates a new chat session.
    *
-   * @param model The model to use for the chat.
-   * @param config The configuration to use for the generate content request.
-   * @param history The initial history to use for the chat.
+   * @param params - Parameters for creating a chat session.
    * @returns A new chat session.
    */
-  create(
-    model: string,
-    config: types.GenerateContentConfig = {},
-    history: types.Content[] = [],
-  ) {
-    return new Chat(this.apiClient, this.modelsModule, model, config, history);
+  create(params: types.CreateChatParameters) {
+    return new Chat(
+        this.apiClient,
+        this.modelsModule,
+        params.model,
+        params.config,
+        params.history,
+    );
   }
 }
 
@@ -109,11 +101,11 @@ export class Chat {
   private sendPromise: Promise<void> = Promise.resolve();
 
   constructor(
-    private readonly apiClient: ApiClient,
-    private readonly modelsModule: Models,
-    private readonly model: string,
-    private readonly config: types.GenerateContentConfig,
-    private readonly curatedHistory: types.Content[],
+      private readonly apiClient: ApiClient,
+      private readonly modelsModule: Models,
+      private readonly model: string,
+      private readonly config: types.GenerateContentConfig = {},
+      private readonly curatedHistory: types.Content[] = [],
   ) {}
 
   /**
@@ -123,22 +115,22 @@ export class Chat {
    * sending the next message.
    *
    * @see {@link Chat#sendMessageStream} for streaming method.
-   * @param message The message to send.
+   * @param params - parameters for sending messages within a chat session.
    * @returns The model's response.
    */
   async sendMessage(
-    message: types.PartListUnion,
-  ): Promise<types.GenerateContentResponse> {
+      params: types.SendMessageParameters,
+      ): Promise<types.GenerateContentResponse> {
     await this.sendPromise;
-    const inputContent = t.tContent(this.apiClient, message);
+    const inputContent = t.tContent(this.apiClient, params.message);
     const responsePromise = this.modelsModule.generateContent({
       model: this.model,
       contents: this.curatedHistory.concat(inputContent),
-      config: this.config,
+      config: params.config ?? this.config,
     });
     this.sendPromise = (async () => {
       const response = await responsePromise;
-      if (validateResponse(response)) {
+      if (isValidResponse(response)) {
         this.curatedHistory.push(inputContent);
         const outputContent = response?.candidates?.[0]?.content;
         if (outputContent !== undefined) {
@@ -158,18 +150,18 @@ export class Chat {
    * sending the next message.
    *
    * @see {@link Chat#sendMessage} for non-streaming method.
-   * @param message The message to send.
+   * @param params - parameters for sending the message.
    * @returns The model's response.
    */
   async sendMessageStream(
-    message: types.PartListUnion,
-  ): Promise<AsyncGenerator<types.GenerateContentResponse>> {
+      params: types.SendMessageParameters,
+      ): Promise<AsyncGenerator<types.GenerateContentResponse>> {
     await this.sendPromise;
-    const inputContent = t.tContent(this.apiClient, message);
+    const inputContent = t.tContent(this.apiClient, params.message);
     const streamResponse = this.modelsModule.generateContentStream({
       model: this.model,
       contents: this.curatedHistory.concat(inputContent),
-      config: this.config,
+      config: params.config ?? this.config,
     });
     this.sendPromise = streamResponse.then(() => undefined);
     const response = await streamResponse;
