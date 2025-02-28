@@ -22,16 +22,18 @@ export class Files extends BaseModule {
    * This method lists all files from the service.
    *
    * @param params - The parameters for the list request
-   * @returns The paginated results of the list of files
+   * @return The paginated results of the list of files
    *
    * @example
    * The following code prints the names of all files from the service, the
-   * szie of each page is 2.
+   * size of each page is 2.
    *
+   * ```ts
    * const listResponse = await client.files.list({config: {'pageSize': 2}});
    * for await (const file of listResponse) {
-   *   console.log(file.name());
+   *   console.log(file.name);
    * }
+   * ```
    */
   list = async (
     params: types.ListFilesParameters = {},
@@ -169,6 +171,21 @@ export class Files extends BaseModule {
     }
   }
 
+  /**
+   * Retrieves the file information from the service.
+   *
+   * @param params - The parameters for the get request
+   * @return The Promise that resolves to the types.File object requested.
+   *
+   * @example
+   * ```ts
+   * const config: GetFileParameters = {
+   *   name: fileName,
+   * };
+   * file = await client.files.get(config);
+   * console.log(file.name);
+   * ```
+   */
   async get(params: types.GetFileParameters): Promise<types.File> {
     let response: Promise<types.File>;
     let path: string = '';
