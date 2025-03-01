@@ -7,41 +7,15 @@
 import {ApiClient} from '../_api_client';
 import {Caches} from '../caches';
 import {Chats} from '../chats';
+import {ClientInitOptions} from '../_cross_client';
 import {Files} from '../files';
 import {Live} from '../live';
 import {Models} from '../models';
 import {Tunings} from '../tunings';
-import {HttpOptions} from '../types';
 import {BrowserWebSocketFactory} from './_browser_websocket';
 import {WebAuth} from './_web_auth';
 
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
-
-/**
- * Options for initializing the Client. The client uses the parameters
- * for authentication purposes as well as to infer if SDK should send the
- * request to Vertex AI or Gemini API.
- */
-export interface ClientInitOptions {
-  /**
-   * The API Key.
-   */
-  apiKey: string;
-  /**
-   * Optional. Set to true if you intend to call Vertex AI endpoints.
-   * If unset, default SDK behavior is to call Gemini API.
-   */
-  vertexai?: boolean;
-  /**
-   * Optional. The API version for the endpoint.
-   * If unset, SDK will choose a default api version.
-   */
-  apiVersion?: string;
-  /**
-   * Optional. A set of customizable configuration for HTTP requests.
-   */
-  httpOptions?: HttpOptions;
-}
 
 /**
   Client for making requests in a browser-compatible environment.
@@ -77,7 +51,7 @@ export interface ClientInitOptions {
   */
 export class Client {
   protected readonly apiClient: ApiClient;
-  private readonly apiKey: string;
+  private readonly apiKey?: string;
   public readonly vertexai: boolean;
   private readonly apiVersion?: string;
   readonly models: Models;
@@ -88,6 +62,9 @@ export class Client {
   readonly files: Files;
 
   constructor(options: ClientInitOptions) {
+    if (options.apiKey == null) {
+      throw new Error('An API Key must be set when running in a browser');
+    }
     this.vertexai = options.vertexai ?? false;
     this.apiKey = options.apiKey;
     this.apiVersion = options.apiVersion;

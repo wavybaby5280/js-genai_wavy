@@ -6,6 +6,7 @@
 
 export * from './caches';
 export * from './chats';
+export {ClientInitOptions} from './_cross_client';
 export * from './live';
 export {Models} from './models';
 export * from './types';

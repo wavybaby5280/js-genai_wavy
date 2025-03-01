@@ -4,6 +4,8 @@
 
 ```ts
 
+import { GoogleAuthOptions } from 'google-auth-library';
+
 // @public (undocumented)
 export enum AdapterSize {
     // (undocumented)
@@ -145,9 +147,14 @@ export class Client {
 
 // @public
 export interface ClientInitOptions {
-    apiKey: string;
+    apiKey?: string;
     apiVersion?: string;
+    // Warning: (ae-forgotten-export) The symbol "Auth" needs to be exported by the entry point index.d.ts
+    auth?: Auth;
+    googleAuthOptions?: GoogleAuthOptions;
     httpOptions?: HttpOptions;
+    location?: string;
+    project?: string;
     vertexai?: boolean;
 }
 
@@ -1035,7 +1042,6 @@ export class ListTuningJobsResponse {
 
 // @public
 export class Live {
-    // Warning: (ae-forgotten-export) The symbol "Auth" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "WebSocketFactory" needs to be exported by the entry point index.d.ts
     constructor(apiClient: ApiClient, auth: Auth, webSocketFactory: WebSocketFactory);
     // Warning: (ae-forgotten-export) The symbol "WebSocketCallbacks" needs to be exported by the entry point index.d.ts

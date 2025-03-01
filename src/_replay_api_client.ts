@@ -6,7 +6,8 @@
 
 import * as fs from 'fs';
 
-import {Client, ClientInitOptions} from './node/node_client';
+import {ClientInitOptions} from './_cross_client';
+import {Client} from './node/node_client';
 import * as types from './types';
 
 /**
