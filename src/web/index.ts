@@ -4,5 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export * from '../index';
+export * from '../caches';
+export * from '../chats';
+export {ClientInitOptions} from '../cross/_cross_platform_client';
+export * from '../live';
+export {Models} from '../models';
+export * from '../types';
 export * from './web_client';

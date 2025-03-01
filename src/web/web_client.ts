@@ -7,7 +7,7 @@
 import {ApiClient} from '../_api_client';
 import {Caches} from '../caches';
 import {Chats} from '../chats';
-import {ClientInitOptions} from '../_cross_client';
+import {ClientInitOptions} from '../cross/_cross_platform_client';
 import {Files} from '../files';
 import {Live} from '../live';
 import {Models} from '../models';
@@ -18,8 +18,6 @@ import {WebAuth} from './_web_auth';
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
 
 /**
-  Client for making requests in a browser-compatible environment.
-
   Use this client to make a request to the Gemini Developer API or Vertex AI
   API and then wait for the response.
 
