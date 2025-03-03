@@ -9,7 +9,7 @@ import {GoogleAuthOptions} from 'google-auth-library';
 import {ApiClient} from '../_api_client';
 import {Caches} from '../caches';
 import {Chats} from '../chats';
-import {ClientInitOptions} from '../cross/_cross_platform_client';
+import {ClientInitOptions} from '../client';
 import {Files} from '../files';
 import {Live} from '../live';
 import {Models} from '../models';

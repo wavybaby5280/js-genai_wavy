@@ -5,18 +5,18 @@
  */
 
 import {GoogleAuthOptions} from 'google-auth-library';
-import {Auth} from '../_auth';
-import {HttpOptions} from '../types';
-import { ApiClient } from '../_api_client';
-import { Models } from '../models';
-import { Live } from '../live';
-import { Tunings } from '../tunings';
-import { Chats } from '../chats';
-import { Caches } from '../caches';
-import { Files } from '../files';
-import { WebAuth } from '../web/_web_auth';
-import { CrossWebSocketFactory } from './_cross_websocket';
-import { crossError } from './_cross_error';
+import {Auth} from './_auth';
+import {HttpOptions} from './types';
+import { ApiClient } from './_api_client';
+import { Models } from './models';
+import { Live } from './live';
+import { Tunings } from './tunings';
+import { Chats } from './chats';
+import { Caches } from './caches';
+import { Files } from './files';
+import { WebAuth } from './web/_web_auth';
+import { CrossWebSocketFactory } from './cross/_cross_websocket';
+import { crossError } from './cross/_cross_error';
 
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
 
