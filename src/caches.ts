@@ -88,7 +88,7 @@ export class Caches extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.CachedContent>;
 
       return response.then((apiResponse) => {
         const resp = cachedContentFromVertex(this.apiClient, apiResponse);
@@ -116,7 +116,7 @@ export class Caches extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.CachedContent>;
 
       return response.then((apiResponse) => {
         const resp = cachedContentFromMldev(this.apiClient, apiResponse);
@@ -161,7 +161,7 @@ export class Caches extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.CachedContent>;
 
       return response.then((apiResponse) => {
         const resp = cachedContentFromVertex(this.apiClient, apiResponse);
@@ -189,7 +189,7 @@ export class Caches extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.CachedContent>;
 
       return response.then((apiResponse) => {
         const resp = cachedContentFromMldev(this.apiClient, apiResponse);
@@ -237,7 +237,7 @@ export class Caches extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.DeleteCachedContentResponse>;
 
       return response.then((apiResponse) => {
         const resp = deleteCachedContentResponseFromVertex(
@@ -269,7 +269,7 @@ export class Caches extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.DeleteCachedContentResponse>;
 
       return response.then((apiResponse) => {
         const resp = deleteCachedContentResponseFromMldev(
@@ -324,7 +324,7 @@ export class Caches extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.CachedContent>;
 
       return response.then((apiResponse) => {
         const resp = cachedContentFromVertex(this.apiClient, apiResponse);
@@ -352,7 +352,7 @@ export class Caches extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.CachedContent>;
 
       return response.then((apiResponse) => {
         const resp = cachedContentFromMldev(this.apiClient, apiResponse);
@@ -389,7 +389,7 @@ export class Caches extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.ListCachedContentsResponse>;
 
       return response.then((apiResponse) => {
         const resp = listCachedContentsResponseFromVertex(
@@ -421,7 +421,7 @@ export class Caches extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.ListCachedContentsResponse>;
 
       return response.then((apiResponse) => {
         const resp = listCachedContentsResponseFromMldev(

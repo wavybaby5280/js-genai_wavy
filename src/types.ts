@@ -244,7 +244,7 @@ export interface FunctionCall {
    `function_call` and return the response with the matching `id`. */
   id?: string;
   /** Optional. Required. The function parameters and values in JSON object format. See [FunctionDeclaration.parameters] for parameter details. */
-  args?: Record<string, any>;
+  args?: Record<string, unknown>;
   /** Required. The name of the function to call. Matches [FunctionDeclaration.name]. */
   name?: string;
 }
@@ -257,7 +257,7 @@ export class FunctionResponse {
   /** Required. The name of the function to call. Matches [FunctionDeclaration.name] and [FunctionCall.name]. */
   name?: string;
   /** Required. The function response in JSON object format. Use "output" key to specify function output and "error" key to specify error details (if any). If "output" and "error" keys are not specified, then whole "response" is treated as function output. */
-  response?: Record<string, any>;
+  response?: Record<string, unknown>;
 }
 
 /** Content blob. */
@@ -318,7 +318,7 @@ export function createPartFromText(text: string): Part {
  */
 export function createPartFromFunctionCall(
   name: string,
-  args: Record<string, any>,
+  args: Record<string, unknown>,
 ): Part {
   return {
     functionCall: {
@@ -333,7 +333,7 @@ export function createPartFromFunctionCall(
 export function createPartFromFunctionResponse(
   id: string,
   name: string,
-  response: Record<string, any>,
+  response: Record<string, unknown>,
 ): Part {
   return {
     functionResponse: {
@@ -407,20 +407,23 @@ export interface Content {
       left blank or unset. If role is not specified, SDK will determine the role. */
   role?: string;
 }
-function _isPart(obj: any): obj is Part {
-  return (
-    obj.fileData !== undefined ||
-    obj.text !== undefined ||
-    obj.functionCall !== undefined ||
-    obj.functionResponse !== undefined ||
-    obj.inlineData !== undefined ||
-    obj.videoMetadata !== undefined ||
-    obj.codeExecutionResult !== undefined ||
-    obj.executableCode !== undefined
-  );
+function _isPart(obj: unknown): obj is Part {
+  if (typeof obj === 'object' && obj !== null) {
+    return (
+      'fileData' in obj ||
+      'text' in obj ||
+      'functionCall' in obj ||
+      'functionResponse' in obj ||
+      'inlineData' in obj ||
+      'videoMetadata' in obj ||
+      'codeExecutionResult' in obj ||
+      'executableCode' in obj
+    );
+  }
+  return false;
 }
 function _toParts(partOrString: PartListUnion | string): Part[] {
-  let parts: Part[] = [];
+  const parts: Part[] = [];
   if (typeof partOrString === 'string') {
     parts.push(createPartFromText(partOrString));
   } else if (_isPart(partOrString)) {
@@ -486,7 +489,7 @@ export interface Schema {
   /** Optional. Minimum number of the elements for Type.ARRAY. */
   minItems?: string;
   /** Optional. Example of the object. Will only populated when the object is the root. */
-  example?: any;
+  example?: unknown;
   /** Optional. The order of the properties. Not a standard field in open api spec. Only used to support the order of the properties. */
   propertyOrdering?: string[];
   /** Optional. Pattern of the Type.STRING to restrict a string to a regular expression. */
@@ -494,7 +497,7 @@ export interface Schema {
   /** Optional. SCHEMA FIELDS FOR TYPE INTEGER and NUMBER Minimum value of the Type.INTEGER and Type.NUMBER */
   minimum?: number;
   /** Optional. Default value of the data. */
-  default?: any;
+  default?: unknown;
   /** Optional. The value should be validated against any (one or more) of the subschemas in the list. */
   anyOf?: Schema[];
   /** Optional. Maximum length of the Type.STRING */
@@ -1415,7 +1418,7 @@ export interface GoogleRpcStatus {
   /** The status code, which should be an enum value of google.rpc.Code. */
   code?: number;
   /** A list of messages that carry the error details. There is a common set of message types for APIs to use. */
-  details?: Record<string, any>[];
+  details?: Record<string, unknown>[];
   /** A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the google.rpc.Status.details field, or localized by the client. */
   message?: string;
 }
@@ -1571,7 +1574,7 @@ export interface EncryptionSpec {
 /** Tuning spec for Partner models. */
 export interface PartnerModelTuningSpec {
   /** Hyperparameters for tuning. The accepted hyper_parameters and their valid range of values will differ depending on the base model. */
-  hyperParameters?: Record<string, any>;
+  hyperParameters?: Record<string, unknown>;
   /** Required. Cloud Storage path to file containing training dataset for tuning. The dataset must be formatted as a JSONL file. */
   trainingDatasetUri?: string;
   /** Optional. Cloud Storage path to file containing validation dataset for tuning. The dataset must be formatted as a JSONL file. */
@@ -1727,13 +1730,13 @@ export interface Operation {
   /** The server-assigned name, which is only unique within the same service that originally returns it. If you use the default HTTP mapping, the `name` should be a resource name ending with `operations/{unique_id}`. */
   name?: string;
   /** Service-specific metadata associated with the operation. It typically contains progress information and common metadata such as create time. Some services might not provide such metadata.  Any method that returns a long-running operation should document the metadata type, if any. */
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   /** If the value is `false`, it means the operation is still in progress. If `true`, the operation is completed, and either `error` or `response` is available. */
   done?: boolean;
   /** The error result of the operation in case of failure or cancellation. */
-  error?: Record<string, any>;
+  error?: Record<string, unknown>;
   /** The normal response of the operation in case of success. */
-  response?: Record<string, any>;
+  response?: Record<string, unknown>;
 }
 
 /** Optional configuration for cached content creation. */
@@ -1895,7 +1898,7 @@ export interface ListFilesParameters {
 /** Status of a File that uses a common error model. */
 export interface FileStatus {
   /** A list of messages that carry the error details. There is a common set of message types for APIs to use. */
-  details?: Record<string, any>[];
+  details?: Record<string, unknown>[];
   /** A list of messages that carry the error details. There is a common set of message types for APIs to use. */
   message?: string;
   /** The status code. 0 for OK, 1 for CANCELLED */
@@ -1929,7 +1932,7 @@ export interface File {
   /** Output only. The source of the `File`. */
   source?: FileSource;
   /** Output only. Metadata for a video. */
-  videoMetadata?: Record<string, any>;
+  videoMetadata?: Record<string, unknown>;
   /** Output only. Error status if File processing failed. */
   error?: FileStatus;
 }
@@ -1972,7 +1975,7 @@ export class HttpResponse {
 
   constructor(response: Response) {
     // Process the headers.
-    let headers: Record<string, string> = {};
+    const headers: Record<string, string> = {};
     for (const pair of response.headers.entries()) {
       headers[pair[0]] = pair[1];
     }
@@ -1982,7 +1985,7 @@ export class HttpResponse {
     this.responseInternal = response;
   }
 
-  json(): Promise<any> {
+  json(): Promise<unknown> {
     return this.responseInternal.json();
   }
 }
@@ -2010,7 +2013,7 @@ export interface TestTableItem {
   /** The name of the test. This is used to derive the replay id. */
   name?: string;
   /** The parameters to the test. Use pydantic models. */
-  parameters?: Record<string, any>;
+  parameters?: Record<string, unknown>;
   /** Expects an exception for MLDev matching the string. */
   exceptionIfMldev?: string;
   /** Expects an exception for Vertex matching the string. */
@@ -2035,15 +2038,15 @@ export interface ReplayRequest {
   method?: string;
   url?: string;
   headers?: Record<string, string>;
-  bodySegments?: Record<string, any>[];
+  bodySegments?: Record<string, unknown>[];
 }
 
 /** Represents a single response in a replay. */
 export class ReplayResponse {
   statusCode?: number;
   headers?: Record<string, string>;
-  bodySegments?: Record<string, any>[];
-  sdkResponseSegments?: Record<string, any>[];
+  bodySegments?: Record<string, unknown>[];
+  sdkResponseSegments?: Record<string, unknown>[];
 }
 
 /** Represents a single interaction, request and response in a replay. */
@@ -2477,4 +2480,4 @@ export type SchemaUnion = Schema;
 
 export type SpeechConfigUnion = SpeechConfig | string;
 
-export type ToolListUnion = Tool[] | Function[];
+export type ToolListUnion = Tool[];

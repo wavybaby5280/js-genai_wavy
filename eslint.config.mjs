@@ -11,7 +11,6 @@ export default [
       'src/files.ts',
       'src/models.ts',
       'src/tunings.ts',
-      'src/types.ts',
       // Ignore built files.
       'dist/**',
     ],
@@ -21,6 +20,7 @@ export default [
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-vars': 'warn',
       '@typescript-eslint/no-unsafe-function-type': 'warn',
-    },
+      "@typescript-eslint/no-empty-object-type": 'off'
+  },
   },
 ];

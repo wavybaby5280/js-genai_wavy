@@ -70,7 +70,7 @@ export class Files extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.ListFilesResponse>;
 
       return response.then((apiResponse) => {
         const resp = listFilesResponseFromVertex(this.apiClient, apiResponse);
@@ -96,7 +96,7 @@ export class Files extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.ListFilesResponse>;
 
       return response.then((apiResponse) => {
         const resp = listFilesResponseFromMldev(this.apiClient, apiResponse);
@@ -131,7 +131,7 @@ export class Files extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.CreateFileResponse>;
 
       return response.then((apiResponse) => {
         const resp = createFileResponseFromVertex(this.apiClient, apiResponse);
@@ -160,7 +160,7 @@ export class Files extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.CreateFileResponse>;
 
       return response.then((apiResponse) => {
         const resp = createFileResponseFromMldev(this.apiClient, apiResponse);
@@ -208,7 +208,7 @@ export class Files extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.File>;
 
       return response.then((apiResponse) => {
         const resp = fileFromVertex(this.apiClient, apiResponse);
@@ -236,7 +236,7 @@ export class Files extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.File>;
 
       return response.then((apiResponse) => {
         const resp = fileFromMldev(this.apiClient, apiResponse);

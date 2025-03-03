@@ -139,7 +139,7 @@ export class Models extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.GenerateContentResponse>;
 
       return response.then((apiResponse) => {
         const resp = generateContentResponseFromVertex(
@@ -171,7 +171,7 @@ export class Models extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.GenerateContentResponse>;
 
       return response.then((apiResponse) => {
         const resp = generateContentResponseFromMldev(
@@ -209,16 +209,18 @@ export class Models extends BaseModule {
         body: JSON.stringify(body),
         httpMethod: 'POST',
         httpOptions: params.config?.httpOptions,
-      });
+      }) as Promise<AsyncGenerator<types.GenerateContentResponse>>;
 
-      return response.then(async function* (apiResponse: any) {
+      return response.then(async function* (
+        apiResponse: AsyncGenerator<types.GenerateContentResponse>,
+      ) {
         for await (const chunk of apiResponse) {
           const resp = generateContentResponseFromVertex(apiClient, chunk);
           const typedResp = new types.GenerateContentResponse();
           Object.assign(typedResp, resp);
           yield typedResp;
         }
-      });
+      }) as Promise<AsyncGenerator<types.GenerateContentResponse>>;
     } else {
       const body = generateContentParametersToMldev(this.apiClient, params);
       path = common.formatMap(
@@ -237,9 +239,11 @@ export class Models extends BaseModule {
         body: JSON.stringify(body),
         httpMethod: 'POST',
         httpOptions: params.config?.httpOptions,
-      });
+      }) as Promise<AsyncGenerator<types.GenerateContentResponse>>;
 
-      return response.then(async function* (apiResponse: any) {
+      return response.then(async function* (
+        apiResponse: AsyncGenerator<types.GenerateContentResponse>,
+      ) {
         for await (const chunk of apiResponse) {
           const resp = generateContentResponseFromMldev(apiClient, chunk);
           const typedResp = new types.GenerateContentResponse();
@@ -300,7 +304,7 @@ export class Models extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.EmbedContentResponse>;
 
       return response.then((apiResponse) => {
         const resp = embedContentResponseFromVertex(
@@ -332,7 +336,7 @@ export class Models extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.EmbedContentResponse>;
 
       return response.then((apiResponse) => {
         const resp = embedContentResponseFromMldev(this.apiClient, apiResponse);
@@ -391,7 +395,7 @@ export class Models extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.GenerateImagesResponse>;
 
       return response.then((apiResponse) => {
         const resp = generateImagesResponseFromVertex(
@@ -423,7 +427,7 @@ export class Models extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.GenerateImagesResponse>;
 
       return response.then((apiResponse) => {
         const resp = generateImagesResponseFromMldev(
@@ -482,7 +486,7 @@ export class Models extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.CountTokensResponse>;
 
       return response.then((apiResponse) => {
         const resp = countTokensResponseFromVertex(this.apiClient, apiResponse);
@@ -511,7 +515,7 @@ export class Models extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.CountTokensResponse>;
 
       return response.then((apiResponse) => {
         const resp = countTokensResponseFromMldev(this.apiClient, apiResponse);
@@ -569,7 +573,7 @@ export class Models extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.ComputeTokensResponse>;
 
       return response.then((apiResponse) => {
         const resp = computeTokensResponseFromVertex(
@@ -598,7 +602,7 @@ export class Models extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.ComputeTokensResponse>;
 
       return response.then((apiResponse) => {
         const resp = computeTokensResponseFromMldev(

@@ -74,7 +74,7 @@ export class Tunings extends BaseModule {
         operation['metadata'] !== undefined &&
         operation['metadata']['tunedModel'] !== undefined
       ) {
-        tunedModelName = operation['metadata']['tunedModel'];
+        tunedModelName = operation['metadata']['tunedModel'] as string;
       } else if (
         operation['name'] !== undefined &&
         operation['name'].includes('/operations/')
@@ -117,7 +117,7 @@ export class Tunings extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.TuningJob>;
 
       return response.then((apiResponse) => {
         const resp = tuningJobFromVertex(this.apiClient, apiResponse);
@@ -145,7 +145,7 @@ export class Tunings extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.TuningJob>;
 
       return response.then((apiResponse) => {
         const resp = tuningJobFromMldev(this.apiClient, apiResponse);
@@ -182,7 +182,7 @@ export class Tunings extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.ListTuningJobsResponse>;
 
       return response.then((apiResponse) => {
         const resp = listTuningJobsResponseFromVertex(
@@ -214,7 +214,7 @@ export class Tunings extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.ListTuningJobsResponse>;
 
       return response.then((apiResponse) => {
         const resp = listTuningJobsResponseFromMldev(
@@ -255,7 +255,7 @@ export class Tunings extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.TuningJob>;
 
       return response.then((apiResponse) => {
         const resp = tuningJobFromVertex(this.apiClient, apiResponse);
@@ -280,7 +280,7 @@ export class Tunings extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.TuningJob>;
 
       return response.then((apiResponse) => {
         const resp = tuningJobFromMldev(this.apiClient, apiResponse);
@@ -314,7 +314,7 @@ export class Tunings extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.Operation>;
 
       return response.then((apiResponse) => {
         const resp = operationFromVertex(this.apiClient, apiResponse);
@@ -342,7 +342,7 @@ export class Tunings extends BaseModule {
         })
         .then((httpResponse) => {
           return httpResponse.json();
-        });
+        }) as Promise<types.Operation>;
 
       return response.then((apiResponse) => {
         const resp = operationFromMldev(this.apiClient, apiResponse);

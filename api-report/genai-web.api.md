@@ -316,10 +316,10 @@ export function createPartFromCodeExecutionResult(outcome: Outcome, output: stri
 export function createPartFromExecutableCode(code: string, language: Language): Part;
 
 // @public
-export function createPartFromFunctionCall(name: string, args: Record<string, any>): Part;
+export function createPartFromFunctionCall(name: string, args: Record<string, unknown>): Part;
 
 // @public
-export function createPartFromFunctionResponse(id: string, name: string, response: Record<string, any>): Part;
+export function createPartFromFunctionResponse(id: string, name: string, response: Record<string, unknown>): Part;
 
 // @public
 export function createPartFromText(text: string): Part;
@@ -495,7 +495,7 @@ interface File_2 {
     state?: FileState;
     updateTime?: string;
     uri?: string;
-    videoMetadata?: Record<string, any>;
+    videoMetadata?: Record<string, unknown>;
 }
 export { File_2 as File }
 
@@ -530,7 +530,7 @@ export enum FileState {
 // @public
 export interface FileStatus {
     code?: number;
-    details?: Record<string, any>[];
+    details?: Record<string, unknown>[];
     message?: string;
 }
 
@@ -560,7 +560,7 @@ export enum FinishReason {
 
 // @public
 export interface FunctionCall {
-    args?: Record<string, any>;
+    args?: Record<string, unknown>;
     id?: string;
     name?: string;
 }
@@ -595,7 +595,7 @@ export interface FunctionDeclaration {
 export class FunctionResponse {
     id?: string;
     name?: string;
-    response?: Record<string, any>;
+    response?: Record<string, unknown>;
 }
 
 // @public
@@ -775,7 +775,7 @@ export interface GetTuningJobParameters {
 // @public
 export interface GoogleRpcStatus {
     code?: number;
-    details?: Record<string, any>[];
+    details?: Record<string, unknown>[];
     message?: string;
 }
 
@@ -914,7 +914,7 @@ export class HttpResponse {
     constructor(response: Response);
     headers?: Record<string, string>;
     // (undocumented)
-    json(): Promise<any>;
+    json(): Promise<unknown>;
     responseInternal: Response;
 }
 
@@ -1217,10 +1217,10 @@ export class Models extends BaseModule {
 // @public
 export interface Operation {
     done?: boolean;
-    error?: Record<string, any>;
-    metadata?: Record<string, any>;
+    error?: Record<string, unknown>;
+    metadata?: Record<string, unknown>;
     name?: string;
-    response?: Record<string, any>;
+    response?: Record<string, unknown>;
 }
 
 // @public
@@ -1253,7 +1253,7 @@ export type PartListUnion = PartUnion[] | PartUnion;
 
 // @public
 export interface PartnerModelTuningSpec {
-    hyperParameters?: Record<string, any>;
+    hyperParameters?: Record<string, unknown>;
     trainingDatasetUri?: string;
     validationDatasetUri?: string;
 }
@@ -1302,7 +1302,7 @@ export interface ReplayInteraction {
 // @public
 export interface ReplayRequest {
     // (undocumented)
-    bodySegments?: Record<string, any>[];
+    bodySegments?: Record<string, unknown>[];
     // (undocumented)
     headers?: Record<string, string>;
     // (undocumented)
@@ -1314,11 +1314,11 @@ export interface ReplayRequest {
 // @public
 export class ReplayResponse {
     // (undocumented)
-    bodySegments?: Record<string, any>[];
+    bodySegments?: Record<string, unknown>[];
     // (undocumented)
     headers?: Record<string, string>;
     // (undocumented)
-    sdkResponseSegments?: Record<string, any>[];
+    sdkResponseSegments?: Record<string, unknown>[];
     // (undocumented)
     statusCode?: number;
 }
@@ -1367,10 +1367,10 @@ export interface SafetySetting {
 // @public
 export interface Schema {
     anyOf?: Schema[];
-    default?: any;
+    default?: unknown;
     description?: string;
     enum?: string[];
-    example?: any;
+    example?: unknown;
     format?: string;
     items?: 'Schema';
     maximum?: number;
@@ -1551,7 +1551,7 @@ export interface TestTableItem {
     hasUnion?: boolean;
     name?: string;
     overrideReplayId?: string;
-    parameters?: Record<string, any>;
+    parameters?: Record<string, unknown>;
     skipInApiMode?: string;
 }
 
@@ -1586,7 +1586,7 @@ export interface ToolConfig {
 }
 
 // @public (undocumented)
-export type ToolListUnion = Tool[] | Function[];
+export type ToolListUnion = Tool[];
 
 // Warning: (ae-internal-missing-underscore) The name "toolToMldev" should be prefixed with an underscore because the declaration is marked as @internal
 //
