@@ -2646,7 +2646,7 @@ function generateImagesParametersToMldev(
 
   const fromPrompt = common.getValueByPath(fromObject, ['prompt']);
   if (fromPrompt != null) {
-    common.setValueByPath(toObject, ['instances', 'prompt'], fromPrompt);
+    common.setValueByPath(toObject, ['instances[0]', 'prompt'], fromPrompt);
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
@@ -2678,7 +2678,7 @@ function generateImagesParametersToVertex(
 
   const fromPrompt = common.getValueByPath(fromObject, ['prompt']);
   if (fromPrompt != null) {
-    common.setValueByPath(toObject, ['instances', 'prompt'], fromPrompt);
+    common.setValueByPath(toObject, ['instances[0]', 'prompt'], fromPrompt);
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);

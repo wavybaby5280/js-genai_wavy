@@ -66,6 +66,18 @@ export function setValueByPath(
         }
       }
       return;
+    } else if (key.endsWith('[0]')) {
+      const keyName = key.slice(0, -3);
+      if (!(keyName in data)) {
+        data[keyName] = [{}];
+      }
+      const arrayData = (data as Record<string, unknown>)[keyName];
+      setValueByPath(
+        (arrayData as Array<Record<string, unknown>>)[0],
+        keys.slice(i + 1),
+        value,
+      );
+      return;
     }
 
     if (!data[key] || typeof data[key] !== 'object') {
