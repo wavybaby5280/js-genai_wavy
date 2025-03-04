@@ -10,6 +10,7 @@ import {Auth} from './_auth';
 import {Caches} from './caches';
 import {Chats} from './chats';
 import {crossError} from './cross/_cross_error';
+import {CrossUploader} from './cross/_cross_uploader';
 import {CrossWebSocketFactory} from './cross/_cross_websocket';
 import {Files} from './files';
 import {Live} from './live';
@@ -148,6 +149,7 @@ export class Client {
       vertexai: this.vertexai,
       httpOptions: options.httpOptions,
       userAgentExtra: LANGUAGE_LABEL_PREFIX + 'web',
+      uploader: new CrossUploader(),
     });
     this.models = new Models(this.apiClient);
     this.live = new Live(this.apiClient, auth, new CrossWebSocketFactory());

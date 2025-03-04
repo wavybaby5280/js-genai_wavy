@@ -5,6 +5,7 @@
  */
 
 import {Auth} from './_auth';
+import {Uploader} from './_uploader';
 import {HttpOptions, HttpResponse} from './types';
 
 const CONTENT_TYPE_HEADER = 'Content-Type';
@@ -91,6 +92,13 @@ export interface ApiClientInitOptions {
    * This can be used to e.g specify the runtime and its version.
    */
   userAgentExtra?: string;
+  
+  //TODO(wanlindu): Make the uploader required.
+  /**
+   * The uploader to use for uploading files. This field is required for
+   * creating an client, will be set through the Node_client or Web_client.
+   */
+  uploader?: Uploader;
 }
 
 /**
@@ -124,10 +132,10 @@ export interface HttpRequest {
    */
   queryParams?: Record<string, string>;
   /**
-   * Optional request body in json string format, GET request doesn't need a
+   * Optional request body in json string or Blob format, GET request doesn't need a
    * request body.
    */
-  body?: string;
+  body?: string | Blob;
   /**
    * The HTTP method to be used for the request.
    */
@@ -143,7 +151,7 @@ export interface HttpRequest {
  * endpoints.
  */
 export class ApiClient {
-  private readonly clientOptions: ApiClientInitOptions;
+  readonly clientOptions: ApiClientInitOptions;
 
   constructor(opts: ApiClientInitOptions) {
     this.clientOptions = {

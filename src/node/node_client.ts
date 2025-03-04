@@ -16,6 +16,7 @@ import {Models} from '../models';
 import {NodeAuth} from '../node/_node_auth';
 import {NodeWebSocketFactory} from '../node/_node_websocket';
 import {Tunings} from '../tunings';
+import {NodeUploader} from './_node_uploader';
 
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
 
@@ -97,6 +98,7 @@ export class Client {
       vertexai: this.vertexai,
       httpOptions: options.httpOptions,
       userAgentExtra: LANGUAGE_LABEL_PREFIX + process.version,
+      uploader: new NodeUploader(),
     });
     this.models = new Models(this.apiClient);
     this.live = new Live(this.apiClient, auth, new NodeWebSocketFactory());
