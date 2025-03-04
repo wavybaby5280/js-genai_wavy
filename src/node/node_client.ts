@@ -58,7 +58,7 @@ export class Client {
   [key: string]: any;
   protected readonly apiClient: ApiClient;
   private readonly apiKey?: string;
-  public readonly vertexai?: boolean;
+  public readonly vertexai: boolean;
   private readonly googleAuthOptions?: GoogleAuthOptions;
   private readonly project?: string;
   private readonly location?: string;

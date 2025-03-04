@@ -124,6 +124,8 @@ export interface CitationMetadata {
 export class Client {
     constructor(options: ClientInitOptions);
     // (undocumented)
+    [key: string]: any;
+    // (undocumented)
     protected readonly apiClient: ApiClient;
     // (undocumented)
     readonly caches: Caches;

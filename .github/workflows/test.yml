@@ -29,3 +29,9 @@ jobs:
         cd samples
         npm install
         npm run build
+
+  api-consistency:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - run: scripts/validate_api_consistency.sh

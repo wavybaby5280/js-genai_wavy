@@ -144,7 +144,7 @@ export class Client {
     // (undocumented)
     readonly tunings: Tunings;
     // (undocumented)
-    readonly vertexai?: boolean;
+    readonly vertexai: boolean;
 }
 
 // @public

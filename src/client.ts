@@ -115,6 +115,7 @@ export interface ClientInitOptions {
   ```
   */
 export class Client {
+  [key: string]: any;
   protected readonly apiClient: ApiClient;
   private readonly apiKey?: string;
   public readonly vertexai: boolean;
