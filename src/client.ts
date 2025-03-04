@@ -5,18 +5,18 @@
  */
 
 import {GoogleAuthOptions} from 'google-auth-library';
+import {ApiClient} from './_api_client';
 import {Auth} from './_auth';
+import {Caches} from './caches';
+import {Chats} from './chats';
+import {crossError} from './cross/_cross_error';
+import {CrossWebSocketFactory} from './cross/_cross_websocket';
+import {Files} from './files';
+import {Live} from './live';
+import {Models} from './models';
+import {Tunings} from './tunings';
 import {HttpOptions} from './types';
-import { ApiClient } from './_api_client';
-import { Models } from './models';
-import { Live } from './live';
-import { Tunings } from './tunings';
-import { Chats } from './chats';
-import { Caches } from './caches';
-import { Files } from './files';
-import { WebAuth } from './web/_web_auth';
-import { CrossWebSocketFactory } from './cross/_cross_websocket';
-import { crossError } from './cross/_cross_error';
+import {WebAuth} from './web/_web_auth';
 
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
 
@@ -83,7 +83,6 @@ export interface ClientInitOptions {
   auth?: Auth;
 }
 
-
 /**
   Use this client to make a request to the Gemini Developer API or Vertex AI
   API and then wait for the response.
@@ -129,7 +128,9 @@ export class Client {
 
   constructor(options: ClientInitOptions) {
     if (options.apiKey == null) {
-      throw new Error(`An API Key must be set when running in an unspecified environment.\n + ${crossError().message}`);
+      throw new Error(
+        `An API Key must be set when running in an unspecified environment.\n + ${crossError().message}`,
+      );
     }
     this.vertexai = options.vertexai ?? false;
     this.apiKey = options.apiKey;

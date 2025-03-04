@@ -53,7 +53,6 @@ export function tCachesModel(
   }
 }
 
-
 export function tPart(
   apiClient: ApiClient,
   origin?: types.PartUnion | null,
@@ -190,7 +189,6 @@ export function tContentsForEmbed(
   return [tContent(apiClient, origin as types.ContentUnion)!];
 }
 
-
 function _appendAccumulatedPartsAsContent(
   apiClient: ApiClient,
   result: types.Content[],
@@ -235,7 +233,7 @@ export function tContents(
   if (
     origin === null ||
     origin === undefined ||
-    Array.isArray(origin) && origin.length === 0
+    (Array.isArray(origin) && origin.length === 0)
   ) {
     throw new Error('contents are required');
   }
@@ -265,7 +263,6 @@ export function tContents(
         role: 'user',
         parts: tParts(apiClient, content),
       });
-
     } else {
       throw new Error(`Unsupported content type: ${typeof content}`);
     }

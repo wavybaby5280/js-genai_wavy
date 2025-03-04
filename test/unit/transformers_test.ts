@@ -6,7 +6,16 @@
 
 import {ApiClient} from '../../src/_api_client';
 import {FakeAuth} from '../../src/_fake_auth';
-import {tContent, tContents, tModel, tPart, tParts, tSchema, tSpeechConfig, tTool} from '../../src/_transformers';
+import {
+  tContent,
+  tContents,
+  tModel,
+  tPart,
+  tParts,
+  tSchema,
+  tSpeechConfig,
+  tTool,
+} from '../../src/_transformers';
 
 describe('tModel', () => {
   it('empty string', () => {
@@ -153,9 +162,9 @@ describe('tPart', () => {
   });
 
   it('string', () => {
-    expect(
-      tPart(new ApiClient({auth: new FakeAuth()}), 'test string'),
-    ).toEqual({text: 'test string'});
+    expect(tPart(new ApiClient({auth: new FakeAuth()}), 'test string')).toEqual(
+      {text: 'test string'},
+    );
   });
 
   it('part object', () => {
@@ -187,25 +196,25 @@ describe('tParts', () => {
 
   it('empty array', () => {
     expect(() => {
-      tParts(new ApiClient({auth: new FakeAuth()}), [])
+      tParts(new ApiClient({auth: new FakeAuth()}), []);
     }).toThrowError('PartListUnion is required');
   });
 
   it('string array', () => {
     expect(
-      tParts(
-        new ApiClient({auth: new FakeAuth()}),
-        ['test string 1', 'test string 2'],
-      ),
+      tParts(new ApiClient({auth: new FakeAuth()}), [
+        'test string 1',
+        'test string 2',
+      ]),
     ).toEqual([{text: 'test string 1'}, {text: 'test string 2'}]);
   });
 
   it('string and part object', () => {
     expect(
-      tParts(
-        new ApiClient({auth: new FakeAuth()}),
-        ['test string 1', {text: 'test string 2'}],
-      ),
+      tParts(new ApiClient({auth: new FakeAuth()}), [
+        'test string 1',
+        {text: 'test string 2'},
+      ]),
     ).toEqual([{text: 'test string 1'}, {text: 'test string 2'}]);
   });
 
@@ -221,7 +230,7 @@ describe('tParts', () => {
       // @ts-expect-error: escaping to test unsupported type
       tParts(new ApiClient({auth: new FakeAuth()}), [123]);
     }).toThrowError('Unsupported part type: number');
-  })
+  });
 });
 
 describe('tContent', () => {
@@ -253,8 +262,13 @@ describe('tContent', () => {
 
   it('function call part', () => {
     expect(
-      tContent(new ApiClient({auth: new FakeAuth()}), {functionCall: {name: 'function-name', args: {arg1: 'arg1'}}}),
-    ).toEqual({role: 'model', parts: [{functionCall: {name: 'function-name', args: {arg1: 'arg1'}}}]});
+      tContent(new ApiClient({auth: new FakeAuth()}), {
+        functionCall: {name: 'function-name', args: {arg1: 'arg1'}},
+      }),
+    ).toEqual({
+      role: 'model',
+      parts: [{functionCall: {name: 'function-name', args: {arg1: 'arg1'}}}],
+    });
   });
 
   it('text part', () => {
@@ -265,10 +279,10 @@ describe('tContent', () => {
 
   it('content', () => {
     expect(
-      tContent(
-        new ApiClient({auth: new FakeAuth()}),
-        {role: 'user', parts: [{text: 'test string'}]},
-      ),
+      tContent(new ApiClient({auth: new FakeAuth()}), {
+        role: 'user',
+        parts: [{text: 'test string'}],
+      }),
     ).toEqual({role: 'user', parts: [{text: 'test string'}]});
   });
 
@@ -301,10 +315,10 @@ describe('tContents', () => {
 
   it('content', () => {
     expect(
-      tContents(
-        new ApiClient({auth: new FakeAuth()}),
-        {role: 'user', parts: [{text: 'test string'}]},
-      ),
+      tContents(new ApiClient({auth: new FakeAuth()}), {
+        role: 'user',
+        parts: [{text: 'test string'}],
+      }),
     ).toEqual([{role: 'user', parts: [{text: 'test string'}]}]);
   });
 
@@ -316,12 +330,14 @@ describe('tContents', () => {
 
   it('function call part', () => {
     expect(
-      tContents(
-        new ApiClient({auth: new FakeAuth()}),
-        {functionCall: {name: 'function-name', args: {arg1: 'arg1'}}},
-      ),
+      tContents(new ApiClient({auth: new FakeAuth()}), {
+        functionCall: {name: 'function-name', args: {arg1: 'arg1'}},
+      }),
     ).toEqual([
-      {role: 'model', parts: [{functionCall: {name: 'function-name', args: {arg1: 'arg1'}}}]},
+      {
+        role: 'model',
+        parts: [{functionCall: {name: 'function-name', args: {arg1: 'arg1'}}}],
+      },
     ]);
   });
 
@@ -333,13 +349,10 @@ describe('tContents', () => {
 
   it('array of contents', () => {
     expect(
-      tContents(
-        new ApiClient({auth: new FakeAuth()}),
-        [
-          {role: 'user', parts: [{text: 'test string 1'}]},
-          {role: 'model', parts: [{text: 'test string 2'}]},
-        ],
-      ),
+      tContents(new ApiClient({auth: new FakeAuth()}), [
+        {role: 'user', parts: [{text: 'test string 1'}]},
+        {role: 'model', parts: [{text: 'test string 2'}]},
+      ]),
     ).toEqual([
       {role: 'user', parts: [{text: 'test string 1'}]},
       {role: 'model', parts: [{text: 'test string 2'}]},
@@ -348,10 +361,10 @@ describe('tContents', () => {
 
   it('array of text parts', () => {
     expect(
-      tContents(
-        new ApiClient({auth: new FakeAuth()}),
-        [{text: 'test string 1'}, {text: 'test string 2'}],
-      ),
+      tContents(new ApiClient({auth: new FakeAuth()}), [
+        {text: 'test string 1'},
+        {text: 'test string 2'},
+      ]),
     ).toEqual([
       {role: 'user', parts: [{text: 'test string 1'}, {text: 'test string 2'}]},
     ]);
@@ -359,35 +372,32 @@ describe('tContents', () => {
 
   it('array of string mixed with text parts, contents', () => {
     expect(
-      tContents(
-        new ApiClient({auth: new FakeAuth()}),
-        [
-          'test string 1',
-          {text: 'test string 2'},
-          {role: 'user', parts: [{text: 'test string 3'}]},
-          {functionCall: {name: 'function-name', args: {arg1: 'arg1'}}},
-          {functionResponse: {name: 'function-name', response: {result: {answer: 'answer1'}}}},
-          {role: 'model', parts: [{text: 'answer1'}]},
-          'thank you',
-        ],
-      ),
+      tContents(new ApiClient({auth: new FakeAuth()}), [
+        'test string 1',
+        {text: 'test string 2'},
+        {role: 'user', parts: [{text: 'test string 3'}]},
+        {functionCall: {name: 'function-name', args: {arg1: 'arg1'}}},
+        {
+          functionResponse: {
+            name: 'function-name',
+            response: {result: {answer: 'answer1'}},
+          },
+        },
+        {role: 'model', parts: [{text: 'answer1'}]},
+        'thank you',
+      ]),
     ).toEqual([
       {
-          role: 'user',
-          parts: [
-            {text: 'test string 1'},
-            {text: 'test string 2'},
-          ]
+        role: 'user',
+        parts: [{text: 'test string 1'}, {text: 'test string 2'}],
       },
       {
-          role: 'user',
-          parts: [{text: 'test string 3'}]
+        role: 'user',
+        parts: [{text: 'test string 3'}],
       },
       {
         role: 'model',
-        parts: [
-          {functionCall: {name: 'function-name', args: {arg1: 'arg1'}}},
-        ],
+        parts: [{functionCall: {name: 'function-name', args: {arg1: 'arg1'}}}],
       },
       {
         role: 'user',
@@ -413,33 +423,29 @@ describe('tContents', () => {
 
   it('array of array', () => {
     expect(
-      tContents(
-        new ApiClient({auth: new FakeAuth()}),
-        [
-          'question1',
-          {functionCall: {name: 'name1', args: {arg1: 'arg1'}}},
-          {functionResponse: {name: 'name1', response: {result: {answer: 'answer1'}}}},
-          {
-            role: 'model',
-            parts: [{text: 'answer1'}],
+      tContents(new ApiClient({auth: new FakeAuth()}), [
+        'question1',
+        {functionCall: {name: 'name1', args: {arg1: 'arg1'}}},
+        {
+          functionResponse: {
+            name: 'name1',
+            response: {result: {answer: 'answer1'}},
           },
-          [
-            'context2',
-            'question2',
-          ],
-        ]
-      ),
-    ).toEqual(
-    [
+        },
+        {
+          role: 'model',
+          parts: [{text: 'answer1'}],
+        },
+        ['context2', 'question2'],
+      ]),
+    ).toEqual([
       {
         role: 'user',
         parts: [{text: 'question1'}],
       },
       {
         role: 'model',
-        parts: [
-          {functionCall: {name: 'name1', args: {arg1: 'arg1'}}},
-        ],
+        parts: [{functionCall: {name: 'name1', args: {arg1: 'arg1'}}}],
       },
       {
         role: 'user',
@@ -458,10 +464,7 @@ describe('tContents', () => {
       },
       {
         role: 'user',
-        parts: [
-          {text: 'context2'},
-          {text: 'question2'},
-        ],
+        parts: [{text: 'context2'}, {text: 'question2'}],
       },
     ]);
   });

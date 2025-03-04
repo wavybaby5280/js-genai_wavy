@@ -812,19 +812,8 @@ function schemaToMldev(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  if (common.getValueByPath(fromObject, ['minItems']) !== undefined) {
-    throw new Error('minItems parameter is not supported in Gemini API.');
-  }
-
   if (common.getValueByPath(fromObject, ['example']) !== undefined) {
     throw new Error('example parameter is not supported in Gemini API.');
-  }
-
-  const fromPropertyOrdering = common.getValueByPath(fromObject, [
-    'propertyOrdering',
-  ]);
-  if (fromPropertyOrdering != null) {
-    common.setValueByPath(toObject, ['propertyOrdering'], fromPropertyOrdering);
   }
 
   if (common.getValueByPath(fromObject, ['pattern']) !== undefined) {
@@ -859,25 +848,12 @@ function schemaToMldev(
     throw new Error('minProperties parameter is not supported in Gemini API.');
   }
 
-  if (common.getValueByPath(fromObject, ['maxItems']) !== undefined) {
-    throw new Error('maxItems parameter is not supported in Gemini API.');
-  }
-
   if (common.getValueByPath(fromObject, ['maximum']) !== undefined) {
     throw new Error('maximum parameter is not supported in Gemini API.');
   }
 
-  if (common.getValueByPath(fromObject, ['nullable']) !== undefined) {
-    throw new Error('nullable parameter is not supported in Gemini API.');
-  }
-
   if (common.getValueByPath(fromObject, ['maxProperties']) !== undefined) {
     throw new Error('maxProperties parameter is not supported in Gemini API.');
-  }
-
-  const fromType = common.getValueByPath(fromObject, ['type']);
-  if (fromType != null) {
-    common.setValueByPath(toObject, ['type'], fromType);
   }
 
   const fromDescription = common.getValueByPath(fromObject, ['description']);
@@ -900,14 +876,41 @@ function schemaToMldev(
     common.setValueByPath(toObject, ['items'], fromItems);
   }
 
+  const fromMaxItems = common.getValueByPath(fromObject, ['maxItems']);
+  if (fromMaxItems != null) {
+    common.setValueByPath(toObject, ['maxItems'], fromMaxItems);
+  }
+
+  const fromMinItems = common.getValueByPath(fromObject, ['minItems']);
+  if (fromMinItems != null) {
+    common.setValueByPath(toObject, ['minItems'], fromMinItems);
+  }
+
+  const fromNullable = common.getValueByPath(fromObject, ['nullable']);
+  if (fromNullable != null) {
+    common.setValueByPath(toObject, ['nullable'], fromNullable);
+  }
+
   const fromProperties = common.getValueByPath(fromObject, ['properties']);
   if (fromProperties != null) {
     common.setValueByPath(toObject, ['properties'], fromProperties);
   }
 
+  const fromPropertyOrdering = common.getValueByPath(fromObject, [
+    'propertyOrdering',
+  ]);
+  if (fromPropertyOrdering != null) {
+    common.setValueByPath(toObject, ['propertyOrdering'], fromPropertyOrdering);
+  }
+
   const fromRequired = common.getValueByPath(fromObject, ['required']);
   if (fromRequired != null) {
     common.setValueByPath(toObject, ['required'], fromRequired);
+  }
+
+  const fromType = common.getValueByPath(fromObject, ['type']);
+  if (fromType != null) {
+    common.setValueByPath(toObject, ['type'], fromType);
   }
 
   return toObject;
@@ -919,21 +922,9 @@ function schemaToVertex(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromMinItems = common.getValueByPath(fromObject, ['minItems']);
-  if (fromMinItems != null) {
-    common.setValueByPath(toObject, ['minItems'], fromMinItems);
-  }
-
   const fromExample = common.getValueByPath(fromObject, ['example']);
   if (fromExample != null) {
     common.setValueByPath(toObject, ['example'], fromExample);
-  }
-
-  const fromPropertyOrdering = common.getValueByPath(fromObject, [
-    'propertyOrdering',
-  ]);
-  if (fromPropertyOrdering != null) {
-    common.setValueByPath(toObject, ['propertyOrdering'], fromPropertyOrdering);
   }
 
   const fromPattern = common.getValueByPath(fromObject, ['pattern']);
@@ -978,19 +969,9 @@ function schemaToVertex(
     common.setValueByPath(toObject, ['minProperties'], fromMinProperties);
   }
 
-  const fromMaxItems = common.getValueByPath(fromObject, ['maxItems']);
-  if (fromMaxItems != null) {
-    common.setValueByPath(toObject, ['maxItems'], fromMaxItems);
-  }
-
   const fromMaximum = common.getValueByPath(fromObject, ['maximum']);
   if (fromMaximum != null) {
     common.setValueByPath(toObject, ['maximum'], fromMaximum);
-  }
-
-  const fromNullable = common.getValueByPath(fromObject, ['nullable']);
-  if (fromNullable != null) {
-    common.setValueByPath(toObject, ['nullable'], fromNullable);
   }
 
   const fromMaxProperties = common.getValueByPath(fromObject, [
@@ -998,11 +979,6 @@ function schemaToVertex(
   ]);
   if (fromMaxProperties != null) {
     common.setValueByPath(toObject, ['maxProperties'], fromMaxProperties);
-  }
-
-  const fromType = common.getValueByPath(fromObject, ['type']);
-  if (fromType != null) {
-    common.setValueByPath(toObject, ['type'], fromType);
   }
 
   const fromDescription = common.getValueByPath(fromObject, ['description']);
@@ -1025,14 +1001,41 @@ function schemaToVertex(
     common.setValueByPath(toObject, ['items'], fromItems);
   }
 
+  const fromMaxItems = common.getValueByPath(fromObject, ['maxItems']);
+  if (fromMaxItems != null) {
+    common.setValueByPath(toObject, ['maxItems'], fromMaxItems);
+  }
+
+  const fromMinItems = common.getValueByPath(fromObject, ['minItems']);
+  if (fromMinItems != null) {
+    common.setValueByPath(toObject, ['minItems'], fromMinItems);
+  }
+
+  const fromNullable = common.getValueByPath(fromObject, ['nullable']);
+  if (fromNullable != null) {
+    common.setValueByPath(toObject, ['nullable'], fromNullable);
+  }
+
   const fromProperties = common.getValueByPath(fromObject, ['properties']);
   if (fromProperties != null) {
     common.setValueByPath(toObject, ['properties'], fromProperties);
   }
 
+  const fromPropertyOrdering = common.getValueByPath(fromObject, [
+    'propertyOrdering',
+  ]);
+  if (fromPropertyOrdering != null) {
+    common.setValueByPath(toObject, ['propertyOrdering'], fromPropertyOrdering);
+  }
+
   const fromRequired = common.getValueByPath(fromObject, ['required']);
   if (fromRequired != null) {
     common.setValueByPath(toObject, ['required'], fromRequired);
+  }
+
+  const fromType = common.getValueByPath(fromObject, ['type']);
+  if (fromType != null) {
+    common.setValueByPath(toObject, ['type'], fromType);
   }
 
   return toObject;
