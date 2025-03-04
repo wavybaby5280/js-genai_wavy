@@ -10,6 +10,6 @@ export function crossError(): Error {
 
 *Enabling conditional exports for your project [recommended]*
 
-*Adding a platform specific import* - Make sure your code imports either '@google/genai/web' or '@google/genai/node' before importing from '@google/genai'.
+*Using a platform specific import* - Make sure your code imports either '@google/genai/web' or '@google/genai/node' instead of '@google/genai'.
 `);
 }
