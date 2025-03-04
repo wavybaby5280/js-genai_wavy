@@ -25,26 +25,28 @@ const LANGUAGE_LABEL_PREFIX = 'gl-node/';
  *
  * See {@link Client} for usage samples.
  */
-
 export interface ClientInitOptions {
   /**
-   * Optional. Determines whether to create a Vertex AI or a Gemini Client.
+   * Optional. Determines whether to use the Vertex AI or the Gemini API.
    *
-   * When true, a Vertex AI client will be created, using the [Google Vertex AI API](https://cloud.google.com/vertex-ai/docs/reference/rest).
-   * When false, a Gemini client will be created, using the [Google Gemini API](https://ai.google.dev/gemini-api/docs#rest)
-   * Set to true if you intend to call Vertex AI endpoints.
+   * @remarks
+   * When true, the {@link https://cloud.google.com/vertex-ai/docs/reference/rest | Vertex AI API} will used.
+   * When false, the {@link https://cloud.google.com/vertex-ai/docs/reference/rest | Gemini API} will be used.
+   *
    * If unset, default SDK behavior is to use the Gemini API service.
    */
   vertexai?: boolean;
   /**
    * Optional. The Google Cloud project ID for Vertex AI clients.
    *
+   * @remarks
    * Only supported on Node runtimes, ignored on browser runtimes.
    */
   project?: string;
   /**
    * Optional. The Google Cloud project region for Vertex AI clients.
    *
+   * @remarks
    * Only supported on Node runtimes, ignored on browser runtimes.
    *
    */
@@ -52,20 +54,22 @@ export interface ClientInitOptions {
   /**
    * The API Key, required for Gemini API clients.
    *
+   * @remarks
    * Required on browser runtimes.
    */
   apiKey?: string;
   /**
    * Optional. The API version to use.
-   * If unset, SDK will choose a default api version.
+   *
+   * @remarks
+   * If unset, the default API version will be used.
    */
   apiVersion?: string;
   /**
-   * Optional. These are the authentication options provided by google-auth-library for Vertex AI clients.
+   * Optional. Authentication options defined by the by google-auth-library for Vertex AI clients.
    *
-   * Complete list of authentication options are documented in the
-   * GoogleAuthOptions interface:
-   * https://github.com/googleapis/google-auth-library-nodejs/blob/main/src/auth/googleauth.ts.
+   * @remarks
+   * @see {@link https://github.com/googleapis/google-auth-library-nodejs/blob/v9.15.0/src/auth/googleauth.ts | GoogleAuthOptions interface in google-auth-library-nodejs}.
    *
    * Only supported on Node runtimes, ignored on browser runtimes.
    *
@@ -84,35 +88,36 @@ export interface ClientInitOptions {
 }
 
 /**
-  Use this client to make a request to the Gemini Developer API or Vertex AI
-  API and then wait for the response.
-
-  To initialize the client, Gemini API users can provide API key by providing
-  input argument `apiKey="your-api-key"`.
-
-  Vertex AI API users can provide inputs argument as `vertexai=true.
-
-  Attributes:
-    options: See ClientInitOptions for usage.
-
-  Usage for the Gemini Developer API:
-
-  ```ts
-    import * as genai from ("@google/genai");
-
-    const client = genai.Client({apiKey: 'my-api-key'})
-  ```
-
-  Usage for the Vertex AI API:
-
-  ```ts
-    import * as genai from ("@google/genai");
-
-    const client = genai.Client({
-        vertexai: true, project: 'my-project-id', location: 'us-central1'
-    })
-  ```
-  */
+ * The Google GenAI SDK.
+ *
+ * @remarks
+ * Provides access to the GenAI features through either the {@link https://cloud.google.com/vertex-ai/docs/reference/rest | Gemini API}
+ * or the {@link https://cloud.google.com/vertex-ai/docs/reference/rest | Vertex AI API}.
+ *
+ * The {@link ClientInitOptions.vertexai} value determines which of the API services to use.
+ *
+ * When using the Gemini API, a {@link ClientInitOptions.apiKey} must also be set,
+ * when using Vertex AI {@link ClientInitOptions.project} and {@link ClientInitOptions.location} must also be set.
+ *
+ * @example
+ * Initializing the SDK for using the Gemini API:
+ * ```ts
+ * import {Client} from '@google/genai';
+ * const client = genai.Client({apiKey: 'GEMINI_API_KEY'});
+ * ```
+ *
+ * @example
+ * Initializing the SDK for using the Vertex AI API:
+ * ```ts
+ * import {Client} from '@google/genai';
+ * const client = genai.Client({
+ *   vertexai: true,
+ *   project: 'PROJECT_ID',
+ *   location: 'PROJECT_LOCATION'
+ * });
+ * ```
+ *
+ */
 export class Client {
   [key: string]: any;
   protected readonly apiClient: ApiClient;
