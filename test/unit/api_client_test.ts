@@ -8,6 +8,7 @@ import {Readable} from 'stream';
 
 import {ApiClient} from '../../src/_api_client';
 import {FakeAuth} from '../../src/_fake_auth';
+import {CrossUploader} from '../../src/cross/_cross_uploader';
 import * as types from '../../src/types';
 
 const fetchOkOptions = {
@@ -61,7 +62,10 @@ const mockGenerateContentResponse: types.GenerateContentResponse =
   );
 
 describe('processStreamResponse', () => {
-  const apiClient = new ApiClient({auth: new FakeAuth()});
+  const apiClient = new ApiClient({
+    auth: new FakeAuth(),
+    uploader: new CrossUploader(),
+  });
 
   it('should throw an error if the chunk does not start with the data prefix', async () => {
     const invalidChunk = 'invalid chunk';
@@ -241,6 +245,7 @@ describe('ApiClient', () => {
         apiKey: 'apikey-from-opts',
         vertexai: false,
         apiVersion: 'v1beta',
+        uploader: new CrossUploader(),
       });
 
       expect(client.isVertexAI()).toBe(false);
@@ -261,6 +266,7 @@ describe('ApiClient', () => {
         vertexai: true,
         apiVersion: 'v1beta1',
         apiKey: 'apikey-from-opts',
+        uploader: new CrossUploader(),
       });
 
       expect(client.isVertexAI()).toBe(true);
@@ -277,6 +283,7 @@ describe('ApiClient', () => {
       const client = new ApiClient({
         auth: new FakeAuth(),
         project: 'env-project',
+        uploader: new CrossUploader(),
       });
       // baseUrl is based on apiVersion
       expect(client.getRequestUrl()).toContain('/v1');
@@ -294,6 +301,7 @@ describe('ApiClient', () => {
         httpOptions: {
           baseUrl: 'https://custom-base-url.googleapis.com',
         },
+        uploader: new CrossUploader(),
       });
 
       expect(client.isVertexAI()).toBe(false);
@@ -320,6 +328,7 @@ describe('ApiClient', () => {
         httpOptions: {
           apiVersion: 'v1',
         },
+        uploader: new CrossUploader(),
       });
 
       expect(client.isVertexAI()).toBe(false);
@@ -342,6 +351,7 @@ describe('ApiClient', () => {
         location: 'vertex-location',
         vertexai: true,
         apiVersion: 'v1beta1',
+        uploader: new CrossUploader(),
       });
 
       expect(client.isVertexAI()).toBe(true);
@@ -373,6 +383,7 @@ describe('ApiClient', () => {
         vertexai: false,
         apiVersion: 'v1beta',
         httpOptions: httpOptions,
+        uploader: new CrossUploader(),
       });
 
       expect(client.isVertexAI()).toBe(false);
@@ -404,6 +415,7 @@ describe('ApiClient', () => {
         vertexai: false,
         apiVersion: 'v1beta',
         httpOptions: httpOptions,
+        uploader: new CrossUploader(),
       });
 
       expect(client.isVertexAI()).toBe(false);
@@ -435,6 +447,7 @@ describe('ApiClient', () => {
         vertexai: true,
         apiVersion: 'v1beta1',
         httpOptions: httpOptions,
+        uploader: new CrossUploader(),
       });
 
       expect(client.isVertexAI()).toBe(true);
@@ -455,7 +468,11 @@ describe('ApiClient', () => {
 
   describe('post/get methods', () => {
     it('should prepend base resource path if vertexai is true and path does not start with "projects/"', async () => {
-      const client = new ApiClient({auth: new FakeAuth(), vertexai: true});
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        vertexai: true,
+        uploader: new CrossUploader(),
+      });
       spyOn(client, 'getBaseResourcePath').and.returnValue(
         'base-resource-path',
       );
@@ -478,6 +495,7 @@ describe('ApiClient', () => {
       const client = new ApiClient({
         auth: new FakeAuth('test-api-key'),
         apiKey: 'test-api-key',
+        uploader: new CrossUploader(),
       });
       const queryParams: Record<string, string> = {
         'param1': 'value1',
@@ -505,6 +523,7 @@ describe('ApiClient', () => {
       const client = new ApiClient({
         auth: new FakeAuth('test-api-key'),
         apiKey: 'test-api-key',
+        uploader: new CrossUploader(),
       });
       await client
         .request({
@@ -523,6 +542,7 @@ describe('ApiClient', () => {
         auth: new FakeAuth('test-api-key'),
         apiKey: 'test-api-key',
         httpOptions: {timeout: 1000},
+        uploader: new CrossUploader(),
       });
       const fetchSpy = spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(
@@ -543,6 +563,7 @@ describe('ApiClient', () => {
       const client = new ApiClient({
         auth: new FakeAuth('test-api-key'),
         apiKey: 'test-api-key',
+        uploader: new CrossUploader(),
       });
       const queryParams: Record<string, string> = {
         'param1': 'value1',
@@ -589,6 +610,7 @@ describe('ApiClient', () => {
         auth: new FakeAuth(),
         apiKey: 'test-api-key',
         vertexai: true,
+        uploader: new CrossUploader(),
       });
       const queryParams: Record<string, string> = {
         'param1': 'value1',
@@ -624,6 +646,7 @@ describe('ApiClient', () => {
         httpOptions: {
           baseUrl: 'https://custom-client-base-url.googleapis.com',
         },
+        uploader: new CrossUploader(),
       });
       const queryParams: Record<string, string> = {
         'param1': 'value1',
@@ -674,6 +697,7 @@ describe('ApiClient', () => {
           timeout: 1000,
           headers: {'google-custom-header': 'custom-header-value'},
         },
+        uploader: new CrossUploader(),
       });
       const queryParams: Record<string, string> = {
         'param1': 'value1',
@@ -754,6 +778,7 @@ describe('ApiClient', () => {
         httpOptions: {
           baseUrl: 'https://custom-client-base-url.googleapis.com',
         },
+        uploader: new CrossUploader(),
       });
 
       spyOn(global, 'fetch').and.returnValue(
@@ -786,6 +811,7 @@ describe('ApiClient', () => {
         httpOptions: {
           baseUrl: 'https://custom-client-base-url.googleapis.com',
         },
+        uploader: new CrossUploader(),
       });
 
       spyOn(global, 'fetch').and.returnValue(
@@ -820,6 +846,7 @@ describe('ApiClient', () => {
           baseUrl:
             'https://custom-client-base-url-set-in-client-options.googleapis.com',
         },
+        uploader: new CrossUploader(),
       });
 
       spyOn(global, 'fetch').and.returnValue(
@@ -853,6 +880,7 @@ describe('ApiClient', () => {
         httpOptions: {
           baseUrl: 'https://custom-client-base-url.googleapis.com',
         },
+        uploader: new CrossUploader(),
       });
       const customHeaders = {
         'content-type': 'application/json',
@@ -883,6 +911,7 @@ describe('ApiClient', () => {
       const client = new ApiClient({
         auth: new FakeAuth('test-api-key'),
         apiKey: 'test-api-key',
+        uploader: new CrossUploader(),
       });
       spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(new Response(JSON.stringify({}), fetch500Options)),
@@ -897,6 +926,7 @@ describe('ApiClient', () => {
       const client = new ApiClient({
         auth: new FakeAuth('test-api-key'),
         apiKey: 'test-api-key',
+        uploader: new CrossUploader(),
       });
       spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(new Response(JSON.stringify({}), fetch400Options)),
@@ -927,6 +957,7 @@ describe('ApiClient', () => {
       const client = new ApiClient({
         auth: new FakeAuth('test-api-key'),
         apiKey: 'test-api-key',
+        uploader: new CrossUploader(),
       });
       spyOn(global, 'fetch').and.returnValue(Promise.resolve(response));
       const generator = await client.requestStream({
@@ -954,6 +985,7 @@ describe('ApiClient', () => {
         auth: new FakeAuth('test-api-key'),
         apiKey: 'test-api-key',
         httpOptions: {timeout: 1000},
+        uploader: new CrossUploader(),
       });
       const fetchSpy = spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(
@@ -974,6 +1006,7 @@ describe('ApiClient', () => {
       const client = new ApiClient({
         auth: new FakeAuth('test-api-key'),
         apiKey: 'test-api-key',
+        uploader: new CrossUploader(),
       });
       const fetchSpy = spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(
@@ -1015,6 +1048,7 @@ describe('ApiClient', () => {
         auth: new FakeAuth(),
         apiKey: 'test-api-key',
         vertexai: true,
+        uploader: new CrossUploader(),
       });
       const fetchSpy = spyOn(global, 'fetch').and.returnValue(
         Promise.resolve(
@@ -1042,6 +1076,7 @@ describe('ApiClient', () => {
         httpOptions: {
           baseUrl: 'https://custom-client-base-url.googleapis.com',
         },
+        uploader: new CrossUploader(),
       });
       const queryParams = {'param1': 'value1', 'param2': 'value2'};
       const fetchSpy = spyOn(global, 'fetch').and.returnValue(
@@ -1089,6 +1124,7 @@ describe('ApiClient', () => {
           timeout: 1000,
           headers: {'google-custom-header': 'custom-header-value'},
         },
+        uploader: new CrossUploader(),
       });
       const queryParams: Record<string, string> = {
         'param1': 'value1',

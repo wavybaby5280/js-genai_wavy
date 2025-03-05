@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {NodeUploader} from '../../../src/node/_node_uploader';
 import {Client} from '../../../src/node/node_client';
 
 describe('Client', () => {
@@ -64,5 +65,10 @@ describe('Client', () => {
     expect(client.vertexai).toBe(false);
     expect(client['project']).toBe('constructor_project');
     expect(client['location']).toBe('constructor_location');
+  });
+  it('should set uploader by default', () => {
+    const client = new Client({});
+    expect(client['apiClient'].clientOptions.uploader)
+        .toBeInstanceOf(NodeUploader);
   });
 });

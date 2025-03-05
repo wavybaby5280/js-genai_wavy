@@ -58,6 +58,11 @@ export interface ApiClientInitOptions {
    */
   auth: Auth;
   /**
+   * The uploader to use for uploading files. This field is required for
+   * creating a client, will be set through the Node_client or Web_client.
+   */
+  uploader: Uploader;
+  /**
    * Optional. The Google Cloud project ID for Vertex AI users.
    * It is not the numeric project name.
    * If not provided, SDK will try to resolve it from runtime environment.
@@ -92,13 +97,6 @@ export interface ApiClientInitOptions {
    * This can be used to e.g specify the runtime and its version.
    */
   userAgentExtra?: string;
-  
-  //TODO(wanlindu): Make the uploader required.
-  /**
-   * The uploader to use for uploading files. This field is required for
-   * creating an client, will be set through the Node_client or Web_client.
-   */
-  uploader?: Uploader;
 }
 
 /**

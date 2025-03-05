@@ -11,6 +11,7 @@ import {
   WebSocketCallbacks,
   WebSocketFactory,
 } from '../../src/_websocket';
+import {CrossUploader} from '../../src/cross/_cross_uploader';
 import {Live} from '../../src/live';
 
 class FakeWebSocketFactory implements WebSocketFactory {
@@ -49,6 +50,7 @@ describe('live', () => {
     const apiClient = new ApiClient({
       auth: new FakeAuth(),
       apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
     });
     const websocketFactory = new FakeWebSocketFactory();
     const live = new Live(apiClient, new FakeAuth(), websocketFactory);
@@ -88,6 +90,7 @@ describe('live', () => {
     const apiClient = new ApiClient({
       auth: new FakeAuth(),
       apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
     });
     const websocketFactory = new FakeWebSocketFactory();
     const live = new Live(apiClient, new FakeAuth(), websocketFactory);
@@ -115,6 +118,7 @@ describe('live', () => {
     const apiClient = new ApiClient({
       auth: new FakeAuth(),
       apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
     });
     const websocketFactory = new FakeWebSocketFactory();
     const live = new Live(apiClient, new FakeAuth(), websocketFactory);
