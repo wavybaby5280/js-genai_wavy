@@ -17,7 +17,7 @@ const rollupPlugins = [
   }),
 ];
 
-const externalDeps = ['google-auth-library', 'ws'];
+const externalDeps = ['google-auth-library', 'ws', 'fs/promises'];
 
 export default [
   // ES module (dist/index.mjs)
