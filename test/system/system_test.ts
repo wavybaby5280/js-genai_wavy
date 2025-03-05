@@ -557,18 +557,28 @@ describe('cachedContent', () => {
       location: GOOGLE_CLOUD_LOCATION,
     });
 
-    const no_config_response = await client.caches.list();
-    const with_config_response = await client.caches.list({
+    const response = await client.caches.list();
+    const pager = await client.caches.list({
       config: {pageSize: 2},
     });
+    let page = pager.page();
+    for (const cache of page) {
+      console.log(cache.name);
+    }
+    while (pager.hasNextPage()) {
+      page = await pager.nextPage();
+      for (const cache of page) {
+        console.log(cache.name);
+      }
+    }
 
-    expect(no_config_response.len()).toBeGreaterThan(0);
-    expect(with_config_response).toBeGreaterThan(0);
+    expect(response.len()).toBeGreaterThan(0);
+    expect(pager.len()).toBeGreaterThan(0);
   });
 });
 
 describe('files', () => {
-  it('ML Dev should list files with specified parameters', async () => {
+  it('ML Dev list files with specified parameters', async () => {
     const client = new Client({vertexai: false, apiKey: GOOGLE_API_KEY});
     const response = await client.files.list({config: {'pageSize': 2}});
     expect(response!.len() ?? 0).toBeGreaterThan(
@@ -580,5 +590,21 @@ describe('files', () => {
       'ML Dev should list files with specified parameters\n',
       JSON.stringify(response),
     );
+  });
+  it('ML Dev list files with pagers', async () => {
+    const client = new Client({vertexai: false, apiKey: GOOGLE_API_KEY});
+    const pager = await client.files.list({config: {pageSize: 2}});
+    let page = pager.page();
+    for (const file of page) {
+      console.log(file.name);
+    }
+    while (pager.hasNextPage()) {
+      for (const file of page) {
+        console.log(file.name);
+      }
+      page = await pager.nextPage();
+    }
+
+    expect(pager.len()).toBeGreaterThan(0);
   });
 });

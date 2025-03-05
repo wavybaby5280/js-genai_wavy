@@ -26,10 +26,10 @@ export class Files extends BaseModule {
    *
    * @example
    * The following code prints the names of all files from the service, the
-   * size of each page is 2.
+   * size of each page is 10.
    *
    * ```ts
-   * const listResponse = await client.files.list({config: {'pageSize': 2}});
+   * const listResponse = await client.files.list({config: {'pageSize': 10}});
    * for await (const file of listResponse) {
    *   console.log(file.name);
    * }
@@ -40,9 +40,9 @@ export class Files extends BaseModule {
   ): Promise<Pager<types.File>> => {
     return new Pager<types.File>(
       PagedItem.PAGED_ITEM_FILES,
-      this.listInternal,
+      (x: types.ListFilesParameters) => this.listInternal(x),
       await this.listInternal(params),
-      params.config,
+      params,
     );
   };
 

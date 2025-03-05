@@ -34,9 +34,9 @@ export class Caches extends BaseModule {
   ): Promise<Pager<types.CachedContent>> => {
     return new Pager<types.CachedContent>(
       PagedItem.PAGED_ITEM_CACHED_CONTENTS,
-      this.listInternal,
+      (x: types.ListCachedContentsParameters) => this.listInternal(x),
       await this.listInternal(params),
-      params.config,
+      params,
     );
   };
 
