@@ -148,7 +148,7 @@ export class Client {
       apiKey: this.apiKey,
       vertexai: this.vertexai,
       httpOptions: options.httpOptions,
-      userAgentExtra: LANGUAGE_LABEL_PREFIX + 'web',
+      userAgentExtra: LANGUAGE_LABEL_PREFIX + 'cross',
       uploader: new CrossUploader(),
     });
     this.models = new Models(this.apiClient);
