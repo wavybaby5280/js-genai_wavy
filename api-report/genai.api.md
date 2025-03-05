@@ -6,22 +6,6 @@
 
 import { GoogleAuthOptions } from 'google-auth-library';
 
-// @public (undocumented)
-export enum AdapterSize {
-    // (undocumented)
-    ADAPTER_SIZE_EIGHT = "ADAPTER_SIZE_EIGHT",
-    // (undocumented)
-    ADAPTER_SIZE_FOUR = "ADAPTER_SIZE_FOUR",
-    // (undocumented)
-    ADAPTER_SIZE_ONE = "ADAPTER_SIZE_ONE",
-    // (undocumented)
-    ADAPTER_SIZE_SIXTEEN = "ADAPTER_SIZE_SIXTEEN",
-    // (undocumented)
-    ADAPTER_SIZE_THIRTY_TWO = "ADAPTER_SIZE_THIRTY_TWO",
-    // (undocumented)
-    ADAPTER_SIZE_UNSPECIFIED = "ADAPTER_SIZE_UNSPECIFIED"
-}
-
 // @public
 interface Blob_2 {
     data?: string;
@@ -139,10 +123,6 @@ export class Client {
     readonly live: Live;
     // (undocumented)
     readonly models: Models;
-    // Warning: (ae-forgotten-export) The symbol "Tunings" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
-    readonly tunings: Tunings;
     // (undocumented)
     readonly vertexai: boolean;
 }
@@ -333,58 +313,7 @@ export function createPartFromUri(uri: string, mimeType: string): Part;
 export function createPartFromVideoMetadata(startOffset: string, endOffset: string): Part;
 
 // @public
-export interface CreateTuningJobConfig {
-    adapterSize?: AdapterSize;
-    batchSize?: number;
-    description?: string;
-    epochCount?: number;
-    httpOptions?: HttpOptions;
-    learningRate?: number;
-    learningRateMultiplier?: number;
-    tunedModelDisplayName?: string;
-    validationDataset?: TuningValidationDataset;
-}
-
-// @public
-export interface CreateTuningJobParameters {
-    baseModel: string;
-    config?: CreateTuningJobConfig;
-    trainingDataset: TuningDataset;
-}
-
-// @public
 export function createUserContent(partOrString: PartListUnion | string): Content;
-
-// @public
-export interface DatasetDistribution {
-    buckets?: DatasetDistributionDistributionBucket[];
-    max?: number;
-    mean?: number;
-    median?: number;
-    min?: number;
-    p5?: number;
-    p95?: number;
-    sum?: number;
-}
-
-// @public
-export interface DatasetDistributionDistributionBucket {
-    count?: string;
-    left?: number;
-    right?: number;
-}
-
-// @public
-export interface DatasetStats {
-    totalBillableCharacterCount?: string;
-    totalTuningCharacterCount?: string;
-    tuningDatasetExampleCount?: string;
-    tuningStepCount?: string;
-    userDatasetExamples?: Content[];
-    userInputTokenDistribution?: DatasetDistribution;
-    userMessagePerExampleDistribution?: DatasetDistribution;
-    userOutputTokenDistribution?: DatasetDistribution;
-}
 
 // @public
 export interface DeleteCachedContentConfig {
@@ -399,29 +328,6 @@ export interface DeleteCachedContentParameters {
 
 // @public
 export class DeleteCachedContentResponse {
-}
-
-// @public
-export interface DistillationDataStats {
-    trainingDatasetStats?: DatasetStats;
-}
-
-// @public
-export interface DistillationHyperParameters {
-    adapterSize?: AdapterSize;
-    epochCount?: string;
-    learningRateMultiplier?: number;
-}
-
-// @public
-export interface DistillationSpec {
-    baseTeacherModel?: string;
-    hyperParameters?: DistillationHyperParameters;
-    pipelineRootDirectory?: string;
-    studentModel?: string;
-    trainingDatasetUri?: string;
-    tunedTeacherModelSource?: string;
-    validationDatasetUri?: string;
 }
 
 // @public
@@ -469,11 +375,6 @@ export interface EmbedContentParameters {
 export class EmbedContentResponse {
     embeddings?: ContentEmbedding[];
     metadata?: EmbedContentMetadata;
-}
-
-// @public
-export interface EncryptionSpec {
-    kmsKeyName?: string;
 }
 
 // @public
@@ -763,25 +664,6 @@ export interface GetFileParameters {
 }
 
 // @public
-export interface GetTuningJobConfig {
-    httpOptions?: HttpOptions;
-}
-
-// @public
-export interface GetTuningJobParameters {
-    config?: GetTuningJobConfig;
-    // (undocumented)
-    name: string;
-}
-
-// @public
-export interface GoogleRpcStatus {
-    code?: number;
-    details?: Record<string, unknown>[];
-    message?: string;
-}
-
-// @public
 export interface GoogleSearch {
 }
 
@@ -943,34 +825,6 @@ export enum ImagePromptLanguage {
 }
 
 // @public (undocumented)
-export enum JobState {
-    // (undocumented)
-    JOB_STATE_CANCELLED = "JOB_STATE_CANCELLED",
-    // (undocumented)
-    JOB_STATE_CANCELLING = "JOB_STATE_CANCELLING",
-    // (undocumented)
-    JOB_STATE_EXPIRED = "JOB_STATE_EXPIRED",
-    // (undocumented)
-    JOB_STATE_FAILED = "JOB_STATE_FAILED",
-    // (undocumented)
-    JOB_STATE_PARTIALLY_SUCCEEDED = "JOB_STATE_PARTIALLY_SUCCEEDED",
-    // (undocumented)
-    JOB_STATE_PAUSED = "JOB_STATE_PAUSED",
-    // (undocumented)
-    JOB_STATE_PENDING = "JOB_STATE_PENDING",
-    // (undocumented)
-    JOB_STATE_QUEUED = "JOB_STATE_QUEUED",
-    // (undocumented)
-    JOB_STATE_RUNNING = "JOB_STATE_RUNNING",
-    // (undocumented)
-    JOB_STATE_SUCCEEDED = "JOB_STATE_SUCCEEDED",
-    // (undocumented)
-    JOB_STATE_UNSPECIFIED = "JOB_STATE_UNSPECIFIED",
-    // (undocumented)
-    JOB_STATE_UPDATING = "JOB_STATE_UPDATING"
-}
-
-// @public (undocumented)
 export enum Language {
     // (undocumented)
     LANGUAGE_UNSPECIFIED = "LANGUAGE_UNSPECIFIED",
@@ -1017,29 +871,6 @@ export interface ListFilesParameters {
 export class ListFilesResponse {
     files?: File_2[];
     nextPageToken?: string;
-}
-
-// @public
-export interface ListTuningJobsConfig {
-    // (undocumented)
-    filter?: string;
-    httpOptions?: HttpOptions;
-    // (undocumented)
-    pageSize?: number;
-    // (undocumented)
-    pageToken?: string;
-}
-
-// @public
-export interface ListTuningJobsParameters {
-    // (undocumented)
-    config?: ListTuningJobsConfig;
-}
-
-// @public
-export class ListTuningJobsResponse {
-    nextPageToken?: string;
-    tuningJobs?: TuningJob[];
 }
 
 // @public
@@ -1217,15 +1048,6 @@ export class Models extends BaseModule {
 }
 
 // @public
-export interface Operation {
-    done?: boolean;
-    error?: Record<string, unknown>;
-    metadata?: Record<string, unknown>;
-    name?: string;
-    response?: Record<string, unknown>;
-}
-
-// @public
 export enum Outcome {
     // (undocumented)
     OUTCOME_DEADLINE_EXCEEDED = "OUTCOME_DEADLINE_EXCEEDED",
@@ -1252,13 +1074,6 @@ export interface Part {
 
 // @public (undocumented)
 export type PartListUnion = PartUnion[] | PartUnion;
-
-// @public
-export interface PartnerModelTuningSpec {
-    hyperParameters?: Record<string, unknown>;
-    trainingDatasetUri?: string;
-    validationDatasetUri?: string;
-}
 
 // @public (undocumented)
 export type PartUnion = Part | string;
@@ -1485,55 +1300,6 @@ export enum SubjectReferenceType {
     SUBJECT_TYPE_PRODUCT = "SUBJECT_TYPE_PRODUCT"
 }
 
-// @public
-export interface SupervisedHyperParameters {
-    adapterSize?: AdapterSize;
-    epochCount?: string;
-    learningRateMultiplier?: number;
-}
-
-// @public
-export interface SupervisedTuningDatasetDistribution {
-    billableSum?: string;
-    buckets?: SupervisedTuningDatasetDistributionDatasetBucket[];
-    max?: number;
-    mean?: number;
-    median?: number;
-    min?: number;
-    p5?: number;
-    p95?: number;
-    sum?: string;
-}
-
-// @public
-export interface SupervisedTuningDatasetDistributionDatasetBucket {
-    count?: number;
-    left?: number;
-    right?: number;
-}
-
-// @public
-export interface SupervisedTuningDataStats {
-    totalBillableCharacterCount?: string;
-    totalBillableTokenCount?: string;
-    totalTruncatedExampleCount?: string;
-    totalTuningCharacterCount?: string;
-    truncatedExampleIndices?: string[];
-    tuningDatasetExampleCount?: string;
-    tuningStepCount?: string;
-    userDatasetExamples?: Content[];
-    userInputTokenDistribution?: SupervisedTuningDatasetDistribution;
-    userMessagePerExampleDistribution?: SupervisedTuningDatasetDistribution;
-    userOutputTokenDistribution?: SupervisedTuningDatasetDistribution;
-}
-
-// @public
-export interface SupervisedTuningSpec {
-    hyperParameters?: SupervisedHyperParameters;
-    trainingDatasetUri?: string;
-    validationDatasetUri?: string;
-}
-
 // @public (undocumented)
 export interface TestTableFile {
     // (undocumented)
@@ -1599,58 +1365,6 @@ export function toolToMldev(apiClient: ApiClient, fromObject: types.Tool): Recor
 //
 // @internal (undocumented)
 export function toolToVertex(apiClient: ApiClient, fromObject: types.Tool): Record<string, unknown>;
-
-// @public (undocumented)
-export interface TunedModel {
-    endpoint?: string;
-    model?: string;
-}
-
-// @public
-export interface TuningDataset {
-    examples?: TuningExample[];
-    gcsUri?: string;
-}
-
-// @public
-export interface TuningDataStats {
-    distillationDataStats?: DistillationDataStats;
-    supervisedTuningDataStats?: SupervisedTuningDataStats;
-}
-
-// @public (undocumented)
-export interface TuningExample {
-    output?: string;
-    textInput?: string;
-}
-
-// @public
-export interface TuningJob {
-    baseModel?: string;
-    createTime?: string;
-    description?: string;
-    distillationSpec?: DistillationSpec;
-    encryptionSpec?: EncryptionSpec;
-    endTime?: string;
-    error?: GoogleRpcStatus;
-    experiment?: string;
-    labels?: Record<string, string>;
-    name?: string;
-    partnerModelTuningSpec?: PartnerModelTuningSpec;
-    pipelineJob?: string;
-    startTime?: string;
-    state?: JobState;
-    supervisedTuningSpec?: SupervisedTuningSpec;
-    tunedModel?: TunedModel;
-    tunedModelDisplayName?: string;
-    tuningDataStats?: TuningDataStats;
-    updateTime?: string;
-}
-
-// @public (undocumented)
-export interface TuningValidationDataset {
-    gcsUri?: string;
-}
 
 // @public (undocumented)
 export enum Type {

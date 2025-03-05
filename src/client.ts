@@ -5,6 +5,7 @@
  */
 
 import {GoogleAuthOptions} from 'google-auth-library';
+
 import {ApiClient} from './_api_client';
 import {Auth} from './_auth';
 import {Caches} from './caches';
@@ -15,7 +16,6 @@ import {CrossWebSocketFactory} from './cross/_cross_websocket';
 import {Files} from './files';
 import {Live} from './live';
 import {Models} from './models';
-import {Tunings} from './tunings';
 import {HttpOptions} from './types';
 import {WebAuth} from './web/_web_auth';
 
@@ -127,7 +127,6 @@ export class Client {
   private readonly apiVersion?: string;
   readonly models: Models;
   readonly live: Live;
-  readonly tunings: Tunings;
   readonly chats: Chats;
   readonly caches: Caches;
   readonly files: Files;
@@ -153,7 +152,6 @@ export class Client {
     });
     this.models = new Models(this.apiClient);
     this.live = new Live(this.apiClient, auth, new CrossWebSocketFactory());
-    this.tunings = new Tunings(this.apiClient);
     this.chats = new Chats(this.models, this.apiClient);
     this.caches = new Caches(this.apiClient);
     this.files = new Files(this.apiClient);

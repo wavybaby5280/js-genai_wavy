@@ -11,7 +11,6 @@ import {ClientInitOptions} from '../client';
 import {Files} from '../files';
 import {Live} from '../live';
 import {Models} from '../models';
-import {Tunings} from '../tunings';
 
 import {BrowserUploader} from './_browser_uploader';
 import {BrowserWebSocketFactory} from './_browser_websocket';
@@ -57,7 +56,6 @@ export class Client {
   private readonly apiVersion?: string;
   readonly models: Models;
   readonly live: Live;
-  readonly tunings: Tunings;
   readonly chats: Chats;
   readonly caches: Caches;
   readonly files: Files;
@@ -81,7 +79,6 @@ export class Client {
     });
     this.models = new Models(this.apiClient);
     this.live = new Live(this.apiClient, auth, new BrowserWebSocketFactory());
-    this.tunings = new Tunings(this.apiClient);
     this.chats = new Chats(this.models, this.apiClient);
     this.caches = new Caches(this.apiClient);
     this.files = new Files(this.apiClient);
