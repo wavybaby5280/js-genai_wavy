@@ -6,7 +6,7 @@
 
 export function crossError(): Error {
   // TODO(b/399934880): this message needs a link to a help page explaining how to enable conditional exports
-  return new Error(`This feature requires the web or Node specific @google/genai implementation, you can fix this by either:
+  return new Error(`This feature requires the web or node specific @google/genai implementation, you can fix this by either:
 
 *Enabling conditional exports for your project [recommended]*
 

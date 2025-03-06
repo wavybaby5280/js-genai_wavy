@@ -303,9 +303,7 @@ export class ApiClient {
     if (request.httpMethod === 'GET') {
       if (request.body && request.body !== '{}') {
         throw new Error(
-          `Request body should be empty for GET request, but got: ${
-            request.body
-          }`,
+          'Request body should be empty for GET request, but got non empty request body',
         );
       }
     } else {
@@ -447,7 +445,7 @@ export class ApiClient {
         const {done, value} = await reader.read();
         if (done) {
           if (buffer.trim().length > 0) {
-            throw new Error(`Incomplete JSON segment at the end: ${buffer}`);
+            throw new Error('Incomplete JSON segment at the end');
           }
           break;
         }
@@ -478,9 +476,7 @@ export class ApiClient {
   ): Promise<Response> {
     return fetch(url, requestInit).catch((e) => {
       throw new Error(
-        `exception ${e} sending request to url: ${url} with requestInit: ${JSON.stringify(
-          requestInit,
-        )}}`,
+        `exception ${e} sending request`,
       );
     });
   }
@@ -529,7 +525,7 @@ async function throwErrorIfNotOK(
     } else {
       errorBody = {
         error: {
-          message: `exception parsing response from url: ${url} with requestInit: ${JSON.stringify(requestInit)}}`,
+          message: 'exception parsing response',
           code: response.status,
           status: response.statusText,
         },

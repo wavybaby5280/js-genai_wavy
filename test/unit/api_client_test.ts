@@ -84,7 +84,7 @@ describe('processStreamResponse', () => {
     const generator = apiClient.processStreamResponse(response);
 
     await expectAsync(generator.next()).toBeRejectedWithError(
-      'Incomplete JSON segment at the end: invalid chunk',
+      'Incomplete JSON segment at the end',
     );
   });
 
@@ -105,7 +105,7 @@ describe('processStreamResponse', () => {
     const generator = apiClient.processStreamResponse(response);
 
     await expectAsync(generator.next()).toBeRejectedWithError(
-      'Incomplete JSON segment at the end: data: invalid chunk',
+      'Incomplete JSON segment at the end',
     );
   });
 
@@ -533,7 +533,7 @@ describe('ApiClient', () => {
         })
         .catch((e) => {
           expect(e.message).toEqual(
-            'Request body should be empty for GET request, but got: {"data":"test"}',
+            'Request body should be empty for GET request, but got non empty request body',
           );
         });
     });

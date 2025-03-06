@@ -48,7 +48,6 @@ export class NodeUploader implements Uploader {
 
     const responseJson = await response?.json();
     if (response?.headers?.['x-goog-upload-status'] !== 'final') {
-      console.debug(`headers: ${response?.headers}, body: ${responseJson}`);
       throw new Error(
         'Failed to upload file: Upload status is not finalized.'
       );
@@ -203,7 +202,7 @@ export class NodeUploader implements Uploader {
     try {
       fileHandle = await open(file, 'r');
       if (!fileHandle) {
-        throw new Error(`Failed to open file: ${file}`);
+        throw new Error(`Failed to open file`);
       }
       fileSize = (await fileHandle.stat()).size;
       while (offset < fileSize) {
@@ -243,10 +242,8 @@ export class NodeUploader implements Uploader {
           return response;
         }
         if (fileSize <= offset) {
-          console.debug(`All content has been uploaded, but the upload status is not finalized. response: ${response}`);
           throw new Error(
-            'All content has been uploaded, but the upload status is not' +
-              ` finalized. response: ${response}`,
+            'All content has been uploaded, but the upload status is not finalized.'
           );
         }
       }
@@ -291,8 +288,7 @@ export class NodeUploader implements Uploader {
       }
       if (fileSize <= offset) {
         throw new Error(
-          'All content has been uploaded, but the upload status is not' +
-            ` finalized. response: ${response}`,
+          'All content has been uploaded, but the upload status is not finalized.'
         );
       }
     }

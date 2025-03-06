@@ -42,7 +42,7 @@ export function setValueByPath(
           data[keyName] = Array.from({length: value.length}, () => ({}));
         } else {
           throw new Error(
-            `Value ${value} must be a list given an array path ${key}`,
+            `Value must be a list given an array path ${key}`,
           );
         }
       }
@@ -111,9 +111,7 @@ export function setValueByPath(
       Object.assign(existingData, value);
     } else {
       throw new Error(
-        `Cannot set value for an existing key. Key: ${
-          keyToSet
-        }; Existing value: ${existingData}; New value: ${value}.`,
+        `Cannot set value for an existing key. Key: ${keyToSet}`,
       );
     }
   } else {
