@@ -123,6 +123,10 @@ describe('sendMessage', () => {
         console.log('chat.sendMessage response: ', response.text());
         expect(response.text()).not.toBeNull();
       }
+      const comprehensiveHistory = chat.getHistory();
+      expect(comprehensiveHistory.length).toBeGreaterThan(0);
+      const curatedHistory = chat.getHistory(true);
+      expect(curatedHistory.length).toBeGreaterThan(0);
     });
   });
 
@@ -141,6 +145,10 @@ describe('sendMessage', () => {
           expect(chunk.text()).not.toBeNull();
         }
       }
+      const comprehensiveHistory = chat.getHistory();
+      expect(comprehensiveHistory.length).toBeGreaterThan(0);
+      const curatedHistory = chat.getHistory(true);
+      expect(curatedHistory.length).toBeGreaterThan(0);
     });
   });
 

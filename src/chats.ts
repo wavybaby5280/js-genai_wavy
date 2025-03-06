@@ -20,6 +20,10 @@ function isValidResponse(response: types.GenerateContentResponse): boolean {
   if (content === undefined) {
     return false;
   }
+  return isValidContent(content);
+}
+
+function isValidContent(content: types.Content): boolean {
   if (content.parts === undefined || content.parts.length === 0) {
     return false;
   }
@@ -35,31 +39,68 @@ function isValidResponse(response: types.GenerateContentResponse): boolean {
 }
 
 /**
- * Processes the stream response and appends the valid contents to the history.
+ * Validates the history contains the correct roles.
+ *
+ * @remarks
+ * Expects the history to start with a user turn and then alternate between
+ * user and model turns.
+ *
+ * @throws Error if the history does not start with a user turn.
+ * @throws Error if the history contains an invalid role.
  */
-async function* processStreamResponse(
-  streamResponse: AsyncGenerator<types.GenerateContentResponse>,
-  curatedHistory: types.Content[],
-  inputContent: types.Content,
-) {
-  const outputContent: types.Content[] = [];
-  let finishReason: types.FinishReason | undefined = undefined;
-  for await (const chunk of streamResponse) {
-    if (isValidResponse(chunk)) {
-      const content = chunk?.candidates?.[0]?.content;
-      if (content !== undefined) {
-        outputContent.push(content);
-      }
-      if (chunk?.candidates?.[0]?.finishReason !== undefined) {
-        finishReason = chunk.candidates[0].finishReason;
-      }
-    }
-    if (outputContent.length && finishReason !== undefined) {
-      curatedHistory.push(inputContent);
-      curatedHistory.push(...outputContent);
-    }
-    yield chunk;
+function validateHistory(history: types.Content[]) {
+  // Empty history is valid.
+  if (history.length === 0) {
+    return;
   }
+  if (history[0].role !== 'user') {
+    throw new Error('History must start with a user turn.');
+  }
+  for (const content of history) {
+    if (content.role !== 'user' && content.role !== 'model') {
+      throw new Error(`Role must be user or model, but got ${content.role}.`);
+    }
+  }
+}
+
+/**
+ * Extracts the curated (valid) history from a comprehensive history.
+ *
+ * @remarks
+ * The model may sometimes generate invalid or empty contents(e.g., due to safty
+ * filters or recitation). Extracting valid turns from the history
+ * ensures that subsequent requests could be accpeted by the model.
+ */
+function extractCuratedHistory(comprehensiveHistory: types.Content[]):
+    types.Content[] {
+  if (comprehensiveHistory === undefined || comprehensiveHistory.length === 0) {
+    return [];
+  }
+  const curatedHistory: types.Content[] = [];
+  const length = comprehensiveHistory.length;
+  let i = 0;
+  let userInput = comprehensiveHistory[0];
+  while (i < length) {
+    if (comprehensiveHistory[i].role === 'user') {
+      userInput = comprehensiveHistory[i];
+      i++;
+    } else {
+      const modelOutput: types.Content[] = [];
+      let isValid = true;
+      while (i < length && comprehensiveHistory[i].role === 'model') {
+        modelOutput.push(comprehensiveHistory[i]);
+        if (isValid && !isValidContent(comprehensiveHistory[i])) {
+          isValid = false;
+        }
+        i++;
+      }
+      if (isValid) {
+        curatedHistory.push(userInput);
+        curatedHistory.push(...modelOutput);
+      }
+    }
+  }
+  return curatedHistory;
 }
 
 /**
@@ -82,11 +123,11 @@ export class Chats {
    */
   create(params: types.CreateChatParameters) {
     return new Chat(
-      this.apiClient,
-      this.modelsModule,
-      params.model,
-      params.config,
-      params.history,
+        this.apiClient,
+        this.modelsModule,
+        params.model,
+        params.config,
+        params.history,
     );
   }
 }
@@ -101,16 +142,19 @@ export class Chat {
   private sendPromise: Promise<void> = Promise.resolve();
 
   constructor(
-    private readonly apiClient: ApiClient,
-    private readonly modelsModule: Models,
-    private readonly model: string,
-    private readonly config: types.GenerateContentConfig = {},
-    private readonly curatedHistory: types.Content[] = [],
-  ) {}
+      private readonly apiClient: ApiClient,
+      private readonly modelsModule: Models,
+      private readonly model: string,
+      private readonly config: types.GenerateContentConfig = {},
+      private history: types.Content[] = [],
+  ) {
+    validateHistory(history);
+  }
 
   /**
    * Sends a message to the model and returns the response.
    *
+   * @remarks
    * This method will wait for the previous message to be processed before
    * sending the next message.
    *
@@ -125,18 +169,14 @@ export class Chat {
     const inputContent = t.tContent(this.apiClient, params.message);
     const responsePromise = this.modelsModule.generateContent({
       model: this.model,
-      contents: this.curatedHistory.concat(inputContent),
+      contents: this.getHistory(true).concat(inputContent),
       config: params.config ?? this.config,
     });
     this.sendPromise = (async () => {
       const response = await responsePromise;
-      if (isValidResponse(response)) {
-        this.curatedHistory.push(inputContent);
-        const outputContent = response?.candidates?.[0]?.content;
-        if (outputContent !== undefined) {
-          this.curatedHistory.push(outputContent);
-        }
-      }
+      const outputContent = response.candidates?.[0]?.content;
+      const modelOutput = outputContent ? [outputContent] : [];
+      this.recordHistory(inputContent, modelOutput);
       return;
     })();
     await this.sendPromise;
@@ -146,12 +186,13 @@ export class Chat {
   /**
    * Sends a message to the model and returns the response in chunks.
    *
+   * @remarks
    * This method will wait for the previous message to be processed before
    * sending the next message.
    *
    * @see {@link Chat#sendMessage} for non-streaming method.
    * @param params - parameters for sending the message.
-   * @returns The model's response.
+   * @return The model's response.
    */
   async sendMessageStream(
     params: types.SendMessageParameters,
@@ -160,16 +201,79 @@ export class Chat {
     const inputContent = t.tContent(this.apiClient, params.message);
     const streamResponse = this.modelsModule.generateContentStream({
       model: this.model,
-      contents: this.curatedHistory.concat(inputContent),
+      contents: this.getHistory(true).concat(inputContent),
       config: params.config ?? this.config,
     });
     this.sendPromise = streamResponse.then(() => undefined);
     const response = await streamResponse;
-    const result = processStreamResponse(
-      response,
-      this.curatedHistory,
-      inputContent,
-    );
+    const result = this.processStreamResponse(response, inputContent);
     return result;
+  }
+
+  /**
+   * Returns the chat history.
+   *
+   * @remarks
+   * The history is a list of contents alternating between user and model.
+   *
+   * There are two types of history:
+   * - The `curated history` contains only the valid turns between user and
+   * model, which will be included in the subsequent requests sent to the model.
+   * - The `comprehensive history` contains all turns, including invalid or
+   *   empty model outputs, providing a complete record of the history.
+   *
+   * The history is updated after receiving the response from the model,
+   * for streaming response, it means receiving the last chunk of the response.
+   *
+   * The `comprehensive history` is returned by default. To get the `curated
+   * history`, set the `curated` parameter to `true`.
+   *
+   * @param curated - whether to return the curated history or the comprehensive
+   *     history.
+   * @return History contents alternating between user and model for the entire
+   *     chat session.
+   */
+  getHistory(curated: boolean = false): types.Content[] {
+    return curated ? extractCuratedHistory(this.history) : this.history;
+  }
+
+  private async *
+      processStreamResponse(
+          streamResponse: AsyncGenerator<types.GenerateContentResponse>,
+          inputContent: types.Content,
+      ) {
+    const outputContent: types.Content[] = [];
+    let finishReason: types.FinishReason|undefined = undefined;
+    for await (const chunk of streamResponse) {
+      if (isValidResponse(chunk)) {
+        const content = chunk.candidates?.[0]?.content;
+        if (content !== undefined) {
+          outputContent.push(content);
+        }
+        if (chunk?.candidates?.[0]?.finishReason !== undefined) {
+          finishReason = chunk.candidates[0].finishReason;
+        }
+      }
+      yield chunk;
+    }
+    this.recordHistory(inputContent, outputContent);
+  }
+
+  private recordHistory(
+      userInput: types.Content, modelOutput: types.Content[]) {
+    let outputContents: types.Content[] = [];
+    if (modelOutput.length > 0 &&
+        modelOutput.every(content => content.role === 'model')) {
+      outputContents = modelOutput;
+    } else {
+      // Appends an empty content when model returns empty response, so that the
+      // history is always alternating between user and model.
+      outputContents.push({
+        role: 'model',
+        parts: [],
+      } as types.Content);
+    }
+    this.history.push(userInput);
+    this.history.push(...outputContents);
   }
 }

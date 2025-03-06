@@ -78,7 +78,8 @@ export interface Candidate {
 
 // @public
 export class Chat {
-    constructor(apiClient: ApiClient, modelsModule: Models, model: string, config?: types.GenerateContentConfig, curatedHistory?: types.Content[]);
+    constructor(apiClient: ApiClient, modelsModule: Models, model: string, config?: types.GenerateContentConfig, history?: types.Content[]);
+    getHistory(curated?: boolean): types.Content[];
     sendMessage(params: types.SendMessageParameters): Promise<types.GenerateContentResponse>;
     sendMessageStream(params: types.SendMessageParameters): Promise<AsyncGenerator<types.GenerateContentResponse>>;
 }

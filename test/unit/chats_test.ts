@@ -6,7 +6,23 @@
 
 import {Models} from '../../src/models';
 import {Client} from '../../src/node/node_client';
-import {GenerateContentResponse} from '../../src/types';
+import {Candidate, Content, FinishReason, GenerateContentResponse} from '../../src/types';
+
+function buildGenerateContentResponse(
+    content: Content,
+    finishReason?: FinishReason,
+    ): GenerateContentResponse {
+  const response = new GenerateContentResponse();
+  response.candidates = [
+    {
+      content,
+    },
+  ];
+  if (finishReason !== undefined) {
+    response.candidates[0].finishReason = finishReason;
+  }
+  return response;
+}
 
 describe('sendMessage invalid response', () => {
   const testCases = [
@@ -17,37 +33,29 @@ describe('sendMessage invalid response', () => {
     {
       name: 'GenerateContent returns empty candidates',
       response: Object.setPrototypeOf(
-        {candidates: []},
-        GenerateContentResponse.prototype,
-      ),
+          {candidates: []},
+          GenerateContentResponse.prototype,
+          ),
     },
     {
       name: 'GenerateContent returns default candidate',
       response: Object.setPrototypeOf(
-        {candidates: [{}]},
-        GenerateContentResponse.prototype,
-      ),
+          {candidates: [{}]},
+          GenerateContentResponse.prototype,
+          ),
     },
     {
       name: 'GenerateContent returns default content',
-      response: Object.setPrototypeOf(
-        {candidates: [{content: {}}]},
-        GenerateContentResponse.prototype,
-      ),
+      response: buildGenerateContentResponse({}),
     },
     {
       name: 'GenerateContent returns default part',
-      response: Object.setPrototypeOf(
-        {candidates: [{content: {parts: [{}]}}]},
-        GenerateContentResponse.prototype,
-      ),
+      response: buildGenerateContentResponse({parts: [{}], role: 'model'}),
     },
     {
       name: 'GenerateContent returns part with empty text',
-      response: Object.setPrototypeOf(
-        {candidates: [{content: {parts: [{text: ''}]}}]},
-        GenerateContentResponse.prototype,
-      ),
+      response:
+          buildGenerateContentResponse({parts: [{text: ''}], role: 'model'}),
     },
   ];
 
@@ -260,21 +268,21 @@ describe('sendMessageStream invalid response', () => {
     GenerateContentResponse.prototype,
   );
   const responseChunk2 = Object.setPrototypeOf(
-    {
-      candidates: [
-        {
-          content: {
-            role: 'model',
-            parts: [
-              {
-                text: 'response chunk 2',
-              },
-            ],
+      {
+        candidates: [
+          {
+            content: {
+              role: 'model',
+              parts: [
+                {
+                  text: '',
+                },
+              ],
+            },
           },
-        },
-      ],
-    },
-    GenerateContentResponse.prototype,
+        ],
+      },
+      GenerateContentResponse.prototype,
   );
 
   async function* mockStreamResponse() {
@@ -282,7 +290,7 @@ describe('sendMessageStream invalid response', () => {
     yield responseChunk2;
   }
 
-  it('GenerateContentStream no finish reason', async () => {
+  it('Chunk with empty text', async () => {
     const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
     const modelsModule = client.models;
     spyOn(modelsModule, 'generateContentStream').and.returnValue(
@@ -306,41 +314,17 @@ describe('sendMessageStream invalid response', () => {
 });
 
 describe('sendMessageStream valid response', () => {
-  const responseChunk1 = Object.setPrototypeOf(
-    {
-      candidates: [
-        {
-          content: {
-            role: 'model',
-            parts: [
-              {
-                text: 'response chunk 1',
-              },
-            ],
-          },
-        },
-      ],
-    },
-    GenerateContentResponse.prototype,
-  );
-  const responseChunk2 = Object.setPrototypeOf(
-    {
-      candidates: [
-        {
-          content: {
-            role: 'model',
-            parts: [
-              {
-                text: 'response chunk 2',
-              },
-            ],
-          },
-          finishReason: 'STOP',
-        },
-      ],
-    },
-    GenerateContentResponse.prototype,
-  );
+  const responseChunk1 = buildGenerateContentResponse({
+    parts: [{text: 'response chunk 1'}],
+    role: 'model',
+  });
+
+  const responseChunk2 = buildGenerateContentResponse(
+      {
+        parts: [{text: 'response chunk 2'}],
+        role: 'model',
+      },
+      FinishReason.STOP);
 
   async function* mockStreamResponse() {
     yield responseChunk1;
@@ -350,31 +334,226 @@ describe('sendMessageStream valid response', () => {
   it('GenerateContentStream with finish reason', async () => {
     const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
     const modelsModule = client.models;
-    spyOn(modelsModule, 'generateContentStream').and.returnValue(
-      Promise.resolve(mockStreamResponse()),
-    );
+    const modelsSpy =
+        spyOn(modelsModule, 'generateContentStream')
+            .and.returnValue(Promise.resolve(mockStreamResponse()));
     const chat = client.chats.create({model: 'gemini-1.5-flash'});
-    let response = await chat.sendMessageStream({message: 'send message 1'});
-    let chunk = await response.next();
-    expect(chunk.value).toEqual(responseChunk1);
-    chunk = await response.next();
-    expect(chunk.value).toEqual(responseChunk2);
-    response = await chat.sendMessageStream({message: 'send message 2'});
-    expect(modelsModule.generateContentStream).toHaveBeenCalledWith({
-      model: 'gemini-1.5-flash',
-      contents: [{role: 'user', parts: [{text: 'send message 1'}]}],
-      config: {},
-    });
-    // Verify that valid response and request are added to the history.
-    expect(modelsModule.generateContentStream).toHaveBeenCalledWith({
-      model: 'gemini-1.5-flash',
-      contents: [
-        {role: 'user', parts: [{text: 'send message 1'}]},
-        {role: 'model', parts: [{text: 'response chunk 1'}]},
-        {role: 'model', parts: [{text: 'response chunk 2'}]},
-        {role: 'user', parts: [{text: 'send message 2'}]},
-      ],
-      config: {},
-    });
+    const response1 = await chat.sendMessageStream({message: 'send message 1'});
+    const chunks1 = [];
+    for await (const chunk of response1) {
+      chunks1.push(chunk);
+    }
+    const response2 = await chat.sendMessageStream({message: 'send message 2'});
+    const chunks2 = [];
+    for await (const chunk of response2) {
+      chunks2.push(chunk);
+    }
+
+    expect(chunks1).toEqual([responseChunk1, responseChunk2]);
+    expect(chunks2).toEqual([]);
+    const calls = modelsSpy.calls.allArgs();
+    expect(calls[0][0]['contents']).toEqual([
+      {role: 'user', parts: [{text: 'send message 1'}]},
+    ]);
+    expect(calls[1][0]['contents']).toEqual([
+      {role: 'user', parts: [{text: 'send message 1'}]},
+      {role: 'model', parts: [{text: 'response chunk 1'}]},
+      {role: 'model', parts: [{text: 'response chunk 2'}]},
+      {role: 'user', parts: [{text: 'send message 2'}]},
+    ]);
   });
+});
+
+describe('create chat with history', () => {
+  it('throws error if history not start with a user turn', async () => {
+    const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
+    const history = [{role: 'model', parts: [{text: 'some model response'}]}];
+
+    expect(() => client.chats.create({model: 'gemini-1.5-flash', history}))
+        .toThrowError(
+            'History must start with a user turn.',
+        );
+  });
+
+  it('throws error if history contains invalid role', async () => {
+    const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
+    const history = [
+      {role: 'user', parts: [{text: 'user content'}]},
+      {role: 'unknown_role', parts: [{text: 'unknown role response'}]}
+    ];
+
+    expect(() => client.chats.create({model: 'gemini-1.5-flash', history}))
+        .toThrowError(
+            'Role must be user or model, but got unknown_role.',
+        );
+  });
+
+  it('derives curated history with invalid model response', async () => {
+    const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
+    const comprehensiveHistory = [
+      {role: 'user', parts: [{text: 'user content 1'}]},
+      {role: 'model', parts: []},
+      {role: 'user', parts: [{text: 'user content 2'}]},
+      {role: 'model', parts: [{text: 'valid model response'}]},
+    ];
+    const chat = client.chats.create(
+        {model: 'gemini-1.5-flash', history: comprehensiveHistory});
+
+    expect(chat.getHistory()).toEqual(comprehensiveHistory);
+    expect(chat.getHistory(true)).toEqual(comprehensiveHistory.slice(2));
+  });
+
+  it('derives curated history with valid model response', async () => {
+    const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
+    const comprehensiveHistory = [
+      {role: 'user', parts: [{text: 'user content 1'}]},
+      {role: 'model', parts: [{text: 'valid model response 1'}]},
+      {role: 'user', parts: [{text: 'user content 2'}]},
+      {
+        role: 'model',
+        parts: [{functionCall: {name: 'foo', args: {'param': 'bar'}}}]
+      },
+      {role: 'user', parts: [{text: 'user content 2'}]},
+      {
+        role: 'model',
+        parts: [{functionResponse: {name: 'foo', response: {'result': 'bar'}}}]
+      },
+    ];
+    const chat = client.chats.create(
+        {model: 'gemini-1.5-flash', history: comprehensiveHistory});
+
+    expect(chat.getHistory()).toEqual(comprehensiveHistory);
+    expect(chat.getHistory(true)).toEqual(comprehensiveHistory);
+  });
+});
+
+describe('getHistory', () => {
+  const existingInputContent = {
+    role: 'user',
+    parts: [{text: 'existing user content'}]
+  };
+  const existingOutputContent = {
+    role: 'model',
+    parts: [{text: 'existing model response'}],
+  };
+
+  async function* mockStreamResponse() {
+    yield buildGenerateContentResponse({
+      parts: [{text: 'streaming response chunk 1'}],
+      role: 'model',
+    });
+    yield buildGenerateContentResponse(
+        {parts: [{text: 'streaming response chunk 2'}], role: 'model'},
+        FinishReason.STOP,
+    );
+  }
+
+  async function* mockStreamResponseWithoutFinishReason() {
+    yield buildGenerateContentResponse({
+      parts: [{text: 'streaming response chunk 1'}],
+      role: 'model',
+    });
+    yield buildGenerateContentResponse({
+      parts: [{text: 'streaming response chunk 2'}],
+      role: 'model',
+    });
+  }
+
+  it('appends to history when sendMessage is called', async () => {
+    const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
+    const modelsModule = client.models;
+    const mockResponse = buildGenerateContentResponse(
+        {parts: [{text: 'new model response'}], role: 'model'});
+    spyOn(modelsModule, 'generateContent')
+        .and.returnValue(Promise.resolve(mockResponse));
+    const chat = client.chats.create({
+      model: 'gemini-1.5-flash',
+      history: [existingInputContent, existingOutputContent]
+    });
+
+    await chat.sendMessage({message: 'new user content'});
+
+    const expectedHistory = [
+      existingInputContent,
+      existingOutputContent,
+      {role: 'user', parts: [{text: 'new user content'}]},
+      {role: 'model', parts: [{text: 'new model response'}]},
+    ];
+    expect(chat.getHistory()).toEqual(expectedHistory);
+    expect(chat.getHistory(true)).toEqual(expectedHistory);
+  });
+
+  it('appends to history when sendMessageStream is called', async () => {
+    const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
+    const modelsModule = client.models;
+    spyOn(modelsModule, 'generateContentStream')
+        .and.returnValue(
+            Promise.resolve(mockStreamResponse()),
+        );
+    const chat = client.chats.create({
+      model: 'gemini-1.5-flash',
+      history: [existingInputContent, existingOutputContent]
+    });
+
+    const chunks = await chat.sendMessageStream({message: 'new user content'});
+    for await (const chunk of chunks) {
+      // do nothing
+    }
+
+    const expectedHistory = [
+      existingInputContent,
+      existingOutputContent,
+      {role: 'user', parts: [{text: 'new user content'}]},
+      {
+        role: 'model',
+        parts: [{text: 'streaming response chunk 1'}],
+      },
+      {
+        role: 'model',
+        parts: [{text: 'streaming response chunk 2'}],
+      },
+    ];
+    expect(chat.getHistory()).toEqual(expectedHistory);
+    expect(chat.getHistory(true)).toEqual(expectedHistory);
+  });
+
+  it('invalid model response is not added to curated history', async () => {
+    const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
+    const modelsModule = client.models;
+    const invalidContent = {parts: [{text: ''}], role: 'model'};
+    const mockResponse = buildGenerateContentResponse(invalidContent);
+    spyOn(modelsModule, 'generateContent')
+        .and.returnValue(Promise.resolve(mockResponse));
+    const chat = client.chats.create({
+      model: 'gemini-1.5-flash',
+    });
+
+    await chat.sendMessage({message: 'new user content'});
+
+    const expectedComprehensiveHistory = [
+      {role: 'user', parts: [{text: 'new user content'}]},
+      invalidContent,
+    ];
+    expect(chat.getHistory()).toEqual(expectedComprehensiveHistory);
+    expect(chat.getHistory(true)).toEqual([]);
+  })
+
+  it('inserts an empty model content when response is empty.', async () => {
+    const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
+    const modelsModule = client.models;
+    spyOn(modelsModule, 'generateContent')
+        .and.returnValue(Promise.resolve(new GenerateContentResponse()));
+    const chat = client.chats.create({
+      model: 'gemini-1.5-flash',
+    });
+
+    await chat.sendMessage({message: 'new user content'});
+
+    const expectedComprehensiveHistory = [
+      {role: 'user', parts: [{text: 'new user content'}]},
+      {role: 'model', parts: []},
+    ];
+    expect(chat.getHistory()).toEqual(expectedComprehensiveHistory);
+    expect(chat.getHistory(true)).toEqual([]);
+  })
 });

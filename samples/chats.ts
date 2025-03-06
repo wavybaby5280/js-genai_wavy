@@ -16,8 +16,33 @@ async function createChatFromMLDev() {
   const chat = client.chats.create({model: 'gemini-2.0-flash'});
 
   const response = await chat.sendMessage({message: 'Why is the sky blue?'});
+  console.debug('chat response 1: ', response.text());
+  const response2 = await chat.sendMessage({message: 'Why is the sunset red?'});
+  console.debug('chat response 2: ', response2.text());
 
-  console.debug(response.text());
+  const history = chat.getHistory();
+  for (const content of history) {
+    console.debug('chat history: ', JSON.stringify(content, null, 2));
+  }
+}
+
+async function createChatStreamFromMLDev() {
+  const client = new Client({vertexai: false, apiKey: GEMINI_API_KEY});
+  const chat = client.chats.create({model: 'gemini-2.0-flash'});
+  const response =
+      await chat.sendMessageStream({message: 'Why is the sky blue?'});
+  for await (const chunk of response) {
+    console.debug('chat response 1 chunk: ', chunk.text());
+  }
+  const response2 =
+      await chat.sendMessageStream({message: 'Why is the sunset red?'});
+  for await (const chunk of response2) {
+    console.debug('chat response 2 chunk: ', chunk.text());
+  }
+  const history = chat.getHistory();
+  for (const content of history) {
+    console.debug('chat history: ', JSON.stringify(content, null, 2));
+  }
 }
 
 async function createChatFromVertexAI() {
@@ -30,15 +55,48 @@ async function createChatFromVertexAI() {
   const chat = client.chats.create({model: 'gemini-2.0-flash'});
 
   const response = await chat.sendMessage({message: 'Why is the sky blue?'});
+  console.debug('chat response 1: ', response.text());
+  const response2 = await chat.sendMessage({message: 'Why is the sunset red?'});
+  console.debug('chat response 2: ', response2.text());
 
-  console.debug(response.text());
+  const history = chat.getHistory();
+  for (const content of history) {
+    console.debug('chat history: ', JSON.stringify(content, null, 2));
+  }
+}
+
+async function createChatStreamFromVertexAI() {
+  const client = new Client({
+    vertexai: true,
+    project: GOOGLE_CLOUD_PROJECT,
+    location: GOOGLE_CLOUD_LOCATION,
+  });
+  const chat = client.chats.create({model: 'gemini-2.0-flash'});
+  const response =
+      await chat.sendMessageStream({message: 'Why is the sky blue?'});
+  for await (const chunk of response) {
+    console.debug('chat response 1 chunk: ', chunk.text());
+  }
+  const response2 =
+      await chat.sendMessageStream({message: 'Why is the sunset red?'});
+  for await (const chunk of response2) {
+    console.debug('chat response 2 chunk: ', chunk.text());
+  }
+  const history = chat.getHistory();
+  for (const content of history) {
+    console.debug('chat history: ', JSON.stringify(content, null, 2));
+  }
 }
 
 async function main() {
   if (GOOGLE_GENAI_USE_VERTEXAI) {
     await createChatFromVertexAI().catch((e) => console.error('got error', e));
+    await createChatStreamFromVertexAI().catch(
+        (e) => console.error('got error', e));
   } else {
     await createChatFromMLDev().catch((e) => console.error('got error', e));
+    await createChatStreamFromMLDev().catch(
+        (e) => console.error('got error', e));
   }
 }
 
