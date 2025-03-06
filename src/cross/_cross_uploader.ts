@@ -9,6 +9,8 @@ import {File} from '../types';
 
 import {crossError} from './_cross_error';
 
+// TODO(b/401271082): re-enable lint once CrossUploader is implemented.
+/*  eslint-disable @typescript-eslint/no-unused-vars */
 export class CrossUploader implements Uploader {
   async upload(
     file: string | Blob,

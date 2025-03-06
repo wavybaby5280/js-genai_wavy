@@ -32,16 +32,6 @@ const lastCorrectFetchOkOptions = {
   },
   url: 'some-url',
 };
-const lastFalseFetchOkOptions = {
-  status: 200,
-  statusText: 'OK',
-  ok: true,
-  headers: {
-    'Content-Type': 'application/json',
-    'x-goog-upload-status': 'active',
-  },
-  url: 'some-url',
-};
 const mockResponse = new Response(
   JSON.stringify({
     data: 'data1',

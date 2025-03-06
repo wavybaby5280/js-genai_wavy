@@ -10,6 +10,9 @@ import {
   WebSocket as Ws,
 } from '../_websocket';
 
+// TODO((b/401271082): re-enable lint once BrowserWebSocketFactory is
+// implemented.
+/*  eslint-disable @typescript-eslint/no-unused-vars */
 export class BrowserWebSocketFactory implements WebSocketFactory {
   create(
     url: string,

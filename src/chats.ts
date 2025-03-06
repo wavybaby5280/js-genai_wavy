@@ -243,15 +243,11 @@ export class Chat {
           inputContent: types.Content,
       ) {
     const outputContent: types.Content[] = [];
-    let finishReason: types.FinishReason|undefined = undefined;
     for await (const chunk of streamResponse) {
       if (isValidResponse(chunk)) {
         const content = chunk.candidates?.[0]?.content;
         if (content !== undefined) {
           outputContent.push(content);
-        }
-        if (chunk?.candidates?.[0]?.finishReason !== undefined) {
-          finishReason = chunk.candidates[0].finishReason;
         }
       }
       yield chunk;

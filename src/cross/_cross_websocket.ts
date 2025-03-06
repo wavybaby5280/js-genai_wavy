@@ -11,6 +11,8 @@ import {
 } from '../_websocket';
 import {crossError} from './_cross_error';
 
+// TODO((b/401271082): re-enable lint once CrossWebSocketFactory is implemented.
+/*  eslint-disable @typescript-eslint/no-unused-vars */
 export class CrossWebSocketFactory implements WebSocketFactory {
   create(
     url: string,

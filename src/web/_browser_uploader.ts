@@ -7,6 +7,8 @@ import {ApiClient} from '../_api_client';
 import {FileStat, Uploader} from '../_uploader';
 import {File} from '../types';
 
+// TODO((b/401271082): re-enable lint once BrowserUploader is implemented.
+/*  eslint-disable @typescript-eslint/no-unused-vars */
 export class BrowserUploader implements Uploader {
   upload(
     file: string | Blob,

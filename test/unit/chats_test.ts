@@ -6,7 +6,7 @@
 
 import {Models} from '../../src/models';
 import {Client} from '../../src/node/node_client';
-import {Candidate, Content, FinishReason, GenerateContentResponse} from '../../src/types';
+import {Content, FinishReason, GenerateContentResponse} from '../../src/types';
 
 function buildGenerateContentResponse(
     content: Content,
@@ -448,17 +448,6 @@ describe('getHistory', () => {
     );
   }
 
-  async function* mockStreamResponseWithoutFinishReason() {
-    yield buildGenerateContentResponse({
-      parts: [{text: 'streaming response chunk 1'}],
-      role: 'model',
-    });
-    yield buildGenerateContentResponse({
-      parts: [{text: 'streaming response chunk 2'}],
-      role: 'model',
-    });
-  }
-
   it('appends to history when sendMessage is called', async () => {
     const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
     const modelsModule = client.models;
@@ -496,8 +485,8 @@ describe('getHistory', () => {
     });
 
     const chunks = await chat.sendMessageStream({message: 'new user content'});
-    for await (const chunk of chunks) {
-      // do nothing
+    for await (const _chunk of chunks) {
+      // No-op, consumes all chunks from the stream.
     }
 
     const expectedHistory = [
