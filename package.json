@@ -64,7 +64,7 @@
     "dist/web/index.js.map",
     "dist/web/index.mjs",
     "dist/web/index.mjs.map",
-    "dist/web/node.d.ts",
+    "dist/web/web.d.ts",
     "node/package.json",
     "web/package.json"
   ],
