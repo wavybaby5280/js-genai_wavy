@@ -50,7 +50,6 @@ const LANGUAGE_LABEL_PREFIX = 'gl-node/';
  *
  */
 export class GoogleGenAI {
-  [key: string]: any;
   protected readonly apiClient: ApiClient;
   private readonly apiKey?: string;
   public readonly vertexai: boolean;

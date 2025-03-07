@@ -632,8 +632,6 @@ export interface GetFileParameters {
 export class GoogleGenAI {
     constructor(options: GoogleGenAIOptions);
     // (undocumented)
-    [key: string]: any;
-    // (undocumented)
     protected readonly apiClient: ApiClient;
     // (undocumented)
     readonly caches: Caches;

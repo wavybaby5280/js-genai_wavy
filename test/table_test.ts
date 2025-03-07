@@ -323,7 +323,7 @@ function getTestTableMethod(
   moduleName: string,
   methodName: string,
 ): Function | null {
-  const module: BaseModule = client[moduleName];
+  const module: BaseModule = client[moduleName as keyof GoogleGenAI];
 
   if (!module) {
     console.log(
@@ -333,7 +333,7 @@ function getTestTableMethod(
     );
     return null;
   }
-  const method: Function = module[methodName];
+  const method: Function = module[methodName as keyof BaseModule];
   if (!method) {
     console.log(
       `   === Skipping method:${moduleName}.${
