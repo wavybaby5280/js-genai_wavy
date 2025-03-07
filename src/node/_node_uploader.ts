@@ -3,19 +3,18 @@
  * Copyright 2025 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
-import {FileHandle, open, stat} from 'fs/promises';
+import * as fs from 'fs/promises';
 
 import {ApiClient} from '../_api_client';
 import {FileStat, Uploader} from '../_uploader';
+import {CrossUploader, MAX_CHUNK_SIZE} from '../cross/_cross_uploader';
 import {File, HttpResponse} from '../types';
-
-const MAX_CHUNK_SIZE = 1024 * 1024 * 8; // bytes
 
 export class NodeUploader implements Uploader {
   async stat(file: string | Blob): Promise<FileStat> {
     const fileStat: FileStat = {size: 0, type: undefined};
     if (typeof file === 'string') {
-      const originalStat = await stat(file);
+      const originalStat = await fs.stat(file);
       fileStat.size = originalStat.size;
       fileStat.type = this.inferMimeType(file);
       return fileStat;
@@ -31,28 +30,12 @@ export class NodeUploader implements Uploader {
     uploadUrl: string,
     apiClient: ApiClient,
   ): Promise<File> {
-    let response: HttpResponse|undefined;
     if (typeof file === 'string') {
-      response = await this.uploadFileFromPath(
-          file,
-          uploadUrl,
-          apiClient,
-      );
+      return await this.uploadFileFromPath(file, uploadUrl, apiClient);
     } else {
-      response = await this.uploadBlob(
-          file,
-          uploadUrl,
-          apiClient,
-      );
+      const crossUploader = new CrossUploader();
+      return await crossUploader.uploadBlob(file, uploadUrl, apiClient);
     }
-
-    const responseJson = await response?.json();
-    if (response?.headers?.['x-goog-upload-status'] !== 'final') {
-      throw new Error(
-        'Failed to upload file: Upload status is not finalized.'
-      );
-    }
-    return responseJson as File;
   }
 
   /**
@@ -152,55 +135,18 @@ export class NodeUploader implements Uploader {
     return mimeType;
   }
 
-  /**
-   * Uploads a chunk of data to the specified URL using the specified upload
-   * command.
-   *
-   * @param chunk The chunk of data as a Blob to upload.
-   * @param uploadUrl The URL to upload the chunk to.
-   * @param uploadCommand The upload command to use.
-   * @param apiClient The API client to use.
-   * @param offset The number of bytes read so far.
-   * @param bytesRead The number of bytes contained in the chunk.
-   * @return A promise that resolves to the HTTP response from the upload
-   *     request.
-   */
-  private async uploadChunk(
-    chunk: Blob,
-    uploadUrl: string,
-    uploadCommand: string,
-    apiClient: ApiClient,
-    offset: number,
-    bytesRead: number,
-  ): Promise<HttpResponse | undefined> {
-    return await apiClient.request({
-      path: '',
-      body: chunk,
-      httpMethod: 'POST',
-      httpOptions: {
-        apiVersion: '',
-        baseUrl: uploadUrl,
-        headers: {
-          'X-Goog-Upload-Command': uploadCommand,
-          'X-Goog-Upload-Offset': String(offset),
-          'Content-Length': String(bytesRead),
-        },
-      },
-    });
-  }
-
   private async uploadFileFromPath(
-      file: string,
-      uploadUrl: string,
-      apiClient: ApiClient,
-      ): Promise<HttpResponse|undefined> {
+    file: string,
+    uploadUrl: string,
+    apiClient: ApiClient,
+  ): Promise<File> {
     let fileSize = 0;
     let offset = 0;
-    let response: HttpResponse | undefined;
+    let response: HttpResponse = new HttpResponse(new Response());
     let uploadCommand = 'upload';
-    let fileHandle: FileHandle | undefined;
+    let fileHandle: fs.FileHandle | undefined;
     try {
-      fileHandle = await open(file, 'r');
+      fileHandle = await fs.open(file, 'r');
       if (!fileHandle) {
         throw new Error(`Failed to open file`);
       }
@@ -212,10 +158,10 @@ export class NodeUploader implements Uploader {
         }
         const buffer = new Uint8Array(chunkSize);
         const {bytesRead: bytesRead} = await fileHandle.read(
-            buffer,
-            0,
-            chunkSize,
-            offset,
+          buffer,
+          0,
+          chunkSize,
+          offset,
         );
 
         if (bytesRead !== chunkSize) {
@@ -227,71 +173,47 @@ export class NodeUploader implements Uploader {
         }
 
         const chunk = new Blob([buffer]);
-        response = await this.uploadChunk(
-          chunk,
-          uploadUrl,
-          uploadCommand,
-          apiClient,
-          offset,
-          bytesRead,
-        );
+        response = await apiClient.request({
+          path: '',
+          body: chunk,
+          httpMethod: 'POST',
+          httpOptions: {
+            apiVersion: '',
+            baseUrl: uploadUrl,
+            headers: {
+              'X-Goog-Upload-Command': uploadCommand,
+              'X-Goog-Upload-Offset': String(offset),
+              'Content-Length': String(bytesRead),
+            },
+          },
+        });
         offset += bytesRead;
         // The `x-goog-upload-status` header field can be `active`, `final` and
         //`cancelled` in resposne.
         if (response?.headers?.['x-goog-upload-status'] !== 'active') {
-          return response;
+          break;
         }
         if (fileSize <= offset) {
           throw new Error(
-            'All content has been uploaded, but the upload status is not finalized.'
+            'All content has been uploaded, but the upload status is not finalized.',
           );
         }
       }
-      return response;
+      const responseJson = (await response?.json()) as Record<
+        string,
+        File | unknown
+      >;
+      if (response?.headers?.['x-goog-upload-status'] !== 'final') {
+        throw new Error(
+          'Failed to upload file: Upload status is not finalized.',
+        );
+      }
+      return responseJson['file'] as File;
     } finally {
       // Ensure the file handle is always closed
       if (fileHandle) {
         await fileHandle.close();
       }
     }
-  }
-
-  private async uploadBlob(
-      file: Blob,
-      uploadUrl: string,
-      apiClient: ApiClient,
-      ): Promise<HttpResponse|undefined> {
-    let fileSize = 0;
-    let offset = 0;
-    let response: HttpResponse | undefined;
-    let uploadCommand = 'upload';
-    fileSize = file.size;
-    while (offset < fileSize) {
-      const chunkSize = Math.min(MAX_CHUNK_SIZE, fileSize - offset);
-      const chunk = file.slice(offset, offset + chunkSize);
-      if (offset + chunkSize >= fileSize) {
-        uploadCommand += ', finalize';
-      }
-      response = await this.uploadChunk(
-        chunk,
-        uploadUrl,
-        uploadCommand,
-        apiClient,
-        offset,
-        chunkSize,
-      );
-      offset += chunkSize;
-      // The `x-goog-upload-status` header field can be `active`, `final` and
-      //`cancelled` in resposne.
-      if (response?.headers?.['x-goog-upload-status'] !== 'active') {
-        break;
-      }
-      if (fileSize <= offset) {
-        throw new Error(
-          'All content has been uploaded, but the upload status is not finalized.'
-        );
-      }
-    }
-    return response;
   }
 }

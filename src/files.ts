@@ -46,6 +46,64 @@ export class Files extends BaseModule {
     );
   };
 
+  /**
+   * Uploads a file asynchronously to the Gemini API.
+   * This method is not available in Vertex AI.
+   * Supported upload sources:
+   * - Node.js: File path (string) or Blob object.
+   * - Browser: Blob object (e.g., File).
+   *
+   * @remarks
+   * The `mimeType` can be specified in the `config` parameter. If omitted:
+   *  - For file path (string) inputs, the `mimeType` will be inferred from the
+   *     file extension.
+   *  - For Blob object inputs, the `mimeType` will be set to the Blob's `type`
+   *     property.
+   * Somex eamples for file extension to mimeType mapping:
+   * .txt -> text/plain
+   * .json -> application/json
+   * .jpg  -> image/jpeg
+   * .png -> image/png
+   * .mp3 -> audio/mpeg
+   * .mp4 -> video/mp4
+   *
+   * This section can contain multiple paragraphs and code examples.
+   *
+   * @param file The string path to the file to be uploaded or a Blob object.
+   * @param config Optional parameters specified in the `types.UploadFileConfig`
+   *     interface. Optional @see {@link types.UploadFileConfig}
+   * @return A promise that resolves to a `types.File` object.
+   * @throws An error if called on a Vertex AI client.
+   * @throws An error if the `mimeType` is not provided and can not be inferred,
+   * the `mimeType` can be provided in the `config` parameter.
+   * @throws An error occurs if a suitable upload location cannot be established.
+   *
+   * @example
+   * The following code uploads a file to Gemini API.
+   *
+   * ```ts
+   * const file = await client.files.upload('file.txt', {
+   *   mimeType: 'text/plain',
+   * });
+   * console.log(file.name);
+   * ```
+   */
+  async upload(
+    file: string | Blob,
+    config?: types.UploadFileConfig,
+  ): Promise<types.File> {
+    if (this.apiClient.isVertexAI()) {
+      throw new Error(
+        'Vertex AI does not support uploading files. You can share files through a GCS bucket.',
+      );
+    }
+
+    return this.apiClient.uploadFile(file, config).then((response) => {
+      const file = fileFromMldev(this.apiClient, response);
+      return file as types.File;
+    });
+  }
+
   private async listInternal(
     params: types.ListFilesParameters,
   ): Promise<types.ListFilesResponse> {

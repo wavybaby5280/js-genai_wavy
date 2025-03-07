@@ -5,8 +5,9 @@
  */
 
 import {Auth} from './_auth';
+import * as common from './_common';
 import {Uploader} from './_uploader';
-import {HttpOptions, HttpResponse} from './types';
+import {File, HttpOptions, HttpResponse, UploadFileConfig} from './types';
 
 const CONTENT_TYPE_HEADER = 'Content-Type';
 const USER_AGENT_HEADER = 'User-Agent';
@@ -130,8 +131,8 @@ export interface HttpRequest {
    */
   queryParams?: Record<string, string>;
   /**
-   * Optional request body in json string or Blob format, GET request doesn't need a
-   * request body.
+   * Optional request body in json string or Blob format, GET request doesn't
+   * need a request body.
    */
   body?: string | Blob;
   /**
@@ -240,9 +241,9 @@ export class ApiClient {
     ) {
       throw new Error('HTTP options are not correctly set.');
     }
-    const baseUrl = httpOptions.baseUrl.endsWith('/') ?
-        httpOptions.baseUrl.slice(0, -1) :
-        httpOptions.baseUrl;
+    const baseUrl = httpOptions.baseUrl.endsWith('/')
+      ? httpOptions.baseUrl.slice(0, -1)
+      : httpOptions.baseUrl;
     const urlElement: Array<string> = [baseUrl];
     if (httpOptions.apiVersion && httpOptions.apiVersion !== '') {
       urlElement.push(httpOptions.apiVersion);
@@ -331,13 +332,13 @@ export class ApiClient {
     for (const [key, value] of Object.entries(requestHttpOptions)) {
       // Records compile to objects.
       if (typeof value === 'object') {
-        // @ts-expect-error TS2345TS7053: Element implicitly has an 'any' type because
-        // expression of type 'string' can't be used to index type
+        // @ts-expect-error TS2345TS7053: Element implicitly has an 'any' type
+        // because expression of type 'string' can't be used to index type
         // 'HttpOptions'.
         patchedHttpOptions[key] = {...patchedHttpOptions[key], ...value};
       } else if (value !== undefined) {
-        // @ts-expect-error TS2345TS7053: Element implicitly has an 'any' type because
-        // expression of type 'string' can't be used to index type
+        // @ts-expect-error TS2345TS7053: Element implicitly has an 'any' type
+        // because expression of type 'string' can't be used to index type
         // 'HttpOptions'.
         patchedHttpOptions[key] = value;
       }
@@ -479,9 +480,7 @@ export class ApiClient {
     requestInit: RequestInit,
   ): Promise<Response> {
     return fetch(url, requestInit).catch((e) => {
-      throw new Error(
-        `exception ${e} sending request`,
-      );
+      throw new Error(`exception ${e} sending request`);
     });
   }
 
@@ -509,6 +508,96 @@ export class ApiClient {
     }
     await this.clientOptions.auth.addAuthHeaders(headers);
     return headers;
+  }
+
+  /**
+   * Uploads a file asynchronously using Gemini API only, this is not supported
+   * in Vertex AI.
+   *
+   * @param file The string path to the file to be uploaded or a Blob object.
+   * @param config Optional parameters specified in the `UploadFileConfig`
+   *     interface. @see {@link UploadFileConfig}
+   * @return A promise that resolves to a `File` object.
+   * @throws An error if called on a Vertex AI client.
+   * @throws An error if the `mimeType` is not provided and can not be inferred,
+   */
+  async uploadFile(
+    file: string | Blob,
+    config?: UploadFileConfig,
+  ): Promise<File> {
+    const fileToUpload: File = {};
+    if (config != null) {
+      fileToUpload.mimeType = config.mimeType;
+      fileToUpload.name = config.name;
+      fileToUpload.displayName = config.displayName;
+    }
+
+    if (fileToUpload.name && !fileToUpload.name.startsWith('files/')) {
+      fileToUpload.name = `files/${fileToUpload.name}`;
+    }
+
+    const uploader = this.clientOptions.uploader;
+    const fileStat = await uploader.stat(file);
+    fileToUpload.sizeBytes = fileStat.size;
+    const mimeType = config?.mimeType ?? fileStat.type;
+    if (mimeType === undefined || mimeType === '') {
+      throw new Error(
+        'Can not determine mimeType. Please provide mimeType in the config.',
+      );
+    }
+    fileToUpload.mimeType = mimeType;
+
+    const uploadUrl = await this.fetchUploadUrl(fileToUpload, config);
+    return uploader.upload(file, uploadUrl, this);
+  }
+
+  private async fetchUploadUrl(
+    file: File,
+    config?: UploadFileConfig,
+  ): Promise<string> {
+    let httpOptions: HttpOptions = {};
+    if (config?.httpOptions) {
+      httpOptions = config.httpOptions;
+    } else {
+      httpOptions = {
+        apiVersion: '', // api-version is set in the path.
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Goog-Upload-Protocol': 'resumable',
+          'X-Goog-Upload-Command': 'start',
+          'X-Goog-Upload-Header-Content-Length': `${file.sizeBytes}`,
+          'X-Goog-Upload-Header-Content-Type': `${file.mimeType}`,
+        },
+      };
+    }
+
+    const body: Record<string, File> = {
+      'file': file,
+    };
+    const httpResponse = await this.request({
+      path: common.formatMap(
+        'upload/v1beta/files',
+        body['_url'] as Record<string, unknown>,
+      ),
+      body: JSON.stringify(body),
+      httpMethod: 'POST',
+      httpOptions,
+    });
+
+    if (!httpResponse || !httpResponse?.headers) {
+      throw new Error(
+        'Server did not return an HttpResponse or the returned HttpResponse did not have headers.',
+      );
+    }
+
+    const uploadUrl: string | undefined =
+      httpResponse?.headers?.['x-goog-upload-url'];
+    if (uploadUrl === undefined) {
+      throw new Error(
+        'Failed to get upload url. Server did not return the x-google-upload-url in the headers',
+      );
+    }
+    return uploadUrl;
   }
 }
 

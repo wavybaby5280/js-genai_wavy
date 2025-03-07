@@ -7,8 +7,14 @@
 import {fail} from 'assert';
 import {GoogleAuthOptions} from 'google-auth-library';
 
+import {createZeroFilledTempFile} from '../../src/_generate_test_file';
 import {GoogleGenAI} from '../../src/node/node_client';
-import {GenerateContentResponse, Part} from '../../src/types';
+import {
+  GenerateContentResponse,
+  GetFileParameters,
+  Part,
+  UploadFileConfig,
+} from '../../src/types';
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
@@ -606,5 +612,51 @@ describe('files', () => {
     }
 
     expect(pager.len()).toBeGreaterThan(0);
+  });
+  it('ML Dev should upload the file from a string path and get just uploaded file with specified parameters', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+    // generate a temp file
+    const filePath = await createZeroFilledTempFile(1024 * 1024 * 10);
+
+    // upload the file
+    const upLoadConfig: UploadFileConfig = {
+      displayName: 'generate_file_test.txt',
+    };
+    const file = await client.files.upload(filePath, upLoadConfig);
+    expect(file.name?.startsWith('files/'))
+      .withContext(`File name "${file.name}" should start with "files/"}`)
+      .toBeTrue();
+
+    // get the file just uploaded
+    const config: GetFileParameters = {
+      name: file.name as string,
+    };
+    const getFile = await client.files.get(config);
+    console.log('getFile', getFile);
+    expect(getFile.name).toBe(file.name);
+  });
+  it('ML Dev should upload the file from a Blob and get just uploaded file with specified parameters', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+    // generate a temp file
+    const fileBlob = new Blob([new Uint8Array(1024 * 1024 * 30)], {
+      type: 'text/plain',
+    });
+
+    // upload the file
+    const upLoadConfig: UploadFileConfig = {
+      displayName: 'upload_blob_test.txt',
+    };
+    const file = await client.files.upload(fileBlob, upLoadConfig);
+    expect(file.name?.startsWith('files/'))
+      .withContext(`File name "${file.name}" should start with "files/"}`)
+      .toBeTrue();
+
+    // get the file just uploaded
+    const config: GetFileParameters = {
+      name: file.name as string,
+    };
+    const getFile = await client.files.get(config);
+    console.log('getFile', getFile);
+    expect(getFile.name).toBe(file.name);
   });
 });
