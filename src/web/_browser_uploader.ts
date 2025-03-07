@@ -5,20 +5,29 @@
  */
 import {ApiClient} from '../_api_client';
 import {FileStat, Uploader} from '../_uploader';
+import {CrossUploader} from '../cross/_cross_uploader';
 import {File} from '../types';
 
-// TODO((b/401271082): re-enable lint once BrowserUploader is implemented.
-/*  eslint-disable @typescript-eslint/no-unused-vars */
 export class BrowserUploader implements Uploader {
-  upload(
-    file: string | Blob,
-    uploadUrl: string,
-    apiClient: ApiClient,
-  ): Promise<File> {
-    throw new Error('Not implemented');
+  async upload(
+      file: string|Blob,
+      uploadUrl: string,
+      apiClient: ApiClient,
+      ): Promise<File> {
+    if (typeof file === 'string') {
+      throw new Error('File path is not supported in browser uploader.');
+    }
+
+    const crossUploader = new CrossUploader();
+    return await crossUploader.uploadBlob(file, uploadUrl, apiClient);
   }
 
-  async stat(file: string | Blob): Promise<FileStat> {
-    throw new Error('Not implemented');
+  async stat(file: string|Blob): Promise<FileStat> {
+    if (typeof file === 'string') {
+      throw new Error('File path is not supported in browser uploader.');
+    } else {
+      const fileStat: FileStat = {size: file.size, type: file.type};
+      return fileStat;
+    }
   }
 }
