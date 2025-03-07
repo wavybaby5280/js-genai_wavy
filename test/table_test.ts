@@ -7,7 +7,7 @@
 import {BaseModule} from '../src/_common';
 import {FakeAuth} from '../src/_fake_auth';
 import {ReplayAPIClient} from '../src/_replay_api_client';
-import {Client} from '../src/node/node_client';
+import {GoogleGenAI} from '../src/node/node_client';
 import * as types from '../src/types';
 
 function getGoogle3Path() {
@@ -319,7 +319,7 @@ function createReplayClient(vertexai: boolean) {
 }
 
 function getTestTableMethod(
-  client: Client,
+  client: GoogleGenAI,
   moduleName: string,
   methodName: string,
 ): Function | null {

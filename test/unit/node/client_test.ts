@@ -5,7 +5,7 @@
  */
 
 import {NodeUploader} from '../../../src/node/_node_uploader';
-import {Client} from '../../../src/node/node_client';
+import {GoogleGenAI} from '../../../src/node/node_client';
 
 describe('Client', () => {
   afterEach(() => {
@@ -16,35 +16,35 @@ describe('Client', () => {
   });
 
   it('should initialize without any options', () => {
-    const client = new Client({});
+    const client = new GoogleGenAI({});
     expect(client).toBeDefined();
   });
 
   it('should set apiKey from environment', () => {
     process.env['GOOGLE_API_KEY'] = 'test_api_key';
-    const client = new Client({});
+    const client = new GoogleGenAI({});
     expect(client['apiKey']).toBe('test_api_key');
   });
 
   it('should set vertexai from environment', () => {
     process.env['GOOGLE_GENAI_USE_VERTEXAI'] = 'false';
-    let client = new Client({});
+    let client = new GoogleGenAI({});
     expect(client.vertexai).toBe(false);
 
     process.env['GOOGLE_GENAI_USE_VERTEXAI'] = 'true';
-    client = new Client({});
+    client = new GoogleGenAI({});
     expect(client.vertexai).toBe(true);
   });
 
   it('should set project from environment', () => {
     process.env['GOOGLE_CLOUD_PROJECT'] = 'test_project';
-    const client = new Client({});
+    const client = new GoogleGenAI({});
     expect(client['project']).toBe('test_project');
   });
 
   it('should set location from environment', () => {
     process.env['GOOGLE_CLOUD_LOCATION'] = 'test_location';
-    const client = new Client({});
+    const client = new GoogleGenAI({});
     expect(client['location']).toBe('test_location');
   });
 
@@ -54,7 +54,7 @@ describe('Client', () => {
     process.env['GOOGLE_CLOUD_PROJECT'] = 'env_project';
     process.env['GOOGLE_CLOUD_LOCATION'] = 'env_location';
 
-    const client = new Client({
+    const client = new GoogleGenAI({
       apiKey: 'constructor_api_key',
       vertexai: false,
       project: 'constructor_project',
@@ -67,7 +67,7 @@ describe('Client', () => {
     expect(client['location']).toBe('constructor_location');
   });
   it('should set uploader by default', () => {
-    const client = new Client({});
+    const client = new GoogleGenAI({});
     expect(client['apiClient'].clientOptions.uploader)
         .toBeInstanceOf(NodeUploader);
   });

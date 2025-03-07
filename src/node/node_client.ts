@@ -9,7 +9,7 @@ import {GoogleAuthOptions} from 'google-auth-library';
 import {ApiClient} from '../_api_client';
 import {Caches} from '../caches';
 import {Chats} from '../chats';
-import {ClientInitOptions} from '../client';
+import {GoogleGenAIOptions} from '../client';
 import {Files} from '../files';
 import {Live} from '../live';
 import {Models} from '../models';
@@ -21,41 +21,37 @@ import {NodeUploader} from './_node_uploader';
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
 
 /**
-  Use this client to make a request to the Gemini Developer API or Vertex AI
-  API and then wait for the response.
-
-  To initialize the client, provide the required arguments either directly
-  or by using environment variables. Gemini API users can provide API key by
-  providing input argument `apiKey="your-api-key"` or by defining
-  `GOOGLE_API_KEY="your-api-key"` as an environment variable.
-
-  Vertex AI API users can provide inputs argument as `vertexai=true,
-  project="your-project-id", location="us-central1"` or by defining
-  `GOOGLE_GENAI_USE_VERTEXAI=false`, `GOOGLE_CLOUD_PROJECT` and
-  `GOOGLE_CLOUD_LOCATION` environment variables.
-
-  Attributes:
-    options: See ClientInitOptions for usage.
-
-  Usage for the Gemini Developer API:
-
-  ```ts
-    import * as genai from ("@google/genai/node");
-
-    const client = genai.Client({apiKey: 'my-api-key'})
-  ```
-
-  Usage for the Vertex AI API:
-
-  ```ts
-    import * as genai from ("@google/genai/node");
-
-    const client = genai.Client({
-        vertexai: true, project: 'my-project-id', location: 'us-central1'
-    })
-  ```
-  */
-export class Client {
+ * The Google GenAI SDK.
+ *
+ * @remarks
+ * Provides access to the GenAI features through either the {@link https://cloud.google.com/vertex-ai/docs/reference/rest | Gemini API}
+ * or the {@link https://cloud.google.com/vertex-ai/docs/reference/rest | Vertex AI API}.
+ *
+ * The {@link GoogleGenAIOptions.vertexai} value determines which of the API services to use.
+ *
+ * When using the Gemini API, a {@link GoogleGenAIOptions.apiKey} must also be set,
+ * when using Vertex AI {@link GoogleGenAIOptions.project} and {@link GoogleGenAIOptions.location} must also be set.
+ *
+ * @example
+ * Initializing the SDK for using the Gemini API:
+ * ```ts
+ * import {GoogleGenAI} from '@google/genai';
+ * const ai = genai.GoogleGenAI({apiKey: 'GEMINI_API_KEY'});
+ * ```
+ *
+ * @example
+ * Initializing the SDK for using the Vertex AI API:
+ * ```ts
+ * import {GoogleGenAI} from '@google/genai';
+ * const ai = genai.GoogleGenAI({
+ *   vertexai: true,
+ *   project: 'PROJECT_ID',
+ *   location: 'PROJECT_LOCATION'
+ * });
+ * ```
+ *
+ */
+export class GoogleGenAI {
   [key: string]: any;
   protected readonly apiClient: ApiClient;
   private readonly apiKey?: string;
@@ -70,7 +66,7 @@ export class Client {
   readonly caches: Caches;
   readonly files: Files;
 
-  constructor(options: ClientInitOptions) {
+  constructor(options: GoogleGenAIOptions) {
     this.vertexai =
       options.vertexai ?? getBooleanEnv('GOOGLE_GENAI_USE_VERTEXAI') ?? false;
     // The tests currently assume that an API key is never set if vertexai is true.

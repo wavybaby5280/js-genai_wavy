@@ -33,13 +33,13 @@ The simplest way to get started is to using an API key from
 [Google AI Studio](https://aistudio.google.com/apikey):
 
 ```typescript
-import {Client} from '@google/genai';
+import {GoogleGenAI} from '@google/genai';
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
-const client = new Client({apiKey: GEMINI_API_KEY});
+const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
 
 async function main() {
-  const response = await client.models.generateContent({
+  const response = await ai.models.generateContent({
     model: 'gemini-2.0-flash-001',
     contents: 'Why is the sky blue?',
   });
@@ -49,7 +49,7 @@ async function main() {
 main();
 ```
 
-## Client Initialization
+## Initialization
 
 The Google Gen AI SDK provides support for both the
 [Google AI Studio](https://ai.google.dev/gemini-api/docs) and
@@ -58,12 +58,12 @@ The Google Gen AI SDK provides support for both the
 
 ### Gemini Developer API
 
-For server-side applications, initialize the client using an API key, which can
+For server-side applications, initialize using an API key, which can
 be acquired from [Google AI Studio](https://aistudio.google.com/apikey):
 
 ```typescript
-import { Client } from '@google/genai';
-const client = new Client({apiKey: 'GEMINI_API_KEY'});
+import { GoogleGenAI } from '@google/genai';
+const ai = new GoogleGenAI({apiKey: 'GEMINI_API_KEY'});
 ```
 
 #### Browser
@@ -75,41 +75,41 @@ In the browser the initialization code is identical:
 
 
 ```typescript
-import { Client } from '@google/genai';
-const client = new Client({apiKey: 'GEMINI_API_KEY'});
+import { GoogleGenAI } from '@google/genai';
+const ai = new GoogleGenAI({apiKey: 'GEMINI_API_KEY'});
 ```
 
 ### Vertex AI
 
-To initialize the client for Vertex AI, use the following code:
+Sample code for VertexAI initialization:
 
 ```typescript
-import { Client } from '@google/genai';
+import { GoogleGenAI } from '@google/genai';
 
-const client = new Client({
+const ai = new GoogleGenAI({
     vertexai: true,
     project: 'your_project',
     location: 'your_location',
 });
 ```
 
-## Client overview
+## GoogleGenAI overview
 
-All API features are accessed through an instance of the `Client` classes.
+All API features are accessed through an instance of the `GoogleGenAI` classes.
 The submodules bundle together related API methods:
 
-- `client.models`: Use `models` to query models (`generateContent`,
+- `ai.models`: Use `models` to query models (`generateContent`,
   `generateImages`, ...), or examine their metadata.
-- `client.caches`: Create and manage `caches` to reduce costs when repeatedly
+- `ai.caches`: Create and manage `caches` to reduce costs when repeatedly
   using the same large prompt prefix.
-- `client.chats`: Create local stateful `chat` objects to simplify multiturn
+- `ai.chats`: Create local stateful `chat` objects to simplify multiturn
   interactions.
-- `client.files`: Upload `files` to the API and reference them in your prompts.
+- `ai.files`: Upload `files` to the API and reference them in your prompts.
   This reduces bandwidth if you use a file many times, and handles files too
   large to fit inline with your prompt.
-- `client.live`: Start a `live` session for realtime interaction, allows text +
+- `ai.live`: Start a `live` session for realtime interaction, allows text +
   audio + video input, and text or audio output.
-- `client.tunings` - Use `tunings` to create and manage tuned models.
+- `ai.tunings` - Use `tunings` to create and manage tuned models.
 
 ## Samples
 
@@ -119,13 +119,13 @@ For quicker more responsive API, use the `generateContentStream` method which
 yields chunks of text as they're generated:
 
 ```typescript
-import {Client} from '@google/genai';
+import {GoogleGenAI} from '@google/genai';
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
-const client = new Client({apiKey: GEMINI_API_KEY});
+const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
 
 async function main() {
-  const response = await client.models.generateContentStream({
+  const response = await ai.models.generateContentStream({
     model: 'gemini-2.0-flash-001',
     contents: 'Write a 100-word poem.',
   });
@@ -145,11 +145,11 @@ To let Gemini to interact with external systems, you can provide provide
 1. **Declare the function name, description, and parameters**
 2. **Call `generateContent` with function calling enabled**
 3. **Use the returned `FunctionCall` parameters to call your actual function**
-3. **Send the result back to the model (with history, easier in `client.chat`)
+3. **Send the result back to the model (with history, easier in `ai.chat`)
    as a `FunctionResponse`**
 
 ```typescript
-import {Client, FunctionCallingConfigMode, FunctionDeclaration, Type} from '@google/genai';
+import {GoogleGenAI, FunctionCallingConfigMode, FunctionDeclaration, Type} from '@google/genai';
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
 async function main() {
@@ -174,8 +174,8 @@ async function main() {
     },
   };
 
-  const client = new Client({apiKey: GEMINI_API_KEY});
-  const response = await client.models.generateContent({
+  const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
+  const response = await ai.models.generateContent({
     model: 'gemini-2.0-flash-001',
     contents: 'Dim the lights so the room feels cozy and warm.',
     config: {

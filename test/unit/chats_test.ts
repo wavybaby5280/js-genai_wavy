@@ -5,7 +5,7 @@
  */
 
 import {Models} from '../../src/models';
-import {Client} from '../../src/node/node_client';
+import {GoogleGenAI} from '../../src/node/node_client';
 import {Content, FinishReason, GenerateContentResponse} from '../../src/types';
 
 function buildGenerateContentResponse(
@@ -61,7 +61,7 @@ describe('sendMessage invalid response', () => {
 
   testCases.forEach(async (testCase) => {
     it(testCase.name, async () => {
-      const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
+      const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
       const modelsModule = client.models;
       spyOn(modelsModule, 'generateContent').and.returnValue(
         Promise.resolve(testCase.response),
@@ -87,7 +87,7 @@ describe('sendMessage invalid response', () => {
 
 describe('sendMessage valid response', () => {
   it('GenerateContent returns valid response', async () => {
-    const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
     const validResponse = Object.setPrototypeOf(
       {
         candidates: [
@@ -132,7 +132,7 @@ describe('sendMessage valid response', () => {
 });
 
 describe('sendMessage config', () => {
-  let client: Client;
+  let client: GoogleGenAI;
   let modelsModule: Models;
   let modelsSpy: jasmine.Spy;
   const response = new GenerateContentResponse();
@@ -150,7 +150,7 @@ describe('sendMessage config', () => {
   ];
 
   beforeEach(() => {
-    client = new Client({vertexai: false, apiKey: 'fake-api-key'});
+    client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
     modelsModule = client.models;
     modelsSpy = spyOn(modelsModule, 'generateContent').and.returnValue(
       Promise.resolve(response),
@@ -188,7 +188,7 @@ describe('sendMessage config', () => {
 });
 
 describe('sendMessageStream config', () => {
-  let client: Client;
+  let client: GoogleGenAI;
   let modelsModule: Models;
   let modelsSpy: jasmine.Spy;
   const chunk = new GenerateContentResponse();
@@ -209,7 +209,7 @@ describe('sendMessageStream config', () => {
   }
 
   beforeEach(() => {
-    client = new Client({vertexai: false, apiKey: 'fake-api-key'});
+    client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
     modelsModule = client.models;
     modelsSpy = spyOn(modelsModule, 'generateContentStream').and.returnValue(
       Promise.resolve(mockStreamResponse()),
@@ -291,7 +291,7 @@ describe('sendMessageStream invalid response', () => {
   }
 
   it('Chunk with empty text', async () => {
-    const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
     const modelsModule = client.models;
     spyOn(modelsModule, 'generateContentStream').and.returnValue(
       Promise.resolve(mockStreamResponse()),
@@ -332,7 +332,7 @@ describe('sendMessageStream valid response', () => {
   }
 
   it('GenerateContentStream with finish reason', async () => {
-    const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
     const modelsModule = client.models;
     const modelsSpy =
         spyOn(modelsModule, 'generateContentStream')
@@ -366,7 +366,7 @@ describe('sendMessageStream valid response', () => {
 
 describe('create chat with history', () => {
   it('throws error if history not start with a user turn', async () => {
-    const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
     const history = [{role: 'model', parts: [{text: 'some model response'}]}];
 
     expect(() => client.chats.create({model: 'gemini-1.5-flash', history}))
@@ -376,7 +376,7 @@ describe('create chat with history', () => {
   });
 
   it('throws error if history contains invalid role', async () => {
-    const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
     const history = [
       {role: 'user', parts: [{text: 'user content'}]},
       {role: 'unknown_role', parts: [{text: 'unknown role response'}]}
@@ -389,7 +389,7 @@ describe('create chat with history', () => {
   });
 
   it('derives curated history with invalid model response', async () => {
-    const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
     const comprehensiveHistory = [
       {role: 'user', parts: [{text: 'user content 1'}]},
       {role: 'model', parts: []},
@@ -404,7 +404,7 @@ describe('create chat with history', () => {
   });
 
   it('derives curated history with valid model response', async () => {
-    const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
     const comprehensiveHistory = [
       {role: 'user', parts: [{text: 'user content 1'}]},
       {role: 'model', parts: [{text: 'valid model response 1'}]},
@@ -449,7 +449,7 @@ describe('getHistory', () => {
   }
 
   it('appends to history when sendMessage is called', async () => {
-    const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
     const modelsModule = client.models;
     const mockResponse = buildGenerateContentResponse(
         {parts: [{text: 'new model response'}], role: 'model'});
@@ -473,7 +473,7 @@ describe('getHistory', () => {
   });
 
   it('appends to history when sendMessageStream is called', async () => {
-    const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
     const modelsModule = client.models;
     spyOn(modelsModule, 'generateContentStream')
         .and.returnValue(
@@ -507,7 +507,7 @@ describe('getHistory', () => {
   });
 
   it('invalid model response is not added to curated history', async () => {
-    const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
     const modelsModule = client.models;
     const invalidContent = {parts: [{text: ''}], role: 'model'};
     const mockResponse = buildGenerateContentResponse(invalidContent);
@@ -528,7 +528,7 @@ describe('getHistory', () => {
   })
 
   it('inserts an empty model content when response is empty.', async () => {
-    const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
     const modelsModule = client.models;
     spyOn(modelsModule, 'generateContent')
         .and.returnValue(Promise.resolve(new GenerateContentResponse()));

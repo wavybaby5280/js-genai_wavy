@@ -106,42 +106,6 @@ export interface CitationMetadata {
 }
 
 // @public
-export class Client {
-    constructor(options: ClientInitOptions);
-    // (undocumented)
-    [key: string]: any;
-    // (undocumented)
-    protected readonly apiClient: ApiClient;
-    // (undocumented)
-    readonly caches: Caches;
-    // (undocumented)
-    readonly chats: Chats;
-    // Warning: (ae-forgotten-export) The symbol "Files" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
-    readonly files: Files;
-    // (undocumented)
-    readonly live: Live;
-    // (undocumented)
-    readonly models: Models;
-    // (undocumented)
-    readonly vertexai: boolean;
-}
-
-// @public
-export interface ClientInitOptions {
-    apiKey?: string;
-    apiVersion?: string;
-    // Warning: (ae-forgotten-export) The symbol "Auth" needs to be exported by the entry point index.d.ts
-    auth?: Auth;
-    googleAuthOptions?: GoogleAuthOptions;
-    httpOptions?: HttpOptions;
-    location?: string;
-    project?: string;
-    vertexai?: boolean;
-}
-
-// @public
 export interface CodeExecutionResult {
     outcome?: Outcome;
     output?: string;
@@ -662,6 +626,42 @@ export interface GetFileConfig {
 export interface GetFileParameters {
     config?: GetFileConfig;
     name: string;
+}
+
+// @public
+export class GoogleGenAI {
+    constructor(options: GoogleGenAIOptions);
+    // (undocumented)
+    [key: string]: any;
+    // (undocumented)
+    protected readonly apiClient: ApiClient;
+    // (undocumented)
+    readonly caches: Caches;
+    // (undocumented)
+    readonly chats: Chats;
+    // Warning: (ae-forgotten-export) The symbol "Files" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    readonly files: Files;
+    // (undocumented)
+    readonly live: Live;
+    // (undocumented)
+    readonly models: Models;
+    // (undocumented)
+    readonly vertexai: boolean;
+}
+
+// @public
+export interface GoogleGenAIOptions {
+    apiKey?: string;
+    apiVersion?: string;
+    // Warning: (ae-forgotten-export) The symbol "Auth" needs to be exported by the entry point index.d.ts
+    auth?: Auth;
+    googleAuthOptions?: GoogleAuthOptions;
+    httpOptions?: HttpOptions;
+    location?: string;
+    project?: string;
+    vertexai?: boolean;
 }
 
 // @public

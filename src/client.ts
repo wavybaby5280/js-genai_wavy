@@ -22,11 +22,11 @@ import {WebAuth} from './web/_web_auth';
 const LANGUAGE_LABEL_PREFIX = 'gl-node/';
 
 /**
- * Client configuration options.
+ * Google Gen AI SDK's configuration options.
  *
- * See {@link Client} for usage samples.
+ * See {@link GoogleGenAI} for usage samples.
  */
-export interface ClientInitOptions {
+export interface GoogleGenAIOptions {
   /**
    * Optional. Determines whether to use the Vertex AI or the Gemini API.
    *
@@ -95,23 +95,23 @@ export interface ClientInitOptions {
  * Provides access to the GenAI features through either the {@link https://cloud.google.com/vertex-ai/docs/reference/rest | Gemini API}
  * or the {@link https://cloud.google.com/vertex-ai/docs/reference/rest | Vertex AI API}.
  *
- * The {@link ClientInitOptions.vertexai} value determines which of the API services to use.
+ * The {@link GoogleGenAIOptions.vertexai} value determines which of the API services to use.
  *
- * When using the Gemini API, a {@link ClientInitOptions.apiKey} must also be set,
- * when using Vertex AI {@link ClientInitOptions.project} and {@link ClientInitOptions.location} must also be set.
+ * When using the Gemini API, a {@link GoogleGenAIOptions.apiKey} must also be set,
+ * when using Vertex AI {@link GoogleGenAIOptions.project} and {@link GoogleGenAIOptions.location} must also be set.
  *
  * @example
  * Initializing the SDK for using the Gemini API:
  * ```ts
- * import {Client} from '@google/genai';
- * const client = genai.Client({apiKey: 'GEMINI_API_KEY'});
+ * import {GoogleGenAI} from '@google/genai';
+ * const ai = new GoogleGenAI({apiKey: 'GEMINI_API_KEY'});
  * ```
  *
  * @example
  * Initializing the SDK for using the Vertex AI API:
  * ```ts
- * import {Client} from '@google/genai';
- * const client = genai.Client({
+ * import {GoogleGenAI} from '@google/genai';
+ * const ai = new GoogleGenAI({
  *   vertexai: true,
  *   project: 'PROJECT_ID',
  *   location: 'PROJECT_LOCATION'
@@ -119,7 +119,7 @@ export interface ClientInitOptions {
  * ```
  *
  */
-export class Client {
+export class GoogleGenAI {
   [key: string]: any;
   protected readonly apiClient: ApiClient;
   private readonly apiKey?: string;
@@ -131,7 +131,7 @@ export class Client {
   readonly caches: Caches;
   readonly files: Files;
 
-  constructor(options: ClientInitOptions) {
+  constructor(options: GoogleGenAIOptions) {
     if (options.apiKey == null) {
       throw new Error(
         `An API Key must be set when running in an unspecified environment.\n + ${crossError().message}`,

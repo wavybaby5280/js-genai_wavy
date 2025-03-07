@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import {
-  Client,
+  GoogleGenAI,
   FunctionCallingConfigMode,
   FunctionDeclaration,
   Type,
@@ -16,7 +16,7 @@ const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
 
 async function generateContentFromMLDev() {
-  const client = new Client({vertexai: false, apiKey: GEMINI_API_KEY});
+  const ai = new GoogleGenAI({vertexai: false, apiKey: GEMINI_API_KEY});
 
   const controlLightFunctionDeclaration: FunctionDeclaration = {
     name: 'controlLight',
@@ -38,7 +38,7 @@ async function generateContentFromMLDev() {
       required: ['brightness', 'colorTemperature'],
     },
   };
-  const response = await client.models.generateContent({
+  const response = await ai.models.generateContent({
     model: 'gemini-2.0-flash',
     contents: 'Dim the lights so the room feels cozy and warm.',
     config: {
@@ -56,7 +56,7 @@ async function generateContentFromMLDev() {
 }
 
 async function generateContentFromVertexAI() {
-  const client = new Client({
+  const ai = new GoogleGenAI({
     vertexai: true,
     project: GOOGLE_CLOUD_PROJECT,
     location: GOOGLE_CLOUD_LOCATION,
@@ -82,7 +82,7 @@ async function generateContentFromVertexAI() {
       required: ['brightness', 'colorTemperature'],
     },
   };
-  const response = await client.models.generateContent({
+  const response = await ai.models.generateContent({
     model: 'gemini-2.0-flash',
     contents: 'Dim the lights so the room feels cozy and warm.',
     config: {

@@ -6,20 +6,20 @@
 
 import * as fs from 'fs';
 
-import {ClientInitOptions} from '.';
-import {Client} from './node/node_client';
+import {GoogleGenAIOptions} from '.';
+import {GoogleGenAI} from './node/node_client';
 import * as types from './types';
 
 /**
  * Configuration options for initializing a `ReplayClient`.
  *
- * This interface extends the base {@link ./_api_client.ClientInitOptions} and
+ * This interface extends the base {@link ./_api_client.GoogleGenAIOptions} and
  * private fields to hold the replay file's path or its JSON format.
  *
  * @interface
- * @extends ClientInitOptions
+ * @extends GoogleGenAIOptions
  */
-export interface ReplayClientInitOpts extends ClientInitOptions {
+export interface ReplayClientInitOpts extends GoogleGenAIOptions {
   replayFile?: string;
   replayFileJson?: Record<string, unknown>;
 }
@@ -28,7 +28,7 @@ export interface ReplayClientInitOpts extends ClientInitOptions {
  * The ReplayAPIClient class is used to execute intergration tests in replay
  * mode, where the API responses are loaded and constructed from recorded files.
  */
-export class ReplayAPIClient extends Client {
+export class ReplayAPIClient extends GoogleGenAI {
   private replayFile: string;
   private replayFileJson: Record<string, unknown>;
 

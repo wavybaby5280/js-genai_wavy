@@ -5,7 +5,7 @@
  */
 
 import {createZeroFilledTempFile} from '../../../src/_generate_test_file';
-import {Client} from '../../../src/node/node_client';
+import {GoogleGenAI} from '../../../src/node/node_client';
 
 const DEFAULT_CHUNK_SIZE = 1024 * 1024 * 8; // bytes
 const TEST_FILE_SIZE = 1024 * 1024 * 30; // bytes
@@ -48,14 +48,14 @@ describe('Node uploader', () => {
     });
 
     it('should get the file stat of a file', async () => {
-      const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
+      const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
       const fileStats =
         await client['apiClient'].clientOptions.uploader?.stat(filePath);
       expect(fileStats?.size).toBe(fileSize);
       expect(fileStats?.type).toBe(DEFAULT_TEST_MIMETYPE);
     });
     it('should upload the file as stream with exact DEFAULT_CHUNK_SIZE except the last chunk', async () => {
-      const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
+      const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
       const numRequests = Math.ceil(TEST_FILE_SIZE / DEFAULT_CHUNK_SIZE);
 
       const mockResponses = [];
@@ -108,14 +108,14 @@ describe('Node uploader', () => {
       });
     });
     it('should get the file stat of a file', async () => {
-      const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
+      const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
       const fileStats =
         await client['apiClient'].clientOptions.uploader?.stat(testBlob);
       expect(fileStats?.size).toBe(fileSize);
       expect(fileStats?.type).toBe(DEFAULT_TEST_MIMETYPE);
     });
     it('should get a readable stream of a file with exact DEFAULT_CHUNK_SIZE except the last chunk', async () => {
-      const client = new Client({vertexai: false, apiKey: 'fake-api-key'});
+      const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
       const numRequests = Math.ceil(TEST_FILE_SIZE / DEFAULT_CHUNK_SIZE);
 
       const mockResponses = [];

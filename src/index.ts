@@ -6,7 +6,7 @@
 
 export * from './caches';
 export * from './chats';
-export {Client, ClientInitOptions} from './client';
+export {GoogleGenAI, GoogleGenAIOptions} from './client';
 export * from './live';
 export {Models} from './models';
 export * from './types';

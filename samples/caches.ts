@@ -3,7 +3,7 @@
  * Copyright 2025 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
-import {Client, Part} from '@google/genai';
+import {GoogleGenAI, Part} from '@google/genai';
 
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
@@ -14,7 +14,7 @@ async function createCacheFromMLDev() {
 }
 
 async function createCacheFromVertexAI() {
-  const client = new Client({
+  const ai = new GoogleGenAI({
     vertexai: true,
     project: GOOGLE_CLOUD_PROJECT,
     location: GOOGLE_CLOUD_LOCATION,
@@ -34,7 +34,7 @@ async function createCacheFromVertexAI() {
     },
   };
 
-  const cache = await client.caches.create({
+  const cache = await ai.caches.create({
     model: 'gemini-1.5-pro-002',
     config: {contents: [cachedContent1, cachedContent2]},
   });

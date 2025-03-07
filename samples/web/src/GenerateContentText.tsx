@@ -1,4 +1,4 @@
-import {Client} from '@google/genai';
+import {GoogleGenAI} from '@google/genai';
 import { useState, ChangeEvent } from 'react';
 import './App.css';
 
@@ -11,8 +11,8 @@ export default function GenerateContentText({ apiKey } : {apiKey: string }) {
   }
 
   const handleSend = async () => {
-    const client = new Client({vertexai: false, apiKey: apiKey});
-    const response = await client.models.generateContent({
+    const ai = new GoogleGenAI({vertexai: false, apiKey: apiKey});
+    const response = await ai.models.generateContent({
       model: 'gemini-2.0-flash',
       contents: prompt
     })
