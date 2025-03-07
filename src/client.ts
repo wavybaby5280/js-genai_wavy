@@ -80,10 +80,11 @@ export interface GoogleGenAIOptions {
    * Optional. A set of customizable configuration for HTTP requests.
    */
   httpOptions?: HttpOptions;
-  // This is currently needed for teh table_tests.
-  // TODO: remove this once we refactor the table_test.
   /**
    * The object used for adding authentication headers to API requests.
+   *
+   * @remarks
+   * Only used for internal testing, will be removed in the future.
    */
   auth?: Auth;
 }

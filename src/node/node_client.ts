@@ -29,8 +29,10 @@ const LANGUAGE_LABEL_PREFIX = 'gl-node/';
  *
  * The {@link GoogleGenAIOptions.vertexai} value determines which of the API services to use.
  *
- * When using the Gemini API, a {@link GoogleGenAIOptions.apiKey} must also be set,
- * when using Vertex AI {@link GoogleGenAIOptions.project} and {@link GoogleGenAIOptions.location} must also be set.
+ * When using the Gemini API, a {@link GoogleGenAIOptions.apiKey} must be set,
+ * when using Vertex AI {@link GoogleGenAIOptions.project}
+ * and {@link GoogleGenAIOptions.location} must be set,
+ * and the {@link GoogleGenAIOptions.vertexai} must be set to `true`.
  *
  * @example
  * Initializing the SDK for using the Gemini API:
