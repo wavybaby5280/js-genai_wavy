@@ -71,8 +71,9 @@ function validateHistory(history: types.Content[]) {
  * filters or recitation). Extracting valid turns from the history
  * ensures that subsequent requests could be accpeted by the model.
  */
-function extractCuratedHistory(comprehensiveHistory: types.Content[]):
-    types.Content[] {
+function extractCuratedHistory(
+  comprehensiveHistory: types.Content[],
+): types.Content[] {
   if (comprehensiveHistory === undefined || comprehensiveHistory.length === 0) {
     return [];
   }
@@ -123,11 +124,11 @@ export class Chats {
    */
   create(params: types.CreateChatParameters) {
     return new Chat(
-        this.apiClient,
-        this.modelsModule,
-        params.model,
-        params.config,
-        params.history,
+      this.apiClient,
+      this.modelsModule,
+      params.model,
+      params.config,
+      params.history,
     );
   }
 }
@@ -142,11 +143,11 @@ export class Chat {
   private sendPromise: Promise<void> = Promise.resolve();
 
   constructor(
-      private readonly apiClient: ApiClient,
-      private readonly modelsModule: Models,
-      private readonly model: string,
-      private readonly config: types.GenerateContentConfig = {},
-      private history: types.Content[] = [],
+    private readonly apiClient: ApiClient,
+    private readonly modelsModule: Models,
+    private readonly model: string,
+    private readonly config: types.GenerateContentConfig = {},
+    private history: types.Content[] = [],
   ) {
     validateHistory(history);
   }
@@ -237,11 +238,10 @@ export class Chat {
     return curated ? extractCuratedHistory(this.history) : this.history;
   }
 
-  private async *
-      processStreamResponse(
-          streamResponse: AsyncGenerator<types.GenerateContentResponse>,
-          inputContent: types.Content,
-      ) {
+  private async *processStreamResponse(
+    streamResponse: AsyncGenerator<types.GenerateContentResponse>,
+    inputContent: types.Content,
+  ) {
     const outputContent: types.Content[] = [];
     for await (const chunk of streamResponse) {
       if (isValidResponse(chunk)) {
@@ -256,10 +256,14 @@ export class Chat {
   }
 
   private recordHistory(
-      userInput: types.Content, modelOutput: types.Content[]) {
+    userInput: types.Content,
+    modelOutput: types.Content[],
+  ) {
     let outputContents: types.Content[] = [];
-    if (modelOutput.length > 0 &&
-        modelOutput.every(content => content.role === 'model')) {
+    if (
+      modelOutput.length > 0 &&
+      modelOutput.every((content) => content.role === 'model')
+    ) {
       outputContents = modelOutput;
     } else {
       // Appends an empty content when model returns empty response, so that the

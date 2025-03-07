@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import {
-  GoogleGenAI,
   FunctionCallingConfigMode,
   FunctionDeclaration,
+  GoogleGenAI,
   Type,
 } from '@google/genai';
 

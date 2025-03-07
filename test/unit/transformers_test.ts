@@ -257,8 +257,11 @@ describe('tPart', () => {
 
   it('int', () => {
     expect(() => {
-      // @ts-expect-error: escaping to test unsupported type
-      tPart(new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),123);
+      tPart(
+        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        // @ts-expect-error: escaping to test unsupported type
+        123,
+      );
     }).toThrowError('Unsupported part type: number');
   });
 });
@@ -311,15 +314,21 @@ describe('tParts', () => {
 
   it('int', () => {
     expect(() => {
-      // @ts-expect-error: escaping to test unsupported type
-      tParts(new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),123);
+      tParts(
+        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        // @ts-expect-error: escaping to test unsupported type
+        123,
+      );
     }).toThrowError('Unsupported part type: number');
   });
 
   it('int in array', () => {
     expect(() => {
-      // @ts-expect-error: escaping to test unsupported type
-      tParts(new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),[123]);
+      tParts(
+        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        // @ts-expect-error: escaping to test unsupported type
+        [123],
+      );
     }).toThrowError('Unsupported part type: number');
   });
 });
@@ -327,8 +336,11 @@ describe('tParts', () => {
 describe('tContent', () => {
   it('null', () => {
     expect(() => {
-      // @ts-expect-error: escaping to test unsupported type
-      tContent(new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),null);
+      tContent(
+        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        // @ts-expect-error: escaping to test unsupported type
+        null,
+      );
     }).toThrowError('ContentUnion is required');
   });
 
@@ -352,8 +364,11 @@ describe('tContent', () => {
 
   it('number', () => {
     expect(() => {
-      // @ts-expect-error: escaping to test unsupported type
-      tContent(new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}), 123);
+      tContent(
+        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        // @ts-expect-error: escaping to test unsupported type
+        123,
+      );
     }).toThrowError('Unsupported part type: number');
   });
 
@@ -405,8 +420,11 @@ describe('tContent', () => {
 describe('tContents', () => {
   it('null', () => {
     expect(() => {
-      // @ts-expect-error: escaping to test error
-      tContents(new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),null);
+      tContents(
+        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        // @ts-expect-error: escaping to test error
+        null,
+      );
     }).toThrowError('contents are required');
   });
 

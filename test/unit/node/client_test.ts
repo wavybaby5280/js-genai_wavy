@@ -68,7 +68,8 @@ describe('Client', () => {
   });
   it('should set uploader by default', () => {
     const client = new GoogleGenAI({});
-    expect(client['apiClient'].clientOptions.uploader)
-        .toBeInstanceOf(NodeUploader);
+    expect(client['apiClient'].clientOptions.uploader).toBeInstanceOf(
+      NodeUploader,
+    );
   });
 });

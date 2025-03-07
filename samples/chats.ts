@@ -29,13 +29,15 @@ async function createChatFromMLDev() {
 async function createChatStreamFromMLDev() {
   const ai = new GoogleGenAI({vertexai: false, apiKey: GEMINI_API_KEY});
   const chat = ai.chats.create({model: 'gemini-2.0-flash'});
-  const response =
-      await chat.sendMessageStream({message: 'Why is the sky blue?'});
+  const response = await chat.sendMessageStream({
+    message: 'Why is the sky blue?',
+  });
   for await (const chunk of response) {
     console.debug('chat response 1 chunk: ', chunk.text());
   }
-  const response2 =
-      await chat.sendMessageStream({message: 'Why is the sunset red?'});
+  const response2 = await chat.sendMessageStream({
+    message: 'Why is the sunset red?',
+  });
   for await (const chunk of response2) {
     console.debug('chat response 2 chunk: ', chunk.text());
   }
@@ -72,13 +74,15 @@ async function createChatStreamFromVertexAI() {
     location: GOOGLE_CLOUD_LOCATION,
   });
   const chat = ai.chats.create({model: 'gemini-2.0-flash'});
-  const response =
-      await chat.sendMessageStream({message: 'Why is the sky blue?'});
+  const response = await chat.sendMessageStream({
+    message: 'Why is the sky blue?',
+  });
   for await (const chunk of response) {
     console.debug('chat response 1 chunk: ', chunk.text());
   }
-  const response2 =
-      await chat.sendMessageStream({message: 'Why is the sunset red?'});
+  const response2 = await chat.sendMessageStream({
+    message: 'Why is the sunset red?',
+  });
   for await (const chunk of response2) {
     console.debug('chat response 2 chunk: ', chunk.text());
   }
@@ -91,12 +95,14 @@ async function createChatStreamFromVertexAI() {
 async function main() {
   if (GOOGLE_GENAI_USE_VERTEXAI) {
     await createChatFromVertexAI().catch((e) => console.error('got error', e));
-    await createChatStreamFromVertexAI().catch(
-        (e) => console.error('got error', e));
+    await createChatStreamFromVertexAI().catch((e) =>
+      console.error('got error', e),
+    );
   } else {
     await createChatFromMLDev().catch((e) => console.error('got error', e));
-    await createChatStreamFromMLDev().catch(
-        (e) => console.error('got error', e));
+    await createChatStreamFromMLDev().catch((e) =>
+      console.error('got error', e),
+    );
   }
 }
 
