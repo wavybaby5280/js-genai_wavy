@@ -109,7 +109,6 @@ The submodules bundle together related API methods:
   large to fit inline with your prompt.
 - `ai.live`: Start a `live` session for realtime interaction, allows text +
   audio + video input, and text or audio output.
-- `ai.tunings` - Use `tunings` to create and manage tuned models.
 
 ## Samples
 
