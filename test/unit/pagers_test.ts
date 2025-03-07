@@ -20,7 +20,7 @@ class FakeFiles {
     );
   };
 
-  private listInternal(
+  private async listInternal(
     _params: ListFilesParameters,
   ): Promise<ListFilesResponse> {
     return Promise.resolve(this.responses[this.responseIndex++]);
@@ -39,7 +39,7 @@ function buildListFilesResponse(
   return {nextPageToken, files} as ListFilesResponse;
 }
 
-describe('Pagers', () => {
+describe('Iterate items', () => {
   const testCases = [
     {
       name: 'empty response',
@@ -92,7 +92,7 @@ describe('Pagers', () => {
       const pager = await files.list(testCase.params);
 
       const fileNames = [];
-      let page = pager.page();
+      let page = pager.page;
       for (const file of page) {
         fileNames.push(file.name);
       }
@@ -108,5 +108,46 @@ describe('Pagers', () => {
       expect(fileNames).toEqual(testCase.expectedFiles);
       expect(numOfPages).toEqual(testCase.expectedPages);
     });
+  });
+});
+
+describe('Pager properties', () => {
+  it('init values', async () => {
+    const firstPageResponse = buildListFilesResponse('page1', 2, 'token1');
+    const secondPageResponse = buildListFilesResponse('page2', 2);
+    const params = {config: {pageSize: 10}};
+    const pager = new Pager<File>(
+        PagedItem.PAGED_ITEM_FILES,
+        (_unused: ListFilesParameters) => Promise.resolve(secondPageResponse),
+        firstPageResponse,
+        params,
+    );
+
+    expect(pager.page).toEqual(firstPageResponse['files'] as File[]);
+    expect(pager.name).toEqual('files');
+    expect(pager.pageSize).toEqual(10);
+    expect(pager.params).toEqual(params);
+    expect(pager.pageLength).toEqual(2);
+    expect(pager.getItem(0)).toEqual({name: 'files/page1/1'});
+  });
+
+  it('next page', async () => {
+    const firstPageResponse = buildListFilesResponse('page1', 2, 'token1');
+    const secondPageResponse = buildListFilesResponse('page2', 1);
+    const params = {config: {pageSize: 10}};
+    const pager = new Pager<File>(
+        PagedItem.PAGED_ITEM_FILES,
+        (_unused: ListFilesParameters) => Promise.resolve(secondPageResponse),
+        firstPageResponse,
+        params,
+    );
+    await pager.nextPage();
+
+    expect(pager.page).toEqual(secondPageResponse['files'] as File[]);
+    expect(pager.name).toEqual('files');
+    expect(pager.pageSize).toEqual(10);
+    expect(pager.params).toEqual(params);
+    expect(pager.pageLength).toEqual(1);
+    expect(pager.getItem(0)).toEqual({name: 'files/page2/1'});
   });
 });

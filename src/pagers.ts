@@ -8,8 +8,7 @@
  * @fileoverview Pagers for the GenAI List APIs.
  */
 
-// Type of request, response and config are determined by the specific list
-// method.
+// TODO(b/401555348): Re-enable linting after enforcing strong types.
 /*  eslint-disable @typescript-eslint/no-explicit-any */
 
 export enum PagedItem {
@@ -21,9 +20,9 @@ export enum PagedItem {
 }
 
 /**
- * Base pager class for iterating through paginated results.
+ * Pager class for iterating through paginated results.
  */
-class BasePager<T> {
+export class Pager<T> implements AsyncIterable<T> {
   private nameInternal!: PagedItem;
   private pageInternal: T[] = [];
   private paramsInternal: any;
@@ -31,7 +30,17 @@ class BasePager<T> {
   protected requestInternal!: (params: any) => any;
   protected idxInternal!: number;
 
-  init(name: PagedItem, response: any, params: any) {
+  constructor(
+      name: PagedItem,
+      request: (params: any) => any,
+      response: any,
+      params: any,
+  ) {
+    this.requestInternal = request;
+    this.init(name, response, params);
+  }
+
+  private init(name: PagedItem, response: any, params: any) {
     this.nameInternal = name;
     this.pageInternal = response[this.nameInternal] || [];
     this.idxInternal = 0;
@@ -51,30 +60,25 @@ class BasePager<T> {
       requestParams['config']?.['pageSize'] ?? this.pageInternal.length;
   }
 
-  constructor(
-    name: PagedItem,
-    request: (params: any) => any,
-    response: any,
-    params: any,
-  ) {
-    this.requestInternal = request;
-    this.init(name, response, params);
+  private initNextPage(response: any): void {
+    this.init(this.nameInternal, response, this.paramsInternal);
   }
 
   /**
    * Returns the current page, which is a list of items.
    *
    * @remarks
-   * The returned list of items is a subset of the entire list.
+   * The first page is retrieved when the pager is created. The returned list of
+   * items could be a subset of the entire list.
    */
-  page(): T[] {
+  get page(): T[] {
     return this.pageInternal;
   }
 
   /**
    * Returns the type of paged item (for example, ``batch_jobs``).
    */
-  name(): PagedItem {
+  get name(): PagedItem {
     return this.nameInternal;
   }
 
@@ -84,7 +88,7 @@ class BasePager<T> {
    * @remarks
    * The number of items in the page is less than or equal to the page length.
    */
-  pageSize(): number {
+  get pageSize(): number {
     return this.pageInternalSize;
   }
 
@@ -93,17 +97,17 @@ class BasePager<T> {
    *
    * @remarks
    * Parameters contain a set of optional configs that can be
-   * used to customize the API request. For example, the ``pageToken`` parameter
+   * used to customize the API request. For example, the `pageToken` parameter
    * contains the token to request the next page.
    */
-  params(): any {
+  get params(): any {
     return this.paramsInternal;
   }
 
   /**
    * Returns the total number of items in the current page.
    */
-  len(): number {
+  get pageLength(): number {
     return this.pageInternal.length;
   }
 
@@ -115,37 +119,29 @@ class BasePager<T> {
   }
 
   /**
-   * Initializes the next page from the response.
+   * Returns an async iterator that support iterating through all items
+   * retrieved from the API.
    *
    * @remarks
-   * This is an internal method that should be called by subclasses after
-   * fetching the next page.
+   * The iterator will automatically fetch the next page if there are more items
+   * to fetch from the API.
+   *
+   * @example
+   *
+   * ```ts
+   * const pager = await ai.files.list({config: {pageSize: 10}});
+   * for await (const file of pager) {
+   *   console.log(file.name);
+   * }
+   * ```
    */
-  protected initNextPage(response: any): void {
-    this.init(this.nameInternal, response, this.paramsInternal);
-  }
-}
-
-/**
- * Pager class for iterating through paginated results.
- */
-export class Pager<T> extends BasePager<T> implements AsyncIterable<T> {
-  constructor(
-    name: PagedItem,
-    request: (params: any) => any,
-    response: any,
-    params: any,
-  ) {
-    super(name, request, response, params);
-  }
-
   [Symbol.asyncIterator](): AsyncIterator<T> {
     return {
       next: async () => {
-        if (this.idxInternal >= this.len()) {
-          try {
+        if (this.idxInternal >= this.pageLength) {
+          if (this.hasNextPage()) {
             await this.nextPage();
-          } catch (e) {
+          } else {
             return {value: undefined, done: true};
           }
         }
@@ -167,16 +163,16 @@ export class Pager<T> extends BasePager<T> implements AsyncIterable<T> {
    * @example
    *
    * ```ts
-   * const pager = await client.files.list({config: {pageSize: 2}});
-   * let page = pager.page();
-   * for (const file of pager) {
-   *   console.log(file.name);
-   * }
-   * while (pager.hasNextPage()) {
-   *   page = await pager.nextPage();
+   * const pager = await ai.files.list({config: {pageSize: 10}});
+   * let page = pager.page;
+   * while (true) {
    *   for (const file of page) {
    *     console.log(file.name);
    *   }
+   *   if (!pager.hasNextPage()) {
+   *     break;
+   *   }
+   *   page = await pager.nextPage();
    * }
    * ```
    */
@@ -184,16 +180,16 @@ export class Pager<T> extends BasePager<T> implements AsyncIterable<T> {
     if (!this.hasNextPage()) {
       throw new Error('No more pages to fetch.');
     }
-    const response = await this.requestInternal(this.params());
+    const response = await this.requestInternal(this.params);
     this.initNextPage(response);
-    return this.page();
+    return this.page;
   }
 
   /**
-   * Returns true if there are more pages to fetch.
+   * Returns true if there are more pages to fetch from the API.
    */
   hasNextPage(): boolean {
-    if (this.params()['config']?.['pageToken'] !== undefined) {
+    if (this.params['config']?.['pageToken'] !== undefined) {
       return true;
     }
     return false;

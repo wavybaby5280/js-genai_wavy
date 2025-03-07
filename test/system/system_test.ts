@@ -567,7 +567,7 @@ describe('cachedContent', () => {
     const pager = await client.caches.list({
       config: {pageSize: 2},
     });
-    let page = pager.page();
+    let page = pager.page;
     for (const cache of page) {
       console.log(cache.name);
     }
@@ -578,8 +578,8 @@ describe('cachedContent', () => {
       }
     }
 
-    expect(response.len()).toBeGreaterThan(0);
-    expect(pager.len()).toBeGreaterThan(0);
+    expect(response.pageLength).toBeGreaterThan(0);
+    expect(pager.pageLength).toBeGreaterThan(0);
   });
 });
 
@@ -587,11 +587,12 @@ describe('files', () => {
   it('ML Dev list files with specified parameters', async () => {
     const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
     const response = await client.files.list({config: {'pageSize': 2}});
-    expect(response!.len() ?? 0).toBeGreaterThan(
-      0,
-      'Expected at least one file has more than 2 pages, got ' +
-        response!.len(),
-    );
+    expect(response!.pageLength ?? 0)
+        .toBeGreaterThan(
+            0,
+            'Expected at least one file has more than 2 pages, got ' +
+                response!.pageLength,
+        );
     console.info(
       'ML Dev should list files with specified parameters\n',
       JSON.stringify(response),
@@ -600,7 +601,7 @@ describe('files', () => {
   it('ML Dev list files with pagers', async () => {
     const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
     const pager = await client.files.list({config: {pageSize: 2}});
-    let page = pager.page();
+    let page = pager.page;
     for (const file of page) {
       console.log(file.name);
     }
@@ -611,7 +612,7 @@ describe('files', () => {
       page = await pager.nextPage();
     }
 
-    expect(pager.len()).toBeGreaterThan(0);
+    expect(pager.pageLength).toBeGreaterThan(0);
   });
   it('ML Dev should upload the file from a string path and get just uploaded file with specified parameters', async () => {
     const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
