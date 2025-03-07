@@ -240,10 +240,14 @@ export class ApiClient {
     ) {
       throw new Error('HTTP options are not correctly set.');
     }
-    if (!httpOptions.baseUrl.endsWith('/') && httpOptions.apiVersion) {
-      return `${httpOptions.baseUrl}/${httpOptions.apiVersion}`;
+    const baseUrl = httpOptions.baseUrl.endsWith('/') ?
+        httpOptions.baseUrl.slice(0, -1) :
+        httpOptions.baseUrl;
+    const urlElement: Array<string> = [baseUrl];
+    if (httpOptions.apiVersion && httpOptions.apiVersion !== '') {
+      urlElement.push(httpOptions.apiVersion);
     }
-    return `${httpOptions.baseUrl}${httpOptions.apiVersion}`;
+    return urlElement.join('/');
   }
 
   getBaseResourcePath() {
@@ -271,7 +275,7 @@ export class ApiClient {
     }
   }
 
-  constructUrl(path: string, httpOptions: HttpOptions): URL {
+  private constructUrl(path: string, httpOptions: HttpOptions): URL {
     const urlElement: Array<string> = [this.getRequestUrlInternal(httpOptions)];
     if (this.clientOptions.vertexai && !path.startsWith('projects/')) {
       urlElement.push(this.getBaseResourcePath());
