@@ -41,14 +41,13 @@ export class Caches extends BaseModule {
   };
 
   /**
-   * Creates cached content, this call will initialize the cached content in
-   * the data storage, and users need to pay for the cache data storage.
+   * Creates a cached contents resource.
    *
    * @example
    * ```ts
    * const contents = ...; // Initialize the content to cache.
    * const response = await client.caches.create({
-   *   model: 'gemini-1.5-flash',
+   *   model: 'gemini-2.0-flash',
    *   config: {
    *    'contents': contents,
    *    'displayName': 'test cache',

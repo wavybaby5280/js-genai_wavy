@@ -19,7 +19,7 @@ export class Files extends BaseModule {
   }
 
   /**
-   * This method lists all files from the service.
+   * Lists all current project files from the service.
    *
    * @param params - The parameters for the list request
    * @return The paginated results of the list of files

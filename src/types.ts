@@ -271,7 +271,7 @@ export interface Part {
   text?: string;
 }
 /**
- * createPartFromUri creates a Part object from a URI.
+ * Creates a `Part` object from a `URI` string.
  */
 export function createPartFromUri(uri: string, mimeType: string): Part {
   return {
@@ -282,7 +282,7 @@ export function createPartFromUri(uri: string, mimeType: string): Part {
   };
 }
 /**
- * createPartFromText creates a Part object from a text.
+ * Creates a `Part` object from a `text` string.
  */
 export function createPartFromText(text: string): Part {
   return {
@@ -290,7 +290,7 @@ export function createPartFromText(text: string): Part {
   };
 }
 /**
- * createPartFromFunctionCall creates a Part object from a function call.
+ * Creates a `Part` object from a `FunctionCall` object.
  */
 export function createPartFromFunctionCall(
   name: string,
@@ -304,7 +304,7 @@ export function createPartFromFunctionCall(
   };
 }
 /**
- * createPartFromFunctionResponse creates a Part object from a function response.
+ * Creates a `Part` object from a `FunctionResponse` object.
  */
 export function createPartFromFunctionResponse(
   id: string,
@@ -320,7 +320,7 @@ export function createPartFromFunctionResponse(
   };
 }
 /**
- * createPartFromBase64 creates a Part object from a base64 string.
+ * Creates a `Part` object from a `base64` `string`.
  */
 export function createPartFromBase64(data: string, mimeType: string): Part {
   return {
@@ -331,7 +331,7 @@ export function createPartFromBase64(data: string, mimeType: string): Part {
   };
 }
 /**
- * createPartFromVideoMetadata creates a Part object from start and end offsets of a video metadata.
+ * Creates a `Part` object from the `startOffset` and `endOffset` of a `VideoMetadata` object.
  */
 export function createPartFromVideoMetadata(
   startOffset: string,
@@ -345,7 +345,7 @@ export function createPartFromVideoMetadata(
   };
 }
 /**
- * createPartFromCodeExecutionResult creates a Part object from outcome and output of a code execution result.
+ * Creates a `Part` object from the `outcome` and `output` of a `CodeExecutionResult` object.
  */
 export function createPartFromCodeExecutionResult(
   outcome: Outcome,
@@ -359,7 +359,7 @@ export function createPartFromCodeExecutionResult(
   };
 }
 /**
- * createPartFromExecutableCode creates a Part object from code and language of an executable code.
+ * Creates a `Part` object from the `code` and `language` of an `ExecutableCode` object.
  */
 export function createPartFromExecutableCode(
   code: string,
@@ -423,7 +423,7 @@ function _toParts(partOrString: PartListUnion | string): Part[] {
   return parts;
 }
 /**
- * create a Content object with a user role from a PartListUnion or string.
+ * Creates a `Content` object with a user role from a `PartListUnion` object or `string`.
  */
 export function createUserContent(
   partOrString: PartListUnion | string,
@@ -435,7 +435,7 @@ export function createUserContent(
 }
 
 /**
- * create a Content object with a model role from a PartListUnion or string.
+ * Creates a `Content` object with a model role from a `PartListUnion` object or `string`.
  */
 export function createModelContent(
   partOrString: PartListUnion | string,

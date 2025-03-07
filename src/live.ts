@@ -505,7 +505,7 @@ export class Live {
 
   /**
      Establishes a connection to the specified model with the given
-     configuration. It returns a Session object representing the connection.
+     configuration and returns a Session object representing that connection.
 
      @experimental
 
@@ -620,7 +620,7 @@ export class Live {
 }
 
 /**
-   Session class represents a connection to the API.
+   Represents a connection to the API.
 
    @experimental
   */
@@ -788,7 +788,7 @@ export class Session {
   }
 
   /**
-     Transmits a message over the established websocket connection.
+     Transmits a message over the established WebSocket connection.
 
      @experimental
 
@@ -823,7 +823,7 @@ export class Session {
   }
 
   /**
-     Close terminates the websocket connection.
+     Terminates the WebSocket connection.
 
      @experimental
 

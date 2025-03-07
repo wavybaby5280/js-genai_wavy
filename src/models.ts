@@ -21,21 +21,21 @@ export class Models extends BaseModule {
    * Makes an API request to generate content with a given model.
    *
    * For the `model` parameter, supported formats for Vertex AI API include:
-   * - The Gemini model ID, for example: 'gemini-1.5-flash-002'
+   * - The Gemini model ID, for example: 'gemini-2.0-flash'
    * - The full resource name starts with 'projects/', for example:
-   *  'projects/my-project-id/locations/us-central1/publishers/google/models/gemini-1.5-flash-002'
+   *  'projects/my-project-id/locations/us-central1/publishers/google/models/gemini-2.0-flash'
    * - The partial resource name with 'publishers/', for example:
-   *  'publishers/google/models/gemini-1.5-flash-002' or
+   *  'publishers/google/models/gemini-2.0-flash' or
    *  'publishers/meta/models/llama-3.1-405b-instruct-maas'
    * - `/` separated publisher and model name, for example:
-   * 'google/gemini-1.5-flash-002' or 'meta/llama-3.1-405b-instruct-maas'
+   * 'google/gemini-2.0-flash' or 'meta/llama-3.1-405b-instruct-maas'
    *
    * For the `model` parameter, supported formats for Gemini API include:
-   * - The Gemini model ID, for example: 'gemini-1.5-flash-002'
+   * - The Gemini model ID, for example: 'gemini-2.0-flash'
    * - The model name starts with 'models/', for example:
-   *  'models/gemini-1.5-flash-002'
-   * - If you would like to use a tuned model, the model name starts with
-   * 'tunedModels/', for example:
+   *  'models/gemini-2.0-flash'
+   * - For tuned models, the model name starts with 'tunedModels/',
+   * for example:
    * 'tunedModels/1234567890123456789'
    *
    * Some models support multimodal input and output.
@@ -48,7 +48,7 @@ export class Models extends BaseModule {
    * @example
    * ```ts
    * const response = await client.models.generateContent({
-   *   model: 'gemini-1.5-flash-002',
+   *   model: 'gemini-2.0-flash',
    *   contents: 'why is the sky blue?',
    *   config: {
    *     candidateCount: 2,
@@ -68,22 +68,22 @@ export class Models extends BaseModule {
    * response in chunks.
    *
    * For the `model` parameter, supported formats for Vertex AI API include:
-   * - The Gemini model ID, for example: 'gemini-1.5-flash-002'
+   * - The Gemini model ID, for example: 'gemini-2.0-flash'
    * - The full resource name starts with 'projects/', for example:
-   *  'projects/my-project-id/locations/us-central1/publishers/google/models/gemini-1.5-flash-002'
+   *  'projects/my-project-id/locations/us-central1/publishers/google/models/gemini-2.0-flash'
    * - The partial resource name with 'publishers/', for example:
-   *  'publishers/google/models/gemini-1.5-flash-002' or
+   *  'publishers/google/models/gemini-2.0-flash' or
    *  'publishers/meta/models/llama-3.1-405b-instruct-maas'
    * - `/` separated publisher and model name, for example:
-   * 'google/gemini-1.5-flash-002' or 'meta/llama-3.1-405b-instruct-maas'
+   * 'google/gemini-2.0-flash' or 'meta/llama-3.1-405b-instruct-maas'
    *
    * For the `model` parameter, supported formats for Gemini API include:
-   * - The Gemini model ID, for example: 'gemini-1.5-flash-002'
+   * - The Gemini model ID, for example: 'gemini-2.0-flash'
    * - The model name starts with 'models/', for example:
-   *  'models/gemini-1.5-flash-002'
-   * - If you would like to use a tuned model, the model name starts with
-   * 'tunedModels/', for example:
-   * 'tunedModels/1234567890123456789'
+   *  'models/gemini-2.0-flash'
+   * - For tuned models, the model name starts with 'tunedModels/',
+   * for example:
+   *  'tunedModels/1234567890123456789'
    *
    * Some models support multimodal input and output.
    *
@@ -95,7 +95,7 @@ export class Models extends BaseModule {
    * @example
    * ```ts
    * const response = await client.models.generateContentStream({
-   *   model: 'gemini-1.5-flash-002',
+   *   model: 'gemini-2.0-flash',
    *   contents: 'why is the sky blue?',
    *   config: {
    *     maxOutputTokens: 200,
@@ -453,7 +453,7 @@ export class Models extends BaseModule {
    * @example
    * ```ts
    * const response = await client.models.countTokens({
-   *  model: 'gemini-1.5-flash',
+   *  model: 'gemini-2.0-flash',
    *  contents: 'The quick brown fox jumps over the lazy dog.'
    * });
    * console.log(response);
@@ -527,8 +527,8 @@ export class Models extends BaseModule {
   }
 
   /**
-   * Return a list of tokens based on the input contents. Only text is
-   * supported.
+   * Given a list of contents, returns a corresponding TokensInfo containing
+   * the list of tokens and list of token ids.
    *
    * This method is not supported by the Gemini Developer API.
    *
@@ -540,7 +540,7 @@ export class Models extends BaseModule {
    * @example
    * ```ts
    * const response = await client.models.computeTokens({
-   *  model: 'gemini-1.5-flash',
+   *  model: 'gemini-2.0-flash',
    *  contents: 'What is your name?'
    * });
    * console.log(response);
