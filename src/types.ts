@@ -491,7 +491,7 @@ export interface Schema {
   /** Optional. The format of the data. Supported formats: for NUMBER type: "float", "double" for INTEGER type: "int32", "int64" for STRING type: "email", "byte", etc */
   format?: string;
   /** Optional. SCHEMA FIELDS FOR TYPE ARRAY Schema of the elements of Type.ARRAY. */
-  items?: 'Schema';
+  items?: Schema;
   /** Optional. Maximum number of the elements for Type.ARRAY. */
   maxItems?: string;
   /** Optional. Minimum number of the elements for Type.ARRAY. */

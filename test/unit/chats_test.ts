@@ -6,7 +6,7 @@
 
 import {Models} from '../../src/models';
 import {GoogleGenAI} from '../../src/node/node_client';
-import {Content, FinishReason, GenerateContentResponse} from '../../src/types';
+import {Candidate, Content, FinishReason, GenerateContentResponse, Type} from '../../src/types';
 
 function buildGenerateContentResponse(
   content: Content,
@@ -132,6 +132,63 @@ describe('sendMessage valid response', () => {
     });
   });
 });
+
+
+describe('GenerateContent response schema', () => {
+  it('smoke test GenerateContent response schema with Array', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const validResponse = Object.setPrototypeOf(
+        {
+          candidates: [
+            {
+              content: {
+                role: 'model',
+                parts: [
+                  {
+                    text:
+                        '[{"recipeName": "recipe1"},{"recipeName": "recipe2"},{"recipeName": "recipe3"}]',
+                  },
+                ],
+              },
+            },
+          ],
+        },
+        GenerateContentResponse.prototype,
+    );
+    const modelsModule = client.models;
+    spyOn(modelsModule, 'generateContent')
+        .and.returnValue(
+            Promise.resolve(validResponse),
+        );
+    const request = {
+      model: 'gemini-2.0-flash',
+      contents: 'List 3 popular cookie recipes.',
+      config: {
+        responseMimeType: 'application/json',
+        responseSchema: {
+          type: Type.ARRAY,
+          items: {
+            type: Type.OBJECT,
+            properties: {
+              'recipeName': {
+                type: Type.STRING,
+                description: 'Name of the recipe',
+                nullable: false
+              },
+            },
+            required: ['recipeName'],
+          },
+        },
+      },
+    };
+    const response = await client.models.generateContent(request);
+
+    expect(response).toEqual(validResponse);
+    // Verify that valid response and request are added to the history.
+    expect(modelsModule.generateContent).toHaveBeenCalledWith(request);
+  });
+});
+
 
 describe('sendMessage config', () => {
   let client: GoogleGenAI;

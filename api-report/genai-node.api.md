@@ -1188,7 +1188,7 @@ export interface Schema {
     enum?: string[];
     example?: unknown;
     format?: string;
-    items?: 'Schema';
+    items?: Schema;
     maximum?: number;
     maxItems?: string;
     maxLength?: string;

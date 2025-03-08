@@ -15,19 +15,22 @@ async function generateContentFromMLDev() {
 
   const response = await ai.models.generateContent({
     model: 'gemini-2.0-flash',
-    contents: 'List a popular cookie recipe.',
+    contents: 'List 3 popular cookie recipes.',
     config: {
       responseMimeType: 'application/json',
       responseSchema: {
-        type: Type.OBJECT,
-        properties: {
-          'recipeName': {
-            type: Type.STRING,
-            description: 'Name of the recipe',
-            nullable: false,
+        type: Type.ARRAY,
+        items: {
+          type: Type.OBJECT,
+          properties: {
+            'recipeName': {
+              type: Type.STRING,
+              description: 'Name of the recipe',
+              nullable: false
+            },
           },
+          required: ['recipeName'],
         },
-        required: ['recipeName'],
       },
     },
   });
@@ -44,19 +47,22 @@ async function generateContentFromVertexAI() {
 
   const response = await ai.models.generateContent({
     model: 'gemini-2.0-flash',
-    contents: 'List a popular cookie recipe.',
+    contents: 'List 3 popular cookie recipes.',
     config: {
       responseMimeType: 'application/json',
       responseSchema: {
-        type: Type.OBJECT,
-        properties: {
-          'recipeName': {
-            type: Type.STRING,
-            description: 'Name of the recipe',
-            nullable: false,
+        type: Type.ARRAY,
+        items: {
+          type: Type.OBJECT,
+          properties: {
+            'recipeName': {
+              type: Type.STRING,
+              description: 'Name of the recipe',
+              nullable: false
+            },
           },
+          required: ['recipeName'],
         },
-        required: ['recipeName'],
       },
     },
   });
