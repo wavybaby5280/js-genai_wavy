@@ -51,7 +51,7 @@ async function main() {
     model: 'gemini-2.0-flash-001',
     contents: 'Why is the sky blue?',
   });
-  console.log(response.text());
+  console.log(response.text);
 }
 
 main();
@@ -177,7 +177,7 @@ async function main() {
     contents: 'Write a 100-word poem.',
   });
   for await (const chunk of response) {
-    console.log(chunk.text());
+    console.log(chunk.text);
   }
 }
 
@@ -237,7 +237,7 @@ async function main() {
     }
   });
 
-  console.log(response.functionCalls());
+  console.log(response.functionCalls);
 }
 
 main();
