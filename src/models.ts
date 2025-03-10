@@ -2336,15 +2336,8 @@ function generateImagesConfigToMldev(
     throw new Error('outputGcsUri parameter is not supported in Gemini API.');
   }
 
-  const fromNegativePrompt = common.getValueByPath(fromObject, [
-    'negativePrompt',
-  ]);
-  if (parentObject !== undefined && fromNegativePrompt != null) {
-    common.setValueByPath(
-      parentObject,
-      ['parameters', 'negativePrompt'],
-      fromNegativePrompt,
-    );
+  if (common.getValueByPath(fromObject, ['negativePrompt']) !== undefined) {
+    throw new Error('negativePrompt parameter is not supported in Gemini API.');
   }
 
   const fromNumberOfImages = common.getValueByPath(fromObject, [
