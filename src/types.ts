@@ -1707,7 +1707,7 @@ export interface File {
   expirationTime?: string;
   /** Output only. The timestamp of when the `File` was last updated. */
   updateTime?: string;
-  /** Output only. SHA-256 hash of the uploaded bytes. */
+  /** Output only. SHA-256 hash of the uploaded bytes. The hash value is encoded in base64 format. */
   sha256Hash?: string;
   /** Output only. The URI of the `File`. */
   uri?: string;
