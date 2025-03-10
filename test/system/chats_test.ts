@@ -120,8 +120,8 @@ describe('sendMessage', () => {
       });
       for (const message of testCase.messages) {
         const response = await chat.sendMessage({message});
-        console.log('chat.sendMessage response: ', response.text());
-        expect(response.text()).not.toBeNull();
+        console.log('chat.sendMessage response: ', response.text);
+        expect(response.text).not.toBeNull();
       }
       const comprehensiveHistory = chat.getHistory();
       expect(comprehensiveHistory.length).toBeGreaterThan(0);
@@ -141,8 +141,8 @@ describe('sendMessage', () => {
       for (const message of testCase.messages) {
         const response = await chat.sendMessageStream({message});
         for await (const chunk of response) {
-          console.log('chat.sendMessageStream response chunk: ', chunk.text());
-          expect(chunk.text()).not.toBeNull();
+          console.log('chat.sendMessageStream response chunk: ', chunk.text);
+          expect(chunk.text).not.toBeNull();
         }
       }
       const comprehensiveHistory = chat.getHistory();
@@ -158,7 +158,7 @@ describe('sendMessage', () => {
     const response = await chat.sendMessage({
       message: ['why is the sky blue?', 'Can the sky appear in other colors?'],
     });
-    console.log('chat.sendMessage response: ', response.text());
+    console.log('chat.sendMessage response: ', response.text);
   });
 
   it('Vertex AI array of strings', async () => {
@@ -170,7 +170,7 @@ describe('sendMessage', () => {
     const response = await chat.sendMessage({
       message: ['why is the sky blue?', 'Can the sky appear in other colors?'],
     });
-    console.log('chat.sendMessage response: ', response.text());
+    console.log('chat.sendMessage response: ', response.text);
   });
 });
 
@@ -206,9 +206,9 @@ describe('chats function calling', () => {
         const response = await chat.sendMessage({message});
         console.log(
           'chat.sendMessage function calls: ',
-          response.functionCalls(),
+          response.functionCalls,
         );
-        expect(response.functionCalls()).not.toBeNull();
+        expect(response.functionCalls).not.toBeNull();
       }
     });
   });
@@ -226,9 +226,9 @@ describe('chats function calling', () => {
         for await (const chunk of response) {
           console.log(
             'chat.sendMessageStream function calls: ',
-            chunk.functionCalls(),
+            chunk.functionCalls,
           );
-          expect(chunk.functionCalls()).not.toBeNull();
+          expect(chunk.functionCalls).not.toBeNull();
         }
       }
     });

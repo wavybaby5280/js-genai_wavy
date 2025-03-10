@@ -41,7 +41,7 @@ describe('generateContent', () => {
     );
     console.info(
       'ML Dev should generate content with specified parameters\n',
-      response.text(),
+      response.text,
     );
   });
 
@@ -67,7 +67,7 @@ describe('generateContent', () => {
     );
     console.info(
       'Vertex AI should generate content with specified parameters\n',
-      response.text(),
+      response.text,
     );
   });
 
@@ -78,7 +78,7 @@ describe('generateContent', () => {
       contents: 'high',
       config: {systemInstruction: 'I say high you say low'},
     });
-    const responseText = response.text();
+    const responseText = response.text;
     expect(responseText?.includes('low') ?? false).toBe(
       true,
       `Expected response to include "low", but got ${responseText}`,
@@ -100,7 +100,7 @@ describe('generateContent', () => {
       contents: 'high',
       config: {systemInstruction: 'I say high you say low.'},
     });
-    const responseText = response.text();
+    const responseText = response.text;
     expect(responseText?.includes('low') ?? false).toBe(
       true,
       `Expected response to include "low", but got ${responseText}`,
@@ -173,8 +173,8 @@ describe('generateContentStream', () => {
       'ML Dev should stream generate content with specified parameters',
     );
     for await (const chunk of response) {
-      expect(chunk.text()).toBeDefined();
-      console.info(`stream chunk ${i}`, chunk.text());
+      expect(chunk.text).toBeDefined();
+      console.info(`stream chunk ${i}`, chunk.text);
       expect(chunk.candidates!.length).toBe(
         1,
         'Expected 1 candidate got ' + chunk.candidates!.length,
@@ -206,7 +206,7 @@ describe('generateContentStream', () => {
       'Vertex AI should stream generate content with specified parameters',
     );
     for await (const chunk of response) {
-      console.info(`stream chunk ${i}`, chunk.text());
+      console.info(`stream chunk ${i}`, chunk.text);
       expect(chunk.candidates!.length).toBe(
         1,
         'Expected 1 candidate got ' + chunk.candidates!.length,
@@ -239,7 +239,7 @@ describe('generateContentStream', () => {
       'ML Dev should stream generate content with system instruction',
     );
     for await (const chunk of response) {
-      console.info(`stream chunk ${i}`, chunk.text());
+      console.info(`stream chunk ${i}`, chunk.text);
       expect(chunk.candidates!.length).toBe(
         1,
         'Expected 1 candidate got ' + chunk.candidates!.length,
@@ -276,7 +276,7 @@ describe('generateContentStream', () => {
       'Vertex AI should stream generate content with system instruction',
     );
     for await (const chunk of response) {
-      console.info(`stream chunk ${i}`, chunk.text());
+      console.info(`stream chunk ${i}`, chunk.text);
       expect(chunk.candidates!.length).toBe(
         1,
         'Expected 1 candidate got ' + chunk.candidates!.length,

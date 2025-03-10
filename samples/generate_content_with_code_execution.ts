@@ -22,7 +22,8 @@ async function generateContentFromMLDev() {
     },
   });
 
-  console.debug(JSON.stringify(response));
+  console.debug(response.executableCode);
+  console.debug(response.codeExecutionResult);
 }
 
 async function generateContentFromVertexAI() {
@@ -41,7 +42,8 @@ async function generateContentFromVertexAI() {
     },
   });
 
-  console.debug(JSON.stringify(response));
+  console.debug(response.executableCode);
+  console.debug(response.codeExecutionResult);
 }
 
 async function main() {

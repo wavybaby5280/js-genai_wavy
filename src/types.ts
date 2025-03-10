@@ -1018,11 +1018,33 @@ export class GenerateContentResponse {
   promptFeedback?: GenerateContentResponsePromptFeedback;
   /** Usage metadata about the response(s). */
   usageMetadata?: GenerateContentResponseUsageMetadata;
-  text(): string | undefined {
-    if (this?.candidates?.[0]?.content?.parts?.length === 0) {
+  /**
+   * Returns the concatenation of all text parts from the first candidate in the response.
+   *
+   * @remarks
+   * If there are multiple candidates in the response, the text from the first
+   * one will be returned.
+   * If there are non-text parts in the response, the concatenation of all text
+   * parts will be returned, and a warning will be logged.
+   * If there are thought parts in the response, the concatenation of all text
+   * parts excluding the thought parts will be returned.
+   *
+   * @example
+   * ```ts
+   * const response = await ai.models.generateContent({
+   *   model: 'gemini-2.0-flash',
+   *   contents:
+   *     'Why is the sky blue?',
+   * });
+   *
+   * console.debug(response.text);
+   * ```
+   */
+  get text(): string | undefined {
+    if (this.candidates?.[0]?.content?.parts?.length === 0) {
       return undefined;
     }
-    if (this?.candidates && this.candidates.length > 1) {
+    if (this.candidates && this.candidates.length > 1) {
       console.warn(
         'there are multiple candidates in the response, returning text from the first one.',
       );
@@ -1030,7 +1052,7 @@ export class GenerateContentResponse {
     let text = '';
     let anyTextPartText = false;
     const nonTextParts = [];
-    for (const part of this?.candidates?.[0]?.content?.parts ?? []) {
+    for (const part of this.candidates?.[0]?.content?.parts ?? []) {
       for (const [fieldName, fieldValue] of Object.entries(part)) {
         if (
           fieldName !== 'text' &&
@@ -1056,16 +1078,62 @@ export class GenerateContentResponse {
     // part.text === '' is different from part.text is null
     return anyTextPartText ? text : undefined;
   }
-  functionCalls(): FunctionCall[] | undefined {
-    if (this?.candidates?.[0]?.content?.parts?.length === 0) {
+
+  /**
+   * Returns the function calls from the first candidate in the response.
+   *
+   * @remarks
+   * If there are multiple candidates in the response, the function calls from
+   * the first one will be returned.
+   * If there are no function calls in the response, undefined will be returned.
+   *
+   * @example
+   * ```ts
+   * const controlLightFunctionDeclaration: FunctionDeclaration = {
+   *   name: 'controlLight',
+   *   parameters: {
+   *   type: Type.OBJECT,
+   *   description: 'Set the brightness and color temperature of a room light.',
+   *   properties: {
+   *     brightness: {
+   *       type: Type.NUMBER,
+   *       description:
+   *         'Light level from 0 to 100. Zero is off and 100 is full brightness.',
+   *     },
+   *     colorTemperature: {
+   *       type: Type.STRING,
+   *       description:
+   *         'Color temperature of the light fixture which can be `daylight`, `cool` or `warm`.',
+   *     },
+   *   },
+   *   required: ['brightness', 'colorTemperature'],
+   *  };
+   *  const response = await ai.models.generateContent({
+   *     model: 'gemini-2.0-flash',
+   *     contents: 'Dim the lights so the room feels cozy and warm.',
+   *     config: {
+   *       tools: [{functionDeclarations: [controlLightFunctionDeclaration]}],
+   *       toolConfig: {
+   *         functionCallingConfig: {
+   *           mode: FunctionCallingConfigMode.ANY,
+   *           allowedFunctionNames: ['controlLight'],
+   *         },
+   *       },
+   *     },
+   *   });
+   *  console.debug(JSON.stringify(response.functionCalls));
+   * ```
+   */
+  get functionCalls(): FunctionCall[] | undefined {
+    if (this.candidates?.[0]?.content?.parts?.length === 0) {
       return undefined;
     }
-    if (this?.candidates && this.candidates.length > 1) {
+    if (this.candidates && this.candidates.length > 1) {
       console.warn(
         'there are multiple candidates in the response, returning function calls from the first one.',
       );
     }
-    const functionCalls = this?.candidates?.[0]?.content?.parts
+    const functionCalls = this.candidates?.[0]?.content?.parts
       ?.filter((part) => part.functionCall)
       .map((part) => part.functionCall)
       .filter(
@@ -1076,6 +1144,94 @@ export class GenerateContentResponse {
       return undefined;
     }
     return functionCalls;
+  }
+  /**
+   * Returns the first executable code from the first candidate in the response.
+   *
+   * @remarks
+   * If there are multiple candidates in the response, the executable code from
+   * the first one will be returned.
+   * If there are no executable code in the response, undefined will be
+   * returned.
+   *
+   * @example
+   * ```ts
+   * const response = await ai.models.generateContent({
+   *   model: 'gemini-2.0-flash',
+   *   contents:
+   *     'What is the sum of the first 50 prime numbers? Generate and run code for the calculation, and make sure you get all 50.'
+   *   config: {
+   *     tools: [{codeExecution: {}}],
+   *   },
+   * });
+   *
+   * console.debug(response.executableCode);
+   * ```
+   */
+  get executableCode(): string | undefined {
+    if (this.candidates?.[0]?.content?.parts?.length === 0) {
+      return undefined;
+    }
+    if (this.candidates && this.candidates.length > 1) {
+      console.warn(
+        'there are multiple candidates in the response, returning executable code from the first one.',
+      );
+    }
+    const executableCode = this.candidates?.[0]?.content?.parts
+      ?.filter((part) => part.executableCode)
+      .map((part) => part.executableCode)
+      .filter(
+        (executableCode): executableCode is ExecutableCode =>
+          executableCode !== undefined,
+      );
+    if (executableCode?.length === 0) {
+      return undefined;
+    }
+
+    return executableCode?.[0]?.code;
+  }
+  /**
+   * Returns the first code execution result from the first candidate in the response.
+   *
+   * @remarks
+   * If there are multiple candidates in the response, the code execution result from
+   * the first one will be returned.
+   * If there are no code execution result in the response, undefined will be returned.
+   *
+   * @example
+   * ```ts
+   * const response = await ai.models.generateContent({
+   *   model: 'gemini-2.0-flash',
+   *   contents:
+   *     'What is the sum of the first 50 prime numbers? Generate and run code for the calculation, and make sure you get all 50.'
+   *   config: {
+   *     tools: [{codeExecution: {}}],
+   *   },
+   * });
+   *
+   * console.debug(response.codeExecutionResult);
+   * ```
+   */
+  get codeExecutionResult(): string | undefined {
+    if (this.candidates?.[0]?.content?.parts?.length === 0) {
+      return undefined;
+    }
+    if (this.candidates && this.candidates.length > 1) {
+      console.warn(
+        'there are multiple candidates in the response, returning code execution result from the first one.',
+      );
+    }
+    const codeExecutionResult = this.candidates?.[0]?.content?.parts
+      ?.filter((part) => part.codeExecutionResult)
+      .map((part) => part.codeExecutionResult)
+      .filter(
+        (codeExecutionResult): codeExecutionResult is CodeExecutionResult =>
+          codeExecutionResult !== undefined,
+      );
+    if (codeExecutionResult?.length === 0) {
+      return undefined;
+    }
+    return codeExecutionResult?.[0]?.output;
   }
 }
 

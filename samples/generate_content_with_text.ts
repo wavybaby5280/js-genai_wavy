@@ -16,7 +16,7 @@ async function generateContentFromMLDev() {
     model: 'gemini-2.0-flash',
     contents: 'why is the sky blue?',
   });
-  console.debug(response.text());
+  console.debug(response.text);
 }
 
 async function generateContentFromVertexAI() {
@@ -29,7 +29,7 @@ async function generateContentFromVertexAI() {
     model: 'gemini-2.0-flash',
     contents: 'why is the sky blue?',
   });
-  console.debug(response.text());
+  console.debug(response.text);
 }
 
 async function main() {

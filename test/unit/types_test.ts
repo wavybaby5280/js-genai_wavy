@@ -26,31 +26,31 @@ import {
 describe('GenerateContentResponse.text', () => {
   it('should return undefined when candidates is undefined', () => {
     const response = new GenerateContentResponse();
-    expect(response.text()).toBeUndefined();
+    expect(response.text).toBeUndefined();
   });
 
   it('should return undefined when candidates is an empty array', () => {
     const response = new GenerateContentResponse();
     response.candidates = [];
-    expect(response.text()).toBeUndefined();
+    expect(response.text).toBeUndefined();
   });
 
   it('should return undefined when content is undefined', () => {
     const response = new GenerateContentResponse();
     response.candidates = [{} as Candidate];
-    expect(response.text()).toBeUndefined();
+    expect(response.text).toBeUndefined();
   });
 
   it('should return undefined when content.parts is undefined', () => {
     const response = new GenerateContentResponse();
     response.candidates = [{content: {} as Content} as Candidate];
-    expect(response.text()).toBeUndefined();
+    expect(response.text).toBeUndefined();
   });
 
   it('should return undefined when content.parts is empty array', () => {
     const response = new GenerateContentResponse();
     response.candidates = [{content: {parts: []}} as Candidate];
-    expect(response.text()).toBeUndefined();
+    expect(response.text).toBeUndefined();
   });
 
   it('should use first candidate when there are multiple candidates', () => {
@@ -61,7 +61,7 @@ describe('GenerateContentResponse.text', () => {
     ];
     spyOn(console, 'warn');
 
-    expect(response.text()).toBe('First candidate');
+    expect(response.text).toBe('First candidate');
     expect(console.warn).toHaveBeenCalledWith(
       'there are multiple candidates in the response, returning text from the first one.',
     );
@@ -76,7 +76,7 @@ describe('GenerateContentResponse.text', () => {
         },
       } as Candidate,
     ];
-    expect(response.text()).toBe('Hello world!');
+    expect(response.text).toBe('Hello world!');
   });
 
   it('should log a warning when parts contain invalid fields', () => {
@@ -98,7 +98,7 @@ describe('GenerateContentResponse.text', () => {
     ];
     spyOn(console, 'warn');
 
-    expect(response.text()).toEqual('Hello ');
+    expect(response.text).toEqual('Hello ');
     expect(console.warn).toHaveBeenCalledWith(
       'there are non-text parts inlineData in the response, returning concatenation of all text parts. Please refer to the non text parts for a full response from model.',
     );
@@ -113,26 +113,26 @@ describe('GenerateContentResponse.text', () => {
         },
       } as Candidate,
     ];
-    expect(response.text()).toBe('Hello ');
+    expect(response.text).toBe('Hello ');
   });
 });
 
 describe('GenerateContentResponse.functionCalls', () => {
   it('should return undefined when candidates is undefined', () => {
     const response = new GenerateContentResponse();
-    expect(response.functionCalls()).toBeUndefined();
+    expect(response.functionCalls).toBeUndefined();
   });
 
   it('should return undefined when candidates is an empty array', () => {
     const response = new GenerateContentResponse();
     response.candidates = [];
-    expect(response.functionCalls()).toBeUndefined();
+    expect(response.functionCalls).toBeUndefined();
   });
 
   it('should return undefined when candidates[0].content.parts is an empty array', () => {
     const response = new GenerateContentResponse();
     response.candidates = [{content: {parts: []}}];
-    expect(response.functionCalls()).toBeUndefined();
+    expect(response.functionCalls).toBeUndefined();
   });
 
   it('should use the first candidate when there are multiple candidates', () => {
@@ -143,7 +143,7 @@ describe('GenerateContentResponse.functionCalls', () => {
     ];
     spyOn(console, 'warn');
 
-    expect(response.functionCalls()).toEqual([{name: 'func1'}]);
+    expect(response.functionCalls).toEqual([{name: 'func1'}]);
     expect(console.warn).toHaveBeenCalledWith(
       'there are multiple candidates in the response, returning function calls from the first one.',
     );
@@ -161,7 +161,7 @@ describe('GenerateContentResponse.functionCalls', () => {
         },
       },
     ];
-    expect(response.functionCalls()).toEqual([
+    expect(response.functionCalls).toEqual([
       {name: 'func1'},
       {name: 'func2'},
     ]);
@@ -172,7 +172,7 @@ describe('GenerateContentResponse.functionCalls', () => {
     response.candidates = [
       {content: {parts: [{text: 'text1'}, {text: 'text2'}]}},
     ];
-    expect(response.functionCalls()).toBeUndefined();
+    expect(response.functionCalls).toBeUndefined();
   });
   it('should filter out filter out undefined function calls', () => {
     const response = new GenerateContentResponse();
@@ -183,7 +183,129 @@ describe('GenerateContentResponse.functionCalls', () => {
         },
       },
     ];
-    expect(response.functionCalls()).toEqual([{name: 'func1'}]);
+    expect(response.functionCalls).toEqual([{name: 'func1'}]);
+  });
+});
+
+describe('GenerateContentResponse.executableCode', () => {
+  it('should return undefined when candidates is undefined', () => {
+    const response = new GenerateContentResponse();
+    expect(response.executableCode).toBeUndefined();
+  });
+
+  it('should return undefined when candidates is an empty array', () => {
+    const response = new GenerateContentResponse();
+    response.candidates = [];
+    expect(response.executableCode).toBeUndefined();
+  });
+
+  it('should return undefined when candidates[0].content.parts is an empty array', () => {
+    const response = new GenerateContentResponse();
+    response.candidates = [{content: {parts: []}}];
+    expect(response.executableCode).toBeUndefined();
+  });
+
+  it('should use the first candidate when there are multiple candidates', () => {
+    const response = new GenerateContentResponse();
+    response.candidates = [
+      {content: {parts: [{executableCode: {code: 'print("Hello world!")'}}]}},
+      {content: {parts: [{executableCode: {code: 'print("Goodbye world!")'}}]}},
+    ];
+    spyOn(console, 'warn');
+
+    expect(response.executableCode).toBe('print("Hello world!")');
+    expect(console.warn).toHaveBeenCalledWith(
+      'there are multiple candidates in the response, returning executable code from the first one.',
+    );
+  });
+
+  it('should return the executable code when candidates[0].content.parts contains valid executable code parts', () => {
+    const response = new GenerateContentResponse();
+    response.candidates = [
+      {
+        content: {
+          parts: [
+            {executableCode: {code: 'print("Hello world!")'}},
+          ],
+        },
+      },
+    ];
+    expect(response.executableCode).toBe('print("Hello world!")');
+  });
+
+  it('should return undefined when candidates[0].content.parts contains no executable code parts', () => {
+    const response = new GenerateContentResponse();
+    response.candidates = [
+      {content: {parts: [{text: 'text1'}, {text: 'text2'}]}},
+    ];
+    expect(response.executableCode).toBeUndefined();
+  });
+});
+
+describe('GenerateContentResponse.codeExecutionResult', () => {
+  it('should return undefined when candidates is undefined', () => {
+    const response = new GenerateContentResponse();
+    expect(response.codeExecutionResult).toBeUndefined();
+  });
+
+  it('should return undefined when candidates is an empty array', () => {
+    const response = new GenerateContentResponse();
+    response.candidates = [];
+    expect(response.codeExecutionResult).toBeUndefined();
+  });
+
+  it('should return undefined when candidates[0].content.parts is an empty array', () => {
+    const response = new GenerateContentResponse();
+    response.candidates = [{content: {parts: []}}];
+    expect(response.codeExecutionResult).toBeUndefined();
+  });
+
+  it('should use the first candidate when there are multiple candidates', () => {
+    const response = new GenerateContentResponse();
+    response.candidates = [
+      {
+        content: {
+          parts: [
+            {codeExecutionResult: {output: 'Hello world!'}},
+          ],
+        },
+      },
+      {
+        content: {
+          parts: [
+            {codeExecutionResult: {output: 'Goodbye world!'}},
+          ],
+        },
+      },
+    ];
+    spyOn(console, 'warn');
+
+    expect(response.codeExecutionResult).toBe('Hello world!');
+    expect(console.warn).toHaveBeenCalledWith(
+      'there are multiple candidates in the response, returning code execution result from the first one.',
+    );
+  });
+
+  it('should return the output of the code execution result part when candidates[0].content.parts contains valid code execution result parts', () => {
+    const response = new GenerateContentResponse();
+    response.candidates = [
+      {
+        content: {
+          parts: [
+            {codeExecutionResult: {output: 'Hello world!'}},
+          ],
+        },
+      },
+    ];
+    expect(response.codeExecutionResult).toBe('Hello world!');
+  });
+
+  it('should return undefined when candidates[0].content.parts contains no code execution result parts', () => {
+    const response = new GenerateContentResponse();
+    response.candidates = [
+      {content: {parts: [{text: 'text1'}, {text: 'text2'}]}},
+    ];
+    expect(response.codeExecutionResult).toBeUndefined();
   });
 });
 

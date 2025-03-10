@@ -506,14 +506,14 @@ export interface GenerateContentParameters {
 // @public
 export class GenerateContentResponse {
     candidates?: Candidate[];
+    get codeExecutionResult(): string | undefined;
     createTime?: string;
-    // (undocumented)
-    functionCalls(): FunctionCall[] | undefined;
+    get executableCode(): string | undefined;
+    get functionCalls(): FunctionCall[] | undefined;
     modelVersion?: string;
     promptFeedback?: GenerateContentResponsePromptFeedback;
     responseId?: string;
-    // (undocumented)
-    text(): string | undefined;
+    get text(): string | undefined;
     usageMetadata?: GenerateContentResponseUsageMetadata;
 }
 

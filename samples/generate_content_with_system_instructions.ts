@@ -17,7 +17,7 @@ async function generateContentFromMLDev() {
     contents: 'high',
     config: {systemInstruction: 'I say high you say low.'},
   });
-  console.debug(response.text());
+  console.debug(response.text);
 }
 
 async function generateContentFromVertexAI() {
@@ -31,7 +31,7 @@ async function generateContentFromVertexAI() {
     contents: 'high',
     config: {systemInstruction: 'I say high you say low.'},
   });
-  console.debug(response.text());
+  console.debug(response.text);
 }
 
 async function main() {

@@ -35,7 +35,7 @@ async function generateContentFromMLDev() {
     },
   });
 
-  console.debug(response.text());
+  console.debug(response.text);
 }
 
 async function generateContentFromVertexAI() {
@@ -67,7 +67,7 @@ async function generateContentFromVertexAI() {
     },
   });
 
-  console.debug(response.text());
+  console.debug(response.text);
 }
 
 async function main() {

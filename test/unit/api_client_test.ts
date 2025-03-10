@@ -185,7 +185,7 @@ describe('processStreamResponse', () => {
     for await (const jsonChunk of streamResponse) {
       const typedChunk = new types.GenerateContentResponse();
       Object.assign(typedChunk, jsonChunk);
-      expect(typedChunk.text()).toEqual(expectedText[count]);
+      expect(typedChunk.text).toEqual(expectedText[count]);
       count++;
     }
     expect(count).toEqual(3);
