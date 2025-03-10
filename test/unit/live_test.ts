@@ -67,9 +67,10 @@ describe('live', () => {
     expect(websocketFactorySpyCall.args[0]).toBe(
       'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=test-api-key',
     );
-    expect(JSON.stringify(websocketFactorySpyCall.args[1])).toBe(
-      '{"content-type":"application/json","user-agent":"google-genai-sdk/0.1.0 undefined","x-goog-api-client":"google-genai-sdk/0.1.0 undefined"}',
-    );
+    expect(JSON.stringify(websocketFactorySpyCall.args[1]))
+        .toBe(
+            '{"content-type":"application/json","user-agent":"google-genai-sdk/0.2.0 undefined","x-goog-api-client":"google-genai-sdk/0.2.0 undefined"}',
+        );
     // Check that the onopen callback is wrapped to call the provided callbacks
     // and then resolve the onopen promise. The string is not fully checked to
     // avoid issues with whitespace.
@@ -152,9 +153,10 @@ describe('live', () => {
     expect(websocketFactorySpyCall.args[0]).toBe(
       'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=test-api-key',
     );
-    expect(JSON.stringify(websocketFactorySpyCall.args[1])).toBe(
-      '{"content-type":"application/json","user-agent":"google-genai-sdk/0.1.0 undefined","x-goog-api-client":"google-genai-sdk/0.1.0 undefined"}',
-    );
+    expect(JSON.stringify(websocketFactorySpyCall.args[1]))
+        .toBe(
+            '{"content-type":"application/json","user-agent":"google-genai-sdk/0.2.0 undefined","x-goog-api-client":"google-genai-sdk/0.2.0 undefined"}',
+        );
     // Check that the onopen callback is wrapped to call the provided callbacks
     // and then resolve the onopen promise. The string is not fully checked to
     // avoid issues with whitespace.
