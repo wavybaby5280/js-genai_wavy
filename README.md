@@ -1,5 +1,13 @@
 # Google Gen AI SDK for JavaScript
 
+[![NPM Downloads](https://img.shields.io/npm/dw/%40google%2Fgenai)](https://www.npmjs.com/package/@google/genai)
+[![Node Current](https://img.shields.io/node/v/%40google%2Fgenai)](https://www.npmjs.com/package/@google/genai)
+
+----------------------
+**Documentation:** https://googleapis.github.io/js-genai/
+
+----------------------
+
 The Google Gen AI JavaScript SDK is an **experimental SDK** designed for
 JavaScript developers to build applications powered by Gemini. The SDK
 supports both the [Gemini Developer API](https://ai.google.dev/gemini-api/docs)
@@ -47,6 +55,38 @@ async function main() {
 }
 
 main();
+```
+
+## Web quickstart
+
+The package contents are also available unzipped in the
+`package/` directory of the bucket, so an equivalent web example is:
+
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Using My Package</title>
+</head>
+<body>
+    <script type="module">
+        import {GoogleGenAI, Type} from 'dist/web/index.mjs';
+        const ai = new GoogleGenAI({apiKey:"YOUR_API_KEY"});
+
+        async function main() {
+          const response = await ai.models.generateContent({
+            model: 'gemini-2.0-flash-001',
+            contents: 'Why is the sky blue?',
+          });
+          console.log(response.text());
+        }
+
+        main();
+    </script>
+</body>
+</html>
 ```
 
 ## Initialization
@@ -98,24 +138,32 @@ const ai = new GoogleGenAI({
 All API features are accessed through an instance of the `GoogleGenAI` classes.
 The submodules bundle together related API methods:
 
-- `ai.models`: Use `models` to query models (`generateContent`,
-  `generateImages`, ...), or examine their metadata.
-- `ai.caches`: Create and manage `caches` to reduce costs when repeatedly
-  using the same large prompt prefix.
-- `ai.chats`: Create local stateful `chat` objects to simplify multiturn
-  interactions.
-- `ai.files`: Upload `files` to the API and reference them in your prompts.
-  This reduces bandwidth if you use a file many times, and handles files too
+- [`client.models`](https://googleapis.github.io/js-genai/classes/models.Models.html):
+  Use `models` to query models (`generateContent`, `generateImages`, ...), or
+  examine their metadata.
+- [`client.caches`](https://googleapis.github.io/js-genai/classes/caches.Caches.html):
+  Create and manage `caches` to reduce costs when repeatedly using the same
+  large prompt prefix.
+- [`client.chats`](https://googleapis.github.io/js-genai/classes/chats.Chats.html):
+  Create local stateful `chat` objects to simplify multi turn interactions.
+- [`client.files`](https://googleapis.github.io/js-genai/classes/files.Files.html):
+  Upload `files` to the API and reference them in your prompts.
+  This reduces bandwidth if you use a file many times, and handles files too 
   large to fit inline with your prompt.
-- `ai.live`: Start a `live` session for realtime interaction, allows text +
-  audio + video input, and text or audio output.
+- [`client.live`](https://googleapis.github.io/js-genai/classes/live.Live.html):
+  Start a `live` session for real time interaction, allows text + audio + video
+  input, and text or audio output.
 
 ## Samples
 
+More samples can be found in the
+[github samples directory](https://github.com/google-gemini/generative-ai-js/tree/main/samples).
+
+
 ### Streaming
 
-For quicker more responsive API, use the `generateContentStream` method which
-yields chunks of text as they're generated:
+For quicker, more responsive API interactions use the `generateContentStream`
+method which yields chunks as they're generated:
 
 ```typescript
 import {GoogleGenAI} from '@google/genai';
