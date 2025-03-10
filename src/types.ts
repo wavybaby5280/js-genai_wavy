@@ -1775,6 +1775,14 @@ export class HttpResponse {
     return this.responseInternal.json();
   }
 }
+
+/** Callbacks for the live API. */
+export interface LiveCallbacks {
+  onopen: (() => void) | null;
+  onmessage: (e: LiveServerMessage) => void;
+  onerror: ((e: ErrorEvent) => void) | null;
+  onclose: ((e: CloseEvent) => void) | null;
+}
 /** Response for the create file method. */
 export class CreateFileResponse {
   /** Used to retain the full HTTP response. */
@@ -2201,6 +2209,8 @@ export interface LiveConnectParameters {
   /** ID of the model to use. For a list of models, see `Google models
     <https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models>`_. */
   model: string;
+  /** callbacks */
+  callbacks: LiveCallbacks;
   /** Optional configuration parameters for the request.
    */
   config?: LiveConnectConfig;

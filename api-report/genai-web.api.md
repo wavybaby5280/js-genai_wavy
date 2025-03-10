@@ -876,8 +876,19 @@ export class ListFilesResponse {
 export class Live {
     // Warning: (ae-forgotten-export) The symbol "WebSocketFactory" needs to be exported by the entry point index.d.ts
     constructor(apiClient: ApiClient, auth: Auth, webSocketFactory: WebSocketFactory);
-    // Warning: (ae-forgotten-export) The symbol "WebSocketCallbacks" needs to be exported by the entry point index.d.ts
-    connect(params: types.LiveConnectParameters, callbacks?: WebSocketCallbacks): Promise<Session>;
+    connect(params: types.LiveConnectParameters): Promise<Session>;
+}
+
+// @public
+export interface LiveCallbacks {
+    // (undocumented)
+    onclose: ((e: CloseEvent) => void) | null;
+    // (undocumented)
+    onerror: ((e: ErrorEvent) => void) | null;
+    // (undocumented)
+    onmessage: (e: LiveServerMessage) => void;
+    // (undocumented)
+    onopen: (() => void) | null;
 }
 
 // @public
@@ -923,6 +934,7 @@ export interface LiveConnectConfig {
 
 // @public
 export interface LiveConnectParameters {
+    callbacks: LiveCallbacks;
     config?: LiveConnectConfig;
     model: string;
 }
@@ -1237,8 +1249,6 @@ export class Session {
     //
     // (undocumented)
     readonly conn: WebSocket_2;
-    // (undocumented)
-    onmessage?: (msg: types.LiveServerMessage) => void;
     sendClientContent(params: types.SessionSendClientContentParameters): void;
     sendRealtimeInput(params: types.SessionSendRealtimeInputParameters): void;
     sendToolResponse(params: types.SessionSendToolResponseParameters): void;

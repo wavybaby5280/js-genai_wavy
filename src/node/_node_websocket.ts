@@ -51,12 +51,4 @@ export class NodeWebSocket implements WebSocket {
 
     this.ws.close();
   }
-
-  setOnMessageCallback(callback: (e: any) => void) {
-    if (this.ws === undefined) {
-      throw new Error('WebSocket is not connected');
-    }
-
-    this.ws.onmessage = callback;
-  }
 }

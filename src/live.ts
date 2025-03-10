@@ -491,6 +491,35 @@ function liveServerMessageFromVertex(
 }
 
 /**
+ * Handles incoming messages from the WebSocket.
+ *
+ * @param apiClient The ApiClient instance.
+ * @param onmessage The user-provided onmessage callback (if any).
+ * @param event The MessageEvent from the WebSocket.
+ */
+async function handleWebSocketMessage(
+  apiClient: ApiClient,
+  onmessage: ((msg: types.LiveServerMessage) => void),
+  event: MessageEvent,
+): Promise<void> {
+  let serverMessage: types.LiveServerMessage;
+  let data: types.LiveServerMessage;
+  if (event.data instanceof Blob) {
+    data = JSON.parse(await event.data.text()) as types.LiveServerMessage;
+  } else {
+    data = JSON.parse(event.data) as types.LiveServerMessage;
+  }
+  if (apiClient.isVertexAI()) {
+    serverMessage = liveServerMessageFromVertex(apiClient, data);
+  } else {
+    serverMessage = liveServerMessageFromMldev(apiClient, data);
+  }
+
+  onmessage(serverMessage);
+}
+
+
+/**
    Live class encapsulates the configuration for live interaction with the
    Generative Language API. It embeds ApiClient for general API settings.
 
@@ -542,7 +571,6 @@ export class Live {
     */
   async connect(
     params: types.LiveConnectParameters,
-    callbacks?: WebSocketCallbacks,
   ): Promise<Session> {
     const websocketBaseUrl = this.apiClient.getWebsocketBaseUrl();
     const apiVersion = this.apiClient.getApiVersion();
@@ -565,17 +593,21 @@ export class Live {
       onopenResolve = resolve;
     });
 
+    const callbacks:types.LiveCallbacks = params.callbacks
+
     const onopenAwaitedCallback = function () {
       callbacks?.onopen?.();
       onopenResolve({});
     };
 
+
+    const apiClient = this.apiClient;
+
     const websocketCallbacks: WebSocketCallbacks = {
       onopen: onopenAwaitedCallback,
-      onmessage: callbacks?.onmessage ??
-          function(e: MessageEvent) {
-            void e;
-          },
+      onmessage: (event: MessageEvent) => {
+        void handleWebSocketMessage(apiClient, callbacks.onmessage, event);
+      },
       onerror: callbacks?.onerror ??
           function(e: ErrorEvent) {
             void e;
@@ -610,6 +642,7 @@ export class Live {
     const liveConnectParameters: types.LiveConnectParameters = {
       model: transformedModel,
       config: params.config,
+      callbacks: params.callbacks,
     };
     if (this.apiClient.isVertexAI()) {
       clientMessage = liveConnectParametersToVertex(
@@ -622,7 +655,6 @@ export class Live {
         liveConnectParameters,
       );
     }
-
     conn.send(JSON.stringify(clientMessage));
     return new Session(conn, this.apiClient);
   }
@@ -634,39 +666,10 @@ export class Live {
    @experimental
   */
 export class Session {
-  onmessage?: (msg: types.LiveServerMessage) => void;
-
   constructor(
     readonly conn: WebSocket,
     private readonly apiClient: ApiClient,
-  ) {
-    conn.setOnMessageCallback((event: MessageEvent) => {
-      try {
-        void this.handleMessage(event);
-      } catch (e) {
-        console.error(e);
-      }
-    });
-  }
-
-  private async handleMessage(event: MessageEvent) {
-    if (!this.onmessage) {
-      return;
-    }
-    let serverMessage: types.LiveServerMessage;
-    let data: types.LiveServerMessage;
-    if (event.data instanceof Blob) {
-      data = JSON.parse(await event.data.text()) as types.LiveServerMessage;
-    } else {
-      data = JSON.parse(event.data) as types.LiveServerMessage;
-    }
-    if (this.apiClient.isVertexAI()) {
-      serverMessage = liveServerMessageFromVertex(this.apiClient, data);
-    } else {
-      serverMessage = liveServerMessageFromMldev(this.apiClient, data);
-    }
-    this.onmessage(serverMessage);
-  }
+  ) {}
 
   private tLiveClientContent(
       apiClient: ApiClient,

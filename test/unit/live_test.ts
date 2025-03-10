@@ -13,6 +13,7 @@ import {
 } from '../../src/_websocket';
 import {CrossUploader} from '../../src/cross/_cross_uploader';
 import {Live} from '../../src/live';
+import * as types from '../../src/types'
 
 class FakeWebSocketFactory implements WebSocketFactory {
   create(
@@ -61,7 +62,15 @@ describe('live', () => {
     ).and.callThrough();
 
     // Default callbacks are used.
-    const session = await live.connect({model: 'models/gemini-2.0-flash-exp'});
+    const session = await live.connect({
+      model: 'models/gemini-2.0-flash-exp',
+      callbacks: {
+        onopen: null,
+        onmessage: function (e: types.LiveServerMessage){void e},
+        onerror: null,
+        onclose: null,
+      },   
+    });
 
     const websocketFactorySpyCall = websocketFactorySpy.calls.all()[0];
     expect(websocketFactorySpyCall.args[0]).toBe(
@@ -99,23 +108,17 @@ describe('live', () => {
     const live = new Live(apiClient, new FakeAuth(), websocketFactory);
 
     try {
-      await live.connect(
-        {model: 'models/gemini-2.0-flash-exp'},
-        {
+      await live.connect({
+        model: 'models/gemini-2.0-flash-exp',
+        callbacks: {
           onopen: () => {
             throw new Error('custom onopen error');
           },
-          onmessage: (e: MessageEvent) => {
-            console.debug(e.data);
-          },
-          onerror: (e: ErrorEvent) => {
-            console.debug(e.message);
-          },
-          onclose: (e: CloseEvent) => {
-            console.debug(e.reason);
-          },
+          onmessage: function (e: types.LiveServerMessage){void e},
+          onerror: null,
+          onclose: null,
         },
-      );
+      });
     } catch (e: unknown) {
       if (e instanceof Error) {
         expect(e.message).toBe('custom onopen error');
@@ -161,7 +164,15 @@ describe('live', () => {
       },
     );
 
-    const session = await live.connect({model: 'models/gemini-2.0-flash-exp'});
+    const session = await live.connect({
+      model: 'models/gemini-2.0-flash-exp',
+      callbacks: {
+        onopen: null,
+        onmessage: function (e: types.LiveServerMessage){void e},
+        onerror: null,
+        onclose: null,
+      }
+    });
 
     const websocketFactorySpyCall = websocketFactorySpy.calls.all()[0];
     expect(websocketFactorySpyCall.args[0]).toBe(
