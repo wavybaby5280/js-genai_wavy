@@ -16,7 +16,7 @@ export default function GenerateContentText({ apiKey } : {apiKey: string }) {
       model: 'gemini-2.0-flash',
       contents: prompt
     })
-    setModelResponse(response.text() ?? "Empty response");
+    setModelResponse(response.text ?? "Empty response");
   }
 
   return (
