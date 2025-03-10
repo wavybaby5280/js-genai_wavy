@@ -21,6 +21,9 @@ export class Caches extends BaseModule {
   /**
    * Lists cached content configurations.
    *
+   * @param params - The parameters for the list request.
+   * @return The paginated results of the list of cached contents.
+   *
    * @example
    * ```ts
    * const cachedContents = await client.caches.list({config: {'pageSize': 2}});
@@ -42,6 +45,9 @@ export class Caches extends BaseModule {
 
   /**
    * Creates a cached contents resource.
+   *
+   * @param params - The parameters for the create request.
+   * @return The created cached content.
    *
    * @example
    * ```ts
@@ -128,6 +134,9 @@ export class Caches extends BaseModule {
   /**
    * Gets cached content configurations.
    *
+   * @param params - The parameters for the get request.
+   * @return The cached content.
+   *
    * @example
    * ```ts
    * await client.caches.get({name: 'gemini-1.5-flash'});
@@ -200,6 +209,9 @@ export class Caches extends BaseModule {
 
   /**
    * Deletes cached content.
+   *
+   * @param params - The parameters for the delete request.
+   * @return The empty response returned by the API.
    *
    * @example
    * ```ts
@@ -284,6 +296,9 @@ export class Caches extends BaseModule {
 
   /**
    * Updates cached content configurations.
+   *
+   * @param params - The parameters for the update request.
+   * @return The updated cached content.
    *
    * @example
    * ```ts
