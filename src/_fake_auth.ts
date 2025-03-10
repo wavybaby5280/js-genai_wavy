@@ -5,10 +5,9 @@
  */
 
 import {Auth} from '../src/_auth';
-import {
-  AUTHORIZATION_HEADER,
-  GOOGLE_API_KEY_HEADER,
-} from '../src/node/_node_auth';
+
+const GOOGLE_API_KEY_HEADER = 'x-goog-api-key';
+const AUTHORIZATION_HEADER = 'Authorization';
 
 /**
  * A mock implementation of the Auth interface for testing purposes.

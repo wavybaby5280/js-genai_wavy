@@ -39,12 +39,10 @@
     "build-prod": "rollup -c && api-extractor run --verbose && api-extractor run -c api-extractor.node.json --verbose && api-extractor run -c api-extractor.web.json --verbose",
     "unit-test": "ts-node node_modules/jasmine/bin/jasmine test/unit/**/*_test.ts test/unit/*_test.ts",
     "system-test": "ts-node node_modules/jasmine/bin/jasmine test/system/**/*_test.ts",
-    "table-test": "ts-node node_modules/jasmine/bin/jasmine test/table_test.ts",
     "docs": "typedoc && scripts/add_typedoc_headers.sh",
     "format": "prettier '**/*.ts' '**/*.mjs' '**/*.json' --write",
     "lint": "eslint '**/*.ts'",
-    "lint-fix": "eslint --fix '**/*.ts'",
-    "generate-report": "./test/generate_report.sh"
+    "lint-fix": "eslint --fix '**/*.ts'"
   },
   "engines": {
     "node": ">=18.0.0"

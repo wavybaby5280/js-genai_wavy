@@ -5,7 +5,7 @@
  */
 
 import {Models} from '../../src/models';
-import {GoogleGenAI} from '../../src/node/node_client';
+import {GoogleGenAI} from '../../src/client';
 import {Candidate, Content, FinishReason, GenerateContentResponse, Type} from '../../src/types';
 
 function buildGenerateContentResponse(
