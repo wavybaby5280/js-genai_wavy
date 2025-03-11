@@ -13,7 +13,7 @@ import {
 } from '../../src/_websocket';
 import {CrossUploader} from '../../src/cross/_cross_uploader';
 import {Live} from '../../src/live';
-import * as types from '../../src/types'
+import * as types from '../../src/types';
 
 class FakeWebSocketFactory implements WebSocketFactory {
   create(
@@ -65,7 +65,9 @@ describe('live', () => {
     const session = await live.connect({
       model: 'models/gemini-2.0-flash-exp',
       callbacks: {
-        onmessage: function (e: types.LiveServerMessage){void e},
+        onmessage: function (e: types.LiveServerMessage) {
+          void e;
+        },
       },
     });
 
@@ -73,8 +75,9 @@ describe('live', () => {
     expect(websocketFactorySpyCall.args[0]).toBe(
       'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=test-api-key',
     );
+    // TODO(b/402513079): Don't hardcode the version here
     expect(JSON.stringify(websocketFactorySpyCall.args[1])).toBe(
-      '{"content-type":"application/json","user-agent":"google-genai-sdk/0.2.0 undefined","x-goog-api-client":"google-genai-sdk/0.2.0 undefined"}',
+      '{"content-type":"application/json","user-agent":"google-genai-sdk/0.3.0 undefined","x-goog-api-client":"google-genai-sdk/0.3.0 undefined"}',
     );
     // Check that the onopen callback is wrapped to call the provided callbacks
     // and then resolve the onopen promise. The string is not fully checked to
@@ -88,9 +91,7 @@ describe('live', () => {
     expect(onopenString).toContain('onopenResolve({});');
     expect(
       JSON.stringify(websocketFactorySpyCall.args[2].onclose.toString()),
-    ).toContain(
-      'void e;',
-    );
+    ).toContain('void e;');
     expect(session).toBeDefined();
   });
 
@@ -110,7 +111,9 @@ describe('live', () => {
           onopen: () => {
             throw new Error('custom onopen error');
           },
-          onmessage: function (e: types.LiveServerMessage){void e},
+          onmessage: function (e: types.LiveServerMessage) {
+            void e;
+          },
         },
       });
     } catch (e: unknown) {
@@ -161,16 +164,19 @@ describe('live', () => {
     const session = await live.connect({
       model: 'models/gemini-2.0-flash-exp',
       callbacks: {
-        onmessage: function (e: types.LiveServerMessage){void e},
-      }
+        onmessage: function (e: types.LiveServerMessage) {
+          void e;
+        },
+      },
     });
 
     const websocketFactorySpyCall = websocketFactorySpy.calls.all()[0];
     expect(websocketFactorySpyCall.args[0]).toBe(
       'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=test-api-key',
     );
+    // TODO(b/402513079): Don't hardcode the version here
     expect(JSON.stringify(websocketFactorySpyCall.args[1])).toBe(
-      '{"content-type":"application/json","user-agent":"google-genai-sdk/0.2.0 undefined","x-goog-api-client":"google-genai-sdk/0.2.0 undefined"}',
+      '{"content-type":"application/json","user-agent":"google-genai-sdk/0.3.0 undefined","x-goog-api-client":"google-genai-sdk/0.3.0 undefined"}',
     );
     // Check that the onopen callback is wrapped to call the provided callbacks
     // and then resolve the onopen promise. The string is not fully checked to
