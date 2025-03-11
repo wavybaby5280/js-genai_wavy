@@ -34,14 +34,14 @@ const LANGUAGE_LABEL_PREFIX = 'gl-node/';
  * Initializing the SDK for using the Gemini API:
  * ```ts
  * import {GoogleGenAI} from '@google/genai';
- * const ai = genai.GoogleGenAI({apiKey: 'GEMINI_API_KEY'});
+ * const ai = new GoogleGenAI({apiKey: 'GEMINI_API_KEY'});
  * ```
  *
  * @example
  * Initializing the SDK for using the Vertex AI API:
  * ```ts
  * import {GoogleGenAI} from '@google/genai';
- * const ai = genai.GoogleGenAI({
+ * const ai = new GoogleGenAI({
  *   vertexai: true,
  *   project: 'PROJECT_ID',
  *   location: 'PROJECT_LOCATION'
