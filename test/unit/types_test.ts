@@ -161,10 +161,7 @@ describe('GenerateContentResponse.functionCalls', () => {
         },
       },
     ];
-    expect(response.functionCalls).toEqual([
-      {name: 'func1'},
-      {name: 'func2'},
-    ]);
+    expect(response.functionCalls).toEqual([{name: 'func1'}, {name: 'func2'}]);
   });
 
   it('should return undefined when candidates[0].content.parts contains no function calls', () => {
@@ -224,9 +221,7 @@ describe('GenerateContentResponse.executableCode', () => {
     response.candidates = [
       {
         content: {
-          parts: [
-            {executableCode: {code: 'print("Hello world!")'}},
-          ],
+          parts: [{executableCode: {code: 'print("Hello world!")'}}],
         },
       },
     ];
@@ -265,16 +260,12 @@ describe('GenerateContentResponse.codeExecutionResult', () => {
     response.candidates = [
       {
         content: {
-          parts: [
-            {codeExecutionResult: {output: 'Hello world!'}},
-          ],
+          parts: [{codeExecutionResult: {output: 'Hello world!'}}],
         },
       },
       {
         content: {
-          parts: [
-            {codeExecutionResult: {output: 'Goodbye world!'}},
-          ],
+          parts: [{codeExecutionResult: {output: 'Goodbye world!'}}],
         },
       },
     ];
@@ -291,9 +282,7 @@ describe('GenerateContentResponse.codeExecutionResult', () => {
     response.candidates = [
       {
         content: {
-          parts: [
-            {codeExecutionResult: {output: 'Hello world!'}},
-          ],
+          parts: [{codeExecutionResult: {output: 'Hello world!'}}],
         },
       },
     ];

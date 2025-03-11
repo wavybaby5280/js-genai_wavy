@@ -26,7 +26,7 @@ async function generateContentFromMLDev() {
             'recipeName': {
               type: Type.STRING,
               description: 'Name of the recipe',
-              nullable: false
+              nullable: false,
             },
           },
           required: ['recipeName'],
@@ -58,7 +58,7 @@ async function generateContentFromVertexAI() {
             'recipeName': {
               type: Type.STRING,
               description: 'Name of the recipe',
-              nullable: false
+              nullable: false,
             },
           },
           required: ['recipeName'],

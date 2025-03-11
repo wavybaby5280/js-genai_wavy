@@ -117,10 +117,10 @@ describe('Pager properties', () => {
     const secondPageResponse = buildListFilesResponse('page2', 2);
     const params = {config: {pageSize: 10}};
     const pager = new Pager<File>(
-        PagedItem.PAGED_ITEM_FILES,
-        (_unused: ListFilesParameters) => Promise.resolve(secondPageResponse),
-        firstPageResponse,
-        params,
+      PagedItem.PAGED_ITEM_FILES,
+      (_unused: ListFilesParameters) => Promise.resolve(secondPageResponse),
+      firstPageResponse,
+      params,
     );
 
     expect(pager.page).toEqual(firstPageResponse['files'] as File[]);
@@ -136,10 +136,10 @@ describe('Pager properties', () => {
     const secondPageResponse = buildListFilesResponse('page2', 1);
     const params = {config: {pageSize: 10}};
     const pager = new Pager<File>(
-        PagedItem.PAGED_ITEM_FILES,
-        (_unused: ListFilesParameters) => Promise.resolve(secondPageResponse),
-        firstPageResponse,
-        params,
+      PagedItem.PAGED_ITEM_FILES,
+      (_unused: ListFilesParameters) => Promise.resolve(secondPageResponse),
+      firstPageResponse,
+      params,
     );
     await pager.nextPage();
 

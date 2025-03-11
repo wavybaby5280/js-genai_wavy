@@ -31,10 +31,10 @@ export class Pager<T> implements AsyncIterable<T> {
   protected idxInternal!: number;
 
   constructor(
-      name: PagedItem,
-      request: (params: any) => any,
-      response: any,
-      params: any,
+    name: PagedItem,
+    request: (params: any) => any,
+    response: any,
+    params: any,
   ) {
     this.requestInternal = request;
     this.init(name, response, params);

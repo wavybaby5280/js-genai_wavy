@@ -6,7 +6,12 @@
 
 import {Models} from '../../src/models';
 import {GoogleGenAI} from '../../src/client';
-import {Candidate, Content, FinishReason, GenerateContentResponse, Type} from '../../src/types';
+import {
+  Content,
+  FinishReason,
+  GenerateContentResponse,
+  Type,
+} from '../../src/types';
 
 function buildGenerateContentResponse(
   content: Content,
@@ -133,33 +138,30 @@ describe('sendMessage valid response', () => {
   });
 });
 
-
 describe('GenerateContent response schema', () => {
   it('smoke test GenerateContent response schema with Array', async () => {
     const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
     const validResponse = Object.setPrototypeOf(
-        {
-          candidates: [
-            {
-              content: {
-                role: 'model',
-                parts: [
-                  {
-                    text:
-                        '[{"recipeName": "recipe1"},{"recipeName": "recipe2"},{"recipeName": "recipe3"}]',
-                  },
-                ],
-              },
+      {
+        candidates: [
+          {
+            content: {
+              role: 'model',
+              parts: [
+                {
+                  text: '[{"recipeName": "recipe1"},{"recipeName": "recipe2"},{"recipeName": "recipe3"}]',
+                },
+              ],
             },
-          ],
-        },
-        GenerateContentResponse.prototype,
+          },
+        ],
+      },
+      GenerateContentResponse.prototype,
     );
     const modelsModule = client.models;
-    spyOn(modelsModule, 'generateContent')
-        .and.returnValue(
-            Promise.resolve(validResponse),
-        );
+    spyOn(modelsModule, 'generateContent').and.returnValue(
+      Promise.resolve(validResponse),
+    );
     const request = {
       model: 'gemini-2.0-flash',
       contents: 'List 3 popular cookie recipes.',
@@ -173,7 +175,7 @@ describe('GenerateContent response schema', () => {
               'recipeName': {
                 type: Type.STRING,
                 description: 'Name of the recipe',
-                nullable: false
+                nullable: false,
               },
             },
             required: ['recipeName'],
@@ -188,7 +190,6 @@ describe('GenerateContent response schema', () => {
     expect(modelsModule.generateContent).toHaveBeenCalledWith(request);
   });
 });
-
 
 describe('sendMessage config', () => {
   let client: GoogleGenAI;

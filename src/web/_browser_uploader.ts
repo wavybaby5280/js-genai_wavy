@@ -10,10 +10,10 @@ import {File} from '../types';
 
 export class BrowserUploader implements Uploader {
   async upload(
-      file: string|Blob,
-      uploadUrl: string,
-      apiClient: ApiClient,
-      ): Promise<File> {
+    file: string | Blob,
+    uploadUrl: string,
+    apiClient: ApiClient,
+  ): Promise<File> {
     if (typeof file === 'string') {
       throw new Error('File path is not supported in browser uploader.');
     }
@@ -22,7 +22,7 @@ export class BrowserUploader implements Uploader {
     return await crossUploader.uploadBlob(file, uploadUrl, apiClient);
   }
 
-  async stat(file: string|Blob): Promise<FileStat> {
+  async stat(file: string | Blob): Promise<FileStat> {
     if (typeof file === 'string') {
       throw new Error('File path is not supported in browser uploader.');
     } else {

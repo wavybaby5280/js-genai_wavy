@@ -587,12 +587,11 @@ describe('files', () => {
   it('ML Dev list files with specified parameters', async () => {
     const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
     const response = await client.files.list({config: {'pageSize': 2}});
-    expect(response!.pageLength ?? 0)
-        .toBeGreaterThan(
-            0,
-            'Expected at least one file has more than 2 pages, got ' +
-                response!.pageLength,
-        );
+    expect(response!.pageLength ?? 0).toBeGreaterThan(
+      0,
+      'Expected at least one file has more than 2 pages, got ' +
+        response!.pageLength,
+    );
     console.info(
       'ML Dev should list files with specified parameters\n',
       JSON.stringify(response),
