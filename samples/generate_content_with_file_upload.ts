@@ -18,8 +18,11 @@ async function generateContentFromFileUploadMLDev() {
   );
 
   // Upload the file.
-  const file = await ai.files.upload(testFile, {
-    displayName: 'generate_file.txt',
+  const file = await ai.files.upload({
+    file: testFile,
+    config: {
+      displayName: 'generate_file.txt',
+    },
   });
 
   // Wait for the file to be processed.

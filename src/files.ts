@@ -69,39 +69,38 @@ export class Files extends BaseModule {
    *
    * This section can contain multiple paragraphs and code examples.
    *
-   * @param file The string path to the file to be uploaded or a Blob object.
-   * @param config Optional parameters specified in the `types.UploadFileConfig`
-   *     interface. Optional @see {@link types.UploadFileConfig}
+   * @param params - Optional parameters specified in the
+   *        `common.UploadFileParameters` interface.
+   *        Optional @see {@link common.UploadFileParameters}
    * @return A promise that resolves to a `types.File` object.
    * @throws An error if called on a Vertex AI client.
    * @throws An error if the `mimeType` is not provided and can not be inferred,
-   * the `mimeType` can be provided in the `config` parameter.
+   * the `mimeType` can be provided in the `params.config` parameter.
    * @throws An error occurs if a suitable upload location cannot be established.
    *
    * @example
    * The following code uploads a file to Gemini API.
    *
    * ```ts
-   * const file = await ai.files.upload('file.txt', {
+   * const file = await ai.files.upload({file: 'file.txt', config: {
    *   mimeType: 'text/plain',
-   * });
+   * }});
    * console.log(file.name);
    * ```
    */
-  async upload(
-    file: string | Blob,
-    config?: types.UploadFileConfig,
-  ): Promise<types.File> {
+  async upload(params: common.UploadFileParameters): Promise<types.File> {
     if (this.apiClient.isVertexAI()) {
       throw new Error(
         'Vertex AI does not support uploading files. You can share files through a GCS bucket.',
       );
     }
 
-    return this.apiClient.uploadFile(file, config).then((response) => {
-      const file = fileFromMldev(this.apiClient, response);
-      return file as types.File;
-    });
+    return this.apiClient
+      .uploadFile(params.file, params.config)
+      .then((response) => {
+        const file = fileFromMldev(this.apiClient, response);
+        return file as types.File;
+      });
   }
 
   private async listInternal(

@@ -84,7 +84,7 @@ describe('File', () => {
         ...mockResponses,
       );
 
-      await client.files.upload(filePath);
+      await client.files.upload({file: filePath});
       expect(fetchSpy).toHaveBeenCalledTimes(numRequests + 1);
 
       const allArgs = fetchSpy.calls.allArgs();
@@ -142,7 +142,7 @@ describe('File', () => {
         ...mockResponses,
       );
 
-      await client.files.upload(testBlob);
+      await client.files.upload({file: testBlob});
 
       expect(fetchSpy).toHaveBeenCalledTimes(numRequests + 1);
       const allArgs = fetchSpy.calls.allArgs();

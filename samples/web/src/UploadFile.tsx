@@ -15,7 +15,7 @@ export default function UploadFile({apiKey}: {apiKey: string}) {
     if (event.target.files && event.target.files[0]) {
       // Update uploaded file
       const ai = new GoogleGenAI({vertexai: false, apiKey: apiKey});
-      const response = await ai.files.upload(event.target.files[0]);
+      const response = await ai.files.upload({file: event.target.files[0]});
 
       setUploadedFile(response);
     }
