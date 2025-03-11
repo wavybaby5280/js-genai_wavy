@@ -119,8 +119,24 @@ export class Chats {
   /**
    * Creates a new chat session.
    *
+   * @remarks
+   * The config in the params will be used for all requests within the chat
+   * session unless overridden by a per-request `config` in
+   * {@link ./types.SendMessageParameters}.
+   *
    * @param params - Parameters for creating a chat session.
    * @returns A new chat session.
+   *
+   * @example
+   * ```ts
+   * const chat = ai.chats.create({
+   *   model: 'gemini-2.0-flash'
+   *   config: {
+   *     temperature: 0.5,
+   *     maxOutputTokens: 1024,
+   *   }
+   * });
+   * ```
    */
   create(params: types.CreateChatParameters) {
     return new Chat(
@@ -134,8 +150,11 @@ export class Chats {
 }
 
 /**
- * Chat session that enables sending messages and stores the chat history so
- * far.
+ * Chat session that enables sending messages to the model with previous
+ * conversation context.
+ *
+ * @remarks
+ * The session maintains all the turns between user and model.
  */
 export class Chat {
   // A promise to represent the current state of the message being sent to the
@@ -162,6 +181,15 @@ export class Chat {
    * @see {@link Chat#sendMessageStream} for streaming method.
    * @param params - parameters for sending messages within a chat session.
    * @returns The model's response.
+   *
+   * @example
+   * ```ts
+   * const chat = ai.chats.create({model: 'gemini-2.0-flash'});
+   * const response = await chat.sendMessage({
+   *   message: 'Why is the sky blue?'
+   * });
+   * console.log(response.text);
+   * ```
    */
   async sendMessage(
     params: types.SendMessageParameters,
@@ -194,6 +222,17 @@ export class Chat {
    * @see {@link Chat#sendMessage} for non-streaming method.
    * @param params - parameters for sending the message.
    * @return The model's response.
+   *
+   * @example
+   * ```ts
+   * const chat = ai.chats.create({model: 'gemini-2.0-flash'});
+   * const response = await chat.sendMessageStream({
+   *   message: 'Why is the sky blue?'
+   * });
+   * for await (const chunk of response) {
+   *   console.log(chunk.text);
+   * }
+   * ```
    */
   async sendMessageStream(
     params: types.SendMessageParameters,
