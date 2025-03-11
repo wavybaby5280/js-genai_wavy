@@ -4,6 +4,7 @@
   "description": "",
   "main": "dist/node/index.js",
   "module": "dist/web/index.mjs",
+  "browser": "dist/web/index.mjs",
   "typings": "dist/genai.d.ts",
   "exports": {
     ".": {
