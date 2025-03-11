@@ -66,9 +66,9 @@ function liveConnectConfigToMldev(
   ]);
   if (fromSystemInstruction !== undefined && fromSystemInstruction !== null) {
     common.setValueByPath(
-        toObject,
-        ['systemInstruction'],
-        contentToMldev(apiClient, fromSystemInstruction),
+      toObject,
+      ['systemInstruction'],
+      contentToMldev(apiClient, fromSystemInstruction),
     );
   }
 
@@ -79,11 +79,11 @@ function liveConnectConfigToMldev(
     Array.isArray(fromTools)
   ) {
     common.setValueByPath(
-        toObject,
-        ['tools'],
-        fromTools.map((item: types.Tool) => {
-          return toolToMldev(apiClient, item);
-        }),
+      toObject,
+      ['tools'],
+      fromTools.map((item: types.Tool) => {
+        return toolToMldev(apiClient, item);
+      }),
     );
   }
 
@@ -135,9 +135,9 @@ function liveConnectConfigToVertex(
   ]);
   if (fromSystemInstruction !== undefined && fromSystemInstruction !== null) {
     common.setValueByPath(
-        toObject,
-        ['systemInstruction'],
-        contentToVertex(apiClient, fromSystemInstruction),
+      toObject,
+      ['systemInstruction'],
+      contentToVertex(apiClient, fromSystemInstruction),
     );
   }
 
@@ -148,11 +148,11 @@ function liveConnectConfigToVertex(
     Array.isArray(fromTools)
   ) {
     common.setValueByPath(
-        toObject,
-        ['tools'],
-        fromTools.map((item: types.Tool) => {
-          return toolToVertex(apiClient, item);
-        }),
+      toObject,
+      ['tools'],
+      fromTools.map((item: types.Tool) => {
+        return toolToVertex(apiClient, item);
+      }),
     );
   }
 
@@ -214,9 +214,9 @@ function liveServerContentFromMldev(
   const fromModelTurn = common.getValueByPath(fromObject, ['modelTurn']);
   if (fromModelTurn !== undefined && fromModelTurn !== null) {
     common.setValueByPath(
-        toObject,
-        ['modelTurn'],
-        contentFromMldev(apiClient, fromModelTurn),
+      toObject,
+      ['modelTurn'],
+      contentFromMldev(apiClient, fromModelTurn),
     );
   }
 
@@ -242,9 +242,9 @@ function liveServerContentFromVertex(
   const fromModelTurn = common.getValueByPath(fromObject, ['modelTurn']);
   if (fromModelTurn !== undefined && fromModelTurn !== null) {
     common.setValueByPath(
-        toObject,
-        ['modelTurn'],
-        contentFromVertex(apiClient, fromModelTurn),
+      toObject,
+      ['modelTurn'],
+      contentFromVertex(apiClient, fromModelTurn),
     );
   }
 
@@ -505,7 +505,7 @@ function liveServerMessageFromVertex(
  */
 async function handleWebSocketMessage(
   apiClient: ApiClient,
-  onmessage: ((msg: types.LiveServerMessage) => void),
+  onmessage: (msg: types.LiveServerMessage) => void,
   event: MessageEvent,
 ): Promise<void> {
   let serverMessage: types.LiveServerMessage;
@@ -524,7 +524,6 @@ async function handleWebSocketMessage(
   onmessage(serverMessage);
 }
 
-
 /**
    Live class encapsulates the configuration for live interaction with the
    Generative Language API. It embeds ApiClient for general API settings.
@@ -541,8 +540,6 @@ export class Live {
   /**
      Establishes a connection to the specified model with the given
      configuration and returns a Session object representing that connection.
-
-    > [!CAUTION] This SDK does not yet support the live API for **Google Vertex AI**.
 
      @experimental
 
@@ -573,13 +570,7 @@ export class Live {
      });
      ```
     */
-  async connect(
-    params: types.LiveConnectParameters,
-  ): Promise<Session> {
-    if (this.apiClient.isVertexAI()) {
-      throw new Error('This SDK does not yet support the live API for **Google Vertex AI**.');
-    }
-
+  async connect(params: types.LiveConnectParameters): Promise<Session> {
     const websocketBaseUrl = this.apiClient.getWebsocketBaseUrl();
     const apiVersion = this.apiClient.getApiVersion();
     let url: string;
@@ -601,13 +592,12 @@ export class Live {
       onopenResolve = resolve;
     });
 
-    const callbacks:types.LiveCallbacks = params.callbacks
+    const callbacks: types.LiveCallbacks = params.callbacks;
 
     const onopenAwaitedCallback = function () {
       callbacks?.onopen?.();
       onopenResolve({});
     };
-
 
     const apiClient = this.apiClient;
 
@@ -680,24 +670,24 @@ export class Session {
   ) {}
 
   private tLiveClientContent(
-      apiClient: ApiClient,
-      params: types.SessionSendClientContentParameters,
-      ): types.LiveClientMessage {
+    apiClient: ApiClient,
+    params: types.SessionSendClientContentParameters,
+  ): types.LiveClientMessage {
     if (params.turns !== null && params.turns !== undefined) {
       let contents: types.Content[] = [];
       try {
-        contents =
-            t.tContents(apiClient, params.turns as types.ContentListUnion)
+        contents = t.tContents(
+          apiClient,
+          params.turns as types.ContentListUnion,
+        );
         if (apiClient.isVertexAI()) {
-          contents = contents.map((item) => contentToVertex(apiClient, item))
-        }
-        else {
-          contents = contents.map((item) => contentToMldev(apiClient, item))
+          contents = contents.map((item) => contentToVertex(apiClient, item));
+        } else {
+          contents = contents.map((item) => contentToMldev(apiClient, item));
         }
       } catch {
         throw new Error(
-            `Failed to parse client content "turns", type: '${
-                typeof params.turns}'`,
+          `Failed to parse client content "turns", type: '${typeof params.turns}'`,
         );
       }
       return {
@@ -711,14 +701,13 @@ export class Session {
   }
 
   private tLiveClientRealtimeInput(
-      apiClient: ApiClient,
-      params: types.SessionSendRealtimeInputParameters,
-      ): types.LiveClientMessage {
+    apiClient: ApiClient,
+    params: types.SessionSendRealtimeInputParameters,
+  ): types.LiveClientMessage {
     let clientMessage: types.LiveClientMessage = {};
     if (!('media' in params) || !params.media) {
       throw new Error(
-          `Failed to convert realtime input "media", type: '${
-              typeof params.media}'`,
+        `Failed to convert realtime input "media", type: '${typeof params.media}'`,
       );
     }
 
@@ -728,9 +717,9 @@ export class Session {
   }
 
   private tLiveClienttToolResponse(
-      apiClient: ApiClient,
-      params: types.SessionSendToolResponseParameters,
-      ): types.LiveClientMessage {
+    apiClient: ApiClient,
+    params: types.SessionSendToolResponseParameters,
+  ): types.LiveClientMessage {
     let functionResponses: types.FunctionResponse[] = [];
 
     if (params.functionResponses == null) {
@@ -746,11 +735,14 @@ export class Session {
     }
 
     for (const functionResponse of functionResponses) {
-      if (typeof functionResponse !== 'object' || functionResponse === null ||
-          !('name' in functionResponse) || !('response' in functionResponse)) {
+      if (
+        typeof functionResponse !== 'object' ||
+        functionResponse === null ||
+        !('name' in functionResponse) ||
+        !('response' in functionResponse)
+      ) {
         throw new Error(
-            `Could not parse function response, type '${
-                typeof functionResponse}'.`,
+          `Could not parse function response, type '${typeof functionResponse}'.`,
         );
       }
       if (!apiClient.isVertexAI() && !('id' in functionResponse)) {
@@ -759,7 +751,7 @@ export class Session {
     }
 
     const clientMessage: types.LiveClientMessage = {
-      toolResponse: {functionResponses: functionResponses}
+      toolResponse: {functionResponses: functionResponses},
     };
     return clientMessage;
   }
@@ -818,8 +810,10 @@ export class Session {
         turnComplete: true,
       };
     }
-    const clientMessage: types.LiveClientMessage =
-        this.tLiveClientContent(this.apiClient, params);
+    const clientMessage: types.LiveClientMessage = this.tLiveClientContent(
+      this.apiClient,
+      params,
+    );
     this.conn.send(JSON.stringify(clientMessage));
   }
 
@@ -851,10 +845,7 @@ export class Session {
     }
 
     const clientMessage: types.LiveClientMessage =
-        this.tLiveClientRealtimeInput(
-            this.apiClient,
-            params,
-        );
+      this.tLiveClientRealtimeInput(this.apiClient, params);
     this.conn.send(JSON.stringify(clientMessage));
   }
 
@@ -878,10 +869,7 @@ export class Session {
     }
 
     const clientMessage: types.LiveClientMessage =
-        this.tLiveClienttToolResponse(
-            this.apiClient,
-            params,
-        );
+      this.tLiveClienttToolResponse(this.apiClient, params);
     this.conn.send(JSON.stringify(clientMessage));
   }
 
