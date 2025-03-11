@@ -653,8 +653,6 @@ export class GoogleGenAI {
 export interface GoogleGenAIOptions {
     apiKey?: string;
     apiVersion?: string;
-    // Warning: (ae-forgotten-export) The symbol "Auth" needs to be exported by the entry point index.d.ts
-    auth?: Auth;
     googleAuthOptions?: GoogleAuthOptions;
     httpOptions?: HttpOptions;
     location?: string;
@@ -874,6 +872,7 @@ export class ListFilesResponse {
 
 // @public
 export class Live {
+    // Warning: (ae-forgotten-export) The symbol "Auth" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "WebSocketFactory" needs to be exported by the entry point index.d.ts
     constructor(apiClient: ApiClient, auth: Auth, webSocketFactory: WebSocketFactory);
     connect(params: types.LiveConnectParameters): Promise<Session>;

@@ -79,12 +79,10 @@ export class GoogleGenAI {
     this.project = options.project ?? getEnv('GOOGLE_CLOUD_PROJECT');
     this.location = options.location ?? getEnv('GOOGLE_CLOUD_LOCATION');
     this.apiVersion = options.apiVersion;
-    const auth =
-      options.auth ??
-      new NodeAuth({
-        apiKey: this.apiKey,
-        googleAuthOptions: options.googleAuthOptions,
-      });
+    const auth = new NodeAuth({
+      apiKey: this.apiKey,
+      googleAuthOptions: options.googleAuthOptions,
+    });
     this.apiClient = new ApiClient({
       auth: auth,
       project: this.project,

@@ -7,7 +7,6 @@
 import {GoogleAuthOptions} from 'google-auth-library';
 
 import {ApiClient} from './_api_client';
-import {Auth} from './_auth';
 import {Caches} from './caches';
 import {Chats} from './chats';
 import {crossError} from './cross/_cross_error';
@@ -80,13 +79,6 @@ export interface GoogleGenAIOptions {
    * Optional. A set of customizable configuration for HTTP requests.
    */
   httpOptions?: HttpOptions;
-  /**
-   * The object used for adding authentication headers to API requests.
-   *
-   * @remarks
-   * Only used for internal testing, will be removed in the future.
-   */
-  auth?: Auth;
 }
 
 /**
