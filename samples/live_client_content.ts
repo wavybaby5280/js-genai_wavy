@@ -6,9 +6,6 @@
 import {GoogleGenAI, LiveServerMessage, Modality} from '@google/genai';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
-const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
-const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
 
 
 async function live(client: GoogleGenAI) {
@@ -90,23 +87,15 @@ async function live(client: GoogleGenAI) {
 }
 
 async function main() {
-  if (GOOGLE_GENAI_USE_VERTEXAI) {
-    const client = new GoogleGenAI({
-      vertexai: true,
-      project: GOOGLE_CLOUD_PROJECT,
-      location: GOOGLE_CLOUD_LOCATION,
-    });
-    await live(client).catch((e) => console.error('got error', e));
-  } else {
-    const client = new GoogleGenAI({
-      vertexai: false,
-      apiKey: GEMINI_API_KEY,
-      httpOptions: {
-        apiVersion: 'v1alpha',
-      }
-    });
-    await live(client).catch((e) => console.error('got error', e));
-  }
+  // This SDK does not yet support the live API for **Google Vertex AI**.
+  const client = new GoogleGenAI({
+    vertexai: false,
+    apiKey: GEMINI_API_KEY,
+    httpOptions: {
+      apiVersion: 'v1alpha',
+    }
+  });
+  await live(client).catch((e) => console.error('got error', e));
 }
 
 main();

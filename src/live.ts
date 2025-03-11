@@ -536,6 +536,8 @@ export class Live {
      Establishes a connection to the specified model with the given
      configuration and returns a Session object representing that connection.
 
+    > [!CAUTION] This SDK does not yet support the live API for **Google Vertex AI**.
+
      @experimental
 
      @param model - Model to use for the Live session.
@@ -572,6 +574,10 @@ export class Live {
   async connect(
     params: types.LiveConnectParameters,
   ): Promise<Session> {
+    if (this.apiClient.isVertexAI()) {
+      throw new Error('This SDK does not yet support the live API for **Google Vertex AI**.');
+    }
+
     const websocketBaseUrl = this.apiClient.getWebsocketBaseUrl();
     const apiVersion = this.apiClient.getApiVersion();
     let url: string;
