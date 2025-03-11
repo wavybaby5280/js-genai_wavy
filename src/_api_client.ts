@@ -397,7 +397,7 @@ export class ApiClient {
       method: httpMethod,
     })
       .then(async (response) => {
-        await throwErrorIfNotOK(response, url.toString(), requestInit);
+        await throwErrorIfNotOK(response);
         return new HttpResponse(response);
       })
       .catch((e) => {
@@ -421,7 +421,7 @@ export class ApiClient {
       method: httpMethod,
     })
       .then(async (response) => {
-        await throwErrorIfNotOK(response, url.toString(), requestInit);
+        await throwErrorIfNotOK(response);
         return this.processStreamResponse(response);
       })
       .catch((e) => {
@@ -603,8 +603,6 @@ export class ApiClient {
 
 async function throwErrorIfNotOK(
   response: Response | undefined,
-  url: string,
-  requestInit: RequestInit,
 ) {
   if (response === undefined) {
     throw new ServerError('response is undefined');
