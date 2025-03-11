@@ -8,9 +8,6 @@
  * @fileoverview Pagers for the GenAI List APIs.
  */
 
-// TODO(b/401555348): Re-enable linting after enforcing strong types.
-/*  eslint-disable @typescript-eslint/no-explicit-any */
-
 export enum PagedItem {
   PAGED_ITEM_BATCH_JOBS = 'batchJobs',
   PAGED_ITEM_MODELS = 'models',
@@ -19,32 +16,54 @@ export enum PagedItem {
   PAGED_ITEM_CACHED_CONTENTS = 'cachedContents',
 }
 
+interface PagedItemConfig {
+  config?: {
+    pageToken?: string;
+    pageSize?: number;
+  };
+}
+
+interface PagedItemResponse<T> {
+  nextPageToken?: string;
+  batchJobs?: T[];
+  models?: T[];
+  tuningJobs?: T[];
+  files?: T[];
+  cachedContents?: T[];
+}
+
 /**
  * Pager class for iterating through paginated results.
  */
 export class Pager<T> implements AsyncIterable<T> {
   private nameInternal!: PagedItem;
   private pageInternal: T[] = [];
-  private paramsInternal: any;
+  private paramsInternal: PagedItemConfig = {};
   private pageInternalSize!: number;
-  protected requestInternal!: (params: any) => any;
+  protected requestInternal!: (
+    params: PagedItemConfig,
+  ) => Promise<PagedItemResponse<T>>;
   protected idxInternal!: number;
 
   constructor(
     name: PagedItem,
-    request: (params: any) => any,
-    response: any,
-    params: any,
+    request: (params: PagedItemConfig) => Promise<PagedItemResponse<T>>,
+    response: PagedItemResponse<T>,
+    params: PagedItemConfig,
   ) {
     this.requestInternal = request;
     this.init(name, response, params);
   }
 
-  private init(name: PagedItem, response: any, params: any) {
+  private init(
+    name: PagedItem,
+    response: PagedItemResponse<T>,
+    params: PagedItemConfig,
+  ) {
     this.nameInternal = name;
     this.pageInternal = response[this.nameInternal] || [];
     this.idxInternal = 0;
-    let requestParams: any = {config: {}};
+    let requestParams: PagedItemConfig = {config: {}};
     if (!params) {
       requestParams = {config: {}};
     } else if (typeof params === 'object') {
@@ -60,7 +79,7 @@ export class Pager<T> implements AsyncIterable<T> {
       requestParams['config']?.['pageSize'] ?? this.pageInternal.length;
   }
 
-  private initNextPage(response: any): void {
+  private initNextPage(response: PagedItemResponse<T>): void {
     this.init(this.nameInternal, response, this.paramsInternal);
   }
 
@@ -100,7 +119,7 @@ export class Pager<T> implements AsyncIterable<T> {
    * used to customize the API request. For example, the `pageToken` parameter
    * contains the token to request the next page.
    */
-  get params(): any {
+  get params(): PagedItemConfig {
     return this.paramsInternal;
   }
 
