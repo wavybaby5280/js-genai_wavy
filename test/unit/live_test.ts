@@ -77,7 +77,7 @@ describe('live', () => {
     );
     // TODO(b/402513079): Don't hardcode the version here
     expect(JSON.stringify(websocketFactorySpyCall.args[1])).toBe(
-      '{"content-type":"application/json","user-agent":"google-genai-sdk/0.3.0 undefined","x-goog-api-client":"google-genai-sdk/0.3.0 undefined"}',
+      '{"content-type":"application/json","user-agent":"google-genai-sdk/0.3.1 undefined","x-goog-api-client":"google-genai-sdk/0.3.1 undefined"}',
     );
     // Check that the onopen callback is wrapped to call the provided callbacks
     // and then resolve the onopen promise. The string is not fully checked to
@@ -176,7 +176,7 @@ describe('live', () => {
     );
     // TODO(b/402513079): Don't hardcode the version here
     expect(JSON.stringify(websocketFactorySpyCall.args[1])).toBe(
-      '{"content-type":"application/json","user-agent":"google-genai-sdk/0.3.0 undefined","x-goog-api-client":"google-genai-sdk/0.3.0 undefined"}',
+      '{"content-type":"application/json","user-agent":"google-genai-sdk/0.3.1 undefined","x-goog-api-client":"google-genai-sdk/0.3.1 undefined"}',
     );
     // Check that the onopen callback is wrapped to call the provided callbacks
     // and then resolve the onopen promise. The string is not fully checked to
