@@ -26,7 +26,7 @@ export class Caches extends BaseModule {
    *
    * @example
    * ```ts
-   * const cachedContents = await client.caches.list({config: {'pageSize': 2}});
+   * const cachedContents = await ai.caches.list({config: {'pageSize': 2}});
    * for (const cachedContent of cachedContents) {
    *   console.log(cachedContent);
    * }
@@ -52,7 +52,7 @@ export class Caches extends BaseModule {
    * @example
    * ```ts
    * const contents = ...; // Initialize the content to cache.
-   * const response = await client.caches.create({
+   * const response = await ai.caches.create({
    *   model: 'gemini-2.0-flash',
    *   config: {
    *    'contents': contents,
@@ -139,7 +139,7 @@ export class Caches extends BaseModule {
    *
    * @example
    * ```ts
-   * await client.caches.get({name: 'gemini-1.5-flash'});
+   * await ai.caches.get({name: 'gemini-1.5-flash'});
    * ```
    */
   async get(
@@ -215,7 +215,7 @@ export class Caches extends BaseModule {
    *
    * @example
    * ```ts
-   * await client.caches.delete({name: 'gemini-1.5-flash'});
+   * await ai.caches.delete({name: 'gemini-1.5-flash'});
    * ```
    */
   async delete(
@@ -302,7 +302,7 @@ export class Caches extends BaseModule {
    *
    * @example
    * ```ts
-   * const response = await client.caches.update({
+   * const response = await ai.caches.update({
    *   name: 'gemini-1.5-flash',
    *   config: {'ttl': '7600s'}
    * });

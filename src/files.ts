@@ -29,7 +29,7 @@ export class Files extends BaseModule {
    * size of each page is 10.
    *
    * ```ts
-   * const listResponse = await client.files.list({config: {'pageSize': 10}});
+   * const listResponse = await ai.files.list({config: {'pageSize': 10}});
    * for await (const file of listResponse) {
    *   console.log(file.name);
    * }
@@ -82,7 +82,7 @@ export class Files extends BaseModule {
    * The following code uploads a file to Gemini API.
    *
    * ```ts
-   * const file = await client.files.upload('file.txt', {
+   * const file = await ai.files.upload('file.txt', {
    *   mimeType: 'text/plain',
    * });
    * console.log(file.name);
@@ -240,7 +240,7 @@ export class Files extends BaseModule {
    * const config: GetFileParameters = {
    *   name: fileName,
    * };
-   * file = await client.files.get(config);
+   * file = await ai.files.get(config);
    * console.log(file.name);
    * ```
    */

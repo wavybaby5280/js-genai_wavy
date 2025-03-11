@@ -548,7 +548,7 @@ export class Live {
 
      @example
      ```ts
-     const session = await client.live.connect({
+     const session = await ai.live.connect({
        model: 'gemini-2.0-flash-exp',
        config: {
          responseModalities: [Modality.AUDIO],
@@ -880,7 +880,7 @@ export class Session {
 
      @example
      ```ts
-     const session = await client.live.connect({
+     const session = await ai.live.connect({
        model: 'gemini-2.0-flash-exp',
        config: {
          responseModalities: [Modality.AUDIO],
