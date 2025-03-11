@@ -40,9 +40,7 @@ export class Models extends BaseModule {
    *
    * Some models support multimodal input and output.
    *
-   * @param model - The model to use for generating content.
-   * @param contents - The input contents to use for generating content.
-   * @param [config] - The configuration for generating content.
+   * @param params - The parameters for generating content.
    * @return The response from generating content.
    *
    * @example
@@ -87,9 +85,7 @@ export class Models extends BaseModule {
    *
    * Some models support multimodal input and output.
    *
-   * @param model - The model to use for generating content.
-   * @param contents - The input contents to use for generating content.
-   * @param [config] - The configuration for generating content.
+   * @param params - The parameters for generating content with streaming response.
    * @return The response from generating content.
    *
    * @example
@@ -257,9 +253,7 @@ export class Models extends BaseModule {
   /**
    * Calculates embeddings for the given contents. Only text is supported.
    *
-   * @param model - The model to use.
-   * @param contents - The contents to embed.
-   * @param [config] - The config for embedding contents.
+   * @param params - The parameters for embedding contents.
    * @return The response from the API.
    *
    * @example
@@ -350,9 +344,7 @@ export class Models extends BaseModule {
   /**
    * Generates an image based on a text description and configuration.
    *
-   * @param model - The model to use.
-   * @param prompt - A text description of the image to generate.
-   * @param [config] - The config for image generation.
+   * @param params - The parameters for generating images.
    * @return The response from the API.
    *
    * @example
@@ -445,9 +437,7 @@ export class Models extends BaseModule {
    * Counts the number of tokens in the given contents. Multimodal input is
    * supported for Gemini models.
    *
-   * @param model - The model to use for counting tokens.
-   * @param contents - The contents to count tokens for.
-   * @param [config] - The config for counting tokens.
+   * @param params - The parameters for counting tokens.
    * @return The response from the API.
    *
    * @example
@@ -532,9 +522,7 @@ export class Models extends BaseModule {
    *
    * This method is not supported by the Gemini Developer API.
    *
-   * @param model - The model to use.
-   * @param contents - The content to compute tokens for.
-   * @param [config] - The config for computing tokens.
+   * @param params - The parameters for computing tokens.
    * @return The response from the API.
    *
    * @example

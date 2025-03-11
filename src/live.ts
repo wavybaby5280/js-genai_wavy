@@ -546,12 +546,8 @@ export class Live {
 
      @experimental
 
-     @param model - Model to use for the Live session.
-     @param config - Configuration parameters for the Live session.
-     @param callbacks - Optional callbacks for websocket events. If not
-         provided, default no-op callbacks will be used. Generally, prefer to
-         provide explicit callbacks to allow for proper handling of websocket
-         events (e.g. connection errors).
+     @param params - The parameters for establishing a connection to the model.
+     @return A live session.
 
      @example
      ```ts
