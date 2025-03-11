@@ -1,4 +1,9 @@
-import {ContentListUnion, File, GoogleGenAI, Part} from '@google/genai';
+import {
+  ContentListUnion,
+  File,
+  GoogleGenAI,
+  createPartFromUri,
+} from '@google/genai';
 import {ChangeEvent, useState} from 'react';
 import './App.css';
 
@@ -23,13 +28,13 @@ export default function UploadFile({apiKey}: {apiKey: string}) {
 
       if (uploadedFile) {
         const resolvedFile = await uploadedFile;
-        const fileContent: Part = {
-          fileData: {
-            fileUri: resolvedFile.uri,
-            mimeType: resolvedFile.mimeType,
-          },
-        };
-        contents.push(fileContent);
+        if (resolvedFile.uri && resolvedFile.mimeType) {
+          const fileContent = createPartFromUri(
+            resolvedFile.uri,
+            resolvedFile.mimeType,
+          );
+          contents.push(fileContent);
+        }
 
         let getFile = await ai.files.get({
           name: resolvedFile.name as string,
