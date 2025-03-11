@@ -65,11 +65,8 @@ describe('live', () => {
     const session = await live.connect({
       model: 'models/gemini-2.0-flash-exp',
       callbacks: {
-        onopen: null,
         onmessage: function (e: types.LiveServerMessage){void e},
-        onerror: null,
-        onclose: null,
-      },   
+      },
     });
 
     const websocketFactorySpyCall = websocketFactorySpy.calls.all()[0];
@@ -114,8 +111,6 @@ describe('live', () => {
             throw new Error('custom onopen error');
           },
           onmessage: function (e: types.LiveServerMessage){void e},
-          onerror: null,
-          onclose: null,
         },
       });
     } catch (e: unknown) {
@@ -166,10 +161,7 @@ describe('live', () => {
     const session = await live.connect({
       model: 'models/gemini-2.0-flash-exp',
       callbacks: {
-        onopen: null,
         onmessage: function (e: types.LiveServerMessage){void e},
-        onerror: null,
-        onclose: null,
       }
     });
 

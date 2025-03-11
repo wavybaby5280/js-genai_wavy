@@ -881,13 +881,13 @@ export class Live {
 // @public
 export interface LiveCallbacks {
     // (undocumented)
-    onclose: ((e: CloseEvent) => void) | null;
+    onclose?: ((e: CloseEvent) => void) | null;
     // (undocumented)
-    onerror: ((e: ErrorEvent) => void) | null;
+    onerror?: ((e: ErrorEvent) => void) | null;
     // (undocumented)
     onmessage: (e: LiveServerMessage) => void;
     // (undocumented)
-    onopen: (() => void) | null;
+    onopen?: (() => void) | null;
 }
 
 // @public

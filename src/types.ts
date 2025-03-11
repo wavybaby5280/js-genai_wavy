@@ -1778,10 +1778,10 @@ export class HttpResponse {
 
 /** Callbacks for the live API. */
 export interface LiveCallbacks {
-  onopen: (() => void) | null;
+  onopen?: (() => void) | null;
   onmessage: (e: LiveServerMessage) => void;
-  onerror: ((e: ErrorEvent) => void) | null;
-  onclose: ((e: CloseEvent) => void) | null;
+  onerror?: ((e: ErrorEvent) => void) | null;
+  onclose?: ((e: CloseEvent) => void) | null;
 }
 /** Response for the create file method. */
 export class CreateFileResponse {
