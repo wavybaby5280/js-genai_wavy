@@ -493,6 +493,12 @@ function liveServerMessageFromVertex(
 /**
  * Handles incoming messages from the WebSocket.
  *
+ * @remarks
+ * This function is responsible for parsing incoming messages, transforming them
+ * into LiveServerMessages, and then calling the onmessage callback. Note that
+ * the first message which is received from the server is a setupComplete
+ * message.
+ *
  * @param apiClient The ApiClient instance.
  * @param onmessage The user-provided onmessage callback (if any).
  * @param event The MessageEvent from the WebSocket.
