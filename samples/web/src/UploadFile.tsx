@@ -70,13 +70,18 @@ export default function UploadFile({apiKey}: {apiKey: string}) {
   return (
     <>
       <div className="card" style={{display: 'flex', alignItems: 'center'}}>
-        <label style={{marginRight: '10px'}}>Upload file:</label>
-        <input
-          type="file"
-          onChange={handleFileUpload}
-          style={{marginRight: '10px'}}
-        />
-        <button onClick={handleDescribe}>Describe</button>
+        <h2 className="card-title">File upload sample</h2>
+        <form>
+          <label htmlFor="srcFile" style={{marginRight: '10px'}}>Upload file:</label>
+          <input
+            type="file"
+            id = "srcFile"
+            className="form-control"
+            onChange={handleFileUpload}
+            style={{marginRight: '10px'}}
+          />
+          <button type="button" className="btn btn-primary" onClick={handleDescribe}>Describe</button>
+        </form>
       </div>
       <div className="card">{modelResponse ?? 'Response'}</div>
     </>

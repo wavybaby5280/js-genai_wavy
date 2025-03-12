@@ -15,21 +15,22 @@ export default function GenerateContentText({ apiKey } : {apiKey: string }) {
     const response = await ai.models.generateContent({
       model: 'gemini-2.0-flash',
       contents: prompt
-    })
+    });
     setModelResponse(response.text ?? "Empty response");
   }
 
   return (
     <>
       <div className="card">
-        <p>
-          Prompt the model:
-        </p>
-        <textarea onChange={handlePromptChange} />
-        <button onClick={handleSend}>Send</button>
-      </div>
-      <div className="card">
-        {modelResponse}
+        <h2 className="card-title">Text generation sample</h2>
+        <form>
+          <label htmlFor="prompt" className="form-label">Prompt:</label>
+          <textarea className="form-control"  id="prompt" onChange={handlePromptChange} />
+          <button type="button" className="btn btn-primary" onClick={handleSend}>Send</button>
+          <div className="card">
+            {modelResponse}
+          </div>
+        </form>
       </div>
     </>
   )

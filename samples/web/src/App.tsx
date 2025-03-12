@@ -14,13 +14,13 @@ function App() {
     <>
       <h1>Google GenAI TypeScript SDK demo</h1>
       <div className="card">
-        <span>API key: </span>
-        <input type='password' onChange={handleKeyChange} value={apiKey} />
+        <form>
+          <label htmlFor="apikey">API key:</label>
+          <input className="form-control" id="apikey" type='password' onChange={handleKeyChange} value={apiKey} />
+        </form>
       </div>
-      <h2>Text generation sample</h2>
-      <GenerateContentText apiKey={apiKey} />
-      <h2>File upload sample</h2>
-      <UploadFile apiKey={apiKey} />
+        <GenerateContentText apiKey={apiKey} />
+        <UploadFile apiKey={apiKey} />
     </>
   )
 }
