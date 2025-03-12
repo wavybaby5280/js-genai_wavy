@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {ApiClient} from '../../src/_api_client';
+import {ApiClient, SDK_VERSION} from '../../src/_api_client';
 import {FakeAuth} from '../../src/_fake_auth';
 import {
   WebSocket,
@@ -75,9 +75,8 @@ describe('live', () => {
     expect(websocketFactorySpyCall.args[0]).toBe(
       'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=test-api-key',
     );
-    // TODO(b/402513079): Don't hardcode the version here
     expect(JSON.stringify(websocketFactorySpyCall.args[1])).toBe(
-      '{"content-type":"application/json","user-agent":"google-genai-sdk/0.3.1 undefined","x-goog-api-client":"google-genai-sdk/0.3.1 undefined"}',
+      `{"content-type":"application/json","user-agent":"google-genai-sdk/${SDK_VERSION} undefined","x-goog-api-client":"google-genai-sdk/${SDK_VERSION} undefined"}`,
     );
     // Check that the onopen callback is wrapped to call the provided callbacks
     // and then resolve the onopen promise. The string is not fully checked to
@@ -174,9 +173,8 @@ describe('live', () => {
     expect(websocketFactorySpyCall.args[0]).toBe(
       'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=test-api-key',
     );
-    // TODO(b/402513079): Don't hardcode the version here
     expect(JSON.stringify(websocketFactorySpyCall.args[1])).toBe(
-      '{"content-type":"application/json","user-agent":"google-genai-sdk/0.3.1 undefined","x-goog-api-client":"google-genai-sdk/0.3.1 undefined"}',
+      `{"content-type":"application/json","user-agent":"google-genai-sdk/${SDK_VERSION} undefined","x-goog-api-client":"google-genai-sdk/${SDK_VERSION} undefined"}`,
     );
     // Check that the onopen callback is wrapped to call the provided callbacks
     // and then resolve the onopen promise. The string is not fully checked to
