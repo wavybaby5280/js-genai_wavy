@@ -466,12 +466,8 @@ export interface Schema {
   example?: unknown;
   /** Optional. Pattern of the Type.STRING to restrict a string to a regular expression. */
   pattern?: string;
-  /** Optional. SCHEMA FIELDS FOR TYPE INTEGER and NUMBER Minimum value of the Type.INTEGER and Type.NUMBER */
-  minimum?: number;
   /** Optional. Default value of the data. */
   default?: unknown;
-  /** Optional. The value should be validated against any (one or more) of the subschemas in the list. */
-  anyOf?: Schema[];
   /** Optional. Maximum length of the Type.STRING */
   maxLength?: string;
   /** Optional. The title of the Schema. */
@@ -480,10 +476,10 @@ export interface Schema {
   minLength?: string;
   /** Optional. Minimum number of the properties for Type.OBJECT. */
   minProperties?: string;
-  /** Optional. Maximum value of the Type.INTEGER and Type.NUMBER */
-  maximum?: number;
   /** Optional. Maximum number of the properties for Type.OBJECT. */
   maxProperties?: string;
+  /** Optional. The value should be validated against any (one or more) of the subschemas in the list. */
+  anyOf?: Schema[];
   /** Optional. The description of the data. */
   description?: string;
   /** Optional. Possible values of the element of primitive type with enum format. Examples: 1. We can define direction as : {type:STRING, format:enum, enum:["EAST", NORTH", "SOUTH", "WEST"]} 2. We can define apartment number as : {type:INTEGER, format:enum, enum:["101", "201", "301"]} */
@@ -494,8 +490,12 @@ export interface Schema {
   items?: Schema;
   /** Optional. Maximum number of the elements for Type.ARRAY. */
   maxItems?: string;
+  /** Optional. Maximum value of the Type.INTEGER and Type.NUMBER */
+  maximum?: number;
   /** Optional. Minimum number of the elements for Type.ARRAY. */
   minItems?: string;
+  /** Optional. SCHEMA FIELDS FOR TYPE INTEGER and NUMBER Minimum value of the Type.INTEGER and Type.NUMBER */
+  minimum?: number;
   /** Optional. Indicates if the value may be null. */
   nullable?: boolean;
   /** Optional. SCHEMA FIELDS FOR TYPE OBJECT Properties of Type.OBJECT. */

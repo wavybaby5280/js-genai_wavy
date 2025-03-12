@@ -808,16 +808,8 @@ function schemaToMldev(
     throw new Error('pattern parameter is not supported in Gemini API.');
   }
 
-  if (common.getValueByPath(fromObject, ['minimum']) !== undefined) {
-    throw new Error('minimum parameter is not supported in Gemini API.');
-  }
-
   if (common.getValueByPath(fromObject, ['default']) !== undefined) {
     throw new Error('default parameter is not supported in Gemini API.');
-  }
-
-  if (common.getValueByPath(fromObject, ['anyOf']) !== undefined) {
-    throw new Error('anyOf parameter is not supported in Gemini API.');
   }
 
   if (common.getValueByPath(fromObject, ['maxLength']) !== undefined) {
@@ -836,12 +828,13 @@ function schemaToMldev(
     throw new Error('minProperties parameter is not supported in Gemini API.');
   }
 
-  if (common.getValueByPath(fromObject, ['maximum']) !== undefined) {
-    throw new Error('maximum parameter is not supported in Gemini API.');
-  }
-
   if (common.getValueByPath(fromObject, ['maxProperties']) !== undefined) {
     throw new Error('maxProperties parameter is not supported in Gemini API.');
+  }
+
+  const fromAnyOf = common.getValueByPath(fromObject, ['anyOf']);
+  if (fromAnyOf != null) {
+    common.setValueByPath(toObject, ['anyOf'], fromAnyOf);
   }
 
   const fromDescription = common.getValueByPath(fromObject, ['description']);
@@ -869,9 +862,19 @@ function schemaToMldev(
     common.setValueByPath(toObject, ['maxItems'], fromMaxItems);
   }
 
+  const fromMaximum = common.getValueByPath(fromObject, ['maximum']);
+  if (fromMaximum != null) {
+    common.setValueByPath(toObject, ['maximum'], fromMaximum);
+  }
+
   const fromMinItems = common.getValueByPath(fromObject, ['minItems']);
   if (fromMinItems != null) {
     common.setValueByPath(toObject, ['minItems'], fromMinItems);
+  }
+
+  const fromMinimum = common.getValueByPath(fromObject, ['minimum']);
+  if (fromMinimum != null) {
+    common.setValueByPath(toObject, ['minimum'], fromMinimum);
   }
 
   const fromNullable = common.getValueByPath(fromObject, ['nullable']);
@@ -920,19 +923,9 @@ function schemaToVertex(
     common.setValueByPath(toObject, ['pattern'], fromPattern);
   }
 
-  const fromMinimum = common.getValueByPath(fromObject, ['minimum']);
-  if (fromMinimum != null) {
-    common.setValueByPath(toObject, ['minimum'], fromMinimum);
-  }
-
   const fromDefault = common.getValueByPath(fromObject, ['default']);
   if (fromDefault != null) {
     common.setValueByPath(toObject, ['default'], fromDefault);
-  }
-
-  const fromAnyOf = common.getValueByPath(fromObject, ['anyOf']);
-  if (fromAnyOf != null) {
-    common.setValueByPath(toObject, ['anyOf'], fromAnyOf);
   }
 
   const fromMaxLength = common.getValueByPath(fromObject, ['maxLength']);
@@ -957,16 +950,16 @@ function schemaToVertex(
     common.setValueByPath(toObject, ['minProperties'], fromMinProperties);
   }
 
-  const fromMaximum = common.getValueByPath(fromObject, ['maximum']);
-  if (fromMaximum != null) {
-    common.setValueByPath(toObject, ['maximum'], fromMaximum);
-  }
-
   const fromMaxProperties = common.getValueByPath(fromObject, [
     'maxProperties',
   ]);
   if (fromMaxProperties != null) {
     common.setValueByPath(toObject, ['maxProperties'], fromMaxProperties);
+  }
+
+  const fromAnyOf = common.getValueByPath(fromObject, ['anyOf']);
+  if (fromAnyOf != null) {
+    common.setValueByPath(toObject, ['anyOf'], fromAnyOf);
   }
 
   const fromDescription = common.getValueByPath(fromObject, ['description']);
@@ -994,9 +987,19 @@ function schemaToVertex(
     common.setValueByPath(toObject, ['maxItems'], fromMaxItems);
   }
 
+  const fromMaximum = common.getValueByPath(fromObject, ['maximum']);
+  if (fromMaximum != null) {
+    common.setValueByPath(toObject, ['maximum'], fromMaximum);
+  }
+
   const fromMinItems = common.getValueByPath(fromObject, ['minItems']);
   if (fromMinItems != null) {
     common.setValueByPath(toObject, ['minItems'], fromMinItems);
+  }
+
+  const fromMinimum = common.getValueByPath(fromObject, ['minimum']);
+  if (fromMinimum != null) {
+    common.setValueByPath(toObject, ['minimum'], fromMinimum);
   }
 
   const fromNullable = common.getValueByPath(fromObject, ['nullable']);

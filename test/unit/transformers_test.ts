@@ -185,21 +185,6 @@ describe('tSchema', () => {
       'Default value is not supported in the response schema for the Gemini API.',
     );
   });
-  it('throws error if anyOf value is present for MLDev', () => {
-    const schema = {anyOf: []};
-    expect(() => {
-      tSchema(
-        new ApiClient({
-          auth: new FakeAuth(),
-          vertexai: false,
-          uploader: new CrossUploader(),
-        }),
-        schema,
-      );
-    }).toThrowError(
-      'AnyOf is not supported in the response schema for the Gemini API.',
-    );
-  });
   it('processes anyOf', () => {
     const schema = {
       title: 'title',
@@ -210,6 +195,16 @@ describe('tSchema', () => {
         new ApiClient({
           auth: new FakeAuth(),
           vertexai: true,
+          uploader: new CrossUploader(),
+        }),
+        schema,
+      ),
+    ).toEqual(schema);
+    expect(
+      tSchema(
+        new ApiClient({
+          auth: new FakeAuth(),
+          vertexai: false,
           uploader: new CrossUploader(),
         }),
         schema,

@@ -286,11 +286,6 @@ export function processSchema(apiClient: ApiClient, schema: types.Schema) {
   }
 
   if ('anyOf' in schema) {
-    if (!apiClient.isVertexAI()) {
-      throw new Error(
-        'AnyOf is not supported in the response schema for the Gemini API.',
-      );
-    }
     if (schema['anyOf'] !== undefined) {
       for (const subSchema of schema['anyOf']) {
         processSchema(apiClient, subSchema);
