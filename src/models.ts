@@ -1140,19 +1140,13 @@ function functionDeclarationToVertex(
   return toObject;
 }
 
-function googleSearchToMldev(
-  apiClient: ApiClient,
-  fromObject: types.GoogleSearch,
-): Record<string, unknown> {
+function googleSearchToMldev(): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   return toObject;
 }
 
-function googleSearchToVertex(
-  apiClient: ApiClient,
-  fromObject: types.GoogleSearch,
-): Record<string, unknown> {
+function googleSearchToVertex(): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   return toObject;
@@ -1274,11 +1268,7 @@ export function toolToMldev(
 
   const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
   if (fromGoogleSearch != null) {
-    common.setValueByPath(
-      toObject,
-      ['googleSearch'],
-      googleSearchToMldev(apiClient, fromGoogleSearch),
-    );
+    common.setValueByPath(toObject, ['googleSearch'], googleSearchToMldev());
   }
 
   const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
@@ -1337,11 +1327,7 @@ export function toolToVertex(
 
   const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
   if (fromGoogleSearch != null) {
-    common.setValueByPath(
-      toObject,
-      ['googleSearch'],
-      googleSearchToVertex(apiClient, fromGoogleSearch),
-    );
+    common.setValueByPath(toObject, ['googleSearch'], googleSearchToVertex());
   }
 
   const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
@@ -2277,6 +2263,7 @@ function embedContentParametersToMldev(
       t.tModel(apiClient, fromModelForEmbedContent),
     );
   }
+
   return toObject;
 }
 
@@ -3378,10 +3365,7 @@ function generateContentResponseFromVertex(
   return toObject;
 }
 
-function contentEmbeddingStatisticsFromMldev(
-  apiClient: ApiClient,
-  fromObject: types.ContentEmbeddingStatistics,
-): Record<string, unknown> {
+function contentEmbeddingStatisticsFromMldev(): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   return toObject;
@@ -3443,10 +3427,7 @@ function contentEmbeddingFromVertex(
   return toObject;
 }
 
-function embedContentMetadataFromMldev(
-  apiClient: ApiClient,
-  fromObject: types.EmbedContentMetadata,
-): Record<string, unknown> {
+function embedContentMetadataFromMldev(): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   return toObject;
@@ -3498,7 +3479,7 @@ function embedContentResponseFromMldev(
     common.setValueByPath(
       toObject,
       ['metadata'],
-      embedContentMetadataFromMldev(apiClient, fromMetadata),
+      embedContentMetadataFromMldev(),
     );
   }
 

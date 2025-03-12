@@ -130,7 +130,7 @@ export class Files extends BaseModule {
         }) as Promise<types.ListFilesResponse>;
 
       return response.then((apiResponse) => {
-        const resp = listFilesResponseFromVertex(this.apiClient, apiResponse);
+        const resp = listFilesResponseFromVertex();
         const typedResp = new types.ListFilesResponse();
         Object.assign(typedResp, resp);
         return typedResp;
@@ -268,7 +268,7 @@ export class Files extends BaseModule {
         }) as Promise<types.File>;
 
       return response.then((apiResponse) => {
-        const resp = fileFromVertex(this.apiClient, apiResponse);
+        const resp = fileFromVertex();
 
         return resp as types.File;
       });
@@ -672,10 +672,7 @@ function fileStatusFromMldev(
   return toObject;
 }
 
-function fileStatusFromVertex(
-  apiClient: ApiClient,
-  fromObject: types.FileStatus,
-): Record<string, unknown> {
+function fileStatusFromVertex(): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   return toObject;
@@ -768,10 +765,7 @@ function fileFromMldev(
   return toObject;
 }
 
-function fileFromVertex(
-  apiClient: ApiClient,
-  fromObject: types.File,
-): Record<string, unknown> {
+function fileFromVertex(): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   return toObject;
@@ -808,10 +802,7 @@ function listFilesResponseFromMldev(
   return toObject;
 }
 
-function listFilesResponseFromVertex(
-  apiClient: ApiClient,
-  fromObject: types.ListFilesResponse,
-): Record<string, unknown> {
+function listFilesResponseFromVertex(): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   return toObject;

@@ -251,10 +251,7 @@ export class Caches extends BaseModule {
         }) as Promise<types.DeleteCachedContentResponse>;
 
       return response.then((apiResponse) => {
-        const resp = deleteCachedContentResponseFromVertex(
-          this.apiClient,
-          apiResponse,
-        );
+        const resp = deleteCachedContentResponseFromVertex();
         const typedResp = new types.DeleteCachedContentResponse();
         Object.assign(typedResp, resp);
         return typedResp;
@@ -283,10 +280,7 @@ export class Caches extends BaseModule {
         }) as Promise<types.DeleteCachedContentResponse>;
 
       return response.then((apiResponse) => {
-        const resp = deleteCachedContentResponseFromMldev(
-          this.apiClient,
-          apiResponse,
-        );
+        const resp = deleteCachedContentResponseFromMldev();
         const typedResp = new types.DeleteCachedContentResponse();
         Object.assign(typedResp, resp);
         return typedResp;
@@ -938,19 +932,13 @@ function functionDeclarationToVertex(
   return toObject;
 }
 
-function googleSearchToMldev(
-  apiClient: ApiClient,
-  fromObject: types.GoogleSearch,
-): Record<string, unknown> {
+function googleSearchToMldev(): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   return toObject;
 }
 
-function googleSearchToVertex(
-  apiClient: ApiClient,
-  fromObject: types.GoogleSearch,
-): Record<string, unknown> {
+function googleSearchToVertex(): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   return toObject;
@@ -1072,11 +1060,7 @@ export function toolToMldev(
 
   const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
   if (fromGoogleSearch != null) {
-    common.setValueByPath(
-      toObject,
-      ['googleSearch'],
-      googleSearchToMldev(apiClient, fromGoogleSearch),
-    );
+    common.setValueByPath(toObject, ['googleSearch'], googleSearchToMldev());
   }
 
   const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
@@ -1135,11 +1119,7 @@ export function toolToVertex(
 
   const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
   if (fromGoogleSearch != null) {
-    common.setValueByPath(
-      toObject,
-      ['googleSearch'],
-      googleSearchToVertex(apiClient, fromGoogleSearch),
-    );
+    common.setValueByPath(toObject, ['googleSearch'], googleSearchToVertex());
   }
 
   const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
@@ -1825,19 +1805,13 @@ function cachedContentFromVertex(
   return toObject;
 }
 
-function deleteCachedContentResponseFromMldev(
-  apiClient: ApiClient,
-  fromObject: types.DeleteCachedContentResponse,
-): Record<string, unknown> {
+function deleteCachedContentResponseFromMldev(): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   return toObject;
 }
 
-function deleteCachedContentResponseFromVertex(
-  apiClient: ApiClient,
-  fromObject: types.DeleteCachedContentResponse,
-): Record<string, unknown> {
+function deleteCachedContentResponseFromVertex(): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
   return toObject;
