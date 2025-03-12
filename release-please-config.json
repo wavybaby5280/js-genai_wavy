@@ -1,7 +1,6 @@
 {
   "packages": {
     ".": {
-      "bootstrap-sha": "f19ca29725237727045a0440cfb1e9491326cde4",
       "changelog-path": "CHANGELOG.md",
       "release-type": "node",
       "bump-minor-pre-major": true,
@@ -10,5 +9,6 @@
       "prerelease": false
     }
   },
+  "bootstrap-sha": "f19ca29725237727045a0440cfb1e9491326cde4",
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
 }
