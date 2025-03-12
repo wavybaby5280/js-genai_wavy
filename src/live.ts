@@ -606,14 +606,16 @@ export class Live {
       onmessage: (event: MessageEvent) => {
         void handleWebSocketMessage(apiClient, callbacks.onmessage, event);
       },
-      onerror: callbacks?.onerror ??
-          function(e: ErrorEvent) {
-            void e;
-          },
-      onclose: callbacks?.onclose ??
-          function(e: CloseEvent) {
-            void e;
-          },
+      onerror:
+        callbacks?.onerror ??
+        function (e: ErrorEvent) {
+          void e;
+        },
+      onclose:
+        callbacks?.onclose ??
+        function (e: CloseEvent) {
+          void e;
+        },
     };
 
     const conn = this.webSocketFactory.create(

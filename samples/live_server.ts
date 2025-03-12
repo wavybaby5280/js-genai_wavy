@@ -7,30 +7,27 @@
 /* eslint no-constant-condition: 0 */
 /* eslint @typescript-eslint/no-require-imports: 0 */
 
-import {GoogleGenAI} from '@google/genai';
 import * as types from '@google/genai';
+import {GoogleGenAI} from '@google/genai';
 
+import type {Request, Response} from 'express'; // Import types only
 import express from 'express';
-import type { Request, Response } from 'express'; // Import types only
 
-import http from 'http';
-import {Server, Socket} from "socket.io";
 import cors from 'cors';
+import http from 'http';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import {Server, Socket} from 'socket.io';
+import {fileURLToPath} from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
 
-export function createBlob(
-  audioData: string,
-): types.Blob {
+export function createBlob(audioData: string): types.Blob {
   return {data: audioData, mimeType: 'audio/pcm;rate=16000'};
 }
 
@@ -61,7 +58,9 @@ async function main() {
   const session = await ai.live.connect({
     model: 'gemini-2.0-flash-exp',
     callbacks: {
-      onopen: () => {console.log("Live Session Opened")},
+      onopen: () => {
+        console.log('Live Session Opened');
+      },
       onmessage: (message: types.LiveServerMessage) => {
         console.log('Received message from the server: %s\n', debug(message));
         if (
@@ -78,12 +77,14 @@ async function main() {
           );
         }
       },
-      onerror:  (e:ErrorEvent) => {console.log("Live Session Error:", debug(e))},
-      onclose:  (e:CloseEvent) => {console.log("Live Session Closed:", debug(e))},
-
-    }
+      onerror: (e: ErrorEvent) => {
+        console.log('Live Session Error:', debug(e));
+      },
+      onclose: (e: CloseEvent) => {
+        console.log('Live Session Closed:', debug(e));
+      },
+    },
   });
-
 
   const app = express();
   app.use(cors({origin: true}));
@@ -114,7 +115,6 @@ async function main() {
   const port = 8000;
   await server.listen(port, async () => {
     console.log(`Server running on port ${port}`);
-
   });
 }
 

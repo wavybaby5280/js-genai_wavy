@@ -601,9 +601,7 @@ export class ApiClient {
   }
 }
 
-async function throwErrorIfNotOK(
-  response: Response | undefined,
-) {
+async function throwErrorIfNotOK(response: Response | undefined) {
   if (response === undefined) {
     throw new ServerError('response is undefined');
   }

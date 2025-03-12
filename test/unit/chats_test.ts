@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Models} from '../../src/models';
 import {GoogleGenAI} from '../../src/client';
+import {Models} from '../../src/models';
 import {
   Content,
   FinishReason,
