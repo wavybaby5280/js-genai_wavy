@@ -293,7 +293,11 @@ describe('generateImages', () => {
     const response = await client.models.generateImages({
       model: 'imagen-3.0-generate-002',
       prompt: 'Robot holding a red skateboard',
-      config: {numberOfImages: 1, outputMimeType: 'image/jpeg'},
+      config: {
+        numberOfImages: 1,
+        outputMimeType: 'image/jpeg',
+        includeSafetyAttributes: true,
+      },
     });
     expect(response?.generatedImages!.length).toBe(
       1,
@@ -302,6 +306,10 @@ describe('generateImages', () => {
     expect(response?.generatedImages?.[0]?.image?.imageBytes).toEqual(
       jasmine.anything(),
       'Expected image bytes to be non-empty',
+    );
+    expect(response?.generatedImages?.[1]?.safetyAttributes).toEqual(
+      jasmine.anything(),
+      'Expected positive prompt safety attributes to be non-empty',
     );
   });
 
@@ -314,7 +322,11 @@ describe('generateImages', () => {
     const response = await client.models.generateImages({
       model: 'imagen-3.0-generate-002',
       prompt: 'Robot holding a red skateboard',
-      config: {numberOfImages: 1, outputMimeType: 'image/jpeg'},
+      config: {
+        numberOfImages: 1,
+        outputMimeType: 'image/jpeg',
+        includeSafetyAttributes: true,
+      },
     });
     expect(response?.generatedImages!.length).toBe(
       1,
@@ -323,6 +335,10 @@ describe('generateImages', () => {
     expect(response?.generatedImages?.[0]?.image?.imageBytes).toEqual(
       jasmine.anything(),
       'Expected image bytes to be non-empty',
+    );
+    expect(response?.generatedImages?.[1]?.safetyAttributes).toEqual(
+      jasmine.anything(),
+      'Expected positive prompt safety attributes to be non-empty',
     );
   });
 });

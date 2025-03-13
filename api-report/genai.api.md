@@ -537,6 +537,7 @@ export interface GeneratedImage {
     enhancedPrompt?: string;
     image?: Image_2;
     raiFilteredReason?: string;
+    safetyAttributes?: SafetyAttributes;
 }
 
 // @public
@@ -1160,6 +1161,12 @@ export interface Retrieval {
 // @public
 export interface RetrievalMetadata {
     googleSearchDynamicRetrievalScore?: number;
+}
+
+// @public
+export interface SafetyAttributes {
+    categories?: string[];
+    scores?: number[];
 }
 
 // @public (undocumented)

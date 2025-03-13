@@ -1399,6 +1399,16 @@ export interface Image {
   mimeType?: string;
 }
 
+/** Safety attributes of a GeneratedImage or the user-provided prompt. */
+export interface SafetyAttributes {
+  /** List of RAI categories.
+   */
+  categories?: string[];
+  /** List of scores of each categories.
+   */
+  scores?: number[];
+}
+
 /** An output image. */
 export interface GeneratedImage {
   /** The output image data.
@@ -1408,6 +1418,10 @@ export interface GeneratedImage {
       response.
        */
   raiFilteredReason?: string;
+  /** Safety attributes of the image. Lists of RAI categories and their
+      scores of each content.
+       */
+  safetyAttributes?: SafetyAttributes;
   /** The rewritten prompt used for the image generation if the prompt
       enhancer is enabled.
        */

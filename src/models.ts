@@ -3550,6 +3550,56 @@ function imageFromVertex(
   return toObject;
 }
 
+function safetyAttributesFromMldev(
+  apiClient: ApiClient,
+  fromObject: types.SafetyAttributes,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromCategories = common.getValueByPath(fromObject, [
+    'safetyAttributes',
+    'categories',
+  ]);
+  if (fromCategories != null) {
+    common.setValueByPath(toObject, ['categories'], fromCategories);
+  }
+
+  const fromScores = common.getValueByPath(fromObject, [
+    'safetyAttributes',
+    'scores',
+  ]);
+  if (fromScores != null) {
+    common.setValueByPath(toObject, ['scores'], fromScores);
+  }
+
+  return toObject;
+}
+
+function safetyAttributesFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.SafetyAttributes,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromCategories = common.getValueByPath(fromObject, [
+    'safetyAttributes',
+    'categories',
+  ]);
+  if (fromCategories != null) {
+    common.setValueByPath(toObject, ['categories'], fromCategories);
+  }
+
+  const fromScores = common.getValueByPath(fromObject, [
+    'safetyAttributes',
+    'scores',
+  ]);
+  if (fromScores != null) {
+    common.setValueByPath(toObject, ['scores'], fromScores);
+  }
+
+  return toObject;
+}
+
 function generatedImageFromMldev(
   apiClient: ApiClient,
   fromObject: types.GeneratedImage,
@@ -3573,6 +3623,15 @@ function generatedImageFromMldev(
       toObject,
       ['raiFilteredReason'],
       fromRaiFilteredReason,
+    );
+  }
+
+  const fromSafetyAttributes = common.getValueByPath(fromObject, ['_self']);
+  if (fromSafetyAttributes != null) {
+    common.setValueByPath(
+      toObject,
+      ['safetyAttributes'],
+      safetyAttributesFromMldev(apiClient, fromSafetyAttributes),
     );
   }
 
@@ -3602,6 +3661,15 @@ function generatedImageFromVertex(
       toObject,
       ['raiFilteredReason'],
       fromRaiFilteredReason,
+    );
+  }
+
+  const fromSafetyAttributes = common.getValueByPath(fromObject, ['_self']);
+  if (fromSafetyAttributes != null) {
+    common.setValueByPath(
+      toObject,
+      ['safetyAttributes'],
+      safetyAttributesFromVertex(apiClient, fromSafetyAttributes),
     );
   }
 
