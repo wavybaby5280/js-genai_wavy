@@ -110,31 +110,9 @@ export class Files extends BaseModule {
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      const body = listFilesParametersToVertex(this.apiClient, params);
-      path = common.formatMap('None', body['_url'] as Record<string, unknown>);
-      queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
-      delete body['_url'];
-      delete body['_query'];
-
-      response = this.apiClient
-        .request({
-          path: path,
-          queryParams: queryParams,
-          body: JSON.stringify(body),
-          httpMethod: 'GET',
-          httpOptions: params.config?.httpOptions,
-        })
-        .then((httpResponse) => {
-          return httpResponse.json();
-        }) as Promise<types.ListFilesResponse>;
-
-      return response.then((apiResponse) => {
-        const resp = listFilesResponseFromVertex();
-        const typedResp = new types.ListFilesResponse();
-        Object.assign(typedResp, resp);
-        return typedResp;
-      });
+      throw new Error(
+        'This method is only supported by the Gemini Developer API.',
+      );
     } else {
       const body = listFilesParametersToMldev(this.apiClient, params);
       path = common.formatMap('files', body['_url'] as Record<string, unknown>);
@@ -171,31 +149,9 @@ export class Files extends BaseModule {
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      const body = createFileParametersToVertex(this.apiClient, params);
-      path = common.formatMap('', body['_url'] as Record<string, unknown>);
-      queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
-      delete body['_url'];
-      delete body['_query'];
-
-      response = this.apiClient
-        .request({
-          path: path,
-          queryParams: queryParams,
-          body: JSON.stringify(body),
-          httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-        })
-        .then((httpResponse) => {
-          return httpResponse.json();
-        }) as Promise<types.CreateFileResponse>;
-
-      return response.then((apiResponse) => {
-        const resp = createFileResponseFromVertex(this.apiClient, apiResponse);
-        const typedResp = new types.CreateFileResponse();
-        Object.assign(typedResp, resp);
-        return typedResp;
-      });
+      throw new Error(
+        'This method is only supported by the Gemini Developer API.',
+      );
     } else {
       const body = createFileParametersToMldev(this.apiClient, params);
       path = common.formatMap(
@@ -248,30 +204,9 @@ export class Files extends BaseModule {
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
-      const body = getFileParametersToVertex(this.apiClient, params);
-      path = common.formatMap('None', body['_url'] as Record<string, unknown>);
-      queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
-      delete body['_url'];
-      delete body['_query'];
-
-      response = this.apiClient
-        .request({
-          path: path,
-          queryParams: queryParams,
-          body: JSON.stringify(body),
-          httpMethod: 'GET',
-          httpOptions: params.config?.httpOptions,
-        })
-        .then((httpResponse) => {
-          return httpResponse.json();
-        }) as Promise<types.File>;
-
-      return response.then((apiResponse) => {
-        const resp = fileFromVertex();
-
-        return resp as types.File;
-      });
+      throw new Error(
+        'This method is only supported by the Gemini Developer API.',
+      );
     } else {
       const body = getFileParametersToMldev(this.apiClient, params);
       path = common.formatMap(

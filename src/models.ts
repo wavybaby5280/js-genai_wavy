@@ -216,7 +216,7 @@ export class Models extends BaseModule {
           Object.assign(typedResp, resp);
           yield typedResp;
         }
-      }) as Promise<AsyncGenerator<types.GenerateContentResponse>>;
+      });
     } else {
       const body = generateContentParametersToMldev(this.apiClient, params);
       path = common.formatMap(
@@ -573,34 +573,7 @@ export class Models extends BaseModule {
         return typedResp;
       });
     } else {
-      const body = computeTokensParametersToMldev(this.apiClient, params);
-      path = common.formatMap('None', body['_url'] as Record<string, unknown>);
-      queryParams = body['_query'] as Record<string, string>;
-      delete body['config'];
-      delete body['_url'];
-      delete body['_query'];
-
-      response = this.apiClient
-        .request({
-          path: path,
-          queryParams: queryParams,
-          body: JSON.stringify(body),
-          httpMethod: 'POST',
-          httpOptions: params.config?.httpOptions,
-        })
-        .then((httpResponse) => {
-          return httpResponse.json();
-        }) as Promise<types.ComputeTokensResponse>;
-
-      return response.then((apiResponse) => {
-        const resp = computeTokensResponseFromMldev(
-          this.apiClient,
-          apiResponse,
-        );
-        const typedResp = new types.ComputeTokensResponse();
-        Object.assign(typedResp, resp);
-        return typedResp;
-      });
+      throw new Error('This method is only supported by the Vertex AI.');
     }
   }
 }
