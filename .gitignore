@@ -1,0 +1,10 @@
+*.tgz
+*.swp
+
+dist/**/*
+temp/**/*
+
+node_modules
+
+samples/build/**/*
+samples/web/dist/**/*
