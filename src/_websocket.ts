@@ -6,8 +6,13 @@
 
 export interface WebSocketCallbacks {
   onopen: () => void;
+  // Following eslint rules are disabled because the callback types depend on
+  // the implementation of the websocket.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onerror: (e: any) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onmessage: (e: any) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onclose: (e: any) => void;
 }
 
