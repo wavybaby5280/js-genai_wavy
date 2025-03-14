@@ -64,30 +64,31 @@ main();
 The package contents are also available unzipped in the
 `package/` directory of the bucket, so an equivalent web example is:
 
-```
+```html
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Using My Package</title>
-</head>
-<body>
+  </head>
+  <body>
     <script type="module">
-        import {GoogleGenAI, Type} from 'dist/web/index.mjs';
-        const ai = new GoogleGenAI({apiKey:"YOUR_API_KEY"});
+      import {GoogleGenAI} from 'https://cdn.jsdelivr.net/npm/@google/genai@latest/+esm'
 
-        async function main() {
-          const response = await ai.models.generateContent({
-            model: 'gemini-2.0-flash-001',
-            contents: 'Why is the sky blue?',
-          });
-          console.log(response.text());
-        }
+          const ai = new GoogleGenAI({apiKey:"GEMINI_API_KEY"});
 
-        main();
+          async function main() {
+            const response = await ai.models.generateContent({
+              model: 'gemini-2.0-flash-001',
+              contents: 'Why is the sky blue?',
+            });
+            console.log(response.text);
+          }
+
+          main();
     </script>
-</body>
+  </body>
 </html>
 ```
 
