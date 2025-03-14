@@ -65,6 +65,11 @@ export class GoogleGenAI {
       throw new Error('An API Key must be set when running in a browser');
     }
     this.vertexai = options.vertexai ?? false;
+    if (this.vertexai) {
+      throw new Error(
+        "VertexAI browser support is not yet implemented, it's coming soon!",
+      );
+    }
     this.apiKey = options.apiKey;
     this.apiVersion = options.apiVersion;
     const auth = new WebAuth(this.apiKey);
