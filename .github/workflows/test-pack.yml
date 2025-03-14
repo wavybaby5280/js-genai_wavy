@@ -24,6 +24,6 @@ jobs:
         cache: 'npm'
         cache-dependency-path: |
           package-lock.json
-          samples/package-lock.json
+          sdk-samples/package-lock.json
     - run: npm ci
     - run: test/packaging/test_packaging.sh

@@ -7,8 +7,7 @@
       "bump-patch-for-minor-pre-major": true,
       "draft": false,
       "prerelease": false,
-      "extra-files": ["src/_api_client.ts"],
-      "exclude-paths": ["samples/package.json"]
+      "extra-files": ["src/_api_client.ts"]
     }
   },
   "include-component-in-tag": false,

@@ -8,7 +8,7 @@ npm install
 npm run build
 
 # Build the samples
-cd samples
+cd sdk-samples
 npm install
 npm run build
 ```

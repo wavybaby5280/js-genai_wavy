@@ -26,7 +26,7 @@ jobs:
     - run: npm run build
     - run: npm run unit-test
     - run: |
-        cd samples
+        cd sdk-samples
         npm install
         npm run build
 
