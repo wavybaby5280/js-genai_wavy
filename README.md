@@ -15,11 +15,13 @@ and [Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/over
 
 The Google Gen AI SDK is designed to work with Gemini 2.0 features.
 
-> [!CAUTION] **Experimental SDK:** This SDK is under active development and may
-  experience breaking changes.
+> [!CAUTION]
+> **Experimental SDK:** This SDK is under active development and
+> may experience breaking changes.
 
-> [!CAUTION] **API Key Security:** Avoid exposing API keys in client-side code.
-  Use server-side implementations in production environments.
+> [!CAUTION]
+> **API Key Security:** Avoid exposing API keys in client-side code.
+> Use server-side implementations in production environments.
 
 
 ## Prerequisites
