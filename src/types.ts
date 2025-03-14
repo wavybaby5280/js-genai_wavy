@@ -331,20 +331,6 @@ export function createPartFromBase64(data: string, mimeType: string): Part {
   };
 }
 /**
- * Creates a `Part` object from the `startOffset` and `endOffset` of a `VideoMetadata` object.
- */
-export function createPartFromVideoMetadata(
-  startOffset: string,
-  endOffset: string,
-): Part {
-  return {
-    videoMetadata: {
-      startOffset: startOffset,
-      endOffset: endOffset,
-    },
-  };
-}
-/**
  * Creates a `Part` object from the `outcome` and `output` of a `CodeExecutionResult` object.
  */
 export function createPartFromCodeExecutionResult(

@@ -275,9 +275,6 @@ export function createPartFromText(text: string): Part;
 export function createPartFromUri(uri: string, mimeType: string): Part;
 
 // @public
-export function createPartFromVideoMetadata(startOffset: string, endOffset: string): Part;
-
-// @public
 export function createUserContent(partOrString: PartListUnion | string): Content;
 
 // @public

@@ -19,7 +19,6 @@ import {
   createPartFromFunctionResponse,
   createPartFromText,
   createPartFromUri,
-  createPartFromVideoMetadata,
   createUserContent,
 } from '../../src/types';
 
@@ -361,18 +360,6 @@ describe('createPart usability functions', () => {
       inlineData: {
         data: 'dGVzdA==',
         mimeType: 'text/plain',
-      },
-    };
-
-    expect(part).toEqual(expectedPart);
-  });
-
-  it('createPartFromVideoMetadata should create a video metadata part', () => {
-    const part = createPartFromVideoMetadata('0:00:01', '0:00:02');
-    const expectedPart: Part = {
-      videoMetadata: {
-        startOffset: '0:00:01',
-        endOffset: '0:00:02',
       },
     };
 
