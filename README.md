@@ -27,7 +27,6 @@ The Google Gen AI SDK is designed to work with Gemini 2.0 features.
 ## Prerequisites
 
 * Node.js version 18 or later
-* `pnpm` or `npm`
 
 ## Installation
 
