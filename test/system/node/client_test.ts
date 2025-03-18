@@ -7,9 +7,9 @@
 import {fail} from 'assert';
 import {GoogleAuthOptions} from 'google-auth-library';
 
-import {createZeroFilledTempFile} from '../../../src/_generate_test_file';
 import {GoogleGenAI} from '../../../src/node/node_client';
 import {GenerateContentResponse, Part} from '../../../src/types';
+import {createZeroFilledTempFile} from '../../_generate_test_file';
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;

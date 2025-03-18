@@ -6,9 +6,9 @@
 
 import {fail} from 'assert';
 
-import {createZeroFilledTempFile} from '../../../src/_generate_test_file';
 import {GenerateContentResponse} from '../../../src/types';
 import {GoogleGenAI} from '../../../src/web/web_client';
+import {createZeroFilledTempFile} from '../../_generate_test_file';
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;

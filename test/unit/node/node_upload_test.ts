@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {createZeroFilledTempFile} from '../../../src/_generate_test_file';
 import {GoogleGenAI} from '../../../src/node/node_client';
+import {createZeroFilledTempFile} from '../../_generate_test_file';
 
 const DEFAULT_CHUNK_SIZE = 1024 * 1024 * 8; // bytes
 const TEST_FILE_SIZE = 1024 * 1024 * 30; // bytes

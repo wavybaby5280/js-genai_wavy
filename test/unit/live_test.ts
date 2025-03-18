@@ -5,7 +5,6 @@
  */
 
 import {ApiClient, SDK_VERSION} from '../../src/_api_client';
-import {FakeAuth} from '../../src/_fake_auth';
 import {
   WebSocket,
   WebSocketCallbacks,
@@ -14,6 +13,7 @@ import {
 import {CrossUploader} from '../../src/cross/_cross_uploader';
 import {Live} from '../../src/live';
 import * as types from '../../src/types';
+import {FakeAuth} from '../_fake_auth';
 
 class FakeWebSocketFactory implements WebSocketFactory {
   create(

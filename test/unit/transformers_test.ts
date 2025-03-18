@@ -5,7 +5,6 @@
  */
 
 import {ApiClient} from '../../src/_api_client';
-import {FakeAuth} from '../../src/_fake_auth';
 import {
   tContent,
   tContents,
@@ -17,6 +16,7 @@ import {
   tTool,
 } from '../../src/_transformers';
 import {CrossUploader} from '../../src/cross/_cross_uploader';
+import {FakeAuth} from '../_fake_auth';
 
 describe('tModel', () => {
   it('empty string', () => {

@@ -7,9 +7,9 @@
 import {Readable} from 'stream';
 
 import {ApiClient} from '../../src/_api_client';
-import {FakeAuth} from '../../src/_fake_auth';
 import {CrossUploader} from '../../src/cross/_cross_uploader';
 import * as types from '../../src/types';
+import {FakeAuth} from '../_fake_auth';
 
 const fetchOkOptions = {
   status: 200,
