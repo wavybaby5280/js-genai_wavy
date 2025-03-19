@@ -665,6 +665,11 @@ export class Live {
   }
 }
 
+const defaultLiveSendClientContentParamerters: types.LiveSendClientContentParameters =
+  {
+    turnComplete: true,
+  };
+
 /**
    Represents a connection to the API.
 
@@ -770,8 +775,9 @@ export class Session {
         `turnComplete`.
 
       - `turns` will be converted to a `Content[]`
-      - `turnComplete: true` indicates that you are done sending content and
-    expect a response.
+      - `turnComplete: true` [default] indicates that you are done sending
+        content and expect a response. If `turnComplete: false`, the server
+        will wait for additional messages before starting generation.
 
     @experimental
 
@@ -812,11 +818,11 @@ export class Session {
     @experimental
    */
   sendClientContent(params: types.LiveSendClientContentParameters) {
-    if (params.turns == null && params.turnComplete == null) {
-      params = {
-        turnComplete: true,
-      };
-    }
+    params = {
+      ...defaultLiveSendClientContentParamerters,
+      ...params,
+    };
+
     const clientMessage: types.LiveClientMessage = this.tLiveClientContent(
       this.apiClient,
       params,

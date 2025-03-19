@@ -64,7 +64,7 @@ async function live(client: GoogleGenAI) {
   const simple = 'Hello world';
   console.log('-'.repeat(80));
   console.log(`Sent: ${simple}`);
-  session.sendClientContent({turns: simple, turnComplete: true});
+  session.sendClientContent({turns: simple});
 
   await handleTurn();
 
@@ -80,7 +80,7 @@ async function live(client: GoogleGenAI) {
   ];
   console.log('-'.repeat(80));
   console.log(`Sent: ${turns}`);
-  session.sendClientContent({turns: turns, turnComplete: true});
+  session.sendClientContent({turns: turns});
 
   await handleTurn();
 
