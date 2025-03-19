@@ -122,7 +122,7 @@ export class Chats {
    * @remarks
    * The config in the params will be used for all requests within the chat
    * session unless overridden by a per-request `config` in
-   * {@link ./types.SendMessageParameters}.
+   * @see {@link types.SendMessageParameters#config}.
    *
    * @param params - Parameters for creating a chat session.
    * @returns A new chat session.
