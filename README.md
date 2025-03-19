@@ -8,16 +8,16 @@
 
 ----------------------
 
-The Google Gen AI JavaScript SDK is an **experimental SDK** designed for
+The Google Gen AI JavaScript SDK is designed for
 TypeScript and JavaScript developers to build applications powered by Gemini. The SDK
 supports both the [Gemini Developer API](https://ai.google.dev/gemini-api/docs)
 and [Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/overview).
 
 The Google Gen AI SDK is designed to work with Gemini 2.0 features.
 
-> [!CAUTION]
-> **Experimental SDK:** This SDK is under active development and
-> may experience breaking changes.
+> [!NOTE]
+> **SDK Preview:**
+> See: [Preview Launch](#preview-launch).
 
 > [!CAUTION]
 > **API Key Security:** Avoid exposing API keys in client-side code.
@@ -110,8 +110,9 @@ const ai = new GoogleGenAI({apiKey: 'GEMINI_API_KEY'});
 
 #### Browser
 
-> [!CAUTION] **API Key Security:** Avoid exposing API keys in client-side code.
-   Use server-side implementations in production environments.
+> [!CAUTION]
+> **API Key Security:** Avoid exposing API keys in client-side code.
+>   Use server-side implementations in production environments.
 
 In the browser the initialization code is identical:
 
@@ -244,3 +245,11 @@ async function main() {
 
 main();
 ```
+
+
+## Preview Launch
+
+The SDK is curently in a preview launch stage, per [Google's launch stages](https://cloud.google.com/products?hl=en#section-22) this means:
+
+> At Preview, products or features are ready for testing by customers. Preview offerings are often publicly announced, but are not necessarily feature-complete, and no SLAs or technical support commitments are provided for these. Unless stated otherwise by Google, Preview offerings are intended for use in test environments only. The average Preview stage lasts about six months.
+
