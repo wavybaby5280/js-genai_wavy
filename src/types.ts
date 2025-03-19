@@ -2265,7 +2265,7 @@ export interface SendMessageParameters {
 }
 
 /** Parameters for sending client content to the live API. */
-export interface SessionSendClientContentParameters {
+export interface LiveSendClientContentParameters {
   /** Client content to send to the session. */
   turns?: ContentListUnion;
   /** If true, indicates that the server content generation should start with
@@ -2275,15 +2275,15 @@ export interface SessionSendClientContentParameters {
 }
 
 /** Parameters for sending realtime input to the live API. */
-export interface SessionSendRealtimeInputParameters {
+export interface LiveSendRealtimeInputParameters {
   /** Realtime input to send to the session. */
   media: Blob;
 }
 
 /** Parameters for sending tool responses to the live API. */
-export class SessionSendToolResponseParameters {
+export class LiveSendToolResponseParameters {
   /** Tool responses to send to the session. */
-  functionResponses: FunctionResponse | FunctionResponse[] = [];
+  functionResponses: FunctionResponse[] | FunctionResponse = [];
 }
 
 export type PartUnion = Part | string;

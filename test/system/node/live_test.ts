@@ -53,21 +53,21 @@ class SessionWithQueue {
     });
   }
 
-  sendClientContent(params: types.SessionSendClientContentParameters) {
+  sendClientContent(params: types.LiveSendClientContentParameters) {
     if (this.session === null) {
       throw new Error('Session is uninitialized. Cannot send client content.');
     }
     return this.session.sendClientContent(params);
   }
 
-  sendRealtimeInput(params: types.SessionSendRealtimeInputParameters) {
+  sendRealtimeInput(params: types.LiveSendRealtimeInputParameters) {
     if (this.session === null) {
       throw new Error('Session is uninitialized. Cannot send client content.');
     }
     return this.session.sendRealtimeInput(params);
   }
 
-  sendToolResponse(params: types.SessionSendToolResponseParameters) {
+  sendToolResponse(params: types.LiveSendToolResponseParameters) {
     if (this.session === null) {
       throw new Error('Session is uninitialized. Cannot send client content.');
     }

@@ -678,7 +678,7 @@ export class Session {
 
   private tLiveClientContent(
     apiClient: ApiClient,
-    params: types.SessionSendClientContentParameters,
+    params: types.LiveSendClientContentParameters,
   ): types.LiveClientMessage {
     if (params.turns !== null && params.turns !== undefined) {
       let contents: types.Content[] = [];
@@ -709,7 +709,7 @@ export class Session {
 
   private tLiveClientRealtimeInput(
     apiClient: ApiClient,
-    params: types.SessionSendRealtimeInputParameters,
+    params: types.LiveSendRealtimeInputParameters,
   ): types.LiveClientMessage {
     let clientMessage: types.LiveClientMessage = {};
     if (!('media' in params) || !params.media) {
@@ -725,7 +725,7 @@ export class Session {
 
   private tLiveClienttToolResponse(
     apiClient: ApiClient,
-    params: types.SessionSendToolResponseParameters,
+    params: types.LiveSendToolResponseParameters,
   ): types.LiveClientMessage {
     let functionResponses: types.FunctionResponse[] = [];
 
@@ -811,7 +811,7 @@ export class Session {
       ```
     @experimental
    */
-  sendClientContent(params: types.SessionSendClientContentParameters) {
+  sendClientContent(params: types.LiveSendClientContentParameters) {
     if (params.turns == null && params.turnComplete == null) {
       params = {
         turnComplete: true,
@@ -846,7 +846,7 @@ export class Session {
     Note: The Call signature expects a `Blob` object, but only a subset
     of audio and image mimetypes are allowed.
    */
-  sendRealtimeInput(params: types.SessionSendRealtimeInputParameters) {
+  sendRealtimeInput(params: types.LiveSendRealtimeInputParameters) {
     if (params.media == null) {
       throw new Error('Media is required.');
     }
@@ -870,7 +870,7 @@ export class Session {
 
     @experimental
    */
-  sendToolResponse(params: types.SessionSendToolResponseParameters) {
+  sendToolResponse(params: types.LiveSendToolResponseParameters) {
     if (params.functionResponses == null) {
       throw new Error('Tool response parameters are required.');
     }

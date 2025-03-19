@@ -937,6 +937,22 @@ export interface LiveConnectParameters {
 }
 
 // @public
+export interface LiveSendClientContentParameters {
+    turnComplete?: boolean;
+    turns?: ContentListUnion;
+}
+
+// @public
+export interface LiveSendRealtimeInputParameters {
+    media: Blob_2;
+}
+
+// @public
+export class LiveSendToolResponseParameters {
+    functionResponses: FunctionResponse[] | FunctionResponse;
+}
+
+// @public
 export interface LiveServerContent {
     interrupted?: boolean;
     modelTurn?: Content;
@@ -1252,25 +1268,9 @@ export class Session {
     //
     // (undocumented)
     readonly conn: WebSocket_2;
-    sendClientContent(params: types.SessionSendClientContentParameters): void;
-    sendRealtimeInput(params: types.SessionSendRealtimeInputParameters): void;
-    sendToolResponse(params: types.SessionSendToolResponseParameters): void;
-}
-
-// @public
-export interface SessionSendClientContentParameters {
-    turnComplete?: boolean;
-    turns?: ContentListUnion;
-}
-
-// @public
-export interface SessionSendRealtimeInputParameters {
-    media: Blob_2;
-}
-
-// @public
-export class SessionSendToolResponseParameters {
-    functionResponses: FunctionResponse | FunctionResponse[];
+    sendClientContent(params: types.LiveSendClientContentParameters): void;
+    sendRealtimeInput(params: types.LiveSendRealtimeInputParameters): void;
+    sendToolResponse(params: types.LiveSendToolResponseParameters): void;
 }
 
 // @public
