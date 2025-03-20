@@ -6,13 +6,13 @@ import UploadFile from './UploadFile';
 
 function App() {
   const [apiKey, setApiKey] = useState('');
-  const [vertexai, setVertexai] = useState(false);
+  const [vertexai, setVertexai] = useState<boolean>(false);
 
   const handleKeyChange = (event: ChangeEvent<HTMLInputElement>) => {
     setApiKey(event.target.value);
   };
 
-  const handleVertexaiChange = (value) => {
+  const handleVertexaiChange = (value: boolean) => {
     setVertexai(value);
   };
 
@@ -43,7 +43,7 @@ function App() {
             <div style={{display: 'flex', alignItems: 'center'}}>
               <input
                 type="radio"
-                value={false}
+                value="false"
                 checked={vertexai === false}
                 onChange={() => handleVertexaiChange(false)}
               />
@@ -52,7 +52,7 @@ function App() {
             <div style={{display: 'flex', alignItems: 'center'}}>
               <input
                 type="radio"
-                value={true}
+                value="true"
                 checked={vertexai === true}
                 onChange={() => handleVertexaiChange(true)}
               />

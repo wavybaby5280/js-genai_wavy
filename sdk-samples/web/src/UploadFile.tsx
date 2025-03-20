@@ -26,7 +26,9 @@ export default function UploadFile({
         setUploadedFile(response);
       } catch (error) {
         console.error('Upload error:', error);
-        setModelResponse(`Upload failed with error: ${error.message}`);
+        setModelResponse(
+          `Upload failed with error: ${(error as Error).message}`,
+        );
       }
     }
   };

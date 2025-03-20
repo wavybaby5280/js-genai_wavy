@@ -19,8 +19,9 @@ export default function TextAndImage({
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
   const [prompt, setPrompt] = useState('');
   const [inputImage, setInputImage] = useState<File | null>(null);
-  const [modelResponse, setModelResponse] =
-    useState<GenerateContentResponse | null>(null);
+  const [modelResponse, setModelResponse] = useState<
+    GenerateContentResponse | string | null
+  >(null);
 
   const ai = new GoogleGenAI({vertexai: vertexai, apiKey: apiKey});
 
@@ -56,7 +57,9 @@ export default function TextAndImage({
       setModelResponse(response);
     } catch (error) {
       console.error('Error generating content:', error);
-      setModelResponse(`Generate content failed with error: ${error.message}`);
+      setModelResponse(
+        `Generate content failed with error: ${(error as Error).message}`,
+      );
     }
   };
 
@@ -92,7 +95,9 @@ export default function TextAndImage({
           Send
         </button>
       </div>
-      {modelResponse && modelResponse.candidates ? (
+      {modelResponse &&
+      modelResponse instanceof GenerateContentResponse &&
+      modelResponse.candidates ? (
         <div className="mt-4">
           <h2>Response:</h2>
           {modelResponse.candidates.map((candidate, candidateIndex) => (
@@ -117,7 +122,8 @@ export default function TextAndImage({
           ))}
         </div>
       ) : (
-        modelResponse && (
+        modelResponse &&
+        typeof modelResponse === 'string' && (
           <div className="mt-4">
             <h2>Response:</h2>
             {modelResponse}
