@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {NodeUploader} from '../../../src/node/_node_uploader';
-import {GoogleGenAI} from '../../../src/node/node_client';
+import {NodeUploader} from '../../../src/g3_node/_g3_node_uploader';
+import {GoogleGenAI} from '../../../src/g3_node/g3_node_client';
 
 describe('Client', () => {
   afterEach(() => {

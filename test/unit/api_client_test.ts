@@ -279,6 +279,25 @@ describe('ApiClient', () => {
       expect(client.getApiVersion()).toBe('v1beta1');
     });
 
+    it('should not have api key if project/location is provided for vertexai', () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'vertex-project',
+        location: 'vertex-location',
+        vertexai: true,
+        apiVersion: 'v1beta1',
+        apiKey: 'apikey-from-opts',
+        uploader: new CrossUploader(),
+      });
+      expect(client.isVertexAI()).toBe(true);
+      expect(client.getProject()).toBe('vertex-project');
+      expect(client.getLocation()).toBe('vertex-location');
+      expect(client.getApiKey()).toBeUndefined();
+      expect(client.getRequestUrl()).toBe(
+        'https://vertex-location-aiplatform.googleapis.com/v1beta1',
+      );
+      expect(client.getApiVersion()).toBe('v1beta1');
+    });
     it('should use default value if not provided', () => {
       const client = new ApiClient({
         auth: new FakeAuth(),
@@ -1013,6 +1032,50 @@ describe('ApiClient', () => {
         },
       });
     });
+    it('should use global endpoint for api keys on vertexai', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth('test-api-key'),
+        vertexai: true,
+        apiKey: 'test-api-key',
+        uploader: new CrossUploader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify(mockGenerateContentResponse),
+            fetchOkOptions,
+          ),
+        ),
+      );
+      await client.requestStream({path: 'test-path', httpMethod: 'POST'});
+      const fetchArgs = fetchSpy.calls.first().args;
+      expect(fetchArgs[0]).toBe(
+        'https://aiplatform.googleapis.com/v1beta1/test-path?alt=sse',
+      );
+    });
+    it('should use project resource path when project is provided', async () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        vertexai: true,
+        project: 'test-project',
+        location: 'test-location',
+        uploader: new CrossUploader(),
+      });
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify(mockGenerateContentResponse),
+            fetchOkOptions,
+          ),
+        ),
+      );
+      await client.requestStream({path: 'test-path', httpMethod: 'POST'});
+      const fetchArgs = fetchSpy.calls.first().args;
+      expect(fetchArgs[0]).toBe(
+        'https://test-location-aiplatform.googleapis.com/v1beta1/projects' +
+          '/test-project/locations/test-location/test-path?alt=sse',
+      );
+    });
     it('should include AbortSignal when timeout is set', async () => {
       const client = new ApiClient({
         auth: new FakeAuth('test-api-key'),
@@ -1030,6 +1093,9 @@ describe('ApiClient', () => {
       );
       await client.requestStream({path: 'test-path', httpMethod: 'POST'});
       const fetchArgs = fetchSpy.calls.first().args;
+      expect(fetchArgs[0]).toBe(
+        'https://generativelanguage.googleapis.com/v1beta/test-path?alt=sse',
+      );
       // @ts-expect-error TS2532: Object is possibly 'undefined'.
       expect(fetchArgs[1].signal instanceof AbortSignal).toBeTrue();
       // @ts-expect-error TS2532: Object is possibly 'undefined'.

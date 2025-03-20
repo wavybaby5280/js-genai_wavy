@@ -166,8 +166,15 @@ export class ApiClient {
     if (this.clientOptions.vertexai) {
       initHttpOptions.apiVersion =
         this.clientOptions.apiVersion ?? VERTEX_AI_API_DEFAULT_VERSION;
-      initHttpOptions.baseUrl = `https://${this.clientOptions.location}-aiplatform.googleapis.com/`;
-      this.clientOptions.apiKey = undefined; // unset API key.
+      // Assume that proj/api key validation occurs before they are passed in.
+      if (this.getProject() || this.getLocation()) {
+        initHttpOptions.baseUrl = `https://${this.clientOptions.location}-aiplatform.googleapis.com/`;
+        this.clientOptions.apiKey = undefined; // unset API key.
+      } else {
+        initHttpOptions.baseUrl = `https://aiplatform.googleapis.com/`;
+        this.clientOptions.project = undefined; // unset project.
+        this.clientOptions.location = undefined; // unset location.
+      }
     } else {
       initHttpOptions.apiVersion =
         this.clientOptions.apiVersion ?? GOOGLE_AI_API_DEFAULT_VERSION;
@@ -278,7 +285,11 @@ export class ApiClient {
 
   private constructUrl(path: string, httpOptions: HttpOptions): URL {
     const urlElement: Array<string> = [this.getRequestUrlInternal(httpOptions)];
-    if (this.clientOptions.vertexai && !path.startsWith('projects/')) {
+    if (
+      this.clientOptions.vertexai &&
+      !this.clientOptions.apiKey &&
+      !path.startsWith('projects/')
+    ) {
       urlElement.push(this.getBaseResourcePath());
     }
     if (path !== '') {

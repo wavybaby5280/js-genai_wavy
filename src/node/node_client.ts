@@ -24,13 +24,22 @@ const LANGUAGE_LABEL_PREFIX = 'gl-node/';
  * The Google GenAI SDK.
  *
  * @remarks
- * Provides access to the GenAI features through either the {@link https://cloud.google.com/vertex-ai/docs/reference/rest | Gemini API}
- * or the {@link https://cloud.google.com/vertex-ai/docs/reference/rest | Vertex AI API}.
+ * Provides access to the GenAI features through either the {@link
+ * https://cloud.google.com/vertex-ai/docs/reference/rest | Gemini API} or
+ * the {@link https://cloud.google.com/vertex-ai/docs/reference/rest | Vertex AI
+ * API}.
  *
- * The {@link GoogleGenAIOptions.vertexai} value determines which of the API services to use.
+ * The {@link GoogleGenAIOptions.vertexai} value determines which of the API
+ * services to use.
  *
- * When using the Gemini API, a {@link GoogleGenAIOptions.apiKey} must also be set,
- * when using Vertex AI {@link GoogleGenAIOptions.project} and {@link GoogleGenAIOptions.location} must also be set.
+ * When using the Gemini API, a {@link GoogleGenAIOptions.apiKey} must also be
+ * set. When using Vertex AI, both {@link GoogleGenAIOptions.project} and {@link
+ * GoogleGenAIOptions.location} must be set, or a {@link
+ * GoogleGenAIOptions.apiKey} must be set when using Express Mode.
+ *
+ * Explicitly passed in values in {@link GoogleGenAIOptions} will always take
+ * precedence over environment variables. If both project/location and api_key
+ * exist in the environment variables, the project/location will be used.
  *
  * @example
  * Initializing the SDK for using the Gemini API:
@@ -66,16 +75,51 @@ export class GoogleGenAI {
   readonly files: Files;
 
   constructor(options: GoogleGenAIOptions) {
+    // Validate explicitly set initializer values.
+    if ((options.project || options.location) && options.apiKey) {
+      throw new Error(
+        'Project/location and API key are mutually exclusive in the client initializer.',
+      );
+    }
+
     this.vertexai =
       options.vertexai ?? getBooleanEnv('GOOGLE_GENAI_USE_VERTEXAI') ?? false;
-    // The tests currently assume that an API key is never set if vertexai is true.
-    // With Google Cloud Express an API key can be used with vertex.
-    // TODO: Set the API key also when vertexai is true.
-    if (!this.vertexai) {
-      this.apiKey = options.apiKey ?? getEnv('GOOGLE_API_KEY');
+    const envApiKey = getEnv('GOOGLE_API_KEY');
+    const envProject = getEnv('GOOGLE_CLOUD_PROJECT');
+    const envLocation = getEnv('GOOGLE_CLOUD_LOCATION');
+
+    this.apiKey = options.apiKey ?? envApiKey;
+    this.project = options.project ?? envProject;
+    this.location = options.location ?? envLocation;
+
+    // Handle when to use Vertex AI in express mode (api key)
+    if (options.vertexai) {
+      // Explicit api_key and explicit project/location already handled above.
+      if ((envProject || envLocation) && options.apiKey) {
+        // Explicit api_key takes precedence over implicit project/location.
+        console.debug(
+          'The user provided Vertex AI API key will take precedence over' +
+            ' the project/location from the environment variables.',
+        );
+        this.project = undefined;
+        this.location = undefined;
+      } else if ((options.project || options.location) && envApiKey) {
+        // Explicit project/location takes precedence over implicit api_key.
+        console.debug(
+          'The user provided project/location will take precedence over' +
+            ' the API key from the environment variables.',
+        );
+        this.apiKey = undefined;
+      } else if ((envProject || envLocation) && envApiKey) {
+        // Implicit project/location takes precedence over implicit api_key.
+        console.debug(
+          'The project/location from the environment variables will take' +
+            ' precedence over the API key from the environment variables.',
+        );
+        this.apiKey = undefined;
+      }
     }
-    this.project = options.project ?? getEnv('GOOGLE_CLOUD_PROJECT');
-    this.location = options.location ?? getEnv('GOOGLE_CLOUD_LOCATION');
+
     this.apiVersion = options.apiVersion;
     const auth = new NodeAuth({
       apiKey: this.apiKey,

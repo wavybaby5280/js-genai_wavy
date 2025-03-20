@@ -22,13 +22,18 @@ const LANGUAGE_LABEL_PREFIX = 'gl-node/';
  * The Google GenAI SDK.
  *
  * @remarks
- * Provides access to the GenAI features through either the {@link https://cloud.google.com/vertex-ai/docs/reference/rest | Gemini API}
- * or the {@link https://cloud.google.com/vertex-ai/docs/reference/rest | Vertex AI API}.
+ * Provides access to the GenAI features through either the {@link
+ * https://cloud.google.com/vertex-ai/docs/reference/rest | Gemini API} or
+ * the {@link https://cloud.google.com/vertex-ai/docs/reference/rest | Vertex AI
+ * API}.
  *
- * The {@link GoogleGenAIOptions.vertexai} value determines which of the API services to use.
+ * The {@link GoogleGenAIOptions.vertexai} value determines which of the API
+ * services to use.
  *
- * When using the Gemini API, a {@link GoogleGenAIOptions.apiKey} must also be set,
- * when using Vertex AI {@link GoogleGenAIOptions.project} and {@link GoogleGenAIOptions.location} must also be set.
+ * When using the Gemini API, a {@link GoogleGenAIOptions.apiKey} must also be
+ * set. When using Vertex AI, currently only {@link GoogleGenAIOptions.apiKey}
+ * is supported via Express mode. {@link GoogleGenAIOptions.project} and {@link
+ * GoogleGenAIOptions.location} should not be set.
  *
  * @example
  * Initializing the SDK for using the Gemini API:
@@ -64,12 +69,14 @@ export class GoogleGenAI {
     if (options.apiKey == null) {
       throw new Error('An API Key must be set when running in a browser');
     }
-    this.vertexai = options.vertexai ?? false;
-    if (this.vertexai) {
+    // Web client only supports API key mode for Vertex AI.
+    if (options.project || options.location) {
       throw new Error(
-        "VertexAI browser support is not yet implemented, it's coming soon!",
+        'Vertex AI project based authentication is not supported on browser runtimes. Please do not provide a project or location.',
       );
     }
+    this.vertexai = options.vertexai ?? false;
+
     this.apiKey = options.apiKey;
     this.apiVersion = options.apiVersion;
     const auth = new WebAuth(this.apiKey);

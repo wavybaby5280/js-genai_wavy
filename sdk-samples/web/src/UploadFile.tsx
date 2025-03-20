@@ -7,17 +7,27 @@ import {
 import {ChangeEvent, useState} from 'react';
 import './App.css';
 
-export default function UploadFile({apiKey}: {apiKey: string}) {
+export default function UploadFile({
+  apiKey,
+  vertexai,
+}: {
+  apiKey: string;
+  vertexai: boolean;
+}) {
   const [modelResponse, setModelResponse] = useState('');
   const [uploadedFile, setUploadedFile] = useState<File | null>(null); // Use File type
 
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       // Update uploaded file
-      const ai = new GoogleGenAI({vertexai: false, apiKey: apiKey});
-      const response = await ai.files.upload({file: event.target.files[0]});
-
-      setUploadedFile(response);
+      const ai = new GoogleGenAI({vertexai: vertexai, apiKey: apiKey});
+      try {
+        const response = await ai.files.upload({file: event.target.files[0]});
+        setUploadedFile(response);
+      } catch (error) {
+        console.error('Upload error:', error);
+        setModelResponse(`Upload failed with error: ${error.message}`);
+      }
     }
   };
 
@@ -69,21 +79,34 @@ export default function UploadFile({apiKey}: {apiKey: string}) {
 
   return (
     <>
-      <div className="card" style={{display: 'flex', alignItems: 'center'}}>
-        <h2 className="card-title">File upload sample</h2>
-        <form>
-          <label htmlFor="srcFile" style={{marginRight: '10px'}}>Upload file:</label>
-          <input
-            type="file"
-            id = "srcFile"
-            className="form-control"
-            onChange={handleFileUpload}
-            style={{marginRight: '10px'}}
-          />
-          <button type="button" className="btn btn-primary" onClick={handleDescribe}>Describe</button>
-        </form>
+      <div className="card">
+        <div>
+          <h2 className="card-title">File upload sample</h2>
+          <form>
+            <label htmlFor="srcFile" style={{marginRight: '10px'}}>
+              Upload file:
+            </label>
+            <input
+              type="file"
+              id="srcFile"
+              className="form-control"
+              onChange={handleFileUpload}
+              style={{marginRight: '10px'}}
+            />
+            <button
+              type="button"
+              style={{marginTop: '10px', marginBottom: '10px'}}
+              className="btn btn-primary"
+              onClick={handleDescribe}>
+              Describe
+            </button>
+          </form>
+        </div>
+        <label htmlFor="response" className="form-label">
+          Response:
+        </label>
+        <div className="card">{modelResponse ?? 'Response'}</div>
       </div>
-      <div className="card">{modelResponse ?? 'Response'}</div>
     </>
   );
 }

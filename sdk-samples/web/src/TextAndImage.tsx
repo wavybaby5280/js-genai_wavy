@@ -9,14 +9,20 @@ import {ChangeEvent, useState} from 'react';
 import './App.css';
 import {ImageUpload} from './ImageUpload';
 
-export default function TextAndImage({apiKey}: {apiKey: string}) {
+export default function TextAndImage({
+  apiKey,
+  vertexai,
+}: {
+  apiKey: string;
+  vertexai: boolean;
+}) {
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
   const [prompt, setPrompt] = useState('');
   const [inputImage, setInputImage] = useState<File | null>(null);
   const [modelResponse, setModelResponse] =
     useState<GenerateContentResponse | null>(null);
 
-  const ai = new GoogleGenAI({vertexai: false, apiKey: apiKey});
+  const ai = new GoogleGenAI({vertexai: vertexai, apiKey: apiKey});
 
   const handleUploadSuccess = (response: any) => {
     setUploadStatus('Image uploaded successfully!');
@@ -33,7 +39,7 @@ export default function TextAndImage({apiKey}: {apiKey: string}) {
       inputImage.uri == null ||
       inputImage.mimeType == null
     ) {
-      console.log('Missing input image');
+      console.log('Missing input image', inputImage);
       return;
     }
     const contents: ContentListUnion = [prompt];
@@ -50,7 +56,7 @@ export default function TextAndImage({apiKey}: {apiKey: string}) {
       setModelResponse(response);
     } catch (error) {
       console.error('Error generating content:', error);
-      setModelResponse(null);
+      setModelResponse(`Generate content failed with error: ${error.message}`);
     }
   };
 
@@ -60,27 +66,33 @@ export default function TextAndImage({apiKey}: {apiKey: string}) {
   };
 
   return (
-    <div className="container">
+    <div className="card">
       <h2 className="card-title">Text+Image -&gt; Text+Image Example</h2>
-      <ImageUpload
-        onUploadSuccess={handleUploadSuccess}
-        onUploadError={handleUploadError}
-        ai={ai}
-      />
-      <label htmlFor="prompt" className="form-label">
-        Prompt:
-      </label>
-      <textarea
-        className="form-control"
-        id="prompt"
-        onChange={handlePromptChange}
-      />
-      {uploadStatus && <p className="mt-3">{uploadStatus}</p>}
-      <button type="button" className="btn btn-primary" onClick={handleSend}>
-        Send
-      </button>
-
-      {modelResponse && modelResponse.candidates && (
+      <br />
+      <div>
+        <ImageUpload
+          onUploadSuccess={handleUploadSuccess}
+          onUploadError={handleUploadError}
+          ai={ai}
+        />
+        <label htmlFor="prompt" className="form-label">
+          Prompt:
+        </label>
+        <textarea
+          className="form-control"
+          id="prompt2"
+          onChange={handlePromptChange}
+        />
+        {uploadStatus && <p className="mt-3">{uploadStatus}</p>}
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={handleSend}
+          style={{marginTop: '10px', marginBottom: '10px'}}>
+          Send
+        </button>
+      </div>
+      {modelResponse && modelResponse.candidates ? (
         <div className="mt-4">
           <h2>Response:</h2>
           {modelResponse.candidates.map((candidate, candidateIndex) => (
@@ -104,6 +116,13 @@ export default function TextAndImage({apiKey}: {apiKey: string}) {
             </div>
           ))}
         </div>
+      ) : (
+        modelResponse && (
+          <div className="mt-4">
+            <h2>Response:</h2>
+            {modelResponse}
+          </div>
+        )
       )}
     </div>
   );
