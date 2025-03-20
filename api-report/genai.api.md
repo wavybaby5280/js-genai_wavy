@@ -524,8 +524,14 @@ export class GenerateContentResponsePromptFeedback {
 // @public
 export class GenerateContentResponseUsageMetadata {
     cachedContentTokenCount?: number;
+    cacheTokensDetails?: ModalityTokenCount[];
     candidatesTokenCount?: number;
+    candidatesTokensDetails?: ModalityTokenCount[];
     promptTokenCount?: number;
+    promptTokensDetails?: ModalityTokenCount[];
+    thoughtsTokenCount?: number;
+    toolUsePromptTokenCount?: number;
+    toolUsePromptTokensDetails?: ModalityTokenCount[];
     totalTokenCount?: number;
 }
 
@@ -1050,6 +1056,12 @@ export enum Modality {
     MODALITY_UNSPECIFIED = "MODALITY_UNSPECIFIED",
     // (undocumented)
     TEXT = "TEXT"
+}
+
+// @public
+export interface ModalityTokenCount {
+    modality?: Modality;
+    tokenCount?: number;
 }
 
 // @public (undocumented)
