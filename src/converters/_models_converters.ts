@@ -2999,6 +2999,11 @@ export function safetyAttributesFromMldev(
     common.setValueByPath(toObject, ['scores'], fromScores);
   }
 
+  const fromContentType = common.getValueByPath(fromObject, ['contentType']);
+  if (fromContentType != null) {
+    common.setValueByPath(toObject, ['contentType'], fromContentType);
+  }
+
   return toObject;
 }
 
@@ -3022,6 +3027,11 @@ export function safetyAttributesFromVertex(
   ]);
   if (fromScores != null) {
     common.setValueByPath(toObject, ['scores'], fromScores);
+  }
+
+  const fromContentType = common.getValueByPath(fromObject, ['contentType']);
+  if (fromContentType != null) {
+    common.setValueByPath(toObject, ['contentType'], fromContentType);
   }
 
   return toObject;
@@ -3131,6 +3141,17 @@ export function generateImagesResponseFromMldev(
     }
   }
 
+  const fromPositivePromptSafetyAttributes = common.getValueByPath(fromObject, [
+    'positivePromptSafetyAttributes',
+  ]);
+  if (fromPositivePromptSafetyAttributes != null) {
+    common.setValueByPath(
+      toObject,
+      ['positivePromptSafetyAttributes'],
+      safetyAttributesFromMldev(apiClient, fromPositivePromptSafetyAttributes),
+    );
+  }
+
   return toObject;
 }
 
@@ -3155,6 +3176,17 @@ export function generateImagesResponseFromVertex(
     } else {
       common.setValueByPath(toObject, ['generatedImages'], fromGeneratedImages);
     }
+  }
+
+  const fromPositivePromptSafetyAttributes = common.getValueByPath(fromObject, [
+    'positivePromptSafetyAttributes',
+  ]);
+  if (fromPositivePromptSafetyAttributes != null) {
+    common.setValueByPath(
+      toObject,
+      ['positivePromptSafetyAttributes'],
+      safetyAttributesFromVertex(apiClient, fromPositivePromptSafetyAttributes),
+    );
   }
 
   return toObject;

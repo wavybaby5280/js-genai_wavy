@@ -1356,8 +1356,9 @@ export interface GenerateImagesConfig {
   /** Allows generation of people by the model.
    */
   personGeneration?: PersonGeneration;
-  /** Whether to report the safety scores of each image in the response.
-   */
+  /** Whether to report the safety scores of each generated image and
+      the positive prompt in the response.
+       */
   includeSafetyAttributes?: boolean;
   /** Whether to include the Responsible AI filter reason if the image
       is filtered out of the response.
@@ -1416,6 +1417,9 @@ export interface SafetyAttributes {
   /** List of scores of each categories.
    */
   scores?: number[];
+  /** Internal use only.
+   */
+  contentType?: string;
 }
 
 /** An output image. */
@@ -1442,6 +1446,10 @@ export class GenerateImagesResponse {
   /** List of generated images.
    */
   generatedImages?: GeneratedImage[];
+  /** Safety attributes of the positive prompt. Only populated if
+      ``include_safety_attributes`` is set to True.
+       */
+  positivePromptSafetyAttributes?: SafetyAttributes;
 }
 
 /** Generation config. */
