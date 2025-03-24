@@ -355,6 +355,46 @@ export function getFileParametersToVertex(
   return toObject;
 }
 
+export function deleteFileParametersToMldev(
+  apiClient: ApiClient,
+  fromObject: types.DeleteFileParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromName = common.getValueByPath(fromObject, ['name']);
+  if (fromName != null) {
+    common.setValueByPath(
+      toObject,
+      ['_url', 'file'],
+      t.tFileName(apiClient, fromName),
+    );
+  }
+
+  const fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig != null) {
+    common.setValueByPath(toObject, ['config'], fromConfig);
+  }
+
+  return toObject;
+}
+
+export function deleteFileParametersToVertex(
+  apiClient: ApiClient,
+  fromObject: types.DeleteFileParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (common.getValueByPath(fromObject, ['name']) !== undefined) {
+    throw new Error('name parameter is not supported in Vertex AI.');
+  }
+
+  if (common.getValueByPath(fromObject, ['config']) !== undefined) {
+    throw new Error('config parameter is not supported in Vertex AI.');
+  }
+
+  return toObject;
+}
+
 export function fileStatusFromMldev(
   apiClient: ApiClient,
   fromObject: types.FileStatus,
@@ -539,6 +579,18 @@ export function createFileResponseFromVertex(
   if (fromHttpHeaders != null) {
     common.setValueByPath(toObject, ['httpHeaders'], fromHttpHeaders);
   }
+
+  return toObject;
+}
+
+export function deleteFileResponseFromMldev(): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  return toObject;
+}
+
+export function deleteFileResponseFromVertex(): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   return toObject;
 }
