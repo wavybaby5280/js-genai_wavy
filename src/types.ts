@@ -540,10 +540,12 @@ export declare interface GoogleSearchRetrieval {
   dynamicRetrievalConfig?: DynamicRetrievalConfig;
 }
 
-/** Retrieve from Vertex AI Search datastore for grounding. See https://cloud.google.com/products/agent-builder */
+/** Retrieve from Vertex AI Search datastore or engine for grounding. datastore and engine are mutually exclusive. See https://cloud.google.com/products/agent-builder */
 export declare interface VertexAISearch {
-  /** Required. Fully-qualified Vertex AI Search data store resource ID. Format: `projects/{project}/locations/{location}/collections/{collection}/dataStores/{dataStore}` */
+  /** Optional. Fully-qualified Vertex AI Search data store resource ID. Format: `projects/{project}/locations/{location}/collections/{collection}/dataStores/{dataStore}` */
   datastore?: string;
+  /** Optional. Fully-qualified Vertex AI Search engine resource ID. Format: `projects/{project}/locations/{location}/collections/{collection}/engines/{engine}` */
+  engine?: string;
 }
 
 /** The definition of the Rag resource. */

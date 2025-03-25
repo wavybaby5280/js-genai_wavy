@@ -1466,6 +1466,7 @@ export interface UpscaleImageParameters {
 // @public
 export interface VertexAISearch {
     datastore?: string;
+    engine?: string;
 }
 
 // @public
