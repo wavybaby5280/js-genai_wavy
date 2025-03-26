@@ -360,7 +360,7 @@ interface File_2 {
     mimeType?: string;
     name?: string;
     sha256Hash?: string;
-    sizeBytes?: number;
+    sizeBytes?: string;
     source?: FileSource;
     state?: FileState;
     updateTime?: string;
