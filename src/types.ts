@@ -183,6 +183,15 @@ export enum SubjectReferenceType {
   SUBJECT_TYPE_PRODUCT = 'SUBJECT_TYPE_PRODUCT',
 }
 
+export enum MediaModality {
+  MODALITY_UNSPECIFIED = 'MODALITY_UNSPECIFIED',
+  TEXT = 'TEXT',
+  IMAGE = 'IMAGE',
+  VIDEO = 'VIDEO',
+  AUDIO = 'AUDIO',
+  DOCUMENT = 'DOCUMENT',
+}
+
 /** Metadata describes the input video content. */
 export declare interface VideoMetadata {
   /** Optional. The end offset of the video. */
@@ -983,7 +992,7 @@ export class GenerateContentResponsePromptFeedback {
 /** Represents token counting info for a single modality. */
 export declare interface ModalityTokenCount {
   /** The modality associated with this token count. */
-  modality?: Modality;
+  modality?: MediaModality;
   /** Number of tokens. */
   tokenCount?: number;
 }
