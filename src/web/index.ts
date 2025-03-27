@@ -7,7 +7,9 @@
 export * from '../caches';
 export * from '../chats';
 export {GoogleGenAIOptions} from '../client';
+export {Files} from '../files';
 export * from '../live';
 export {Models} from '../models';
+export {PagedItem, Pager} from '../pagers';
 export * from '../types';
 export * from './web_client';

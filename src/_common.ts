@@ -8,6 +8,7 @@ import {UploadFileConfig} from './types';
 
 export class BaseModule {}
 
+// TODO (b/406332263): Move this to a place where it can be linked for doc.
 /** Parameters for the upload file method. */
 export interface UploadFileParameters {
   /** The string path to the file to be uploaded or a Blob object. */

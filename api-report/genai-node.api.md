@@ -57,7 +57,6 @@ export class Caches extends BaseModule {
     delete(params: types.DeleteCachedContentParameters): Promise<types.DeleteCachedContentResponse>;
     get(params: types.GetCachedContentParameters): Promise<types.CachedContent>;
     // Warning: (ae-forgotten-export) The symbol "types" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "Pager" needs to be exported by the entry point index.d.ts
     list: (params?: types.ListCachedContentsParameters) => Promise<Pager<types.CachedContent>>;
     update(params: types.UpdateCachedContentParameters): Promise<types.CachedContent>;
 }
@@ -386,6 +385,16 @@ export { File_2 as File }
 export interface FileData {
     fileUri?: string;
     mimeType?: string;
+}
+
+// @public (undocumented)
+export class Files extends BaseModule {
+    constructor(apiClient: ApiClient);
+    delete(params: types.DeleteFileParameters): Promise<types.DeleteFileResponse>;
+    get(params: types.GetFileParameters): Promise<types.File>;
+    list: (params?: types.ListFilesParameters) => Promise<Pager<types.File>>;
+    // Warning: (ae-forgotten-export) The symbol "common" needs to be exported by the entry point index.d.ts
+    upload(params: common.UploadFileParameters): Promise<types.File>;
 }
 
 // @public (undocumented)
@@ -719,8 +728,6 @@ export class GoogleGenAI {
     readonly caches: Caches;
     // (undocumented)
     readonly chats: Chats;
-    // Warning: (ae-forgotten-export) The symbol "Files" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     readonly files: Files;
     // (undocumented)
@@ -1188,6 +1195,41 @@ export enum Outcome {
     OUTCOME_OK = "OUTCOME_OK",
     // (undocumented)
     OUTCOME_UNSPECIFIED = "OUTCOME_UNSPECIFIED"
+}
+
+// @public
+export enum PagedItem {
+    // (undocumented)
+    PAGED_ITEM_BATCH_JOBS = "batchJobs",
+    // (undocumented)
+    PAGED_ITEM_CACHED_CONTENTS = "cachedContents",
+    // (undocumented)
+    PAGED_ITEM_FILES = "files",
+    // (undocumented)
+    PAGED_ITEM_MODELS = "models",
+    // (undocumented)
+    PAGED_ITEM_TUNING_JOBS = "tuningJobs"
+}
+
+// @public
+export class Pager<T> implements AsyncIterable<T> {
+    [Symbol.asyncIterator](): AsyncIterator<T>;
+    constructor(name: PagedItem, request: (params: PagedItemConfig) => Promise<PagedItemResponse<T>>, response: PagedItemResponse<T>, params: PagedItemConfig);
+    getItem(index: number): T;
+    hasNextPage(): boolean;
+    // (undocumented)
+    protected idxInternal: number;
+    get name(): PagedItem;
+    nextPage(): Promise<T[]>;
+    get page(): T[];
+    get pageLength(): number;
+    get pageSize(): number;
+    get params(): PagedItemConfig;
+    // Warning: (ae-forgotten-export) The symbol "PagedItemConfig" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "PagedItemResponse" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    protected requestInternal: (params: PagedItemConfig) => Promise<PagedItemResponse<T>>;
 }
 
 // @public

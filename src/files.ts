@@ -71,7 +71,6 @@ export class Files extends BaseModule {
    *
    * @param params - Optional parameters specified in the
    *        `common.UploadFileParameters` interface.
-   *        Optional @see {@link common.UploadFileParameters}
    * @return A promise that resolves to a `types.File` object.
    * @throws An error if called on a Vertex AI client.
    * @throws An error if the `mimeType` is not provided and can not be inferred,
