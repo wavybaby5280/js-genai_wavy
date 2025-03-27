@@ -734,8 +734,6 @@ export class GoogleGenAI {
     readonly live: Live;
     // (undocumented)
     readonly models: Models;
-    // Warning: (ae-forgotten-export) The symbol "Operations" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     readonly operations: Operations;
     // (undocumented)
@@ -1193,6 +1191,12 @@ export class Models extends BaseModule {
 export interface OperationGetParameters {
     config?: GetOperationConfig;
     operation: GenerateVideosOperation;
+}
+
+// @public (undocumented)
+export class Operations extends BaseModule {
+    constructor(apiClient: ApiClient);
+    get(parameters: types.OperationGetParameters): Promise<types.GenerateVideosOperation>;
 }
 
 // @public

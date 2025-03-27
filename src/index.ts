@@ -10,5 +10,6 @@ export {GoogleGenAI, GoogleGenAIOptions} from './client';
 export {Files} from './files';
 export * from './live';
 export {Models} from './models';
+export {Operations} from './operations';
 export {PagedItem, Pager} from './pagers';
 export * from './types';
