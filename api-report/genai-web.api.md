@@ -551,6 +551,11 @@ export interface GeneratedImage {
 }
 
 // @public
+export interface GeneratedVideo {
+    video?: Video;
+}
+
+// @public
 export interface GenerateImagesConfig {
     addWatermark?: boolean;
     aspectRatio?: string;
@@ -581,6 +586,47 @@ export interface GenerateImagesParameters {
 export class GenerateImagesResponse {
     generatedImages?: GeneratedImage[];
     positivePromptSafetyAttributes?: SafetyAttributes;
+}
+
+// @public
+export interface GenerateVideosConfig {
+    aspectRatio?: string;
+    durationSeconds?: number;
+    enhancePrompt?: boolean;
+    fps?: number;
+    httpOptions?: HttpOptions;
+    negativePrompt?: string;
+    numberOfVideos?: number;
+    outputGcsUri?: string;
+    personGeneration?: string;
+    pubsubTopic?: string;
+    resolution?: string;
+    seed?: number;
+}
+
+// @public
+export interface GenerateVideosOperation {
+    done?: boolean;
+    error?: Record<string, unknown>;
+    metadata?: Record<string, unknown>;
+    name?: string;
+    response?: Record<string, unknown>;
+    result?: GenerateVideosResponse;
+}
+
+// @public
+export interface GenerateVideosParameters {
+    config?: GenerateVideosConfig;
+    image?: Image_2;
+    model: string;
+    prompt?: string;
+}
+
+// @public
+export class GenerateVideosResponse {
+    generatedVideos?: GeneratedVideo[];
+    raiMediaFilteredCount?: number;
+    raiMediaFilteredReasons?: string[];
 }
 
 // @public
@@ -1105,6 +1151,7 @@ export class Models extends BaseModule {
     generateContent: (params: types.GenerateContentParameters) => Promise<types.GenerateContentResponse>;
     generateContentStream: (params: types.GenerateContentParameters) => Promise<AsyncGenerator<types.GenerateContentResponse>>;
     generateImages: (params: types.GenerateImagesParameters) => Promise<types.GenerateImagesResponse>;
+    generateVideos(params: types.GenerateVideosParameters): Promise<types.GenerateVideosOperation>;
 }
 
 // @public
@@ -1497,6 +1544,13 @@ export interface VertexRagStore {
 export interface VertexRagStoreRagResource {
     ragCorpus?: string;
     ragFileIds?: string[];
+}
+
+// @public
+export interface Video {
+    mimeType?: string;
+    uri?: string;
+    videoBytes?: string;
 }
 
 // @public

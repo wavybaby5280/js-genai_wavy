@@ -681,4 +681,105 @@ export class Models extends BaseModule {
       throw new Error('This method is only supported by the Vertex AI.');
     }
   }
+
+  /**
+   *  Generates videos based on a text description and configuration.
+   *
+   * @param params - The parameters for generating videos.
+   * @return A Promise<GenerateVideosOperation> which allows you to track the progress and eventually retrieve the generated videos using the operations.get method.
+   *
+   * @example
+   * ```ts
+   * const operation = await ai.models.generateVideos({
+   *  model: 'veo-2.0-generate-001',
+   *  prompt: 'A neon hologram of a cat driving at top speed',
+   *  config: {
+   *    numberOfVideos: 1
+   * });
+   *
+   * while (!operation.done) {
+   *   await new Promise(resolve => setTimeout(resolve, 10000));
+   *   operation = await ai.operations.get({operation: operation});
+   * }
+   *
+   * console.log(operation.result?.generatedVideos?.[0]?.video?.uri);
+   * ```
+   */
+
+  async generateVideos(
+    params: types.GenerateVideosParameters,
+  ): Promise<types.GenerateVideosOperation> {
+    let response: Promise<types.GenerateVideosOperation>;
+    let path: string = '';
+    let queryParams: Record<string, string> = {};
+    if (this.apiClient.isVertexAI()) {
+      const body = converters.generateVideosParametersToVertex(
+        this.apiClient,
+        params,
+      );
+      path = common.formatMap(
+        '{model}:predictLongRunning',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json();
+        }) as Promise<types.GenerateVideosOperation>;
+
+      return response.then((apiResponse) => {
+        const resp = converters.generateVideosOperationFromVertex(
+          this.apiClient,
+          apiResponse,
+        );
+
+        return resp as types.GenerateVideosOperation;
+      });
+    } else {
+      const body = converters.generateVideosParametersToMldev(
+        this.apiClient,
+        params,
+      );
+      path = common.formatMap(
+        '{model}:predictLongRunning',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json();
+        }) as Promise<types.GenerateVideosOperation>;
+
+      return response.then((apiResponse) => {
+        const resp = converters.generateVideosOperationFromMldev(
+          this.apiClient,
+          apiResponse,
+        );
+
+        return resp as types.GenerateVideosOperation;
+      });
+    }
+  }
 }

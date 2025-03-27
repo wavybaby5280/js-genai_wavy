@@ -1567,6 +1567,90 @@ export class ComputeTokensResponse {
   tokensInfo?: TokensInfo[];
 }
 
+/** Configuration for generating videos. */
+export declare interface GenerateVideosConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+  /** Number of output videos. */
+  numberOfVideos?: number;
+  /** The gcs bucket where to save the generated videos. */
+  outputGcsUri?: string;
+  /** Frames per second for video generation. */
+  fps?: number;
+  /** Duration of the clip for video generation in seconds. */
+  durationSeconds?: number;
+  /** The RNG seed. If RNG seed is exactly same for each request with unchanged inputs, the prediction results will be consistent. Otherwise, a random RNG seed will be used each time to produce a different result. */
+  seed?: number;
+  /** The aspect ratio for the generated video. 16:9 (landscape) and 9:16 (portrait) are supported. */
+  aspectRatio?: string;
+  /** The resolution for the generated video. 1280x720, 1920x1080 are supported. */
+  resolution?: string;
+  /** Whether allow to generate person videos, and restrict to specific ages. Supported values are: dont_allow, allow_adult. */
+  personGeneration?: string;
+  /** The pubsub topic where to publish the video generation progress. */
+  pubsubTopic?: string;
+  /** Optional field in addition to the text content. Negative prompts can be explicitly stated here to help generate the video. */
+  negativePrompt?: string;
+  /** Whether to use the prompt rewriting logic. */
+  enhancePrompt?: boolean;
+}
+
+/** Class that represents the parameters for generating an image. */
+export declare interface GenerateVideosParameters {
+  /** ID of the model to use. For a list of models, see `Google models
+    <https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models>`_. */
+  model: string;
+  /** The text prompt for generating the videos. Optional for image to video use cases. */
+  prompt?: string;
+  /** The input image for generating the videos.
+      Optional if prompt is provided. */
+  image?: Image;
+  /** Configuration for generating videos. */
+  config?: GenerateVideosConfig;
+}
+
+/** A generated video. */
+export declare interface Video {
+  /** Path to another storage. */
+  uri?: string;
+  /** Video bytes. */
+  videoBytes?: string;
+  /** Video encoding, for example "video/mp4". */
+  mimeType?: string;
+}
+
+/** A generated video. */
+export declare interface GeneratedVideo {
+  /** The output video */
+  video?: Video;
+}
+
+/** Response with generated videos. */
+export class GenerateVideosResponse {
+  /** List of the generated videos */
+  generatedVideos?: GeneratedVideo[];
+  /** Returns if any videos were filtered due to RAI policies. */
+  raiMediaFilteredCount?: number;
+  /** Returns rai failure reasons if any. */
+  raiMediaFilteredReasons?: string[];
+}
+
+/** A video generation operation. */
+export declare interface GenerateVideosOperation {
+  /** The server-assigned name, which is only unique within the same service that originally returns it. If you use the default HTTP mapping, the `name` should be a resource name ending with `operations/{unique_id}`. */
+  name?: string;
+  /** Service-specific metadata associated with the operation. It typically contains progress information and common metadata such as create time. Some services might not provide such metadata.  Any method that returns a long-running operation should document the metadata type, if any. */
+  metadata?: Record<string, unknown>;
+  /** If the value is `false`, it means the operation is still in progress. If `true`, the operation is completed, and either `error` or `response` is available. */
+  done?: boolean;
+  /** The error result of the operation in case of failure or cancellation. */
+  error?: Record<string, unknown>;
+  /** The normal response of the operation in case of success. */
+  response?: Record<string, unknown>;
+  /** The generated videos. */
+  result?: GenerateVideosResponse;
+}
+
 /** Optional configuration for cached content creation. */
 export declare interface CreateCachedContentConfig {
   /** Used to override HTTP request options. */
