@@ -350,6 +350,19 @@ export interface ExecutableCode {
     language?: Language;
 }
 
+// @public (undocumented)
+export interface FetchPredictOperationConfig {
+    httpOptions?: HttpOptions;
+}
+
+// @public
+export interface FetchPredictOperationParameters {
+    config?: FetchPredictOperationConfig;
+    operationName: string;
+    // (undocumented)
+    resourceName: string;
+}
+
 // @public
 interface File_2 {
     createTime?: string;
@@ -684,6 +697,17 @@ export interface GetFileConfig {
 export interface GetFileParameters {
     config?: GetFileConfig;
     name: string;
+}
+
+// @public (undocumented)
+export interface GetOperationConfig {
+    httpOptions?: HttpOptions;
+}
+
+// @public
+export interface GetOperationParameters {
+    config?: GetOperationConfig;
+    operationName: string;
 }
 
 // @public

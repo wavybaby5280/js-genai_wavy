@@ -1946,6 +1946,33 @@ export declare interface DeleteFileParameters {
 /** Response for the delete file method. */
 export class DeleteFileResponse {}
 
+export declare interface GetOperationConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+}
+
+/** Parameters for the GET method. */
+export declare interface GetOperationParameters {
+  /** The server-assigned name for the operation. */
+  operationName: string;
+  /** Used to override the default configuration. */
+  config?: GetOperationConfig;
+}
+
+export declare interface FetchPredictOperationConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+}
+
+/** Parameters for the fetchPredictOperation method. */
+export declare interface FetchPredictOperationParameters {
+  /** The server-assigned name for the operation. */
+  operationName: string;
+  resourceName: string;
+  /** Used to override the default configuration. */
+  config?: FetchPredictOperationConfig;
+}
+
 export declare interface TestTableItem {
   /** The name of the test. This is used to derive the replay id. */
   name?: string;
