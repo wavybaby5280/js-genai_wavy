@@ -2458,6 +2458,14 @@ export class LiveSendToolResponseParameters {
   functionResponses: FunctionResponse[] | FunctionResponse = [];
 }
 
+/** Parameters for the get method of the operations module. */
+export declare interface OperationGetParameters {
+  /** The operation to be retrieved. */
+  operation: GenerateVideosOperation;
+  /** Used to override the default configuration. */
+  config?: GetOperationConfig;
+}
+
 export type PartUnion = Part | string;
 
 export type PartListUnion = PartUnion[] | PartUnion;

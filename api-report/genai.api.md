@@ -734,6 +734,10 @@ export class GoogleGenAI {
     readonly live: Live;
     // (undocumented)
     readonly models: Models;
+    // Warning: (ae-forgotten-export) The symbol "Operations" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    readonly operations: Operations;
     // (undocumented)
     readonly vertexai: boolean;
 }
@@ -1183,6 +1187,12 @@ export class Models extends BaseModule {
     generateContentStream: (params: types.GenerateContentParameters) => Promise<AsyncGenerator<types.GenerateContentResponse>>;
     generateImages: (params: types.GenerateImagesParameters) => Promise<types.GenerateImagesResponse>;
     generateVideos(params: types.GenerateVideosParameters): Promise<types.GenerateVideosOperation>;
+}
+
+// @public
+export interface OperationGetParameters {
+    config?: GetOperationConfig;
+    operation: GenerateVideosOperation;
 }
 
 // @public

@@ -17,6 +17,43 @@ export class Operations extends BaseModule {
     super();
   }
 
+  /**
+   * Gets the status of a long-running operation.
+   *
+   * @param operation The Operation object returned by a previous API call.
+   * @return The updated Operation object, with the latest status or result.
+   */
+  async get(
+    parameters: types.OperationGetParameters,
+  ): Promise<types.GenerateVideosOperation> {
+    const operation = parameters.operation;
+    const config = parameters.config;
+
+    if (operation.name === undefined || operation.name === '') {
+      throw new Error('Operation name is required.');
+    }
+
+    if (this.apiClient.isVertexAI()) {
+      const resourceName = operation.name.split('/operations/')[0];
+      var httpOptions: types.HttpOptions | undefined = undefined;
+
+      if (config && 'httpOptions' in config) {
+        httpOptions = config.httpOptions;
+      }
+
+      return this.fetchPredictVideosOperationInternal({
+        operationName: operation.name,
+        resourceName: resourceName,
+        config: {httpOptions: httpOptions},
+      });
+    } else {
+      return this.getVideosOperationInternal({
+        operationName: operation.name,
+        config: config,
+      });
+    }
+  }
+
   private async getVideosOperationInternal(
     params: types.GetOperationParameters,
   ): Promise<types.GenerateVideosOperation> {

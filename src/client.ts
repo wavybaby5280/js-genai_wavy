@@ -15,6 +15,7 @@ import {CrossWebSocketFactory} from './cross/_cross_websocket';
 import {Files} from './files';
 import {Live} from './live';
 import {Models} from './models';
+import {Operations} from './operations';
 import {HttpOptions} from './types';
 import {WebAuth} from './web/_web_auth';
 
@@ -122,6 +123,7 @@ export class GoogleGenAI {
   readonly chats: Chats;
   readonly caches: Caches;
   readonly files: Files;
+  readonly operations: Operations;
 
   constructor(options: GoogleGenAIOptions) {
     if (options.apiKey == null) {
@@ -147,5 +149,6 @@ export class GoogleGenAI {
     this.chats = new Chats(this.models, this.apiClient);
     this.caches = new Caches(this.apiClient);
     this.files = new Files(this.apiClient);
+    this.operations = new Operations(this.apiClient);
   }
 }
