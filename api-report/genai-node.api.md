@@ -13,7 +13,7 @@ interface Blob_2 {
 }
 export { Blob_2 as Blob }
 
-// @public (undocumented)
+// @public
 export enum BlockedReason {
     // (undocumented)
     BLOCKED_REASON_UNSPECIFIED = "BLOCKED_REASON_UNSPECIFIED",
@@ -165,7 +165,7 @@ export interface ControlReferenceImage {
     referenceType?: string;
 }
 
-// @public (undocumented)
+// @public
 export enum ControlReferenceType {
     // (undocumented)
     CONTROL_TYPE_CANNY = "CONTROL_TYPE_CANNY",
@@ -307,7 +307,7 @@ export interface DynamicRetrievalConfig {
     mode?: DynamicRetrievalConfigMode;
 }
 
-// @public (undocumented)
+// @public
 export enum DynamicRetrievalConfigMode {
     // (undocumented)
     MODE_DYNAMIC = "MODE_DYNAMIC",
@@ -397,7 +397,7 @@ export class Files extends BaseModule {
     upload(params: common.UploadFileParameters): Promise<types.File>;
 }
 
-// @public (undocumented)
+// @public
 export enum FileSource {
     // (undocumented)
     GENERATED = "GENERATED",
@@ -407,7 +407,7 @@ export enum FileSource {
     UPLOADED = "UPLOADED"
 }
 
-// @public (undocumented)
+// @public
 export enum FileState {
     // (undocumented)
     ACTIVE = "ACTIVE",
@@ -426,7 +426,7 @@ export interface FileStatus {
     message?: string;
 }
 
-// @public (undocumented)
+// @public
 export enum FinishReason {
     // (undocumented)
     BLOCKLIST = "BLOCKLIST",
@@ -465,7 +465,7 @@ export interface FunctionCallingConfig {
     mode?: FunctionCallingConfigMode;
 }
 
-// @public (undocumented)
+// @public
 export enum FunctionCallingConfigMode {
     // (undocumented)
     ANY = "ANY",
@@ -803,7 +803,7 @@ export interface GroundingSupport {
     segment?: Segment;
 }
 
-// @public (undocumented)
+// @public
 export enum HarmBlockMethod {
     // (undocumented)
     HARM_BLOCK_METHOD_UNSPECIFIED = "HARM_BLOCK_METHOD_UNSPECIFIED",
@@ -813,7 +813,7 @@ export enum HarmBlockMethod {
     SEVERITY = "SEVERITY"
 }
 
-// @public (undocumented)
+// @public
 export enum HarmBlockThreshold {
     // (undocumented)
     BLOCK_LOW_AND_ABOVE = "BLOCK_LOW_AND_ABOVE",
@@ -829,7 +829,7 @@ export enum HarmBlockThreshold {
     OFF = "OFF"
 }
 
-// @public (undocumented)
+// @public
 export enum HarmCategory {
     // (undocumented)
     HARM_CATEGORY_CIVIC_INTEGRITY = "HARM_CATEGORY_CIVIC_INTEGRITY",
@@ -845,7 +845,7 @@ export enum HarmCategory {
     HARM_CATEGORY_UNSPECIFIED = "HARM_CATEGORY_UNSPECIFIED"
 }
 
-// @public (undocumented)
+// @public
 export enum HarmProbability {
     // (undocumented)
     HARM_PROBABILITY_UNSPECIFIED = "HARM_PROBABILITY_UNSPECIFIED",
@@ -859,7 +859,7 @@ export enum HarmProbability {
     NEGLIGIBLE = "NEGLIGIBLE"
 }
 
-// @public (undocumented)
+// @public
 export enum HarmSeverity {
     // (undocumented)
     HARM_SEVERITY_HIGH = "HARM_SEVERITY_HIGH",
@@ -898,7 +898,7 @@ interface Image_2 {
 }
 export { Image_2 as Image }
 
-// @public (undocumented)
+// @public
 export enum ImagePromptLanguage {
     // (undocumented)
     auto = "auto",
@@ -912,7 +912,7 @@ export enum ImagePromptLanguage {
     ko = "ko"
 }
 
-// @public (undocumented)
+// @public
 export enum Language {
     // (undocumented)
     LANGUAGE_UNSPECIFIED = "LANGUAGE_UNSPECIFIED",
@@ -971,13 +971,9 @@ export class Live {
 
 // @public
 export interface LiveCallbacks {
-    // (undocumented)
     onclose?: ((e: CloseEvent) => void) | null;
-    // (undocumented)
     onerror?: ((e: ErrorEvent) => void) | null;
-    // (undocumented)
     onmessage: (e: LiveServerMessage) => void;
-    // (undocumented)
     onopen?: (() => void) | null;
 }
 
@@ -1107,7 +1103,7 @@ export interface MaskReferenceImage {
     referenceType?: string;
 }
 
-// @public (undocumented)
+// @public
 export enum MaskReferenceMode {
     // (undocumented)
     MASK_MODE_BACKGROUND = "MASK_MODE_BACKGROUND",
@@ -1121,7 +1117,7 @@ export enum MaskReferenceMode {
     MASK_MODE_USER_PROVIDED = "MASK_MODE_USER_PROVIDED"
 }
 
-// @public (undocumented)
+// @public
 export enum MediaModality {
     // (undocumented)
     AUDIO = "AUDIO",
@@ -1137,7 +1133,7 @@ export enum MediaModality {
     VIDEO = "VIDEO"
 }
 
-// @public (undocumented)
+// @public
 export enum MediaResolution {
     // (undocumented)
     MEDIA_RESOLUTION_HIGH = "MEDIA_RESOLUTION_HIGH",
@@ -1149,7 +1145,7 @@ export enum MediaResolution {
     MEDIA_RESOLUTION_UNSPECIFIED = "MEDIA_RESOLUTION_UNSPECIFIED"
 }
 
-// @public (undocumented)
+// @public
 export enum Modality {
     // (undocumented)
     AUDIO = "AUDIO",
@@ -1167,7 +1163,7 @@ export interface ModalityTokenCount {
     tokenCount?: number;
 }
 
-// @public (undocumented)
+// @public
 export enum Mode {
     // (undocumented)
     MODE_DYNAMIC = "MODE_DYNAMIC",
@@ -1265,7 +1261,7 @@ export type PartListUnion = PartUnion[] | PartUnion;
 // @public (undocumented)
 export type PartUnion = Part | string;
 
-// @public (undocumented)
+// @public
 export enum PersonGeneration {
     // (undocumented)
     ALLOW_ADULT = "ALLOW_ADULT",
@@ -1346,7 +1342,7 @@ export interface SafetyAttributes {
     scores?: number[];
 }
 
-// @public (undocumented)
+// @public
 export enum SafetyFilterLevel {
     // (undocumented)
     BLOCK_LOW_AND_ABOVE = "BLOCK_LOW_AND_ABOVE",
@@ -1445,7 +1441,7 @@ export interface SpeechConfig {
 // @public (undocumented)
 export type SpeechConfigUnion = SpeechConfig | string;
 
-// @public (undocumented)
+// @public
 export enum State {
     // (undocumented)
     ACTIVE = "ACTIVE",
@@ -1482,7 +1478,7 @@ export interface SubjectReferenceImage {
     referenceType?: string;
 }
 
-// @public (undocumented)
+// @public
 export enum SubjectReferenceType {
     // (undocumented)
     SUBJECT_TYPE_ANIMAL = "SUBJECT_TYPE_ANIMAL",
@@ -1551,7 +1547,7 @@ export interface ToolConfig {
 // @public (undocumented)
 export type ToolListUnion = Tool[];
 
-// @public (undocumented)
+// @public
 export enum Type {
     // (undocumented)
     ARRAY = "ARRAY",
