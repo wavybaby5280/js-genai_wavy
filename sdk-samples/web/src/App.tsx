@@ -3,6 +3,7 @@ import './App.css';
 import GenerateContentText from './GenerateContentText';
 import TextAndImage from './TextAndImage';
 import UploadFile from './UploadFile';
+import {VideoGeneration} from './Video';
 
 function App() {
   const [apiKey, setApiKey] = useState('');
@@ -64,6 +65,7 @@ function App() {
       <GenerateContentText apiKey={apiKey} vertexai={vertexai} />
       <UploadFile apiKey={apiKey} vertexai={vertexai} />
       <TextAndImage apiKey={apiKey} vertexai={vertexai} />
+      <VideoGeneration apiKey={apiKey} vertexai={vertexai} />
     </>
   );
 }
