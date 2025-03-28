@@ -404,7 +404,7 @@ export declare interface Content {
   parts?: Part[];
   /** Optional. The producer of the content. Must be either 'user' or
       'model'. Useful to set for multi-turn conversations, otherwise can be
-      left blank or unset. If role is not specified, SDK will determine the role. */
+      empty. If role is not specified, SDK will determine the role. */
   role?: string;
 }
 function _isPart(obj: unknown): obj is Part {
@@ -2348,11 +2348,11 @@ export declare interface LiveClientContent {
 
 /** User input that is sent in real time.
 
-  This is different from `ClientContentUpdate` in a few ways:
+  This is different from `LiveClientContent` in a few ways:
 
     - Can be sent continuously without interruption to model generation.
     - If there is a need to mix data interleaved across the
-      `ClientContentUpdate` and the `RealtimeUpdate`, server attempts to
+      `LiveClientContent` and the `LiveClientRealtimeInput`, server attempts to
       optimize for best response, but there are no guarantees.
     - End of turn is not explicitly specified, but is rather derived from user
       activity (for example, end of speech).
