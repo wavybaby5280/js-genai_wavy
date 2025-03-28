@@ -359,7 +359,7 @@ export class ApiClient {
 
   async requestStream(
     request: HttpRequest,
-    // TODO: Replace with HttpResponse.
+    // TODO: b/407059430 - Replace with HttpResponse.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<any> {
     let patchedHttpOptions = this.clientOptions.httpOptions!;
@@ -423,7 +423,7 @@ export class ApiClient {
     url: URL,
     requestInit: RequestInit,
     httpMethod: 'GET' | 'POST' | 'PATCH' | 'DELETE',
-    // TODO: Replace with HttpResponse.
+    // TODO: b/407059430 - Replace with HttpResponse.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<AsyncGenerator<any>> {
     return this.apiCall(url.toString(), {
@@ -445,7 +445,7 @@ export class ApiClient {
 
   async *processStreamResponse(
     response: Response,
-    // TODO: Replace with HttpResponse.
+    // TODO: b/407059430 - Replace with HttpResponse.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): AsyncGenerator<any> {
     const reader = response?.body?.getReader();
