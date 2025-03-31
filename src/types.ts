@@ -1949,6 +1949,14 @@ export interface LiveCallbacks {
    */
   onclose?: ((e: CloseEvent) => void) | null;
 }
+
+/** Parameters for the upload file method. */
+export interface UploadFileParameters {
+  /** The string path to the file to be uploaded or a Blob object. */
+  file: string | globalThis.Blob;
+  /** Configuration that contains optional parameters. */
+  config?: UploadFileConfig;
+}
 /** Response for the create file method. */
 export class CreateFileResponse {
   /** Used to retain the full HTTP response. */
