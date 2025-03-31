@@ -2302,15 +2302,7 @@ export declare interface LiveClientSetup {
        */
   model?: string;
   /** The generation configuration for the session.
-
-The following fields are supported:
-- `response_logprobs`
-- `response_mime_type`
-- `logprobs`
-- `response_schema`
-- `stop_sequence`
-- `routing_config`
-- `audio_timestamp`
+      Note: only a subset of fields are supported.
        */
   generationConfig?: GenerationConfig;
   /** The user provided system instructions for the model.
