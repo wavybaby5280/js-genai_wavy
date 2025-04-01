@@ -2393,6 +2393,9 @@ export declare interface LiveClientMessage {
   toolResponse?: LiveClientToolResponse;
 }
 
+/** The audio transcription configuration in Setup. */
+export declare interface AudioTranscriptionConfig {}
+
 /** Session config for the API connection. */
 export declare interface LiveConnectConfig {
   /** The generation configuration for the session. */

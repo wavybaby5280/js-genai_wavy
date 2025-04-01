@@ -7,6 +7,10 @@
 import { GoogleAuthOptions } from 'google-auth-library';
 
 // @public
+export interface AudioTranscriptionConfig {
+}
+
+// @public
 interface Blob_2 {
     data?: string;
     mimeType?: string;
