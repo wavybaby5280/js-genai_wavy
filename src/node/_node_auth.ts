@@ -9,7 +9,6 @@ import {GoogleAuth, GoogleAuthOptions} from 'google-auth-library';
 import {Auth} from '../_auth';
 
 export const GOOGLE_API_KEY_HEADER = 'x-goog-api-key';
-export const AUTHORIZATION_HEADER = 'Authorization';
 const REQUIRED_VERTEX_AI_SCOPE =
   'https://www.googleapis.com/auth/cloud-platform';
 
@@ -62,9 +61,6 @@ export class NodeAuth implements Auth {
   }
 
   private async addGoogleAuthHeaders(headers: Headers): Promise<void> {
-    if (headers.get(AUTHORIZATION_HEADER) !== null) {
-      return;
-    }
     if (this.googleAuth === undefined) {
       // This should never happen, addGoogleAuthHeaders should only be
       // called when there is no apiKey set and in these cases googleAuth
@@ -73,8 +69,13 @@ export class NodeAuth implements Auth {
         'Trying to set google-auth headers but googleAuth is unset',
       );
     }
-    const token = await this.googleAuth.getAccessToken();
-    headers.append(AUTHORIZATION_HEADER, `Bearer ${token}`);
+    const authHeaders = await this.googleAuth.getRequestHeaders();
+    for (const key in authHeaders) {
+      if (headers.get(key) !== null) {
+        continue;
+      }
+      headers.append(key, authHeaders[key]);
+    }
   }
 }
 
