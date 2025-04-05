@@ -958,6 +958,115 @@ describe('ApiClient', () => {
       expect(postResponse.headers?.['x-custom-header']).toBe('custom-value');
     });
   });
+  it('should construct correct URL for public API calls', async () => {
+    const client = new ApiClient({
+      auth: new FakeAuth('test-api-key'),
+      apiKey: 'test-api-key',
+      httpOptions: {
+        baseUrl: 'https://custom-client-base-url.googleapis.com',
+      },
+      uploader: new CrossUploader(),
+    });
+
+    spyOn(global, 'fetch').and.returnValue(
+      Promise.resolve(
+        new Response(
+          JSON.stringify(mockGenerateContentResponse),
+          fetchOkOptions,
+        ),
+      ),
+    );
+
+    const testPath = 'test-public-api-path';
+    const apiVersion = 'v1';
+    await client.request({
+      path: testPath,
+      httpMethod: 'GET',
+      httpOptions: {
+        apiVersion: apiVersion,
+      },
+    });
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      `https://custom-client-base-url.googleapis.com/${apiVersion}/${testPath}`,
+      jasmine.any(Object),
+    );
+  });
+  it('should not prepend project/location to path if path already contains it for requestStream', async () => {
+    const client = new ApiClient({
+      auth: new FakeAuth(),
+      vertexai: true,
+      project: 'test-project',
+      location: 'test-location',
+      uploader: new CrossUploader(),
+    });
+    const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+      Promise.resolve(
+        new Response(
+          JSON.stringify(mockGenerateContentResponse),
+          fetchOkOptions,
+        ),
+      ),
+    );
+    await client.requestStream({
+      path: 'projects/test-project/locations/test-location/test-path',
+      httpMethod: 'POST',
+    });
+    const fetchArgs = fetchSpy.calls.first().args;
+    expect(fetchArgs[0]).toBe(
+      'https://test-location-aiplatform.googleapis.com/v1beta1/projects/test-project/locations/test-location/test-path?alt=sse',
+    );
+  });
+  it('should not prepend project/location to path if path already contains it for request', async () => {
+    const client = new ApiClient({
+      auth: new FakeAuth(),
+      vertexai: true,
+      project: 'test-project',
+      location: 'test-location',
+      uploader: new CrossUploader(),
+    });
+    const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+      Promise.resolve(
+        new Response(
+          JSON.stringify(mockGenerateContentResponse),
+          fetchOkOptions,
+        ),
+      ),
+    );
+    await client.request({
+      path: 'projects/test-project/locations/test-location/test-path',
+      httpMethod: 'POST',
+    });
+    const fetchArgs = fetchSpy.calls.first().args;
+    expect(fetchArgs[0]).toBe(
+      'https://test-location-aiplatform.googleapis.com/v1beta1/projects/test-project/locations/test-location/test-path',
+    );
+  });
+  it('should not prepend project/location to path if path starts with publishers/google/models for request', async () => {
+    const client = new ApiClient({
+      auth: new FakeAuth(),
+      vertexai: true,
+      project: 'test-project',
+      location: 'test-location',
+      uploader: new CrossUploader(),
+    });
+    const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+      Promise.resolve(
+        new Response(
+          JSON.stringify(mockGenerateContentResponse),
+          fetchOkOptions,
+        ),
+      ),
+    );
+    await client.request({
+      path: 'publishers/google/models/test-model',
+      httpMethod: 'GET',
+    });
+    const fetchArgs = fetchSpy.calls.first().args;
+    expect(fetchArgs[0]).toBe(
+      'https://test-location-aiplatform.googleapis.com/v1beta1/publishers/google/models/test-model',
+    );
+  });
   describe('requestStream', () => {
     it('should throw ServerError if response is 500', async () => {
       const client = new ApiClient({

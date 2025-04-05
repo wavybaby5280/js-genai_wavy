@@ -524,6 +524,80 @@ export class Models extends BaseModule {
   }
 
   /**
+   * Fetches information about a model by name.
+   *
+   * @example
+   * ```ts
+   * const modelInfo = await ai.models.get({model: 'gemini-2.0-flash'});
+   * ```
+   */
+  async get(params: types.GetModelParameters): Promise<types.Model> {
+    let response: Promise<types.Model>;
+    let path: string = '';
+    let queryParams: Record<string, string> = {};
+    if (this.apiClient.isVertexAI()) {
+      const body = converters.getModelParametersToVertex(
+        this.apiClient,
+        params,
+      );
+      path = common.formatMap(
+        '{name}',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'GET',
+          httpOptions: params.config?.httpOptions,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json();
+        }) as Promise<types.Model>;
+
+      return response.then((apiResponse) => {
+        const resp = converters.modelFromVertex(this.apiClient, apiResponse);
+
+        return resp as types.Model;
+      });
+    } else {
+      const body = converters.getModelParametersToMldev(this.apiClient, params);
+      path = common.formatMap(
+        '{name}',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'GET',
+          httpOptions: params.config?.httpOptions,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json();
+        }) as Promise<types.Model>;
+
+      return response.then((apiResponse) => {
+        const resp = converters.modelFromMldev(this.apiClient, apiResponse);
+
+        return resp as types.Model;
+      });
+    }
+  }
+
+  /**
    * Counts the number of tokens in the given contents. Multimodal input is
    * supported for Gemini models.
    *

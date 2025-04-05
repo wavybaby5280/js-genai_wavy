@@ -300,6 +300,18 @@ export interface DeleteFileParameters {
 export class DeleteFileResponse {
 }
 
+// @public (undocumented)
+export enum DeploymentResourcesType {
+    // (undocumented)
+    AUTOMATIC_RESOURCES = "AUTOMATIC_RESOURCES",
+    // (undocumented)
+    DEDICATED_RESOURCES = "DEDICATED_RESOURCES",
+    // (undocumented)
+    DEPLOYMENT_RESOURCES_TYPE_UNSPECIFIED = "DEPLOYMENT_RESOURCES_TYPE_UNSPECIFIED",
+    // (undocumented)
+    SHARED_RESOURCES = "SHARED_RESOURCES"
+}
+
 // @public
 export interface DownloadFileConfig {
     httpOptions?: HttpOptions;
@@ -345,6 +357,12 @@ export interface EmbedContentParameters {
 export class EmbedContentResponse {
     embeddings?: ContentEmbedding[];
     metadata?: EmbedContentMetadata;
+}
+
+// @public
+export interface Endpoint {
+    deployedModelId?: string;
+    name?: string;
 }
 
 // @public
@@ -709,6 +727,18 @@ export interface GetFileConfig {
 export interface GetFileParameters {
     config?: GetFileConfig;
     name: string;
+}
+
+// @public
+export interface GetModelConfig {
+    httpOptions?: HttpOptions;
+}
+
+// @public (undocumented)
+export interface GetModelParameters {
+    config?: GetModelConfig;
+    // (undocumented)
+    model: string;
 }
 
 // @public (undocumented)
@@ -1174,6 +1204,20 @@ export enum Mode {
     MODE_UNSPECIFIED = "MODE_UNSPECIFIED"
 }
 
+// @public
+export interface Model {
+    description?: string;
+    displayName?: string;
+    endpoints?: Endpoint[];
+    inputTokenLimit?: number;
+    labels?: Record<string, string>;
+    name?: string;
+    outputTokenLimit?: number;
+    supportedActions?: string[];
+    tunedModelInfo?: TunedModelInfo;
+    version?: string;
+}
+
 // @public (undocumented)
 export class Models extends BaseModule {
     constructor(apiClient: ApiClient);
@@ -1184,6 +1228,7 @@ export class Models extends BaseModule {
     generateContentStream: (params: types.GenerateContentParameters) => Promise<AsyncGenerator<types.GenerateContentResponse>>;
     generateImages: (params: types.GenerateImagesParameters) => Promise<types.GenerateImagesResponse>;
     generateVideos(params: types.GenerateVideosParameters): Promise<types.GenerateVideosOperation>;
+    get(params: types.GetModelParameters): Promise<types.Model>;
 }
 
 // @public
@@ -1549,6 +1594,13 @@ export interface ToolConfig {
 
 // @public (undocumented)
 export type ToolListUnion = Tool[];
+
+// @public
+export interface TunedModelInfo {
+    baseModel?: string;
+    createTime?: string;
+    updateTime?: string;
+}
 
 // @public
 export enum Type {

@@ -1012,6 +1012,29 @@ export function generateImagesParametersToMldev(
   return toObject;
 }
 
+export function getModelParametersToMldev(
+  apiClient: ApiClient,
+  fromObject: types.GetModelParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromModel = common.getValueByPath(fromObject, ['model']);
+  if (fromModel != null) {
+    common.setValueByPath(
+      toObject,
+      ['_url', 'name'],
+      t.tModel(apiClient, fromModel),
+    );
+  }
+
+  const fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig != null) {
+    common.setValueByPath(toObject, ['config'], fromConfig);
+  }
+
+  return toObject;
+}
+
 export function countTokensConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.CountTokensConfig,
@@ -2296,6 +2319,29 @@ export function generateImagesParametersToVertex(
   return toObject;
 }
 
+export function getModelParametersToVertex(
+  apiClient: ApiClient,
+  fromObject: types.GetModelParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromModel = common.getValueByPath(fromObject, ['model']);
+  if (fromModel != null) {
+    common.setValueByPath(
+      toObject,
+      ['_url', 'name'],
+      t.tModel(apiClient, fromModel),
+    );
+  }
+
+  const fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig != null) {
+    common.setValueByPath(toObject, ['config'], fromConfig);
+  }
+
+  return toObject;
+}
+
 export function countTokensConfigToVertex(
   apiClient: ApiClient,
   fromObject: types.CountTokensConfig,
@@ -3025,6 +3071,95 @@ export function generateImagesResponseFromMldev(
   return toObject;
 }
 
+export function endpointFromMldev(): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  return toObject;
+}
+
+export function tunedModelInfoFromMldev(
+  apiClient: ApiClient,
+  fromObject: types.TunedModelInfo,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromBaseModel = common.getValueByPath(fromObject, ['baseModel']);
+  if (fromBaseModel != null) {
+    common.setValueByPath(toObject, ['baseModel'], fromBaseModel);
+  }
+
+  const fromCreateTime = common.getValueByPath(fromObject, ['createTime']);
+  if (fromCreateTime != null) {
+    common.setValueByPath(toObject, ['createTime'], fromCreateTime);
+  }
+
+  const fromUpdateTime = common.getValueByPath(fromObject, ['updateTime']);
+  if (fromUpdateTime != null) {
+    common.setValueByPath(toObject, ['updateTime'], fromUpdateTime);
+  }
+
+  return toObject;
+}
+
+export function modelFromMldev(
+  apiClient: ApiClient,
+  fromObject: types.Model,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromName = common.getValueByPath(fromObject, ['name']);
+  if (fromName != null) {
+    common.setValueByPath(toObject, ['name'], fromName);
+  }
+
+  const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
+  if (fromDisplayName != null) {
+    common.setValueByPath(toObject, ['displayName'], fromDisplayName);
+  }
+
+  const fromDescription = common.getValueByPath(fromObject, ['description']);
+  if (fromDescription != null) {
+    common.setValueByPath(toObject, ['description'], fromDescription);
+  }
+
+  const fromVersion = common.getValueByPath(fromObject, ['version']);
+  if (fromVersion != null) {
+    common.setValueByPath(toObject, ['version'], fromVersion);
+  }
+
+  const fromTunedModelInfo = common.getValueByPath(fromObject, ['_self']);
+  if (fromTunedModelInfo != null) {
+    common.setValueByPath(
+      toObject,
+      ['tunedModelInfo'],
+      tunedModelInfoFromMldev(apiClient, fromTunedModelInfo),
+    );
+  }
+
+  const fromInputTokenLimit = common.getValueByPath(fromObject, [
+    'inputTokenLimit',
+  ]);
+  if (fromInputTokenLimit != null) {
+    common.setValueByPath(toObject, ['inputTokenLimit'], fromInputTokenLimit);
+  }
+
+  const fromOutputTokenLimit = common.getValueByPath(fromObject, [
+    'outputTokenLimit',
+  ]);
+  if (fromOutputTokenLimit != null) {
+    common.setValueByPath(toObject, ['outputTokenLimit'], fromOutputTokenLimit);
+  }
+
+  const fromSupportedActions = common.getValueByPath(fromObject, [
+    'supportedGenerationMethods',
+  ]);
+  if (fromSupportedActions != null) {
+    common.setValueByPath(toObject, ['supportedActions'], fromSupportedActions);
+  }
+
+  return toObject;
+}
+
 export function countTokensResponseFromMldev(
   apiClient: ApiClient,
   fromObject: types.CountTokensResponse,
@@ -3663,6 +3798,112 @@ export function generateImagesResponseFromVertex(
       toObject,
       ['positivePromptSafetyAttributes'],
       safetyAttributesFromVertex(apiClient, fromPositivePromptSafetyAttributes),
+    );
+  }
+
+  return toObject;
+}
+
+export function endpointFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.Endpoint,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromName = common.getValueByPath(fromObject, ['endpoint']);
+  if (fromName != null) {
+    common.setValueByPath(toObject, ['name'], fromName);
+  }
+
+  const fromDeployedModelId = common.getValueByPath(fromObject, [
+    'deployedModelId',
+  ]);
+  if (fromDeployedModelId != null) {
+    common.setValueByPath(toObject, ['deployedModelId'], fromDeployedModelId);
+  }
+
+  return toObject;
+}
+
+export function tunedModelInfoFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.TunedModelInfo,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromBaseModel = common.getValueByPath(fromObject, [
+    'labels',
+    'google-vertex-llm-tuning-base-model-id',
+  ]);
+  if (fromBaseModel != null) {
+    common.setValueByPath(toObject, ['baseModel'], fromBaseModel);
+  }
+
+  const fromCreateTime = common.getValueByPath(fromObject, ['createTime']);
+  if (fromCreateTime != null) {
+    common.setValueByPath(toObject, ['createTime'], fromCreateTime);
+  }
+
+  const fromUpdateTime = common.getValueByPath(fromObject, ['updateTime']);
+  if (fromUpdateTime != null) {
+    common.setValueByPath(toObject, ['updateTime'], fromUpdateTime);
+  }
+
+  return toObject;
+}
+
+export function modelFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.Model,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromName = common.getValueByPath(fromObject, ['name']);
+  if (fromName != null) {
+    common.setValueByPath(toObject, ['name'], fromName);
+  }
+
+  const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
+  if (fromDisplayName != null) {
+    common.setValueByPath(toObject, ['displayName'], fromDisplayName);
+  }
+
+  const fromDescription = common.getValueByPath(fromObject, ['description']);
+  if (fromDescription != null) {
+    common.setValueByPath(toObject, ['description'], fromDescription);
+  }
+
+  const fromVersion = common.getValueByPath(fromObject, ['versionId']);
+  if (fromVersion != null) {
+    common.setValueByPath(toObject, ['version'], fromVersion);
+  }
+
+  const fromEndpoints = common.getValueByPath(fromObject, ['deployedModels']);
+  if (fromEndpoints != null) {
+    if (Array.isArray(fromEndpoints)) {
+      common.setValueByPath(
+        toObject,
+        ['endpoints'],
+        fromEndpoints.map((item) => {
+          return endpointFromVertex(apiClient, item);
+        }),
+      );
+    } else {
+      common.setValueByPath(toObject, ['endpoints'], fromEndpoints);
+    }
+  }
+
+  const fromLabels = common.getValueByPath(fromObject, ['labels']);
+  if (fromLabels != null) {
+    common.setValueByPath(toObject, ['labels'], fromLabels);
+  }
+
+  const fromTunedModelInfo = common.getValueByPath(fromObject, ['_self']);
+  if (fromTunedModelInfo != null) {
+    common.setValueByPath(
+      toObject,
+      ['tunedModelInfo'],
+      tunedModelInfoFromVertex(apiClient, fromTunedModelInfo),
     );
   }
 

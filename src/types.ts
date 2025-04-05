@@ -117,6 +117,14 @@ export enum Modality {
   AUDIO = 'AUDIO',
 }
 
+/**  */
+export enum DeploymentResourcesType {
+  DEPLOYMENT_RESOURCES_TYPE_UNSPECIFIED = 'DEPLOYMENT_RESOURCES_TYPE_UNSPECIFIED',
+  DEDICATED_RESOURCES = 'DEDICATED_RESOURCES',
+  AUTOMATIC_RESOURCES = 'AUTOMATIC_RESOURCES',
+  SHARED_RESOURCES = 'SHARED_RESOURCES',
+}
+
 /** Output only. RagFile state. */
 export enum State {
   STATE_UNSPECIFIED = 'STATE_UNSPECIFIED',
@@ -1489,6 +1497,64 @@ export class GenerateImagesResponse {
       ``include_safety_attributes`` is set to True.
        */
   positivePromptSafetyAttributes?: SafetyAttributes;
+}
+
+/** Optional parameters for models.get method. */
+export declare interface GetModelConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+}
+
+export declare interface GetModelParameters {
+  model: string;
+  /** Optional parameters for the request. */
+  config?: GetModelConfig;
+}
+
+/** An endpoint where you deploy models. */
+export declare interface Endpoint {
+  /** Resource name of the endpoint. */
+  name?: string;
+  /** ID of the model that's deployed to the endpoint. */
+  deployedModelId?: string;
+}
+
+/** A tuned machine learning model. */
+export declare interface TunedModelInfo {
+  /** ID of the base model that you want to tune. */
+  baseModel?: string;
+  /** Date and time when the base model was created. */
+  createTime?: string;
+  /** Date and time when the base model was last updated. */
+  updateTime?: string;
+}
+
+/** A trained machine learning model. */
+export declare interface Model {
+  /** Resource name of the model. */
+  name?: string;
+  /** Display name of the model. */
+  displayName?: string;
+  /** Description of the model. */
+  description?: string;
+  /** Version ID of the model. A new version is committed when a new
+      model version is uploaded or trained under an existing model ID. The
+      version ID is an auto-incrementing decimal number in string
+      representation. */
+  version?: string;
+  /** List of deployed models created from this base model. Note that a
+      model could have been deployed to endpoints in different locations. */
+  endpoints?: Endpoint[];
+  /** Labels with user-defined metadata to organize your models. */
+  labels?: Record<string, string>;
+  /** Information about the tuned model from the base model. */
+  tunedModelInfo?: TunedModelInfo;
+  /** The maximum number of input tokens that the model can handle. */
+  inputTokenLimit?: number;
+  /** The maximum number of output tokens that the model can generate. */
+  outputTokenLimit?: number;
+  /** List of actions that are supported by the model. */
+  supportedActions?: string[];
 }
 
 /** Generation config. */

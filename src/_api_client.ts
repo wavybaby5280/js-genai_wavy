@@ -283,13 +283,13 @@ export class ApiClient {
     }
   }
 
-  private constructUrl(path: string, httpOptions: HttpOptions): URL {
+  private constructUrl(
+    path: string,
+    httpOptions: HttpOptions,
+    prependProjectLocation: boolean,
+  ): URL {
     const urlElement: Array<string> = [this.getRequestUrlInternal(httpOptions)];
-    if (
-      this.clientOptions.vertexai &&
-      !this.clientOptions.apiKey &&
-      !path.startsWith('projects/')
-    ) {
+    if (prependProjectLocation) {
       urlElement.push(this.getBaseResourcePath());
     }
     if (path !== '') {
@@ -298,6 +298,30 @@ export class ApiClient {
     const url = new URL(`${urlElement.join('/')}`);
 
     return url;
+  }
+
+  private shouldPrependVertexProjectPath(request: HttpRequest): boolean {
+    if (this.clientOptions.apiKey) {
+      return false;
+    }
+    if (!this.clientOptions.vertexai) {
+      return false;
+    }
+    if (request.path.startsWith('projects/')) {
+      // Assume the path already starts with
+      // `projects/<project>/location/<location>`.
+      return false;
+    }
+    if (
+      request.httpMethod === 'GET' &&
+      request.path.startsWith('publishers/google/models')
+    ) {
+      // These paths are used by Vertex's models.get and models.list
+      // calls. For base models Vertex does not accept a project/location
+      // prefix (for tuned model the prefix is required).
+      return false;
+    }
+    return true;
   }
 
   async request(request: HttpRequest): Promise<HttpResponse> {
@@ -309,7 +333,12 @@ export class ApiClient {
       );
     }
 
-    const url = this.constructUrl(request.path, patchedHttpOptions);
+    const prependProjectLocation = this.shouldPrependVertexProjectPath(request);
+    const url = this.constructUrl(
+      request.path,
+      patchedHttpOptions,
+      prependProjectLocation,
+    );
     if (request.queryParams) {
       for (const [key, value] of Object.entries(request.queryParams)) {
         url.searchParams.append(key, String(value));
@@ -370,7 +399,12 @@ export class ApiClient {
       );
     }
 
-    const url = this.constructUrl(request.path, patchedHttpOptions);
+    const prependProjectLocation = this.shouldPrependVertexProjectPath(request);
+    const url = this.constructUrl(
+      request.path,
+      patchedHttpOptions,
+      prependProjectLocation,
+    );
     if (!url.searchParams.has('alt') || url.searchParams.get('alt') !== 'sse') {
       url.searchParams.set('alt', 'sse');
     }
