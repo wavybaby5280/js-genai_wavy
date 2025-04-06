@@ -1739,10 +1739,8 @@ export declare interface GenerateVideosOperation {
   done?: boolean;
   /** The error result of the operation in case of failure or cancellation. */
   error?: Record<string, unknown>;
-  /** The normal response of the operation in case of success. */
-  response?: Record<string, unknown>;
   /** The generated videos. */
-  result?: GenerateVideosResponse;
+  response?: GenerateVideosResponse;
 }
 
 /** Optional configuration for cached content creation. */
