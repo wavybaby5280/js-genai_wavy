@@ -10,6 +10,7 @@ import {Uploader} from './_uploader';
 import {File, HttpOptions, HttpResponse, UploadFileConfig} from './types';
 
 const CONTENT_TYPE_HEADER = 'Content-Type';
+const SERVER_TIMEOUT_HEADER = 'X-Server-Timeout';
 const USER_AGENT_HEADER = 'User-Agent';
 const GOOGLE_API_CLIENT_HEADER = 'x-goog-api-client';
 export const SDK_VERSION = '0.7.0'; // x-release-please-version
@@ -548,6 +549,14 @@ export class ApiClient {
     if (httpOptions && httpOptions.headers) {
       for (const [key, value] of Object.entries(httpOptions.headers)) {
         headers.append(key, value);
+      }
+      // Append a timeout header if it is set, note that the timeout option is
+      // in milliseconds but the header is in seconds.
+      if (httpOptions.timeout && httpOptions.timeout > 0) {
+        headers.append(
+          SERVER_TIMEOUT_HEADER,
+          String(Math.ceil(httpOptions.timeout / 1000)),
+        );
       }
     }
     await this.clientOptions.auth.addAuthHeaders(headers);

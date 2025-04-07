@@ -620,6 +620,7 @@ describe('ApiClient', () => {
       expect(headers.get('x-goog-api-client')).toContain('google-genai-sdk/');
       expect(headers.get('google-custom-header')).toBe('custom-header-value');
       expect(timeoutArgs[1]).toEqual(1001);
+      expect(headers.get('X-Server-Timeout')).toBe('2'); // Rounds up to 2s.
       expect(fetchArgs[0]).toEqual(
         'https://custom-request-base-url.googleapis.com/v1alpha/test-path?param1=value1&param2=value2',
       );
