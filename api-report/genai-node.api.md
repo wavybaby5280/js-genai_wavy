@@ -814,6 +814,7 @@ export interface GroundingChunkRetrievedContext {
 
 // @public
 export interface GroundingChunkWeb {
+    domain?: string;
     title?: string;
     uri?: string;
 }

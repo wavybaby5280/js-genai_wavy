@@ -879,6 +879,8 @@ export declare interface GroundingChunkRetrievedContext {
 
 /** Chunk from the web. */
 export declare interface GroundingChunkWeb {
+  /** Domain of the (original) URI. */
+  domain?: string;
   /** Title of the chunk. */
   title?: string;
   /** URI reference of the chunk. */
