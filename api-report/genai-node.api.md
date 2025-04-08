@@ -583,6 +583,7 @@ export class GenerateContentResponseUsageMetadata {
     toolUsePromptTokenCount?: number;
     toolUsePromptTokensDetails?: ModalityTokenCount[];
     totalTokenCount?: number;
+    trafficType?: TrafficType;
 }
 
 // @public
@@ -1613,6 +1614,16 @@ export interface ToolConfig {
 
 // @public (undocumented)
 export type ToolListUnion = Tool[];
+
+// @public
+export enum TrafficType {
+    // (undocumented)
+    ON_DEMAND = "ON_DEMAND",
+    // (undocumented)
+    PROVISIONED_THROUGHPUT = "PROVISIONED_THROUGHPUT",
+    // (undocumented)
+    TRAFFIC_TYPE_UNSPECIFIED = "TRAFFIC_TYPE_UNSPECIFIED"
+}
 
 // @public
 export interface TunedModelInfo {

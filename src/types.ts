@@ -109,6 +109,13 @@ export enum BlockedReason {
   PROHIBITED_CONTENT = 'PROHIBITED_CONTENT',
 }
 
+/** Output only. Traffic type. This shows whether a request consumes Pay-As-You-Go or Provisioned Throughput quota. */
+export enum TrafficType {
+  TRAFFIC_TYPE_UNSPECIFIED = 'TRAFFIC_TYPE_UNSPECIFIED',
+  ON_DEMAND = 'ON_DEMAND',
+  PROVISIONED_THROUGHPUT = 'PROVISIONED_THROUGHPUT',
+}
+
 /** Server content modalities. */
 export enum Modality {
   MODALITY_UNSPECIFIED = 'MODALITY_UNSPECIFIED',
@@ -1060,6 +1067,8 @@ export class GenerateContentResponseUsageMetadata {
   toolUsePromptTokensDetails?: ModalityTokenCount[];
   /** Total token count for prompt, response candidates, and tool-use prompts (if present). */
   totalTokenCount?: number;
+  /** Output only. Traffic type. This shows whether a request consumes Pay-As-You-Go or Provisioned Throughput quota. */
+  trafficType?: TrafficType;
 }
 
 /** Response message for PredictionService.GenerateContent. */
