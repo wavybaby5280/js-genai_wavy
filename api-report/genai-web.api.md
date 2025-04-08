@@ -300,18 +300,6 @@ export interface DeleteFileParameters {
 export class DeleteFileResponse {
 }
 
-// @public (undocumented)
-export enum DeploymentResourcesType {
-    // (undocumented)
-    AUTOMATIC_RESOURCES = "AUTOMATIC_RESOURCES",
-    // (undocumented)
-    DEDICATED_RESOURCES = "DEDICATED_RESOURCES",
-    // (undocumented)
-    DEPLOYMENT_RESOURCES_TYPE_UNSPECIFIED = "DEPLOYMENT_RESOURCES_TYPE_UNSPECIFIED",
-    // (undocumented)
-    SHARED_RESOURCES = "SHARED_RESOURCES"
-}
-
 // @public
 export interface DownloadFileConfig {
     httpOptions?: HttpOptions;
@@ -1512,16 +1500,6 @@ export interface SpeechConfig {
 
 // @public (undocumented)
 export type SpeechConfigUnion = SpeechConfig | string;
-
-// @public
-export enum State {
-    // (undocumented)
-    ACTIVE = "ACTIVE",
-    // (undocumented)
-    ERROR = "ERROR",
-    // (undocumented)
-    STATE_UNSPECIFIED = "STATE_UNSPECIFIED"
-}
 
 // @public
 export interface StyleReferenceConfig {

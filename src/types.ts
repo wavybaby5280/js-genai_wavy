@@ -124,21 +124,6 @@ export enum Modality {
   AUDIO = 'AUDIO',
 }
 
-/**  */
-export enum DeploymentResourcesType {
-  DEPLOYMENT_RESOURCES_TYPE_UNSPECIFIED = 'DEPLOYMENT_RESOURCES_TYPE_UNSPECIFIED',
-  DEDICATED_RESOURCES = 'DEDICATED_RESOURCES',
-  AUTOMATIC_RESOURCES = 'AUTOMATIC_RESOURCES',
-  SHARED_RESOURCES = 'SHARED_RESOURCES',
-}
-
-/** Output only. RagFile state. */
-export enum State {
-  STATE_UNSPECIFIED = 'STATE_UNSPECIFIED',
-  ACTIVE = 'ACTIVE',
-  ERROR = 'ERROR',
-}
-
 /** Config for the dynamic retrieval config mode. */
 export enum DynamicRetrievalConfigMode {
   MODE_UNSPECIFIED = 'MODE_UNSPECIFIED',
