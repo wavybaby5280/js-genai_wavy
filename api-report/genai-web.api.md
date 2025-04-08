@@ -1082,11 +1082,23 @@ export interface LiveServerContent {
 }
 
 // @public
+export interface LiveServerGoAway {
+    timeLeft?: string;
+}
+
+// @public
 export interface LiveServerMessage {
     serverContent?: LiveServerContent;
     setupComplete?: LiveServerSetupComplete;
     toolCall?: LiveServerToolCall;
     toolCallCancellation?: LiveServerToolCallCancellation;
+}
+
+// @public
+export interface LiveServerSessionResumptionUpdate {
+    lastConsumedClientMessageIndex?: string;
+    newHandle?: string;
+    resumable?: boolean;
 }
 
 // @public
@@ -1479,6 +1491,12 @@ export class Session {
     sendClientContent(params: types.LiveSendClientContentParameters): void;
     sendRealtimeInput(params: types.LiveSendRealtimeInputParameters): void;
     sendToolResponse(params: types.LiveSendToolResponseParameters): void;
+}
+
+// @public
+export interface SessionResumptionConfig {
+    handle?: string;
+    transparent?: boolean;
 }
 
 // @public

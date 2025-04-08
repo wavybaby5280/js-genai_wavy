@@ -2359,6 +2359,29 @@ export declare interface LiveServerToolCallCancellation {
   ids?: string[];
 }
 
+/** Server will not be able to service client soon. */
+export declare interface LiveServerGoAway {
+  /** The remaining time before the connection will be terminated as ABORTED. The minimal time returned here is specified differently together with the rate limits for a given model. */
+  timeLeft?: string;
+}
+
+/** Update of the session resumption state.
+
+  Only sent if `session_resumption` was set in the connection config.
+   */
+export declare interface LiveServerSessionResumptionUpdate {
+  /** New handle that represents state that can be resumed. Empty if `resumable`=false. */
+  newHandle?: string;
+  /** True if session can be resumed at this point. It might be not possible to resume session at some points. In that case we send update empty new_handle and resumable=false. Example of such case could be model executing function calls or just generating. Resuming session (using previous session token) in such state will result in some data loss. */
+  resumable?: boolean;
+  /** Index of last message sent by client that is included in state represented by this SessionResumptionToken. Only sent when `SessionResumptionConfig.transparent` is set.
+
+Presence of this index allows users to transparently reconnect and avoid issue of losing some part of realtime audio input/video. If client wishes to temporarily disconnect (for example as result of receiving GoAway) they can do it without losing state by buffering messages sent since last `SessionResmumptionTokenUpdate`. This field will enable them to limit buffering (avoid keeping all requests in RAM).
+
+Note: This should not be used for when resuming a session at some time later -- in those cases partial audio and video frames arelikely not needed. */
+  lastConsumedClientMessageIndex?: string;
+}
+
 /** Response message for API call. */
 export declare interface LiveServerMessage {
   /** Sent in response to a `LiveClientSetup` message from the client. */
@@ -2369,6 +2392,20 @@ export declare interface LiveServerMessage {
   toolCall?: LiveServerToolCall;
   /** Notification for the client that a previously issued `ToolCallMessage` with the specified `id`s should have been not executed and should be cancelled. */
   toolCallCancellation?: LiveServerToolCallCancellation;
+}
+
+/** Configuration of session resumption mechanism.
+
+  Included in `LiveConnectConfig.session_resumption`. If included server
+  will send `LiveServerSessionResumptionUpdate` messages.
+   */
+export declare interface SessionResumptionConfig {
+  /** Session resumption handle of previous session (session to restore).
+
+If not present new session will be started. */
+  handle?: string;
+  /** If set the server will send `last_consumed_client_message_index` in the `session_resumption_update` messages to allow for transparent reconnections. */
+  transparent?: boolean;
 }
 
 /** Message contains configuration that will apply for the duration of the streaming session. */
