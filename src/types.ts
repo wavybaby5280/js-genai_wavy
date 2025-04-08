@@ -2349,6 +2349,15 @@ export declare interface LiveServerContent {
   turnComplete?: boolean;
   /** If true, indicates that a client message has interrupted current model generation. If the client is playing out the content in realtime, this is a good signal to stop and empty the current queue. */
   interrupted?: boolean;
+  /** If true, indicates that the model is done generating. When model is
+      interrupted while generating there will be no generation_complete message
+      in interrupted turn, it will go through interrupted > turn_complete.
+      When model assumes realtime playback there will be delay between
+      generation_complete and turn_complete that is caused by model
+      waiting for playback to finish. If true, indicates that the model
+      has finished generating all content. This is a signal to the client
+      that it can stop sending messages. */
+  generationComplete?: boolean;
 }
 
 /** Request for the client to execute the `function_calls` and return the responses with the matching `id`s. */

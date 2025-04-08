@@ -1079,6 +1079,7 @@ export class LiveSendToolResponseParameters {
 
 // @public
 export interface LiveServerContent {
+    generationComplete?: boolean;
     interrupted?: boolean;
     modelTurn?: Content;
     turnComplete?: boolean;

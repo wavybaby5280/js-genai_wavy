@@ -396,6 +396,17 @@ function liveServerContentFromMldev(
     common.setValueByPath(toObject, ['interrupted'], fromInterrupted);
   }
 
+  const fromGenerationComplete = common.getValueByPath(fromObject, [
+    'generationComplete',
+  ]);
+  if (fromGenerationComplete != null) {
+    common.setValueByPath(
+      toObject,
+      ['generationComplete'],
+      fromGenerationComplete,
+    );
+  }
+
   return toObject;
 }
 
@@ -424,6 +435,16 @@ function liveServerContentFromVertex(
     common.setValueByPath(toObject, ['interrupted'], fromInterrupted);
   }
 
+  const fromGenerationComplete = common.getValueByPath(fromObject, [
+    'generationComplete',
+  ]);
+  if (fromGenerationComplete != null) {
+    common.setValueByPath(
+      toObject,
+      ['generationComplete'],
+      fromGenerationComplete,
+    );
+  }
   return toObject;
 }
 
