@@ -1034,6 +1034,7 @@ export interface LiveClientRealtimeInput {
 export interface LiveClientSetup {
     generationConfig?: GenerationConfig;
     model?: string;
+    sessionResumption?: SessionResumptionConfig;
     systemInstruction?: Content;
     tools?: ToolListUnion;
 }
@@ -1047,6 +1048,7 @@ export class LiveClientToolResponse {
 export interface LiveConnectConfig {
     generationConfig?: GenerationConfig;
     responseModalities?: Modality[];
+    sessionResumption?: SessionResumptionConfig;
     speechConfig?: SpeechConfig;
     systemInstruction?: Content;
     tools?: ToolListUnion;
@@ -1089,7 +1091,9 @@ export interface LiveServerGoAway {
 
 // @public
 export interface LiveServerMessage {
+    goAway?: LiveServerGoAway;
     serverContent?: LiveServerContent;
+    sessionResumptionUpdate?: LiveServerSessionResumptionUpdate;
     setupComplete?: LiveServerSetupComplete;
     toolCall?: LiveServerToolCall;
     toolCallCancellation?: LiveServerToolCallCancellation;

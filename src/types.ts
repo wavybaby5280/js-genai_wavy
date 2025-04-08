@@ -2401,6 +2401,10 @@ export declare interface LiveServerMessage {
   toolCall?: LiveServerToolCall;
   /** Notification for the client that a previously issued `ToolCallMessage` with the specified `id`s should have been not executed and should be cancelled. */
   toolCallCancellation?: LiveServerToolCallCancellation;
+  /** Server will disconnect soon. */
+  goAway?: LiveServerGoAway;
+  /** Update of the session resumption state. */
+  sessionResumptionUpdate?: LiveServerSessionResumptionUpdate;
 }
 
 /** Configuration of session resumption mechanism.
@@ -2438,6 +2442,10 @@ export declare interface LiveClientSetup {
       external systems to perform an action, or set of actions, outside of
       knowledge and scope of the model. */
   tools?: ToolListUnion;
+  /** Configures session resumption mechanism.
+
+          If included server will send SessionResumptionUpdate messages. */
+  sessionResumption?: SessionResumptionConfig;
 }
 
 /** Incremental update of the current conversation delivered from the client.
@@ -2532,6 +2540,10 @@ export declare interface LiveConnectConfig {
       external systems to perform an action, or set of actions, outside of
       knowledge and scope of the model. */
   tools?: ToolListUnion;
+  /** Configures session resumption mechanism.
+
+If included the server will send SessionResumptionUpdate messages. */
+  sessionResumption?: SessionResumptionConfig;
 }
 
 /** Parameters for connecting to the live API. */

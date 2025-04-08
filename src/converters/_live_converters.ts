@@ -116,6 +116,29 @@ export function liveServerMessageFromMldev(
     );
   }
 
+  const fromGoAway = common.getValueByPath(fromObject, ['goAway']);
+  if (fromGoAway !== undefined && fromGoAway !== null) {
+    common.setValueByPath(
+      toObject,
+      ['goAway'],
+      liveServerGoAwayFromMldev(fromGoAway),
+    );
+  }
+
+  const fromSessionResumptionUpdate = common.getValueByPath(fromObject, [
+    'sessionResumptionUpdate',
+  ]);
+  if (
+    fromSessionResumptionUpdate !== undefined &&
+    fromSessionResumptionUpdate !== null
+  ) {
+    common.setValueByPath(
+      toObject,
+      ['sessionResumptionUpdate'],
+      liveServerSessionResumptionUpdateFromMldev(fromSessionResumptionUpdate),
+    );
+  }
+
   return toObject;
 }
 
@@ -166,6 +189,29 @@ export function liveServerMessageFromVertex(
         apiClient,
         fromToolCallCancellation,
       ),
+    );
+  }
+
+  const fromGoAway = common.getValueByPath(fromObject, ['goAway']);
+  if (fromGoAway !== undefined && fromGoAway !== null) {
+    common.setValueByPath(
+      toObject,
+      ['goAway'],
+      liveServerGoAwayFromVertex(fromGoAway),
+    );
+  }
+
+  const fromSessionResumptionUpdate = common.getValueByPath(fromObject, [
+    'sessionResumptionUpdate',
+  ]);
+  if (
+    fromSessionResumptionUpdate !== undefined &&
+    fromSessionResumptionUpdate !== null
+  ) {
+    common.setValueByPath(
+      toObject,
+      ['sessionResumptionUpdate'],
+      liveServerSessionResumptionUpdateFromVertex(fromSessionResumptionUpdate),
     );
   }
 
@@ -228,6 +274,17 @@ function liveConnectConfigToMldev(
       fromTools.map((item: types.Tool) => {
         return toolToMldev(apiClient, item);
       }),
+    );
+  }
+
+  const fromSessionResumption = common.getValueByPath(fromObject, [
+    'sessionResumption',
+  ]);
+  if (fromSessionResumption !== undefined && fromSessionResumption !== null) {
+    common.setValueByPath(
+      toObject,
+      ['sessionResumption'],
+      liveClientSessionResumptionConfigToMldev(fromSessionResumption),
     );
   }
 
@@ -297,6 +354,17 @@ function liveConnectConfigToVertex(
       fromTools.map((item: types.Tool) => {
         return toolToVertex(apiClient, item);
       }),
+    );
+  }
+
+  const fromSessionResumption = common.getValueByPath(fromObject, [
+    'sessionResumption',
+  ]);
+  if (fromSessionResumption !== undefined && fromSessionResumption !== null) {
+    common.setValueByPath(
+      toObject,
+      ['sessionResumption'],
+      liveClientSessionResumptionConfigToVertex(fromSessionResumption),
     );
   }
 
@@ -477,6 +545,125 @@ function liveServerToolCallCancellationFromVertex(
   const fromIds = common.getValueByPath(fromObject, ['ids']);
   if (fromIds !== undefined) {
     common.setValueByPath(toObject, ['ids'], fromIds);
+  }
+
+  return toObject;
+}
+
+function liveServerGoAwayFromMldev(
+  fromObject: types.LiveServerGoAway,
+): types.LiveServerGoAway {
+  const toObject: Record<string, unknown> = {};
+
+  const fromTimeLeft = common.getValueByPath(fromObject, ['timeLeft']);
+  if (fromTimeLeft !== undefined) {
+    common.setValueByPath(toObject, ['timeLeft'], fromTimeLeft);
+  }
+
+  return toObject;
+}
+
+function liveServerGoAwayFromVertex(
+  fromObject: types.LiveServerGoAway,
+): types.LiveServerGoAway {
+  const toObject: Record<string, unknown> = {};
+
+  const fromTimeLeft = common.getValueByPath(fromObject, ['timeLeft']);
+  if (fromTimeLeft !== undefined) {
+    common.setValueByPath(toObject, ['timeLeft'], fromTimeLeft);
+  }
+
+  return toObject;
+}
+
+function liveServerSessionResumptionUpdateFromMldev(
+  fromObject: types.LiveServerSessionResumptionUpdate,
+): types.LiveServerSessionResumptionUpdate {
+  const toObject: Record<string, unknown> = {};
+
+  const fromNewHandle = common.getValueByPath(fromObject, ['newHandle']);
+  if (fromNewHandle !== undefined) {
+    common.setValueByPath(toObject, ['newHandle'], fromNewHandle);
+  }
+
+  const fromResumable = common.getValueByPath(fromObject, ['resumable']);
+  if (fromResumable !== undefined) {
+    common.setValueByPath(toObject, ['resumable'], fromResumable);
+  }
+
+  const fromLastConsumedClientMessageIndex = common.getValueByPath(fromObject, [
+    'lastConsumedClientMessageIndex',
+  ]);
+  if (fromLastConsumedClientMessageIndex !== undefined) {
+    common.setValueByPath(
+      toObject,
+      ['lastConsumedClientMessageIndex'],
+      fromLastConsumedClientMessageIndex,
+    );
+  }
+
+  return toObject;
+}
+
+function liveServerSessionResumptionUpdateFromVertex(
+  fromObject: types.LiveServerSessionResumptionUpdate,
+): types.LiveServerSessionResumptionUpdate {
+  const toObject: Record<string, unknown> = {};
+
+  const fromNewHandle = common.getValueByPath(fromObject, ['newHandle']);
+  if (fromNewHandle !== undefined) {
+    common.setValueByPath(toObject, ['newHandle'], fromNewHandle);
+  }
+
+  const fromResumable = common.getValueByPath(fromObject, ['resumable']);
+  if (fromResumable !== undefined) {
+    common.setValueByPath(toObject, ['resumable'], fromResumable);
+  }
+
+  const fromLastConsumedClientMessageIndex = common.getValueByPath(fromObject, [
+    'lastConsumedClientMessageIndex',
+  ]);
+  if (fromLastConsumedClientMessageIndex !== undefined) {
+    common.setValueByPath(
+      toObject,
+      ['lastConsumedClientMessageIndex'],
+      fromLastConsumedClientMessageIndex,
+    );
+  }
+
+  return toObject;
+}
+
+function liveClientSessionResumptionConfigToMldev(
+  fromObject: types.SessionResumptionConfig,
+): types.SessionResumptionConfig {
+  const toObject: Record<string, unknown> = {};
+
+  const fromHandle = common.getValueByPath(fromObject, ['handle']);
+  if (fromHandle !== undefined) {
+    common.setValueByPath(toObject, ['handle'], fromHandle);
+  }
+
+  if (common.getValueByPath(fromObject, ['transparent']) !== undefined) {
+    throw new Error('transparent parameter is not supported in Gemini API.');
+  }
+
+  return toObject;
+}
+
+function liveClientSessionResumptionConfigToVertex(
+  fromObject: types.SessionResumptionConfig,
+): types.SessionResumptionConfig {
+  const toObject: Record<string, unknown> = {};
+
+  const fromHandle = common.getValueByPath(fromObject, ['handle']);
+  if (fromHandle !== undefined) {
+    common.setValueByPath(toObject, ['handle'], fromHandle);
+  }
+
+  const fromTransparent = common.getValueByPath(fromObject, ['transparent']);
+  if (fromTransparent !== undefined) {
+    common.setValueByPath(toObject, ['transparent'], fromTransparent);
   }
 
   return toObject;
