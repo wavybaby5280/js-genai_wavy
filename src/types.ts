@@ -210,6 +210,34 @@ export enum SubjectReferenceType {
   SUBJECT_TYPE_PRODUCT = 'SUBJECT_TYPE_PRODUCT',
 }
 
+/** Start of speech sensitivity. */
+export enum StartSensitivity {
+  START_SENSITIVITY_UNSPECIFIED = 'START_SENSITIVITY_UNSPECIFIED',
+  START_SENSITIVITY_HIGH = 'START_SENSITIVITY_HIGH',
+  START_SENSITIVITY_LOW = 'START_SENSITIVITY_LOW',
+}
+
+/** End of speech sensitivity. */
+export enum EndSensitivity {
+  END_SENSITIVITY_UNSPECIFIED = 'END_SENSITIVITY_UNSPECIFIED',
+  END_SENSITIVITY_HIGH = 'END_SENSITIVITY_HIGH',
+  END_SENSITIVITY_LOW = 'END_SENSITIVITY_LOW',
+}
+
+/** The different ways of handling user activity. */
+export enum ActivityHandling {
+  ACTIVITY_HANDLING_UNSPECIFIED = 'ACTIVITY_HANDLING_UNSPECIFIED',
+  START_OF_ACTIVITY_INTERRUPTS = 'START_OF_ACTIVITY_INTERRUPTS',
+  NO_INTERRUPTION = 'NO_INTERRUPTION',
+}
+
+/** Options about which input is included in the user's turn. */
+export enum TurnCoverage {
+  TURN_COVERAGE_UNSPECIFIED = 'TURN_COVERAGE_UNSPECIFIED',
+  TURN_INCLUDES_ONLY_ACTIVITY = 'TURN_INCLUDES_ONLY_ACTIVITY',
+  TURN_INCLUDES_ALL_INPUT = 'TURN_INCLUDES_ALL_INPUT',
+}
+
 /** Server content modalities. */
 export enum MediaModality {
   MODALITY_UNSPECIFIED = 'MODALITY_UNSPECIFIED',
@@ -2401,6 +2429,34 @@ export declare interface LiveServerMessage {
   sessionResumptionUpdate?: LiveServerSessionResumptionUpdate;
 }
 
+/** Configures automatic detection of activity. */
+export declare interface AutomaticActivityDetection {
+  /** If enabled, detected voice and text input count as activity. If disabled, the client must send activity signals. */
+  disabled?: boolean;
+  /** Determines how likely speech is to be detected. */
+  startOfSpeechSensitivity?: StartSensitivity;
+  /** Determines how likely detected speech is ended. */
+  endOfSpeechSensitivity?: EndSensitivity;
+  /** The required duration of detected speech before start-of-speech is committed. The lower this value the more sensitive the start-of-speech detection is and the shorter speech can be recognized. However, this also increases the probability of false positives. */
+  prefixPaddingMs?: number;
+  /** The required duration of detected non-speech (e.g. silence) before end-of-speech is committed. The larger this value, the longer speech gaps can be without interrupting the user's activity but this will increase the model's latency. */
+  silenceDurationMs?: number;
+}
+
+/** Marks the end of user activity.
+
+  This can only be sent if automatic (i.e. server-side) activity detection is
+  disabled.
+   */
+export declare interface RealtimeInputConfig {
+  /** If not set, automatic activity detection is enabled by default. If automatic voice detection is disabled, the client must send activity signals. */
+  automaticActivityDetection?: AutomaticActivityDetection;
+  /** Defines what effect activity has. */
+  activityHandling?: ActivityHandling;
+  /** Defines which input is included in the user's turn. */
+  turnCoverage?: TurnCoverage;
+}
+
 /** Configuration of session resumption mechanism.
 
   Included in `LiveConnectConfig.session_resumption`. If included server
@@ -2436,6 +2492,8 @@ export declare interface LiveClientSetup {
       external systems to perform an action, or set of actions, outside of
       knowledge and scope of the model. */
   tools?: ToolListUnion;
+  /** Configures the realtime input behavior in BidiGenerateContent. */
+  realtimeInputConfig?: RealtimeInputConfig;
   /** Configures session resumption mechanism.
 
           If included server will send SessionResumptionUpdate messages. */
@@ -2463,6 +2521,20 @@ export declare interface LiveClientContent {
   turnComplete?: boolean;
 }
 
+/** Marks the start of user activity.
+
+  This can only be sent if automatic (i.e. server-side) activity detection is
+  disabled.
+   */
+export declare interface ActivityStart {}
+
+/** Marks the end of user activity.
+
+  This can only be sent if automatic (i.e. server-side) activity detection is
+  disabled.
+   */
+export declare interface ActivityEnd {}
+
 /** User input that is sent in real time.
 
   This is different from `LiveClientContent` in a few ways:
@@ -2481,6 +2553,10 @@ export declare interface LiveClientContent {
 export declare interface LiveClientRealtimeInput {
   /** Inlined bytes data for media input. */
   mediaChunks?: Blob[];
+  /** Marks the start of user activity. */
+  activityStart?: ActivityStart;
+  /** Marks the end of user activity. */
+  activityEnd?: ActivityEnd;
 }
 
 /** Client generated response to a `ToolCall` received from the server.
@@ -2538,6 +2614,8 @@ export declare interface LiveConnectConfig {
 
 If included the server will send SessionResumptionUpdate messages. */
   sessionResumption?: SessionResumptionConfig;
+  /** Configures the realtime input behavior in BidiGenerateContent. */
+  realtimeInputConfig?: RealtimeInputConfig;
 }
 
 /** Parameters for connecting to the live API. */

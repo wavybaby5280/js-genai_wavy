@@ -7,7 +7,34 @@
 import { GoogleAuthOptions } from 'google-auth-library';
 
 // @public
+export interface ActivityEnd {
+}
+
+// @public
+export enum ActivityHandling {
+    // (undocumented)
+    ACTIVITY_HANDLING_UNSPECIFIED = "ACTIVITY_HANDLING_UNSPECIFIED",
+    // (undocumented)
+    NO_INTERRUPTION = "NO_INTERRUPTION",
+    // (undocumented)
+    START_OF_ACTIVITY_INTERRUPTS = "START_OF_ACTIVITY_INTERRUPTS"
+}
+
+// @public
+export interface ActivityStart {
+}
+
+// @public
 export interface AudioTranscriptionConfig {
+}
+
+// @public
+export interface AutomaticActivityDetection {
+    disabled?: boolean;
+    endOfSpeechSensitivity?: EndSensitivity;
+    prefixPaddingMs?: number;
+    silenceDurationMs?: number;
+    startOfSpeechSensitivity?: StartSensitivity;
 }
 
 // @public
@@ -351,6 +378,16 @@ export class EmbedContentResponse {
 export interface Endpoint {
     deployedModelId?: string;
     name?: string;
+}
+
+// @public
+export enum EndSensitivity {
+    // (undocumented)
+    END_SENSITIVITY_HIGH = "END_SENSITIVITY_HIGH",
+    // (undocumented)
+    END_SENSITIVITY_LOW = "END_SENSITIVITY_LOW",
+    // (undocumented)
+    END_SENSITIVITY_UNSPECIFIED = "END_SENSITIVITY_UNSPECIFIED"
 }
 
 // @public
@@ -1015,6 +1052,8 @@ export interface LiveClientMessage {
 
 // @public
 export interface LiveClientRealtimeInput {
+    activityEnd?: ActivityEnd;
+    activityStart?: ActivityStart;
     mediaChunks?: Blob_2[];
 }
 
@@ -1022,6 +1061,7 @@ export interface LiveClientRealtimeInput {
 export interface LiveClientSetup {
     generationConfig?: GenerationConfig;
     model?: string;
+    realtimeInputConfig?: RealtimeInputConfig;
     sessionResumption?: SessionResumptionConfig;
     systemInstruction?: Content;
     tools?: ToolListUnion;
@@ -1035,6 +1075,7 @@ export class LiveClientToolResponse {
 // @public
 export interface LiveConnectConfig {
     generationConfig?: GenerationConfig;
+    realtimeInputConfig?: RealtimeInputConfig;
     responseModalities?: Modality[];
     sessionResumption?: SessionResumptionConfig;
     speechConfig?: SpeechConfig;
@@ -1338,6 +1379,13 @@ export interface RawReferenceImage {
 }
 
 // @public
+export interface RealtimeInputConfig {
+    activityHandling?: ActivityHandling;
+    automaticActivityDetection?: AutomaticActivityDetection;
+    turnCoverage?: TurnCoverage;
+}
+
+// @public
 export interface ReplayFile {
     // (undocumented)
     interactions?: ReplayInteraction[];
@@ -1502,6 +1550,16 @@ export interface SpeechConfig {
 export type SpeechConfigUnion = SpeechConfig | string;
 
 // @public
+export enum StartSensitivity {
+    // (undocumented)
+    START_SENSITIVITY_HIGH = "START_SENSITIVITY_HIGH",
+    // (undocumented)
+    START_SENSITIVITY_LOW = "START_SENSITIVITY_LOW",
+    // (undocumented)
+    START_SENSITIVITY_UNSPECIFIED = "START_SENSITIVITY_UNSPECIFIED"
+}
+
+// @public
 export interface StyleReferenceConfig {
     styleDescription?: string;
 }
@@ -1613,6 +1671,16 @@ export interface TunedModelInfo {
     baseModel?: string;
     createTime?: string;
     updateTime?: string;
+}
+
+// @public
+export enum TurnCoverage {
+    // (undocumented)
+    TURN_COVERAGE_UNSPECIFIED = "TURN_COVERAGE_UNSPECIFIED",
+    // (undocumented)
+    TURN_INCLUDES_ALL_INPUT = "TURN_INCLUDES_ALL_INPUT",
+    // (undocumented)
+    TURN_INCLUDES_ONLY_ACTIVITY = "TURN_INCLUDES_ONLY_ACTIVITY"
 }
 
 // @public
