@@ -183,6 +183,12 @@ export type ContentListUnion = ContentUnion[] | ContentUnion;
 export type ContentUnion = Content | PartUnion[] | PartUnion;
 
 // @public
+export interface ContextWindowCompressionConfig {
+    slidingWindow?: SlidingWindow;
+    triggerTokens?: string;
+}
+
+// @public
 export interface ControlReferenceConfig {
     controlType?: ControlReferenceType;
     enableControlImageComputation?: boolean;
@@ -1059,6 +1065,7 @@ export interface LiveClientRealtimeInput {
 
 // @public
 export interface LiveClientSetup {
+    contextWindowCompression?: ContextWindowCompressionConfig;
     generationConfig?: GenerationConfig;
     model?: string;
     realtimeInputConfig?: RealtimeInputConfig;
@@ -1074,6 +1081,7 @@ export class LiveClientToolResponse {
 
 // @public
 export interface LiveConnectConfig {
+    contextWindowCompression?: ContextWindowCompressionConfig;
     generationConfig?: GenerationConfig;
     realtimeInputConfig?: RealtimeInputConfig;
     responseModalities?: Modality[];
@@ -1539,6 +1547,11 @@ export class Session {
 export interface SessionResumptionConfig {
     handle?: string;
     transparent?: boolean;
+}
+
+// @public
+export interface SlidingWindow {
+    targetTokens?: string;
 }
 
 // @public

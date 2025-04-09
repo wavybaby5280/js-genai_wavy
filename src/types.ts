@@ -2471,6 +2471,26 @@ If not present new session will be started. */
   transparent?: boolean;
 }
 
+/** Context window will be truncated by keeping only suffix of it.
+
+  Context window will always be cut at start of USER role turn. System
+  instructions and `BidiGenerateContentSetup.prefix_turns` will not be
+  subject to the sliding window mechanism, they will always stay at the
+  beginning of context window.
+   */
+export declare interface SlidingWindow {
+  /** Session reduction target -- how many tokens we should keep. Window shortening operation has some latency costs, so we should avoid running it on every turn. Should be < trigger_tokens. If not set, trigger_tokens/2 is assumed. */
+  targetTokens?: string;
+}
+
+/** Enables context window compression -- mechanism managing model context window so it does not exceed given length. */
+export declare interface ContextWindowCompressionConfig {
+  /** Number of tokens (before running turn) that triggers context window compression mechanism. */
+  triggerTokens?: string;
+  /** Sliding window compression mechanism. */
+  slidingWindow?: SlidingWindow;
+}
+
 /** Message contains configuration that will apply for the duration of the streaming session. */
 export declare interface LiveClientSetup {
   /** 
@@ -2498,6 +2518,10 @@ export declare interface LiveClientSetup {
 
           If included server will send SessionResumptionUpdate messages. */
   sessionResumption?: SessionResumptionConfig;
+  /** Configures context window compression mechanism.
+
+      If included, server will compress context window to fit into given length. */
+  contextWindowCompression?: ContextWindowCompressionConfig;
 }
 
 /** Incremental update of the current conversation delivered from the client.
@@ -2616,6 +2640,10 @@ If included the server will send SessionResumptionUpdate messages. */
   sessionResumption?: SessionResumptionConfig;
   /** Configures the realtime input behavior in BidiGenerateContent. */
   realtimeInputConfig?: RealtimeInputConfig;
+  /** Configures context window compression mechanism.
+
+      If included, server will compress context window to fit into given length. */
+  contextWindowCompression?: ContextWindowCompressionConfig;
 }
 
 /** Parameters for connecting to the live API. */
