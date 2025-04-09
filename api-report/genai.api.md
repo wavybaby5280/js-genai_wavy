@@ -1135,6 +1135,7 @@ export interface LiveServerMessage {
     setupComplete?: LiveServerSetupComplete;
     toolCall?: LiveServerToolCall;
     toolCallCancellation?: LiveServerToolCallCancellation;
+    usageMetadata?: UsageMetadata;
 }
 
 // @public
@@ -1755,6 +1756,21 @@ export interface UpscaleImageParameters {
     image: Image_2;
     model: string;
     upscaleFactor: string;
+}
+
+// @public
+export interface UsageMetadata {
+    cachedContentTokenCount?: number;
+    cacheTokensDetails?: ModalityTokenCount[];
+    promptTokenCount?: number;
+    promptTokensDetails?: ModalityTokenCount[];
+    responseTokenCount?: number;
+    responseTokensDetails?: ModalityTokenCount[];
+    thoughtsTokenCount?: number;
+    toolUsePromptTokenCount?: number;
+    toolUsePromptTokensDetails?: ModalityTokenCount[];
+    totalTokenCount?: number;
+    trafficType?: TrafficType;
 }
 
 // @public

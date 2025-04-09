@@ -116,6 +116,17 @@ export function liveServerMessageFromMldev(
     );
   }
 
+  const fromUsageMetadata = common.getValueByPath(fromObject, [
+    'usageMetadata',
+  ]);
+  if (fromUsageMetadata != undefined && fromUsageMetadata != null) {
+    common.setValueByPath(
+      toObject,
+      ['usageMetadata'],
+      usageMetadataFromMldev(apiClient, fromUsageMetadata),
+    );
+  }
+
   const fromGoAway = common.getValueByPath(fromObject, ['goAway']);
   if (fromGoAway !== undefined && fromGoAway !== null) {
     common.setValueByPath(
@@ -212,6 +223,17 @@ export function liveServerMessageFromVertex(
       toObject,
       ['sessionResumptionUpdate'],
       liveServerSessionResumptionUpdateFromVertex(fromSessionResumptionUpdate),
+    );
+  }
+
+  const fromUsageMetadata = common.getValueByPath(fromObject, [
+    'usageMetadata',
+  ]);
+  if (fromUsageMetadata != undefined && fromUsageMetadata != null) {
+    common.setValueByPath(
+      toObject,
+      ['usageMetadata'],
+      usageMetadataFromVertex(apiClient, fromUsageMetadata),
     );
   }
 
@@ -791,6 +813,351 @@ function liveClientSessionResumptionConfigToVertex(
   const fromTransparent = common.getValueByPath(fromObject, ['transparent']);
   if (fromTransparent !== undefined) {
     common.setValueByPath(toObject, ['transparent'], fromTransparent);
+  }
+
+  return toObject;
+}
+
+export function modalityTokenCountFromMldev(
+  apiClient: ApiClient,
+  fromObject: types.ModalityTokenCount,
+): types.ModalityTokenCount {
+  const toObject: Record<string, unknown> = {};
+
+  const fromModality = common.getValueByPath(fromObject, ['modality']);
+  if (fromModality != null) {
+    common.setValueByPath(toObject, ['modality'], fromModality);
+  }
+
+  const fromTokenCount = common.getValueByPath(fromObject, ['tokenCount']);
+  if (fromTokenCount != null) {
+    common.setValueByPath(toObject, ['tokenCount'], fromTokenCount);
+  }
+
+  return toObject;
+}
+
+export function usageMetadataFromMldev(
+  apiClient: ApiClient,
+  fromObject: types.UsageMetadata,
+): types.UsageMetadata {
+  const toObject: Record<string, unknown> = {};
+
+  const fromPromptTokenCount = common.getValueByPath(fromObject, [
+    'promptTokenCount',
+  ]);
+  if (fromPromptTokenCount != null) {
+    common.setValueByPath(toObject, ['promptTokenCount'], fromPromptTokenCount);
+  }
+
+  const fromCachedContentTokenCount = common.getValueByPath(fromObject, [
+    'cachedContentTokenCount',
+  ]);
+  if (fromCachedContentTokenCount != null) {
+    common.setValueByPath(
+      toObject,
+      ['cachedContentTokenCount'],
+      fromCachedContentTokenCount,
+    );
+  }
+
+  const fromResponseTokenCount = common.getValueByPath(fromObject, [
+    'responseTokenCount',
+  ]);
+  if (fromResponseTokenCount != null) {
+    common.setValueByPath(
+      toObject,
+      ['responseTokenCount'],
+      fromResponseTokenCount,
+    );
+  }
+
+  const fromToolUsePromptTokenCount = common.getValueByPath(fromObject, [
+    'toolUsePromptTokenCount',
+  ]);
+  if (fromToolUsePromptTokenCount != null) {
+    common.setValueByPath(
+      toObject,
+      ['toolUsePromptTokenCount'],
+      fromToolUsePromptTokenCount,
+    );
+  }
+
+  const fromThoughtsTokenCount = common.getValueByPath(fromObject, [
+    'thoughtsTokenCount',
+  ]);
+  if (fromThoughtsTokenCount != null) {
+    common.setValueByPath(
+      toObject,
+      ['thoughtsTokenCount'],
+      fromThoughtsTokenCount,
+    );
+  }
+
+  const fromTotalTokenCount = common.getValueByPath(fromObject, [
+    'totalTokenCount',
+  ]);
+  if (fromTotalTokenCount != null) {
+    common.setValueByPath(toObject, ['totalTokenCount'], fromTotalTokenCount);
+  }
+
+  const fromPromptTokensDetails = common.getValueByPath(fromObject, [
+    'promptTokensDetails',
+  ]);
+  if (fromPromptTokensDetails != null) {
+    if (Array.isArray(fromPromptTokensDetails)) {
+      common.setValueByPath(
+        toObject,
+        ['promptTokensDetails'],
+        fromPromptTokensDetails.map((item) => {
+          return modalityTokenCountFromMldev(apiClient, item);
+        }),
+      );
+    } else {
+      common.setValueByPath(
+        toObject,
+        ['promptTokensDetails'],
+        fromPromptTokensDetails,
+      );
+    }
+  }
+
+  const fromCacheTokensDetails = common.getValueByPath(fromObject, [
+    'cacheTokensDetails',
+  ]);
+  if (fromCacheTokensDetails != null) {
+    if (Array.isArray(fromCacheTokensDetails)) {
+      common.setValueByPath(
+        toObject,
+        ['cacheTokensDetails'],
+        fromCacheTokensDetails.map((item) => {
+          return modalityTokenCountFromMldev(apiClient, item);
+        }),
+      );
+    } else {
+      common.setValueByPath(
+        toObject,
+        ['cacheTokensDetails'],
+        fromCacheTokensDetails,
+      );
+    }
+  }
+
+  const fromResponseTokensDetails = common.getValueByPath(fromObject, [
+    'responseTokensDetails',
+  ]);
+  if (fromResponseTokensDetails != null) {
+    if (Array.isArray(fromResponseTokensDetails)) {
+      common.setValueByPath(
+        toObject,
+        ['responseTokensDetails'],
+        fromResponseTokensDetails.map((item) => {
+          return modalityTokenCountFromMldev(apiClient, item);
+        }),
+      );
+    } else {
+      common.setValueByPath(
+        toObject,
+        ['responseTokensDetails'],
+        fromResponseTokensDetails,
+      );
+    }
+  }
+
+  const fromToolUsePromptTokensDetails = common.getValueByPath(fromObject, [
+    'toolUsePromptTokensDetails',
+  ]);
+  if (fromToolUsePromptTokensDetails != null) {
+    if (Array.isArray(fromToolUsePromptTokensDetails)) {
+      common.setValueByPath(
+        toObject,
+        ['toolUsePromptTokensDetails'],
+        fromToolUsePromptTokensDetails.map((item) => {
+          return modalityTokenCountFromMldev(apiClient, item);
+        }),
+      );
+    } else {
+      common.setValueByPath(
+        toObject,
+        ['toolUsePromptTokensDetails'],
+        fromToolUsePromptTokensDetails,
+      );
+    }
+  }
+
+  return toObject;
+}
+
+export function modalityTokenCountFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.ModalityTokenCount,
+): types.ModalityTokenCount {
+  const toObject: Record<string, unknown> = {};
+
+  const fromModality = common.getValueByPath(fromObject, ['modality']);
+  if (fromModality != null) {
+    common.setValueByPath(toObject, ['modality'], fromModality);
+  }
+
+  const fromTokenCount = common.getValueByPath(fromObject, ['tokenCount']);
+  if (fromTokenCount != null) {
+    common.setValueByPath(toObject, ['tokenCount'], fromTokenCount);
+  }
+
+  return toObject;
+}
+
+export function usageMetadataFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.UsageMetadata,
+): types.UsageMetadata {
+  const toObject: Record<string, unknown> = {};
+
+  const fromPromptTokenCount = common.getValueByPath(fromObject, [
+    'promptTokenCount',
+  ]);
+  if (fromPromptTokenCount != null) {
+    common.setValueByPath(toObject, ['promptTokenCount'], fromPromptTokenCount);
+  }
+
+  const fromCachedContentTokenCount = common.getValueByPath(fromObject, [
+    'cachedContentTokenCount',
+  ]);
+  if (fromCachedContentTokenCount != null) {
+    common.setValueByPath(
+      toObject,
+      ['cachedContentTokenCount'],
+      fromCachedContentTokenCount,
+    );
+  }
+
+  const fromResponseTokenCount = common.getValueByPath(fromObject, [
+    'candidatesTokenCount',
+  ]);
+  if (fromResponseTokenCount != null) {
+    common.setValueByPath(
+      toObject,
+      ['responseTokenCount'],
+      fromResponseTokenCount,
+    );
+  }
+
+  const fromToolUsePromptTokenCount = common.getValueByPath(fromObject, [
+    'toolUsePromptTokenCount',
+  ]);
+  if (fromToolUsePromptTokenCount != null) {
+    common.setValueByPath(
+      toObject,
+      ['toolUsePromptTokenCount'],
+      fromToolUsePromptTokenCount,
+    );
+  }
+
+  const fromThoughtsTokenCount = common.getValueByPath(fromObject, [
+    'thoughtsTokenCount',
+  ]);
+  if (fromThoughtsTokenCount != null) {
+    common.setValueByPath(
+      toObject,
+      ['thoughtsTokenCount'],
+      fromThoughtsTokenCount,
+    );
+  }
+
+  const fromTotalTokenCount = common.getValueByPath(fromObject, [
+    'totalTokenCount',
+  ]);
+  if (fromTotalTokenCount != null) {
+    common.setValueByPath(toObject, ['totalTokenCount'], fromTotalTokenCount);
+  }
+
+  const fromPromptTokensDetails = common.getValueByPath(fromObject, [
+    'promptTokensDetails',
+  ]);
+  if (fromPromptTokensDetails != null) {
+    if (Array.isArray(fromPromptTokensDetails)) {
+      common.setValueByPath(
+        toObject,
+        ['promptTokensDetails'],
+        fromPromptTokensDetails.map((item) => {
+          return modalityTokenCountFromVertex(apiClient, item);
+        }),
+      );
+    } else {
+      common.setValueByPath(
+        toObject,
+        ['promptTokensDetails'],
+        fromPromptTokensDetails,
+      );
+    }
+  }
+
+  const fromCacheTokensDetails = common.getValueByPath(fromObject, [
+    'cacheTokensDetails',
+  ]);
+  if (fromCacheTokensDetails != null) {
+    if (Array.isArray(fromCacheTokensDetails)) {
+      common.setValueByPath(
+        toObject,
+        ['cacheTokensDetails'],
+        fromCacheTokensDetails.map((item) => {
+          return modalityTokenCountFromVertex(apiClient, item);
+        }),
+      );
+    } else {
+      common.setValueByPath(
+        toObject,
+        ['cacheTokensDetails'],
+        fromCacheTokensDetails,
+      );
+    }
+  }
+
+  const fromToolUsePromptTokensDetails = common.getValueByPath(fromObject, [
+    'toolUsePromptTokensDetails',
+  ]);
+  if (fromToolUsePromptTokensDetails != null) {
+    if (Array.isArray(fromToolUsePromptTokensDetails)) {
+      common.setValueByPath(
+        toObject,
+        ['toolUsePromptTokensDetails'],
+        fromToolUsePromptTokensDetails.map((item) => {
+          return modalityTokenCountFromVertex(apiClient, item);
+        }),
+      );
+    } else {
+      common.setValueByPath(
+        toObject,
+        ['toolUsePromptTokensDetails'],
+        fromToolUsePromptTokensDetails,
+      );
+    }
+  }
+
+  const fromResponseTokensDetails = common.getValueByPath(fromObject, [
+    'candidatesTokensDetails',
+  ]);
+  if (fromResponseTokensDetails != null) {
+    if (Array.isArray(fromResponseTokensDetails)) {
+      common.setValueByPath(
+        toObject,
+        ['responseTokensDetails'],
+        fromResponseTokensDetails.map((item) => {
+          return modalityTokenCountFromVertex(apiClient, item);
+        }),
+      );
+    } else {
+      common.setValueByPath(
+        toObject,
+        ['responseTokensDetails'],
+        fromResponseTokensDetails,
+      );
+    }
+  }
+
+  const fromTrafficType = common.getValueByPath(fromObject, ['trafficType']);
+  if (fromTrafficType != null) {
+    common.setValueByPath(toObject, ['trafficType'], fromTrafficType);
   }
 
   return toObject;

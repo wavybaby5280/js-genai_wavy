@@ -210,6 +210,16 @@ export enum SubjectReferenceType {
   SUBJECT_TYPE_PRODUCT = 'SUBJECT_TYPE_PRODUCT',
 }
 
+/** Server content modalities. */
+export enum MediaModality {
+  MODALITY_UNSPECIFIED = 'MODALITY_UNSPECIFIED',
+  TEXT = 'TEXT',
+  IMAGE = 'IMAGE',
+  VIDEO = 'VIDEO',
+  AUDIO = 'AUDIO',
+  DOCUMENT = 'DOCUMENT',
+}
+
 /** Start of speech sensitivity. */
 export enum StartSensitivity {
   START_SENSITIVITY_UNSPECIFIED = 'START_SENSITIVITY_UNSPECIFIED',
@@ -236,16 +246,6 @@ export enum TurnCoverage {
   TURN_COVERAGE_UNSPECIFIED = 'TURN_COVERAGE_UNSPECIFIED',
   TURN_INCLUDES_ONLY_ACTIVITY = 'TURN_INCLUDES_ONLY_ACTIVITY',
   TURN_INCLUDES_ALL_INPUT = 'TURN_INCLUDES_ALL_INPUT',
-}
-
-/** Server content modalities. */
-export enum MediaModality {
-  MODALITY_UNSPECIFIED = 'MODALITY_UNSPECIFIED',
-  TEXT = 'TEXT',
-  IMAGE = 'IMAGE',
-  VIDEO = 'VIDEO',
-  AUDIO = 'AUDIO',
-  DOCUMENT = 'DOCUMENT',
 }
 
 /** Metadata describes the input video content. */
@@ -2390,6 +2390,33 @@ export declare interface LiveServerToolCallCancellation {
   ids?: string[];
 }
 
+/** Usage metadata about response(s). */
+export declare interface UsageMetadata {
+  /** Number of tokens in the prompt. When `cached_content` is set, this is still the total effective prompt size meaning this includes the number of tokens in the cached content. */
+  promptTokenCount?: number;
+  /** Number of tokens in the cached part of the prompt (the cached content). */
+  cachedContentTokenCount?: number;
+  /** Total number of tokens across all the generated response candidates. */
+  responseTokenCount?: number;
+  /** Number of tokens present in tool-use prompt(s). */
+  toolUsePromptTokenCount?: number;
+  /** Number of tokens of thoughts for thinking models. */
+  thoughtsTokenCount?: number;
+  /** Total token count for prompt, response candidates, and tool-use prompts(if present). */
+  totalTokenCount?: number;
+  /** List of modalities that were processed in the request input. */
+  promptTokensDetails?: ModalityTokenCount[];
+  /** List of modalities that were processed in the cache input. */
+  cacheTokensDetails?: ModalityTokenCount[];
+  /** List of modalities that were returned in the response. */
+  responseTokensDetails?: ModalityTokenCount[];
+  /** List of modalities that were processed in the tool-use prompt. */
+  toolUsePromptTokensDetails?: ModalityTokenCount[];
+  /** Traffic type. This shows whether a request consumes Pay-As-You-Go
+ or Provisioned Throughput quota. */
+  trafficType?: TrafficType;
+}
+
 /** Server will not be able to service client soon. */
 export declare interface LiveServerGoAway {
   /** The remaining time before the connection will be terminated as ABORTED. The minimal time returned here is specified differently together with the rate limits for a given model. */
@@ -2423,6 +2450,8 @@ export declare interface LiveServerMessage {
   toolCall?: LiveServerToolCall;
   /** Notification for the client that a previously issued `ToolCallMessage` with the specified `id`s should have been not executed and should be cancelled. */
   toolCallCancellation?: LiveServerToolCallCancellation;
+  /** Usage metadata about model response(s). */
+  usageMetadata?: UsageMetadata;
   /** Server will disconnect soon. */
   goAway?: LiveServerGoAway;
   /** Update of the session resumption state. */
