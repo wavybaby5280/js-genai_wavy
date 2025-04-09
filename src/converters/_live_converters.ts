@@ -218,6 +218,84 @@ export function liveServerMessageFromVertex(
   return toObject;
 }
 
+function slidingWindowToMldev(
+  fromObject: types.SlidingWindow,
+): types.SlidingWindow {
+  const toObject: Record<string, unknown> = {};
+
+  const fromTargetTokens = common.getValueByPath(fromObject, ['targetTokens']);
+  if (fromTargetTokens !== undefined && fromTargetTokens !== null) {
+    common.setValueByPath(toObject, ['targetTokens'], fromTargetTokens);
+  }
+
+  return toObject;
+}
+
+function slidingWindowToVertex(
+  fromObject: types.SlidingWindow,
+): types.SlidingWindow {
+  const toObject: Record<string, unknown> = {};
+
+  const fromTargetTokens = common.getValueByPath(fromObject, ['targetTokens']);
+  if (fromTargetTokens !== undefined && fromTargetTokens !== null) {
+    common.setValueByPath(toObject, ['targetTokens'], fromTargetTokens);
+  }
+
+  return toObject;
+}
+
+function contextWindowCompressionToMldev(
+  fromObject: types.ContextWindowCompressionConfig,
+): types.ContextWindowCompressionConfig {
+  const toObject: Record<string, unknown> = {};
+
+  const fromTriggerTokens = common.getValueByPath(fromObject, [
+    'triggerTokens',
+  ]);
+  if (fromTriggerTokens !== undefined && fromTriggerTokens !== null) {
+    common.setValueByPath(toObject, ['triggerTokens'], fromTriggerTokens);
+  }
+
+  const fromSlidingWindow = common.getValueByPath(fromObject, [
+    'slidingWindow',
+  ]);
+  if (fromSlidingWindow !== undefined && fromSlidingWindow !== null) {
+    common.setValueByPath(
+      toObject,
+      ['slidingWindow'],
+      slidingWindowToMldev(fromSlidingWindow),
+    );
+  }
+
+  return toObject;
+}
+
+function contextWindowCompressionToVertex(
+  fromObject: types.ContextWindowCompressionConfig,
+): types.ContextWindowCompressionConfig {
+  const toObject: Record<string, unknown> = {};
+
+  const fromTriggerTokens = common.getValueByPath(fromObject, [
+    'triggerTokens',
+  ]);
+  if (fromTriggerTokens !== undefined && fromTriggerTokens !== null) {
+    common.setValueByPath(toObject, ['triggerTokens'], fromTriggerTokens);
+  }
+
+  const fromSlidingWindow = common.getValueByPath(fromObject, [
+    'slidingWindow',
+  ]);
+  if (fromSlidingWindow !== undefined && fromSlidingWindow !== null) {
+    common.setValueByPath(
+      toObject,
+      ['slidingWindow'],
+      slidingWindowToVertex(fromSlidingWindow),
+    );
+  }
+
+  return toObject;
+}
+
 function liveConnectConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.LiveConnectConfig,
@@ -285,6 +363,20 @@ function liveConnectConfigToMldev(
       toObject,
       ['sessionResumption'],
       liveClientSessionResumptionConfigToMldev(fromSessionResumption),
+    );
+  }
+
+  const fromContextWindowCompression = common.getValueByPath(fromObject, [
+    'contextWindowCompression',
+  ]);
+  if (
+    fromContextWindowCompression !== undefined &&
+    fromContextWindowCompression !== null
+  ) {
+    common.setValueByPath(
+      toObject,
+      ['contextWindowCompression'],
+      contextWindowCompressionToMldev(fromContextWindowCompression),
     );
   }
 
@@ -365,6 +457,20 @@ function liveConnectConfigToVertex(
       toObject,
       ['sessionResumption'],
       liveClientSessionResumptionConfigToVertex(fromSessionResumption),
+    );
+  }
+
+  const fromContextWindowCompression = common.getValueByPath(fromObject, [
+    'contextWindowCompression',
+  ]);
+  if (
+    fromContextWindowCompression !== undefined &&
+    fromContextWindowCompression !== null
+  ) {
+    common.setValueByPath(
+      toObject,
+      ['contextWindowCompression'],
+      contextWindowCompressionToVertex(fromContextWindowCompression),
     );
   }
 

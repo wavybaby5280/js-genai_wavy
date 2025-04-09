@@ -310,6 +310,65 @@ describe('live', () => {
     expect(session).toBeDefined();
   });
 
+  it('connect should send setup message with context window compression config', async () => {
+    const apiClient = new ApiClient({
+      auth: new FakeAuth(),
+      apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
+      vertexai: true,
+      project: 'test-project',
+      location: 'test-location',
+    });
+    const websocketFactory = new FakeWebSocketFactory();
+    const live = new Live(apiClient, new FakeAuth(), websocketFactory);
+
+    let websocket = new FakeWebSocket(
+      '',
+      {},
+      {
+        onopen: function () {},
+        onmessage: function (e: MessageEvent) {},
+        onerror: function (e: ErrorEvent) {},
+        onclose: function (e: CloseEvent) {},
+      },
+    );
+    spyOn(websocket, 'connect').and.callThrough();
+    let websocketSpy = spyOn(websocket, 'send').and.callThrough();
+    const websocketFactorySpy = spyOn(websocketFactory, 'create').and.callFake(
+      (url, headers, callbacks) => {
+        // Update the websocket spy instance with callbacks provided by
+        // the websocket factory.
+        websocket = new FakeWebSocket(url, headers, callbacks);
+        spyOn(websocket, 'connect').and.callThrough();
+        websocketSpy = spyOn(websocket, 'send').and.callThrough();
+        return websocket;
+      },
+    );
+
+    const session = await live.connect({
+      model: 'models/gemini-2.0-flash-exp',
+      config: {
+        contextWindowCompression: {
+          triggerTokens: '1000',
+          slidingWindow: {
+            targetTokens: '10',
+          },
+        },
+      },
+      callbacks: {
+        onmessage: function (e: types.LiveServerMessage) {
+          void e;
+        },
+      },
+    });
+
+    const websocketSpyCall = websocketSpy.calls.all()[0];
+    expect(websocketSpyCall.args[0]).toBe(
+      '{"setup":{"generationConfig":{"responseModalities":["AUDIO"]},"contextWindowCompression":{"triggerTokens":"1000","slidingWindow":{"targetTokens":"10"}},"model":"models/gemini-2.0-flash-exp"}}',
+    );
+    expect(session).toBeDefined();
+  });
+
   it('session should return goAway message', async () => {
     const apiClient = new ApiClient({
       auth: new FakeAuth(),
