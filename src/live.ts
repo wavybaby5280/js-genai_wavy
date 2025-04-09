@@ -255,7 +255,13 @@ export class Session {
     }
 
     // LiveClientRealtimeInput
-    clientMessage = {realtimeInput: {mediaChunks: [params.media]}};
+    clientMessage = {
+      realtimeInput: {
+        mediaChunks: [params.media],
+        activityStart: params.activityStart,
+        activityEnd: params.activityEnd,
+      },
+    };
     return clientMessage;
   }
 

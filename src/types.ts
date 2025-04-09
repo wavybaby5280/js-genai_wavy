@@ -2749,6 +2749,10 @@ export declare interface LiveSendClientContentParameters {
 export declare interface LiveSendRealtimeInputParameters {
   /** Realtime input to send to the session. */
   media: Blob;
+  /** Marks the start of user activity. */
+  activityStart?: ActivityStart;
+  /** Marks the end of user activity. */
+  activityEnd?: ActivityEnd;
 }
 
 /** Parameters for sending tool responses to the live API. */

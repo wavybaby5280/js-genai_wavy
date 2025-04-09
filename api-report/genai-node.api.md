@@ -1106,6 +1106,8 @@ export interface LiveSendClientContentParameters {
 
 // @public
 export interface LiveSendRealtimeInputParameters {
+    activityEnd?: ActivityEnd;
+    activityStart?: ActivityStart;
     media: Blob_2;
 }
 

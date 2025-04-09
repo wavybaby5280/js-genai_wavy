@@ -318,6 +318,192 @@ function contextWindowCompressionToVertex(
   return toObject;
 }
 
+function automaticActivityDetectionToMldev(
+  fromObject: types.AutomaticActivityDetection,
+): types.AutomaticActivityDetection {
+  const toObject: Record<string, unknown> = {};
+
+  const fromDisabled = common.getValueByPath(fromObject, ['disabled']);
+  if (fromDisabled !== undefined && fromDisabled !== null) {
+    common.setValueByPath(toObject, ['disabled'], fromDisabled);
+  }
+
+  const fromStartOfSpeechSensitivity = common.getValueByPath(fromObject, [
+    'startOfSpeechSensitivity',
+  ]);
+  if (
+    fromStartOfSpeechSensitivity !== undefined &&
+    fromStartOfSpeechSensitivity !== null
+  ) {
+    common.setValueByPath(
+      toObject,
+      ['startOfSpeechSensitivity'],
+      fromStartOfSpeechSensitivity,
+    );
+  }
+
+  const fromEndOfSpeechSensitivity = common.getValueByPath(fromObject, [
+    'endOfSpeechSensitivity',
+  ]);
+  if (
+    fromEndOfSpeechSensitivity !== undefined &&
+    fromEndOfSpeechSensitivity !== null
+  ) {
+    common.setValueByPath(
+      toObject,
+      ['endOfSpeechSensitivity'],
+      fromEndOfSpeechSensitivity,
+    );
+  }
+
+  const fromPrefixPaddingMs = common.getValueByPath(fromObject, [
+    'prefixPaddingMs',
+  ]);
+  if (fromPrefixPaddingMs !== undefined && fromPrefixPaddingMs !== null) {
+    common.setValueByPath(toObject, ['prefixPaddingMs'], fromPrefixPaddingMs);
+  }
+
+  const fromSilenceDurationMs = common.getValueByPath(fromObject, [
+    'silenceDurationMs',
+  ]);
+  if (fromSilenceDurationMs !== undefined && fromSilenceDurationMs !== null) {
+    common.setValueByPath(
+      toObject,
+      ['silenceDurationMs'],
+      fromSilenceDurationMs,
+    );
+  }
+
+  return toObject;
+}
+
+function automaticActivityDetectionToVertex(
+  fromObject: types.AutomaticActivityDetection,
+): types.AutomaticActivityDetection {
+  const toObject: Record<string, unknown> = {};
+
+  const fromDisabled = common.getValueByPath(fromObject, ['disabled']);
+  if (fromDisabled !== undefined && fromDisabled !== null) {
+    common.setValueByPath(toObject, ['disabled'], fromDisabled);
+  }
+
+  const fromStartOfSpeechSensitivity = common.getValueByPath(fromObject, [
+    'startOfSpeechSensitivity',
+  ]);
+  if (
+    fromStartOfSpeechSensitivity !== undefined &&
+    fromStartOfSpeechSensitivity !== null
+  ) {
+    common.setValueByPath(
+      toObject,
+      ['startOfSpeechSensitivity'],
+      fromStartOfSpeechSensitivity,
+    );
+  }
+
+  const fromEndOfSpeechSensitivity = common.getValueByPath(fromObject, [
+    'endOfSpeechSensitivity',
+  ]);
+  if (
+    fromEndOfSpeechSensitivity !== undefined &&
+    fromEndOfSpeechSensitivity !== null
+  ) {
+    common.setValueByPath(
+      toObject,
+      ['endOfSpeechSensitivity'],
+      fromEndOfSpeechSensitivity,
+    );
+  }
+
+  const fromPrefixPaddingMs = common.getValueByPath(fromObject, [
+    'prefixPaddingMs',
+  ]);
+  if (fromPrefixPaddingMs !== undefined && fromPrefixPaddingMs !== null) {
+    common.setValueByPath(toObject, ['prefixPaddingMs'], fromPrefixPaddingMs);
+  }
+
+  const fromSilenceDurationMs = common.getValueByPath(fromObject, [
+    'silenceDurationMs',
+  ]);
+  if (fromSilenceDurationMs !== undefined && fromSilenceDurationMs !== null) {
+    common.setValueByPath(
+      toObject,
+      ['silenceDurationMs'],
+      fromSilenceDurationMs,
+    );
+  }
+
+  return toObject;
+}
+
+function realtimeInputConfigToMldev(
+  fromObject: types.RealtimeInputConfig,
+): types.RealtimeInputConfig {
+  const toObject: Record<string, unknown> = {};
+
+  const fromAutomaticActivityDetection = common.getValueByPath(fromObject, [
+    'automaticActivityDetection',
+  ]);
+  if (
+    fromAutomaticActivityDetection !== undefined &&
+    fromAutomaticActivityDetection !== null
+  ) {
+    common.setValueByPath(
+      toObject,
+      ['automaticActivityDetection'],
+      automaticActivityDetectionToMldev(fromAutomaticActivityDetection),
+    );
+  }
+
+  const fromActivityHandling = common.getValueByPath(fromObject, [
+    'activityHandling',
+  ]);
+  if (fromActivityHandling !== undefined && fromActivityHandling !== null) {
+    common.setValueByPath(toObject, ['activityHandling'], fromActivityHandling);
+  }
+
+  const fromTurnCoverage = common.getValueByPath(fromObject, ['turnCoverage']);
+  if (fromTurnCoverage !== undefined && fromTurnCoverage !== null) {
+    common.setValueByPath(toObject, ['turnCoverage'], fromTurnCoverage);
+  }
+
+  return toObject;
+}
+
+function realtimeInputConfigToVertex(
+  fromObject: types.RealtimeInputConfig,
+): types.RealtimeInputConfig {
+  const toObject: Record<string, unknown> = {};
+
+  const fromAutomaticActivityDetection = common.getValueByPath(fromObject, [
+    'automaticActivityDetection',
+  ]);
+  if (
+    fromAutomaticActivityDetection !== undefined &&
+    fromAutomaticActivityDetection !== null
+  ) {
+    common.setValueByPath(
+      toObject,
+      ['automaticActivityDetection'],
+      automaticActivityDetectionToVertex(fromAutomaticActivityDetection),
+    );
+  }
+
+  const fromActivityHandling = common.getValueByPath(fromObject, [
+    'activityHandling',
+  ]);
+  if (fromActivityHandling !== undefined && fromActivityHandling !== null) {
+    common.setValueByPath(toObject, ['activityHandling'], fromActivityHandling);
+  }
+
+  const fromTurnCoverage = common.getValueByPath(fromObject, ['turnCoverage']);
+  if (fromTurnCoverage !== undefined && fromTurnCoverage !== null) {
+    common.setValueByPath(toObject, ['turnCoverage'], fromTurnCoverage);
+  }
+
+  return toObject;
+}
+
 function liveConnectConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.LiveConnectConfig,
@@ -399,6 +585,20 @@ function liveConnectConfigToMldev(
       toObject,
       ['contextWindowCompression'],
       contextWindowCompressionToMldev(fromContextWindowCompression),
+    );
+  }
+
+  const fromRealtimeInputConfig = common.getValueByPath(fromObject, [
+    'realtimeInputConfig',
+  ]);
+  if (
+    fromRealtimeInputConfig !== undefined &&
+    fromRealtimeInputConfig !== null
+  ) {
+    common.setValueByPath(
+      toObject,
+      ['realtimeInputConfig'],
+      realtimeInputConfigToMldev(fromRealtimeInputConfig),
     );
   }
 
@@ -493,6 +693,20 @@ function liveConnectConfigToVertex(
       toObject,
       ['contextWindowCompression'],
       contextWindowCompressionToVertex(fromContextWindowCompression),
+    );
+  }
+
+  const fromRealtimeInputConfig = common.getValueByPath(fromObject, [
+    'realtimeInputConfig',
+  ]);
+  if (
+    fromRealtimeInputConfig !== undefined &&
+    fromRealtimeInputConfig !== null
+  ) {
+    common.setValueByPath(
+      toObject,
+      ['realtimeInputConfig'],
+      realtimeInputConfigToVertex(fromRealtimeInputConfig),
     );
   }
 
