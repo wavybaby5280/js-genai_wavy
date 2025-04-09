@@ -151,9 +151,8 @@ describe('processStreamResponse', () => {
         },
       };
       const generator = apiClient.processStreamResponse(response);
-      const resultHttpResponse = await generator.next();
-      const result = await resultHttpResponse.value.json();
-      expect(result).toEqual(expectedResponse);
+      const result = await generator.next();
+      expect(result.value).toEqual(expectedResponse);
     }
   });
 
@@ -185,8 +184,7 @@ describe('processStreamResponse', () => {
     const expectedText = ['One', 'Two', 'Three'];
     for await (const jsonChunk of streamResponse) {
       const typedChunk = new types.GenerateContentResponse();
-      const jsonChunkData = await jsonChunk.json();
-      Object.assign(typedChunk, jsonChunkData);
+      Object.assign(typedChunk, jsonChunk);
       expect(typedChunk.text).toEqual(expectedText[count]);
       count++;
     }
@@ -232,9 +230,8 @@ describe('processStreamResponse', () => {
       },
     };
     const generator = apiClient.processStreamResponse(response);
-    const resultHttpResponse = await generator.next();
-    const result = await resultHttpResponse.value.json();
-    expect(result).toEqual(expectedResponse);
+    const result = await generator.next();
+    expect(result.value).toEqual(expectedResponse);
   });
 });
 
@@ -1129,9 +1126,8 @@ describe('ApiClient', () => {
         path: 'test-path',
         httpMethod: 'POST',
       });
-      const resultHttpResponse = await generator.next();
-      const result = await resultHttpResponse.value.json();
-      expect(result).toEqual({
+      const result = await generator.next();
+      expect(result.value).toEqual({
         candidates: [
           {
             content: {parts: [{text: 'The'}], role: 'model'},
