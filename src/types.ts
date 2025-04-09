@@ -124,6 +124,14 @@ export enum Modality {
   AUDIO = 'AUDIO',
 }
 
+/** The media resolution to use. */
+export enum MediaResolution {
+  MEDIA_RESOLUTION_UNSPECIFIED = 'MEDIA_RESOLUTION_UNSPECIFIED',
+  MEDIA_RESOLUTION_LOW = 'MEDIA_RESOLUTION_LOW',
+  MEDIA_RESOLUTION_MEDIUM = 'MEDIA_RESOLUTION_MEDIUM',
+  MEDIA_RESOLUTION_HIGH = 'MEDIA_RESOLUTION_HIGH',
+}
+
 /** Config for the dynamic retrieval config mode. */
 export enum DynamicRetrievalConfigMode {
   MODE_UNSPECIFIED = 'MODE_UNSPECIFIED',
@@ -136,14 +144,6 @@ export enum FunctionCallingConfigMode {
   AUTO = 'AUTO',
   ANY = 'ANY',
   NONE = 'NONE',
-}
-
-/** The media resolution to use. */
-export enum MediaResolution {
-  MEDIA_RESOLUTION_UNSPECIFIED = 'MEDIA_RESOLUTION_UNSPECIFIED',
-  MEDIA_RESOLUTION_LOW = 'MEDIA_RESOLUTION_LOW',
-  MEDIA_RESOLUTION_MEDIUM = 'MEDIA_RESOLUTION_MEDIUM',
-  MEDIA_RESOLUTION_HIGH = 'MEDIA_RESOLUTION_HIGH',
 }
 
 /** Enum that controls the safety filter level for objectionable content. */
@@ -1596,6 +1596,8 @@ export declare interface GenerationConfig {
   logprobs?: number;
   /** Optional. The maximum number of output tokens to generate per message. */
   maxOutputTokens?: number;
+  /** Optional. If specified, the media resolution specified will be used. */
+  mediaResolution?: MediaResolution;
   /** Optional. Positive penalties. */
   presencePenalty?: number;
   /** Optional. If true, export the logprobs results in response. */

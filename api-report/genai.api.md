@@ -710,6 +710,7 @@ export interface GenerationConfig {
     frequencyPenalty?: number;
     logprobs?: number;
     maxOutputTokens?: number;
+    mediaResolution?: MediaResolution;
     presencePenalty?: number;
     responseLogprobs?: boolean;
     responseMimeType?: string;
