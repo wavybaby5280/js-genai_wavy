@@ -177,7 +177,7 @@ export interface ContentEmbeddingStatistics {
 }
 
 // @public (undocumented)
-export type ContentListUnion = ContentUnion[] | ContentUnion;
+export type ContentListUnion = Content | Content[] | PartUnion | PartUnion[];
 
 // @public (undocumented)
 export type ContentUnion = Content | PartUnion[] | PartUnion;

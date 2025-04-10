@@ -2831,7 +2831,7 @@ export type PartListUnion = PartUnion[] | PartUnion;
 
 export type ContentUnion = Content | PartUnion[] | PartUnion;
 
-export type ContentListUnion = ContentUnion[] | ContentUnion;
+export type ContentListUnion = Content | Content[] | PartUnion | PartUnion[];
 
 export type SchemaUnion = Schema;
 

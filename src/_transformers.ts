@@ -105,25 +105,13 @@ function _isFunctionCallPart(origin: unknown): boolean {
   );
 }
 
-function _isUserPart(origin: unknown): boolean {
-  if (origin === null || origin === undefined) {
-    return false;
-  }
-  if (_isFunctionCallPart(origin)) {
-    return false;
-  }
-  return true;
-}
-
-function _areUserParts(origin: types.PartListUnion[]): boolean {
-  if (
-    origin === null ||
-    origin === undefined ||
-    (Array.isArray(origin) && origin.length === 0)
-  ) {
-    return false;
-  }
-  return origin.every(_isUserPart);
+function _isFunctionResponsePart(origin: unknown): boolean {
+  return (
+    origin !== null &&
+    origin !== undefined &&
+    typeof origin === 'object' &&
+    'functionResponse' in origin
+  );
 }
 
 export function tContent(
@@ -134,22 +122,15 @@ export function tContent(
     throw new Error('ContentUnion is required');
   }
   if (_isContent(origin)) {
-    // @ts-expect-error: _isContent is a utility function that checks if the
+    // _isContent is a utility function that checks if the
     // origin is a Content.
-    return origin;
+    return origin as types.Content;
   }
 
-  if (_isUserPart(origin)) {
-    return {
-      role: 'user',
-      parts: tParts(apiClient, origin as types.PartListUnion)!,
-    };
-  } else {
-    return {
-      role: 'model',
-      parts: tParts(apiClient, origin as types.PartListUnion)!,
-    };
-  }
+  return {
+    role: 'user',
+    parts: tParts(apiClient, origin as types.PartListUnion)!,
+  };
 }
 
 export function tContentsForEmbed(
@@ -190,43 +171,6 @@ export function tContentsForEmbed(
   return [tContent(apiClient, origin as types.ContentUnion)!];
 }
 
-function _appendAccumulatedPartsAsContent(
-  apiClient: ApiClient,
-  result: types.Content[],
-  accumulatedParts: types.PartUnion[],
-) {
-  if (accumulatedParts.length === 0) {
-    return;
-  }
-  if (_areUserParts(accumulatedParts)) {
-    result.push({
-      role: 'user',
-      parts: tParts(apiClient, accumulatedParts),
-    });
-  } else {
-    result.push({
-      role: 'model',
-      parts: tParts(apiClient, accumulatedParts),
-    });
-  }
-  accumulatedParts.length = 0; // clear the array inplace
-}
-
-function _handleCurrentPart(
-  apiClient: ApiClient,
-  result: types.Content[],
-  accumulatedParts: types.PartUnion[],
-  currentPart: types.PartUnion,
-) {
-  if (_isUserPart(currentPart) === _areUserParts(accumulatedParts)) {
-    accumulatedParts.push(currentPart);
-  } else {
-    _appendAccumulatedPartsAsContent(apiClient, result, accumulatedParts);
-    accumulatedParts.length = 0;
-    accumulatedParts.push(currentPart);
-  }
-}
-
 export function tContents(
   apiClient: ApiClient,
   origin?: types.ContentListUnion,
@@ -239,37 +183,44 @@ export function tContents(
     throw new Error('contents are required');
   }
   if (!Array.isArray(origin)) {
-    return [tContent(apiClient, origin)];
+    // If it's not an array, it's a single content or a single PartUnion.
+    if (_isFunctionCallPart(origin) || _isFunctionResponsePart(origin)) {
+      throw new Error(
+        'To specify functionCall or functionResponse parts, please wrap them in a Content object, specifying the role for them',
+      );
+    }
+    return [tContent(apiClient, origin as types.ContentUnion)];
   }
 
   const result: types.Content[] = [];
   const accumulatedParts: types.PartUnion[] = [];
+  const isContentArray = _isContent(origin[0]);
 
-  for (const content of origin) {
-    if (_isContent(content)) {
-      _appendAccumulatedPartsAsContent(apiClient, result, accumulatedParts);
-      // @ts-expect-error: content is a Content here
-      result.push(content);
-    } else if (
-      typeof content === 'string' ||
-      (typeof content === 'object' && !Array.isArray(content))
-    ) {
-      // @ts-expect-error: content is a part here
-      _handleCurrentPart(apiClient, result, accumulatedParts, content);
-    } else if (Array.isArray(content)) {
-      // if there're consecutive user parts before the list,
-      // convert to UserContent and append to result
-      _appendAccumulatedPartsAsContent(apiClient, result, accumulatedParts);
-      result.push({
-        role: 'user',
-        parts: tParts(apiClient, content),
-      });
+  for (const item of origin) {
+    const isContent = _isContent(item);
+
+    if (isContent != isContentArray) {
+      throw new Error(
+        'Mixing Content and Parts is not supported, please group the parts into a the appropriate Content objects and specify the roles for them',
+      );
+    }
+
+    if (isContent) {
+      // `isContent` contains the result of _isContent, which is a utility
+      // function that checks if the item is a Content.
+      result.push(item as types.Content);
+    } else if (_isFunctionCallPart(item) || _isFunctionResponsePart(item)) {
+      throw new Error(
+        'To specify functionCall or functionResponse parts, please wrap them, and any other parts, in Content objects as appropriate, specifying the role for them',
+      );
     } else {
-      throw new Error(`Unsupported content type: ${typeof content}`);
+      accumulatedParts.push(item as types.PartUnion);
     }
   }
-  _appendAccumulatedPartsAsContent(apiClient, result, accumulatedParts);
 
+  if (!isContentArray) {
+    result.push({role: 'user', parts: tParts(apiClient, accumulatedParts)});
+  }
   return result;
 }
 

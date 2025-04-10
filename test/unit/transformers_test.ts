@@ -437,20 +437,6 @@ describe('tContent', () => {
     }).toThrowError('Unsupported part type: number');
   });
 
-  it('function call part', () => {
-    expect(
-      tContent(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
-        {
-          functionCall: {name: 'function-name', args: {arg1: 'arg1'}},
-        },
-      ),
-    ).toEqual({
-      role: 'model',
-      parts: [{functionCall: {name: 'function-name', args: {arg1: 'arg1'}}}],
-    });
-  });
-
   it('text part', () => {
     expect(
       tContent(
@@ -533,19 +519,67 @@ describe('tContents', () => {
   });
 
   it('function call part', () => {
-    expect(
+    expect(() => {
       tContents(
         new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
         {
           functionCall: {name: 'function-name', args: {arg1: 'arg1'}},
         },
-      ),
-    ).toEqual([
-      {
-        role: 'model',
-        parts: [{functionCall: {name: 'function-name', args: {arg1: 'arg1'}}}],
-      },
-    ]);
+      );
+    }).toThrowError(
+      'To specify functionCall or functionResponse parts, please wrap them in a Content object, specifying the role for them',
+    );
+  });
+
+  it('function call part in array', () => {
+    expect(() => {
+      tContents(
+        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        [
+          {
+            functionCall: {name: 'function-name', args: {arg1: 'arg1'}},
+          },
+          {text: 'test string'},
+        ],
+      );
+    }).toThrowError(
+      'To specify functionCall or functionResponse parts, please wrap them, and any other parts, in Content objects as appropriate, specifying the role for them',
+    );
+  });
+
+  it('function response part', () => {
+    expect(() => {
+      tContents(
+        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        {
+          functionResponse: {
+            name: 'name1',
+            response: {result: {answer: 'answer1'}},
+          },
+        },
+      );
+    }).toThrowError(
+      'To specify functionCall or functionResponse parts, please wrap them in a Content object, specifying the role for them',
+    );
+  });
+
+  it('function response part in array', () => {
+    expect(() => {
+      tContents(
+        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        [
+          {
+            functionResponse: {
+              name: 'name1',
+              response: {result: {answer: 'answer1'}},
+            },
+          },
+          {text: 'test string'},
+        ],
+      );
+    }).toThrowError(
+      'To specify functionCall or functionResponse parts, please wrap them, and any other parts, in Content objects as appropriate, specifying the role for them',
+    );
   });
 
   it('string', () => {
@@ -582,111 +616,6 @@ describe('tContents', () => {
       {
         role: 'user',
         parts: [{text: 'test string 1'}, {text: 'test string 2'}],
-      },
-    ]);
-  });
-
-  it('array of string mixed with text parts, contents', () => {
-    expect(
-      tContents(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
-        [
-          'test string 1',
-          {text: 'test string 2'},
-          {role: 'user', parts: [{text: 'test string 3'}]},
-          {functionCall: {name: 'function-name', args: {arg1: 'arg1'}}},
-          {
-            functionResponse: {
-              name: 'function-name',
-              response: {result: {answer: 'answer1'}},
-            },
-          },
-          {role: 'model', parts: [{text: 'answer1'}]},
-          'thank you',
-        ],
-      ),
-    ).toEqual([
-      {
-        role: 'user',
-        parts: [{text: 'test string 1'}, {text: 'test string 2'}],
-      },
-      {
-        role: 'user',
-        parts: [{text: 'test string 3'}],
-      },
-      {
-        role: 'model',
-        parts: [{functionCall: {name: 'function-name', args: {arg1: 'arg1'}}}],
-      },
-      {
-        role: 'user',
-        parts: [
-          {
-            functionResponse: {
-              name: 'function-name',
-              response: {result: {answer: 'answer1'}},
-            },
-          },
-        ],
-      },
-      {
-        role: 'model',
-        parts: [{text: 'answer1'}],
-      },
-      {
-        role: 'user',
-        parts: [{text: 'thank you'}],
-      },
-    ]);
-  });
-
-  it('array of array', () => {
-    expect(
-      tContents(
-        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
-        [
-          'question1',
-          {functionCall: {name: 'name1', args: {arg1: 'arg1'}}},
-          {
-            functionResponse: {
-              name: 'name1',
-              response: {result: {answer: 'answer1'}},
-            },
-          },
-          {
-            role: 'model',
-            parts: [{text: 'answer1'}],
-          },
-          ['context2', 'question2'],
-        ],
-      ),
-    ).toEqual([
-      {
-        role: 'user',
-        parts: [{text: 'question1'}],
-      },
-      {
-        role: 'model',
-        parts: [{functionCall: {name: 'name1', args: {arg1: 'arg1'}}}],
-      },
-      {
-        role: 'user',
-        parts: [
-          {
-            functionResponse: {
-              name: 'name1',
-              response: {result: {answer: 'answer1'}},
-            },
-          },
-        ],
-      },
-      {
-        role: 'model',
-        parts: [{text: 'answer1'}],
-      },
-      {
-        role: 'user',
-        parts: [{text: 'context2'}, {text: 'question2'}],
       },
     ]);
   });
