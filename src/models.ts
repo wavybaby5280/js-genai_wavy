@@ -247,7 +247,7 @@ export class Models extends BaseModule {
   private async generateContentStreamInternal(
     params: types.GenerateContentParameters,
   ): Promise<AsyncGenerator<types.GenerateContentResponse>> {
-    let response: Promise<AsyncGenerator<types.GenerateContentResponse>>;
+    let response: Promise<AsyncGenerator<types.HttpResponse>>;
     let path: string = '';
     let queryParams: Record<string, string> = {};
     if (this.apiClient.isVertexAI()) {
@@ -271,15 +271,15 @@ export class Models extends BaseModule {
         body: JSON.stringify(body),
         httpMethod: 'POST',
         httpOptions: params.config?.httpOptions,
-      }) as Promise<AsyncGenerator<types.GenerateContentResponse>>;
+      }) as Promise<AsyncGenerator<types.HttpResponse>>;
 
       return response.then(async function* (
-        apiResponse: AsyncGenerator<types.GenerateContentResponse>,
+        apiResponse: AsyncGenerator<types.HttpResponse>,
       ) {
         for await (const chunk of apiResponse) {
           const resp = converters.generateContentResponseFromVertex(
             apiClient,
-            chunk,
+            (await chunk.json()) as types.GenerateContentResponse,
           );
           const typedResp = new types.GenerateContentResponse();
           Object.assign(typedResp, resp);
@@ -307,15 +307,15 @@ export class Models extends BaseModule {
         body: JSON.stringify(body),
         httpMethod: 'POST',
         httpOptions: params.config?.httpOptions,
-      }) as Promise<AsyncGenerator<types.GenerateContentResponse>>;
+      }) as Promise<AsyncGenerator<types.HttpResponse>>;
 
       return response.then(async function* (
-        apiResponse: AsyncGenerator<types.GenerateContentResponse>,
+        apiResponse: AsyncGenerator<types.HttpResponse>,
       ) {
         for await (const chunk of apiResponse) {
           const resp = converters.generateContentResponseFromMldev(
             apiClient,
-            chunk,
+            (await chunk.json()) as types.GenerateContentResponse,
           );
           const typedResp = new types.GenerateContentResponse();
           Object.assign(typedResp, resp);

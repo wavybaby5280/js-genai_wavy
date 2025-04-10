@@ -389,9 +389,7 @@ export class ApiClient {
 
   async requestStream(
     request: HttpRequest,
-    // TODO: b/407059430 - Replace with HttpResponse.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ): Promise<any> {
+  ): Promise<AsyncGenerator<HttpResponse>> {
     let patchedHttpOptions = this.clientOptions.httpOptions!;
     if (request.httpOptions) {
       patchedHttpOptions = this.patchHttpOptions(
@@ -458,9 +456,7 @@ export class ApiClient {
     url: URL,
     requestInit: RequestInit,
     httpMethod: 'GET' | 'POST' | 'PATCH' | 'DELETE',
-    // TODO: b/407059430 - Replace with HttpResponse.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ): Promise<AsyncGenerator<any>> {
+  ): Promise<AsyncGenerator<HttpResponse>> {
     return this.apiCall(url.toString(), {
       ...requestInit,
       method: httpMethod,
@@ -480,9 +476,7 @@ export class ApiClient {
 
   async *processStreamResponse(
     response: Response,
-    // TODO: b/407059430 - Replace with HttpResponse.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ): AsyncGenerator<any> {
+  ): AsyncGenerator<HttpResponse> {
     const reader = response?.body?.getReader();
     const decoder = new TextDecoder('utf-8');
     if (!reader) {
@@ -505,8 +499,12 @@ export class ApiClient {
         while (match) {
           const processedChunkString = match[1];
           try {
-            const chunkData = JSON.parse(processedChunkString);
-            yield chunkData;
+            const partialResponse = new Response(processedChunkString, {
+              headers: response?.headers,
+              status: response?.status,
+              statusText: response?.statusText,
+            });
+            yield new HttpResponse(partialResponse);
             buffer = buffer.slice(match[0].length);
             match = buffer.match(responseLineRE);
           } catch (e) {
