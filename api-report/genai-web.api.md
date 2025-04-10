@@ -1071,7 +1071,7 @@ export interface LiveClientSetup {
     model?: string;
     realtimeInputConfig?: RealtimeInputConfig;
     sessionResumption?: SessionResumptionConfig;
-    systemInstruction?: Content;
+    systemInstruction?: ContentUnion;
     tools?: ToolListUnion;
 }
 
@@ -1088,7 +1088,7 @@ export interface LiveConnectConfig {
     responseModalities?: Modality[];
     sessionResumption?: SessionResumptionConfig;
     speechConfig?: SpeechConfig;
-    systemInstruction?: Content;
+    systemInstruction?: ContentUnion;
     tools?: ToolListUnion;
 }
 
@@ -1560,6 +1560,7 @@ export interface SlidingWindow {
 
 // @public
 export interface SpeechConfig {
+    languageCode?: string;
     voiceConfig?: VoiceConfig;
 }
 

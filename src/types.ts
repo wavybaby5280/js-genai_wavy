@@ -697,6 +697,10 @@ export declare interface SpeechConfig {
   /** The configuration for the speaker to use.
    */
   voiceConfig?: VoiceConfig;
+  /** Language code (ISO 639. e.g. en-US) for the speech synthesization.
+      Only available for Live API.
+       */
+  languageCode?: string;
 }
 
 /** The thinking features configuration. */
@@ -2536,7 +2540,7 @@ export declare interface LiveClientSetup {
   /** The user provided system instructions for the model.
       Note: only text should be used in parts and content in each part will be
       in a separate paragraph. */
-  systemInstruction?: Content;
+  systemInstruction?: ContentUnion;
   /**  A list of `Tools` the model may use to generate the next response.
 
       A `Tool` is a piece of code that enables the system to interact with
@@ -2658,7 +2662,7 @@ export declare interface LiveConnectConfig {
   /** The user provided system instructions for the model.
       Note: only text should be used in parts and content in each part will be
       in a separate paragraph. */
-  systemInstruction?: Content;
+  systemInstruction?: ContentUnion;
   /** A list of `Tools` the model may use to generate the next response.
 
       A `Tool` is a piece of code that enables the system to interact with

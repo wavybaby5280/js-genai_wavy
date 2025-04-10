@@ -466,6 +466,11 @@ export function speechConfigToMldev(
     );
   }
 
+  const fromLanguageCode = common.getValueByPath(fromObject, ['languageCode']);
+  if (fromLanguageCode != null) {
+    common.setValueByPath(toObject, ['languageCode'], fromLanguageCode);
+  }
+
   return toObject;
 }
 
@@ -1745,6 +1750,11 @@ export function speechConfigToVertex(
       ['voiceConfig'],
       voiceConfigToVertex(apiClient, fromVoiceConfig),
     );
+  }
+
+  const fromLanguageCode = common.getValueByPath(fromObject, ['languageCode']);
+  if (fromLanguageCode != null) {
+    common.setValueByPath(toObject, ['languageCode'], fromLanguageCode);
   }
 
   return toObject;
