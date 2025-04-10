@@ -1384,6 +1384,42 @@ export interface PrebuiltVoiceConfig {
 }
 
 // @public
+export interface RagRetrievalConfig {
+    filter?: RagRetrievalConfigFilter;
+    hybridSearch?: RagRetrievalConfigHybridSearch;
+    ranking?: RagRetrievalConfigRanking;
+    topK?: number;
+}
+
+// @public
+export interface RagRetrievalConfigFilter {
+    metadataFilter?: string;
+    vectorDistanceThreshold?: number;
+    vectorSimilarityThreshold?: number;
+}
+
+// @public
+export interface RagRetrievalConfigHybridSearch {
+    alpha?: number;
+}
+
+// @public
+export interface RagRetrievalConfigRanking {
+    llmRanker?: RagRetrievalConfigRankingLlmRanker;
+    rankService?: RagRetrievalConfigRankingRankService;
+}
+
+// @public
+export interface RagRetrievalConfigRankingLlmRanker {
+    modelName?: string;
+}
+
+// @public
+export interface RagRetrievalConfigRankingRankService {
+    modelName?: string;
+}
+
+// @public
 export interface RawReferenceImage {
     referenceId?: number;
     referenceImage?: Image_2;
@@ -1787,6 +1823,7 @@ export interface VertexAISearch {
 export interface VertexRagStore {
     ragCorpora?: string[];
     ragResources?: VertexRagStoreRagResource[];
+    ragRetrievalConfig?: RagRetrievalConfig;
     similarityTopK?: number;
     vectorDistanceThreshold?: number;
 }

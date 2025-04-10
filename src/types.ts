@@ -621,12 +621,62 @@ export declare interface VertexRagStoreRagResource {
   ragFileIds?: string[];
 }
 
+/** Config for filters. */
+export declare interface RagRetrievalConfigFilter {
+  /** Optional. String for metadata filtering. */
+  metadataFilter?: string;
+  /** Optional. Only returns contexts with vector distance smaller than the threshold. */
+  vectorDistanceThreshold?: number;
+  /** Optional. Only returns contexts with vector similarity larger than the threshold. */
+  vectorSimilarityThreshold?: number;
+}
+
+/** Config for Hybrid Search. */
+export declare interface RagRetrievalConfigHybridSearch {
+  /** Optional. Alpha value controls the weight between dense and sparse vector search results. The range is [0, 1], while 0 means sparse vector search only and 1 means dense vector search only. The default value is 0.5 which balances sparse and dense vector search equally. */
+  alpha?: number;
+}
+
+/** Config for LlmRanker. */
+export declare interface RagRetrievalConfigRankingLlmRanker {
+  /** Optional. The model name used for ranking. Format: `gemini-1.5-pro` */
+  modelName?: string;
+}
+
+/** Config for Rank Service. */
+export declare interface RagRetrievalConfigRankingRankService {
+  /** Optional. The model name of the rank service. Format: `semantic-ranker-512@latest` */
+  modelName?: string;
+}
+
+/** Config for ranking and reranking. */
+export declare interface RagRetrievalConfigRanking {
+  /** Optional. Config for LlmRanker. */
+  llmRanker?: RagRetrievalConfigRankingLlmRanker;
+  /** Optional. Config for Rank Service. */
+  rankService?: RagRetrievalConfigRankingRankService;
+}
+
+/** Specifies the context retrieval config. */
+export declare interface RagRetrievalConfig {
+  /** Optional. Config for filters. */
+  filter?: RagRetrievalConfigFilter;
+  /** Optional. Config for Hybrid Search. */
+  hybridSearch?: RagRetrievalConfigHybridSearch;
+  /** Optional. Config for ranking and reranking. */
+  ranking?: RagRetrievalConfigRanking;
+  /** Optional. The number of contexts to retrieve. */
+  topK?: number;
+}
+
 /** Retrieve from Vertex RAG Store for grounding. */
 export declare interface VertexRagStore {
   /** Optional. Deprecated. Please use rag_resources instead. */
   ragCorpora?: string[];
   /** Optional. The representation of the rag source. It can be used to specify corpus only or ragfiles. Currently only support one corpus or multiple files from one corpus. In the future we may open up multiple corpora support. */
   ragResources?: VertexRagStoreRagResource[];
+  /** Optional. The retrieval config for the Rag query. */
+  ragRetrievalConfig?: RagRetrievalConfig;
   /** Optional. Number of top k results to return from the selected corpora. */
   similarityTopK?: number;
   /** Optional. Only return results with vector distance smaller than the threshold. */
