@@ -222,18 +222,6 @@ export function generateVideosOperationFromMldev(
     );
   }
 
-  const fromResult = common.getValueByPath(fromObject, [
-    'response',
-    'generateVideoResponse',
-  ]);
-  if (fromResult != null) {
-    common.setValueByPath(
-      toObject,
-      ['result'],
-      generateVideosResponseFromMldev(apiClient, fromResult),
-    );
-  }
-
   return toObject;
 }
 
@@ -363,15 +351,6 @@ export function generateVideosOperationFromVertex(
       toObject,
       ['response'],
       generateVideosResponseFromVertex(apiClient, fromResponse),
-    );
-  }
-
-  const fromResult = common.getValueByPath(fromObject, ['response']);
-  if (fromResult != null) {
-    common.setValueByPath(
-      toObject,
-      ['result'],
-      generateVideosResponseFromVertex(apiClient, fromResult),
     );
   }
 

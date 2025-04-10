@@ -367,16 +367,8 @@ export function listFilesResponseFromMldev(
   return toObject;
 }
 
-export function createFileResponseFromMldev(
-  apiClient: ApiClient,
-  fromObject: types.CreateFileResponse,
-): Record<string, unknown> {
+export function createFileResponseFromMldev(): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
-
-  const fromHttpHeaders = common.getValueByPath(fromObject, ['httpHeaders']);
-  if (fromHttpHeaders != null) {
-    common.setValueByPath(toObject, ['httpHeaders'], fromHttpHeaders);
-  }
 
   return toObject;
 }

@@ -185,11 +185,8 @@ export class Files extends BaseModule {
           return httpResponse.json();
         }) as Promise<types.CreateFileResponse>;
 
-      return response.then((apiResponse) => {
-        const resp = converters.createFileResponseFromMldev(
-          this.apiClient,
-          apiResponse,
-        );
+      return response.then(() => {
+        const resp = converters.createFileResponseFromMldev();
         const typedResp = new types.CreateFileResponse();
         Object.assign(typedResp, resp);
         return typedResp;
