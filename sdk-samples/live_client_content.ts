@@ -10,7 +10,7 @@ const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
 const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
 
-async function live(client: GoogleGenAI) {
+async function live(client: GoogleGenAI, model: string) {
   const responseQueue: LiveServerMessage[] = [];
 
   // This should use an async queue.
@@ -43,7 +43,7 @@ async function live(client: GoogleGenAI) {
   }
 
   const session = await client.live.connect({
-    model: 'gemini-2.0-flash-exp',
+    model: model,
     callbacks: {
       onopen: function () {
         console.debug('Opened');
@@ -94,16 +94,15 @@ async function main() {
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
     });
-    await live(client).catch((e) => console.error('got error', e));
+    const model = 'gemini-2.0-flash-live-preview-04-09';
+    await live(client, model).catch((e) => console.error('got error', e));
   } else {
     const client = new GoogleGenAI({
       vertexai: false,
       apiKey: GEMINI_API_KEY,
-      httpOptions: {
-        apiVersion: 'v1alpha',
-      },
     });
-    await live(client).catch((e) => console.error('got error', e));
+    const model = 'gemini-2.0-flash-live-001';
+    await live(client, model).catch((e) => console.error('got error', e));
   }
 }
 

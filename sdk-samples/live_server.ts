@@ -37,6 +37,7 @@ export function debug(data: object): string {
 
 async function main() {
   let options: types.GoogleGenAIOptions;
+  let model: string;
   if (GOOGLE_GENAI_USE_VERTEXAI) {
     options = {
       // Vertex AI
@@ -44,19 +45,18 @@ async function main() {
       project: GOOGLE_CLOUD_PROJECT,
       location: GOOGLE_CLOUD_LOCATION,
     };
+    model = 'gemini-2.0-flash-live-preview-04-09';
   } else {
     options = {
       // Google AI
       vertexai: false,
       apiKey: GOOGLE_API_KEY,
-      httpOptions: {
-        apiVersion: 'v1alpha',
-      },
     };
+    model = 'gemini-2.0-flash-live-001';
   }
   const ai = new GoogleGenAI(options);
   const session = await ai.live.connect({
-    model: 'gemini-2.0-flash-exp',
+    model: model,
     callbacks: {
       onopen: () => {
         console.log('Live Session Opened');
