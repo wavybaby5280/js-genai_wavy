@@ -177,7 +177,19 @@ export class Live {
         `projects/${project}/locations/${location}/` + transformedModel;
     }
 
-    let clientMessage: types.LiveClientMessage = {};
+    let clientMessage: Record<string, unknown> = {};
+
+    if (
+      this.apiClient.isVertexAI() &&
+      params.config?.responseModalities === undefined
+    ) {
+      // Set default to AUDIO to align with MLDev API.
+      if (params.config === undefined) {
+        params.config = {responseModalities: [types.Modality.AUDIO]};
+      } else {
+        params.config.responseModalities = [types.Modality.AUDIO];
+      }
+    }
     const liveConnectParameters: types.LiveConnectParameters = {
       model: transformedModel,
       config: params.config,
@@ -194,6 +206,7 @@ export class Live {
         liveConnectParameters,
       );
     }
+    delete clientMessage['config'];
     conn.send(JSON.stringify(clientMessage));
     return new Session(conn, this.apiClient);
   }
