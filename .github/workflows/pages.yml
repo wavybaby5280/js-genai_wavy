@@ -30,9 +30,9 @@ jobs:
       - name: Generate pages
         id: generate_pages
         run: |
-          GITHUB_EVENT="${{ github.event_type }}"
+          GITHUB_EVENT="${{ github.event_name }}"
           echo "Generating pages from $GITHUB_EVENT"
-          if [[ "$GITHUB_EVENT" == 'ReleaseEvent' ]]; then
+          if [[ "$GITHUB_EVENT" == 'release' ]]; then
             echo "is_release_event=true" >> $GITHUB_OUTPUT
             npm run pages-release
           else
