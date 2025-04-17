@@ -213,6 +213,78 @@ describe('live', () => {
     session.close();
   });
 
+  it('ML Dev should receive transcription in async session with transcription enabled', async () => {
+    const clientOpts: GoogleGenAIOptions = {
+      vertexai: false,
+      apiKey: GOOGLE_API_KEY,
+    };
+    const client = new GoogleGenAI(clientOpts);
+    const config: types.LiveConnectConfig = {
+      outputAudioTranscription: {},
+    };
+    const session = await make_session_with_queue(
+      client,
+      'models/gemini-2.0-flash-live-001',
+      config,
+    );
+
+    session.sendClientContent({
+      turns: 'Hello what should we talk about?',
+      turnComplete: true,
+    });
+    const setupMessage = await session.receive();
+    expect(setupMessage.setupComplete).not.toBeNull();
+
+    // First message could be empty.
+    await session.receive();
+    const message = await session.receive();
+    expect(message.serverContent).not.toBeNull();
+    console.log(
+      'ML Dev should receive transcription in async session with transcription enabled',
+    );
+    console.log(message);
+
+    session.close();
+
+    console.log('Mldev ok');
+  });
+
+  it('Vertex should receive transcription in async session with transcription enabled', async () => {
+    const clientOpts: GoogleGenAIOptions = {
+      vertexai: true,
+      project: GOOGLE_CLOUD_PROJECT,
+      location: GOOGLE_CLOUD_LOCATION,
+    };
+    const client = new GoogleGenAI(clientOpts);
+    const config: types.LiveConnectConfig = {
+      outputAudioTranscription: {},
+    };
+    const session = await make_session_with_queue(
+      client,
+      'gemini-2.0-flash-live-preview-04-09',
+      config,
+    );
+
+    session.sendClientContent({
+      turns: 'Hello what should we talk about?',
+      turnComplete: true,
+    });
+    const setupMessage = await session.receive();
+    expect(setupMessage.setupComplete).not.toBeNull();
+
+    // First message could be empty.
+    await session.receive();
+    const message = await session.receive();
+    expect(message.serverContent).not.toBeNull();
+    console.log(
+      'Vertex should receive transcription in async session with transcription enabled',
+    );
+    console.log(message);
+
+    session.close();
+    console.log('Vertex ok');
+  });
+
   it('ML Dev should return error for invalid input in async session', async () => {
     const clientOpts: GoogleGenAIOptions = {
       vertexai: false,

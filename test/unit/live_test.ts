@@ -429,6 +429,63 @@ describe('live', () => {
     expect(session).toBeDefined();
   });
 
+  it('connect should send setup message with top level generation config', async () => {
+    const apiClient = new ApiClient({
+      auth: new FakeAuth(),
+      apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
+      vertexai: true,
+      project: 'test-project',
+      location: 'test-location',
+    });
+    const websocketFactory = new FakeWebSocketFactory();
+    const live = new Live(apiClient, new FakeAuth(), websocketFactory);
+
+    let websocket = new FakeWebSocket(
+      '',
+      {},
+      {
+        onopen: function () {},
+        onmessage: function (_e: MessageEvent) {},
+        onerror: function (_e: ErrorEvent) {},
+        onclose: function (_e: CloseEvent) {},
+      },
+    );
+    spyOn(websocket, 'connect').and.callThrough();
+    let websocketSpy = spyOn(websocket, 'send').and.callThrough();
+    spyOn(websocketFactory, 'create').and.callFake(
+      (url, headers, callbacks) => {
+        // Update the websocket spy instance with callbacks provided by
+        // the websocket factory.
+        websocket = new FakeWebSocket(url, headers, callbacks);
+        spyOn(websocket, 'connect').and.callThrough();
+        websocketSpy = spyOn(websocket, 'send').and.callThrough();
+        return websocket;
+      },
+    );
+
+    const session = await live.connect({
+      model: 'models/gemini-2.0-flash-live-001',
+      config: {
+        temperature: 0.5,
+        seed: 12,
+        topP: 0.9,
+        topK: 3,
+      },
+      callbacks: {
+        onmessage: function (e: types.LiveServerMessage) {
+          void e;
+        },
+      },
+    });
+
+    const websocketSpyCall = websocketSpy.calls.all()[0];
+    expect(websocketSpyCall.args[0]).toBe(
+      '{"setup":{"model":"models/gemini-2.0-flash-live-001","generationConfig":{"responseModalities":["AUDIO"],"temperature":0.5,"topP":0.9,"topK":3,"seed":12}}}',
+    );
+    expect(session).toBeDefined();
+  });
+
   it('connect should send setup message with speech config', async () => {
     const apiClient = new ApiClient({
       auth: new FakeAuth(),
@@ -522,6 +579,60 @@ describe('live', () => {
     const liveServerMessage = incomingMessages[0];
     expect(liveServerMessage.goAway).toBeDefined();
     expect(liveServerMessage.goAway!.timeLeft).toBe('10s');
+  });
+
+  it('connect should send setup message with audio transcription config', async () => {
+    const apiClient = new ApiClient({
+      auth: new FakeAuth(),
+      apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
+      vertexai: true,
+      project: 'test-project',
+      location: 'test-location',
+    });
+    const websocketFactory = new FakeWebSocketFactory();
+    const live = new Live(apiClient, new FakeAuth(), websocketFactory);
+
+    let websocket = new FakeWebSocket(
+      '',
+      {},
+      {
+        onopen: function () {},
+        onmessage: function (_e: MessageEvent) {},
+        onerror: function (_e: ErrorEvent) {},
+        onclose: function (_e: CloseEvent) {},
+      },
+    );
+    spyOn(websocket, 'connect').and.callThrough();
+    let websocketSpy = spyOn(websocket, 'send').and.callThrough();
+    spyOn(websocketFactory, 'create').and.callFake(
+      (url, headers, callbacks) => {
+        // Update the websocket spy instance with callbacks provided by
+        // the websocket factory.
+        websocket = new FakeWebSocket(url, headers, callbacks);
+        spyOn(websocket, 'connect').and.callThrough();
+        websocketSpy = spyOn(websocket, 'send').and.callThrough();
+        return websocket;
+      },
+    );
+
+    const session = await live.connect({
+      model: 'models/gemini-2.0-flash-live-001',
+      config: {
+        outputAudioTranscription: {},
+      },
+      callbacks: {
+        onmessage: function (e: types.LiveServerMessage) {
+          void e;
+        },
+      },
+    });
+
+    const websocketSpyCall = websocketSpy.calls.all()[0];
+    expect(websocketSpyCall.args[0]).toBe(
+      '{"setup":{"model":"models/gemini-2.0-flash-live-001","generationConfig":{"responseModalities":["AUDIO"]},"outputAudioTranscription":{}}}',
+    );
+    expect(session).toBeDefined();
   });
 
   it('session should return session resumption update message', async () => {

@@ -190,6 +190,12 @@ export class Live {
         params.config.responseModalities = [types.Modality.AUDIO];
       }
     }
+    if (params.config?.generationConfig) {
+      // Raise deprecation warning for generationConfig.
+      console.warn(
+        'Setting `LiveConnectConfig.generation_config` is deprecated, please set the fields on `LiveConnectConfig` directly. This will become an error in a future version (not before Q3 2025).',
+      );
+    }
     const liveConnectParameters: types.LiveConnectParameters = {
       model: transformedModel,
       config: params.config,

@@ -1045,6 +1045,64 @@ export function liveConnectConfigToMldev(
     );
   }
 
+  const fromTemperature = common.getValueByPath(fromObject, ['temperature']);
+  if (parentObject !== undefined && fromTemperature != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'generationConfig', 'temperature'],
+      fromTemperature,
+    );
+  }
+
+  const fromTopP = common.getValueByPath(fromObject, ['topP']);
+  if (parentObject !== undefined && fromTopP != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'generationConfig', 'topP'],
+      fromTopP,
+    );
+  }
+
+  const fromTopK = common.getValueByPath(fromObject, ['topK']);
+  if (parentObject !== undefined && fromTopK != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'generationConfig', 'topK'],
+      fromTopK,
+    );
+  }
+
+  const fromMaxOutputTokens = common.getValueByPath(fromObject, [
+    'maxOutputTokens',
+  ]);
+  if (parentObject !== undefined && fromMaxOutputTokens != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'generationConfig', 'maxOutputTokens'],
+      fromMaxOutputTokens,
+    );
+  }
+
+  const fromMediaResolution = common.getValueByPath(fromObject, [
+    'mediaResolution',
+  ]);
+  if (parentObject !== undefined && fromMediaResolution != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'generationConfig', 'mediaResolution'],
+      fromMediaResolution,
+    );
+  }
+
+  const fromSeed = common.getValueByPath(fromObject, ['seed']);
+  if (parentObject !== undefined && fromSeed != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'generationConfig', 'seed'],
+      fromSeed,
+    );
+  }
+
   const fromSpeechConfig = common.getValueByPath(fromObject, ['speechConfig']);
   if (parentObject !== undefined && fromSpeechConfig != null) {
     common.setValueByPath(
@@ -1095,6 +1153,25 @@ export function liveConnectConfigToMldev(
       parentObject,
       ['setup', 'sessionResumption'],
       sessionResumptionConfigToMldev(apiClient, fromSessionResumption),
+    );
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['inputAudioTranscription']) !== undefined
+  ) {
+    throw new Error(
+      'inputAudioTranscription parameter is not supported in Gemini API.',
+    );
+  }
+
+  const fromOutputAudioTranscription = common.getValueByPath(fromObject, [
+    'outputAudioTranscription',
+  ]);
+  if (parentObject !== undefined && fromOutputAudioTranscription != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'outputAudioTranscription'],
+      audioTranscriptionConfigToMldev(),
     );
   }
 
@@ -1155,6 +1232,64 @@ export function liveConnectConfigToVertex(
     );
   }
 
+  const fromTemperature = common.getValueByPath(fromObject, ['temperature']);
+  if (parentObject !== undefined && fromTemperature != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'generationConfig', 'temperature'],
+      fromTemperature,
+    );
+  }
+
+  const fromTopP = common.getValueByPath(fromObject, ['topP']);
+  if (parentObject !== undefined && fromTopP != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'generationConfig', 'topP'],
+      fromTopP,
+    );
+  }
+
+  const fromTopK = common.getValueByPath(fromObject, ['topK']);
+  if (parentObject !== undefined && fromTopK != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'generationConfig', 'topK'],
+      fromTopK,
+    );
+  }
+
+  const fromMaxOutputTokens = common.getValueByPath(fromObject, [
+    'maxOutputTokens',
+  ]);
+  if (parentObject !== undefined && fromMaxOutputTokens != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'generationConfig', 'maxOutputTokens'],
+      fromMaxOutputTokens,
+    );
+  }
+
+  const fromMediaResolution = common.getValueByPath(fromObject, [
+    'mediaResolution',
+  ]);
+  if (parentObject !== undefined && fromMediaResolution != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'generationConfig', 'mediaResolution'],
+      fromMediaResolution,
+    );
+  }
+
+  const fromSeed = common.getValueByPath(fromObject, ['seed']);
+  if (parentObject !== undefined && fromSeed != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'generationConfig', 'seed'],
+      fromSeed,
+    );
+  }
+
   const fromSpeechConfig = common.getValueByPath(fromObject, ['speechConfig']);
   if (parentObject !== undefined && fromSpeechConfig != null) {
     common.setValueByPath(
@@ -1205,6 +1340,28 @@ export function liveConnectConfigToVertex(
       parentObject,
       ['setup', 'sessionResumption'],
       sessionResumptionConfigToVertex(apiClient, fromSessionResumption),
+    );
+  }
+
+  const fromInputAudioTranscription = common.getValueByPath(fromObject, [
+    'inputAudioTranscription',
+  ]);
+  if (parentObject !== undefined && fromInputAudioTranscription != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'inputAudioTranscription'],
+      audioTranscriptionConfigToVertex(),
+    );
+  }
+
+  const fromOutputAudioTranscription = common.getValueByPath(fromObject, [
+    'outputAudioTranscription',
+  ]);
+  if (parentObject !== undefined && fromOutputAudioTranscription != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'outputAudioTranscription'],
+      audioTranscriptionConfigToVertex(),
     );
   }
 
@@ -1377,6 +1534,25 @@ export function liveClientSetupToMldev(
     );
   }
 
+  if (
+    common.getValueByPath(fromObject, ['inputAudioTranscription']) !== undefined
+  ) {
+    throw new Error(
+      'inputAudioTranscription parameter is not supported in Gemini API.',
+    );
+  }
+
+  const fromOutputAudioTranscription = common.getValueByPath(fromObject, [
+    'outputAudioTranscription',
+  ]);
+  if (fromOutputAudioTranscription != null) {
+    common.setValueByPath(
+      toObject,
+      ['outputAudioTranscription'],
+      audioTranscriptionConfigToMldev(),
+    );
+  }
+
   return toObject;
 }
 
@@ -1464,6 +1640,28 @@ export function liveClientSetupToVertex(
         apiClient,
         fromContextWindowCompression,
       ),
+    );
+  }
+
+  const fromInputAudioTranscription = common.getValueByPath(fromObject, [
+    'inputAudioTranscription',
+  ]);
+  if (fromInputAudioTranscription != null) {
+    common.setValueByPath(
+      toObject,
+      ['inputAudioTranscription'],
+      audioTranscriptionConfigToVertex(),
+    );
+  }
+
+  const fromOutputAudioTranscription = common.getValueByPath(fromObject, [
+    'outputAudioTranscription',
+  ]);
+  if (fromOutputAudioTranscription != null) {
+    common.setValueByPath(
+      toObject,
+      ['outputAudioTranscription'],
+      audioTranscriptionConfigToVertex(),
     );
   }
 
@@ -2004,14 +2202,40 @@ export function contentFromVertex(
   return toObject;
 }
 
-export function transcriptionFromMldev(): Record<string, unknown> {
+export function transcriptionFromMldev(
+  apiClient: ApiClient,
+  fromObject: types.Transcription,
+): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
+
+  const fromText = common.getValueByPath(fromObject, ['text']);
+  if (fromText != null) {
+    common.setValueByPath(toObject, ['text'], fromText);
+  }
+
+  const fromFinished = common.getValueByPath(fromObject, ['finished']);
+  if (fromFinished != null) {
+    common.setValueByPath(toObject, ['finished'], fromFinished);
+  }
 
   return toObject;
 }
 
-export function transcriptionFromVertex(): Record<string, unknown> {
+export function transcriptionFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.Transcription,
+): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
+
+  const fromText = common.getValueByPath(fromObject, ['text']);
+  if (fromText != null) {
+    common.setValueByPath(toObject, ['text'], fromText);
+  }
+
+  const fromFinished = common.getValueByPath(fromObject, ['finished']);
+  if (fromFinished != null) {
+    common.setValueByPath(toObject, ['finished'], fromFinished);
+  }
 
   return toObject;
 }
@@ -2052,6 +2276,28 @@ export function liveServerContentFromMldev(
     );
   }
 
+  const fromInputTranscription = common.getValueByPath(fromObject, [
+    'inputTranscription',
+  ]);
+  if (fromInputTranscription != null) {
+    common.setValueByPath(
+      toObject,
+      ['inputTranscription'],
+      transcriptionFromMldev(apiClient, fromInputTranscription),
+    );
+  }
+
+  const fromOutputTranscription = common.getValueByPath(fromObject, [
+    'outputTranscription',
+  ]);
+  if (fromOutputTranscription != null) {
+    common.setValueByPath(
+      toObject,
+      ['outputTranscription'],
+      transcriptionFromMldev(apiClient, fromOutputTranscription),
+    );
+  }
+
   return toObject;
 }
 
@@ -2088,6 +2334,28 @@ export function liveServerContentFromVertex(
       toObject,
       ['generationComplete'],
       fromGenerationComplete,
+    );
+  }
+
+  const fromInputTranscription = common.getValueByPath(fromObject, [
+    'inputTranscription',
+  ]);
+  if (fromInputTranscription != null) {
+    common.setValueByPath(
+      toObject,
+      ['inputTranscription'],
+      transcriptionFromVertex(apiClient, fromInputTranscription),
+    );
+  }
+
+  const fromOutputTranscription = common.getValueByPath(fromObject, [
+    'outputTranscription',
+  ]);
+  if (fromOutputTranscription != null) {
+    common.setValueByPath(
+      toObject,
+      ['outputTranscription'],
+      transcriptionFromVertex(apiClient, fromOutputTranscription),
     );
   }
 

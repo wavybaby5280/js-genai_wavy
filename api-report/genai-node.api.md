@@ -1081,7 +1081,9 @@ export interface LiveClientRealtimeInput {
 export interface LiveClientSetup {
     contextWindowCompression?: ContextWindowCompressionConfig;
     generationConfig?: GenerationConfig;
+    inputAudioTranscription?: AudioTranscriptionConfig;
     model?: string;
+    outputAudioTranscription?: AudioTranscriptionConfig;
     realtimeInputConfig?: RealtimeInputConfig;
     sessionResumption?: SessionResumptionConfig;
     systemInstruction?: ContentUnion;
@@ -1097,12 +1099,20 @@ export class LiveClientToolResponse {
 export interface LiveConnectConfig {
     contextWindowCompression?: ContextWindowCompressionConfig;
     generationConfig?: GenerationConfig;
+    inputAudioTranscription?: AudioTranscriptionConfig;
+    maxOutputTokens?: number;
+    mediaResolution?: MediaResolution;
+    outputAudioTranscription?: AudioTranscriptionConfig;
     realtimeInputConfig?: RealtimeInputConfig;
     responseModalities?: Modality[];
+    seed?: number;
     sessionResumption?: SessionResumptionConfig;
     speechConfig?: SpeechConfig;
     systemInstruction?: ContentUnion;
+    temperature?: number;
     tools?: ToolListUnion;
+    topK?: number;
+    topP?: number;
 }
 
 // @public
@@ -1133,8 +1143,10 @@ export class LiveSendToolResponseParameters {
 // @public
 export interface LiveServerContent {
     generationComplete?: boolean;
+    inputTranscription?: Transcription;
     interrupted?: boolean;
     modelTurn?: Content;
+    outputTranscription?: Transcription;
     turnComplete?: boolean;
 }
 
@@ -1736,6 +1748,12 @@ export enum TrafficType {
     PROVISIONED_THROUGHPUT = "PROVISIONED_THROUGHPUT",
     // (undocumented)
     TRAFFIC_TYPE_UNSPECIFIED = "TRAFFIC_TYPE_UNSPECIFIED"
+}
+
+// @public
+export interface Transcription {
+    finished?: boolean;
+    text?: string;
 }
 
 // @public
