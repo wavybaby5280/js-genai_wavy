@@ -1134,6 +1134,7 @@ describe('ApiClient', () => {
         .requestStream({path: 'test-path', httpMethod: 'POST'})
         .catch((e) => {
           expect(e.name).toEqual('ServerError');
+          expect(e.message).toContain('Internal Server Error');
         });
     });
     it('should throw ClientError if response is 400', async () => {
@@ -1149,6 +1150,7 @@ describe('ApiClient', () => {
         .requestStream({path: 'test-path', httpMethod: 'POST'})
         .catch((e) => {
           expect(e.name).toEqual('ClientError');
+          expect(e.message).toContain('Bad Request');
         });
     });
     it('should yield data if response is ok', async () => {
