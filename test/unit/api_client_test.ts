@@ -109,6 +109,55 @@ describe('processStreamResponse', () => {
     );
   });
 
+  it('should throw an error if encountering an error while parsing the chunk', async () => {
+    const validChunk =
+      'data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"},"finishReason": "STOP","index": 0}],"usageMetadata": {"promptTokenCount": 8,"candidatesTokenCount": 1,"totalTokenCount": 9}}\n\n';
+    const invalidChunk =
+      '{"error": {"code": 500, "message": "Internal error", "status": "INTERNAL"}}';
+    const stream = new Readable();
+    stream.push(validChunk);
+    stream.push(invalidChunk);
+    stream.push(null); // signal end of stream
+    const readableStream = new ReadableStream({
+      start(controller) {
+        stream.on('data', (chunk) => controller.enqueue(chunk));
+        stream.on('end', () => controller.close());
+        stream.on('error', (err) => controller.error(err));
+      },
+    });
+    const response = new Response(readableStream);
+
+    const expectedResponse = {
+      candidates: [
+        {
+          content: {
+            parts: [
+              {
+                text: 'The',
+              },
+            ],
+            role: 'model',
+          },
+          finishReason: 'STOP' as types.FinishReason,
+          index: 0,
+        },
+      ],
+      usageMetadata: {
+        promptTokenCount: 8,
+        candidatesTokenCount: 1,
+        totalTokenCount: 9,
+      },
+    };
+    const generator = apiClient.processStreamResponse(response);
+    const resultHttpResponse = await generator.next();
+    const result = await resultHttpResponse.value.json();
+    expect(result).toEqual(expectedResponse);
+
+    await expectAsync(generator.next()).toBeRejectedWithError(
+      'got status: INTERNAL. {"error":{"code":500,"message":"Internal error","status":"INTERNAL"}}',
+    );
+  });
+
   it('should yield the json chunk data', async () => {
     const validChunk1 =
       'data: {"candidates": [{"content": {"parts": [{"text": "The"}],"role": "model"},"finishReason": "STOP","index": 0}],"usageMetadata": {"promptTokenCount": 8,"candidatesTokenCount": 1,"totalTokenCount": 9}}\n\n';

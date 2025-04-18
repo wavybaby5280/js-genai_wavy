@@ -494,6 +494,33 @@ export class ApiClient {
           break;
         }
         const chunkString = decoder.decode(value);
+
+        // Parse and throw an error if the chunk contains an error.
+        try {
+          const chunkJson = JSON.parse(chunkString) as Record<string, unknown>;
+          if ('error' in chunkJson) {
+            const errorJson = JSON.parse(
+              JSON.stringify(chunkJson['error']),
+            ) as Record<string, unknown>;
+            const status = errorJson['status'] as string;
+            const code = errorJson['code'] as number;
+            const errorMessage = `got status: ${status}. ${JSON.stringify(
+              chunkJson,
+            )}`;
+            if (code >= 400 && code < 500) {
+              const clientError = new ClientError(errorMessage);
+              throw clientError;
+            } else if (code >= 500 && code < 600) {
+              const serverError = new ServerError(errorMessage);
+              throw serverError;
+            }
+          }
+        } catch (e: unknown) {
+          const error = e as Error;
+          if (error.name === 'ClientError' || error.name === 'ServerError') {
+            throw e;
+          }
+        }
         buffer += chunkString;
         let match = buffer.match(responseLineRE);
         while (match) {
