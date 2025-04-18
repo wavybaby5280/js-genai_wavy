@@ -212,6 +212,31 @@ async function main() {
 main();
 ```
 
+### Generate Content
+
+#### How to structure `contents` argument for `generateContent`
+
+The SDK allows you to specify the following types in the `contents` parameter:
+
+#### Content
+
+- `Content`: The SDK will wrap the singular `Content` instance in an array which
+contains only the given content instance
+- `Content[]`: No transformation happens
+
+#### Part
+
+Parts will be aggregated on a singular Content, with role 'user'.
+
+- `Part | string`: The SDK will wrap the `string` or `Part` in a `Content`
+instance with role 'user'.
+- `Part[] | string[]`: The SDK will wrap the full provided list into a single
+`Content` with role 'user'.
+
+**_NOTE:_** This doesn't apply to `FunctionCall` and `FunctionResponse` parts,
+if you are specifying those, you need to explicitly provide the full
+`Content[]` structure making it explicit which Parts are 'spoken' by the model,
+or the user. The SDK will throw an exception if you try this.
 
 ## Preview Launch
 
