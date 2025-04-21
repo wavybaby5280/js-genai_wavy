@@ -38,6 +38,14 @@ export interface AutomaticActivityDetection {
 }
 
 // @public
+export interface BaseUrlParameters {
+    // (undocumented)
+    geminiUrl?: string;
+    // (undocumented)
+    vertexUrl?: string;
+}
+
+// @public
 interface Blob_2 {
     data?: string;
     mimeType?: string;
@@ -1629,6 +1637,9 @@ export interface SessionResumptionConfig {
     handle?: string;
     transparent?: boolean;
 }
+
+// @public
+export function setDefaultBaseUrls(baseUrlParams: BaseUrlParameters): void;
 
 // @public
 export interface SlidingWindow {
