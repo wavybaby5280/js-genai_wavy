@@ -273,43 +273,10 @@ export function tContents(
   return result;
 }
 
-export function processSchema(apiClient: ApiClient, schema: types.Schema) {
-  if (!apiClient.isVertexAI()) {
-    if ('default' in schema) {
-      throw new Error(
-        'Default value is not supported in the response schema for the Gemini API.',
-      );
-    }
-  }
-
-  if ('anyOf' in schema) {
-    if (schema['anyOf'] !== undefined) {
-      for (const subSchema of schema['anyOf']) {
-        processSchema(apiClient, subSchema);
-      }
-    }
-  }
-
-  if ('items' in schema) {
-    if (schema['items'] !== undefined) {
-      processSchema(apiClient, schema['items']);
-    }
-  }
-
-  if ('properties' in schema) {
-    if (schema['properties'] !== undefined) {
-      for (const subSchema of Object.values(schema['properties'])) {
-        processSchema(apiClient, subSchema);
-      }
-    }
-  }
-}
-
 export function tSchema(
   apiClient: ApiClient,
   schema: types.Schema,
 ): types.Schema {
-  processSchema(apiClient, schema);
   return schema;
 }
 
