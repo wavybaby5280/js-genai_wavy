@@ -154,6 +154,7 @@ export interface CodeExecutionResult {
 
 // @public
 export interface ComputeTokensConfig {
+    abortSignal?: AbortSignal;
     httpOptions?: HttpOptions;
 }
 
@@ -227,6 +228,7 @@ export enum ControlReferenceType {
 
 // @public
 export interface CountTokensConfig {
+    abortSignal?: AbortSignal;
     generationConfig?: GenerationConfig;
     httpOptions?: HttpOptions;
     systemInstruction?: ContentUnion;
@@ -248,6 +250,7 @@ export class CountTokensResponse {
 
 // @public
 export interface CreateCachedContentConfig {
+    abortSignal?: AbortSignal;
     contents?: ContentListUnion;
     displayName?: string;
     expireTime?: string;
@@ -273,6 +276,7 @@ export interface CreateChatParameters {
 
 // @public
 export interface CreateFileConfig {
+    abortSignal?: AbortSignal;
     httpOptions?: HttpOptions;
 }
 
@@ -316,6 +320,7 @@ export function createUserContent(partOrString: PartListUnion | string): Content
 
 // @public
 export interface DeleteCachedContentConfig {
+    abortSignal?: AbortSignal;
     httpOptions?: HttpOptions;
 }
 
@@ -331,6 +336,7 @@ export class DeleteCachedContentResponse {
 
 // @public
 export interface DeleteFileConfig {
+    abortSignal?: AbortSignal;
     httpOptions?: HttpOptions;
 }
 
@@ -346,6 +352,7 @@ export class DeleteFileResponse {
 
 // @public
 export interface DownloadFileConfig {
+    abortSignal?: AbortSignal;
     httpOptions?: HttpOptions;
 }
 
@@ -365,6 +372,7 @@ export enum DynamicRetrievalConfigMode {
 
 // @public (undocumented)
 export interface EmbedContentConfig {
+    abortSignal?: AbortSignal;
     autoTruncate?: boolean;
     httpOptions?: HttpOptions;
     mimeType?: string;
@@ -427,6 +435,7 @@ export enum FeatureSelectionPreference {
 
 // @public (undocumented)
 export interface FetchPredictOperationConfig {
+    abortSignal?: AbortSignal;
     httpOptions?: HttpOptions;
 }
 
@@ -569,6 +578,7 @@ export class FunctionResponse {
 
 // @public
 export interface GenerateContentConfig {
+    abortSignal?: AbortSignal;
     audioTimestamp?: boolean;
     cachedContent?: string;
     candidateCount?: number;
@@ -657,6 +667,7 @@ export interface GeneratedVideo {
 
 // @public
 export interface GenerateImagesConfig {
+    abortSignal?: AbortSignal;
     addWatermark?: boolean;
     aspectRatio?: string;
     enhancePrompt?: boolean;
@@ -690,6 +701,7 @@ export class GenerateImagesResponse {
 
 // @public
 export interface GenerateVideosConfig {
+    abortSignal?: AbortSignal;
     aspectRatio?: string;
     durationSeconds?: number;
     enhancePrompt?: boolean;
@@ -766,6 +778,7 @@ export interface GenerationConfigRoutingConfigManualRoutingMode {
 
 // @public
 export interface GetCachedContentConfig {
+    abortSignal?: AbortSignal;
     httpOptions?: HttpOptions;
 }
 
@@ -777,6 +790,7 @@ export interface GetCachedContentParameters {
 
 // @public
 export interface GetFileConfig {
+    abortSignal?: AbortSignal;
     httpOptions?: HttpOptions;
 }
 
@@ -788,6 +802,7 @@ export interface GetFileParameters {
 
 // @public
 export interface GetModelConfig {
+    abortSignal?: AbortSignal;
     httpOptions?: HttpOptions;
 }
 
@@ -800,6 +815,7 @@ export interface GetModelParameters {
 
 // @public (undocumented)
 export interface GetOperationConfig {
+    abortSignal?: AbortSignal;
     httpOptions?: HttpOptions;
 }
 
@@ -1013,6 +1029,7 @@ export enum Language {
 
 // @public
 export interface ListCachedContentsConfig {
+    abortSignal?: AbortSignal;
     httpOptions?: HttpOptions;
     // (undocumented)
     pageSize?: number;
@@ -1034,6 +1051,7 @@ export class ListCachedContentsResponse {
 
 // @public
 export interface ListFilesConfig {
+    abortSignal?: AbortSignal;
     httpOptions?: HttpOptions;
     // (undocumented)
     pageSize?: number;
@@ -1816,6 +1834,7 @@ export enum Type {
 
 // @public
 export interface UpdateCachedContentConfig {
+    abortSignal?: AbortSignal;
     expireTime?: string;
     httpOptions?: HttpOptions;
     ttl?: string;
@@ -1829,6 +1848,7 @@ export interface UpdateCachedContentParameters {
 
 // @public
 export interface UploadFileConfig {
+    abortSignal?: AbortSignal;
     displayName?: string;
     httpOptions?: HttpOptions;
     mimeType?: string;
@@ -1843,6 +1863,7 @@ export interface UploadFileParameters {
 
 // @public
 export interface UpscaleImageConfig {
+    abortSignal?: AbortSignal;
     httpOptions?: HttpOptions;
     includeRaiReason?: boolean;
     outputCompressionQuality?: number;
