@@ -272,7 +272,7 @@ export class ApiClient {
   getWebsocketBaseUrl() {
     const baseUrl = this.getBaseUrl();
     const urlParts = new URL(baseUrl);
-    urlParts.protocol = 'wss';
+    urlParts.protocol = urlParts.protocol == 'http:' ? 'ws' : 'wss';
     return urlParts.toString();
   }
 

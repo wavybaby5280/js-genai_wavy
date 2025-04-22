@@ -361,6 +361,44 @@ describe('ApiClient', () => {
       expect(client.isVertexAI()).toBeFalse();
     });
 
+    it('should set websocket protocol to ws when base URL is http', () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'project-from-opts',
+        location: 'location-from-opts',
+        apiKey: 'apikey-from-opts',
+        vertexai: false,
+        apiVersion: 'v1beta',
+        httpOptions: {
+          baseUrl: 'http://custom-base-url.googleapis.com',
+        },
+        uploader: new CrossUploader(),
+      });
+
+      expect(client.getWebsocketBaseUrl()).toBe(
+        'ws://custom-base-url.googleapis.com/',
+      );
+    });
+
+    it('should set websocket protocol to wss when base URL is https', () => {
+      const client = new ApiClient({
+        auth: new FakeAuth(),
+        project: 'project-from-opts',
+        location: 'location-from-opts',
+        apiKey: 'apikey-from-opts',
+        vertexai: false,
+        apiVersion: 'v1beta',
+        httpOptions: {
+          baseUrl: 'https://custom-base-url.googleapis.com',
+        },
+        uploader: new CrossUploader(),
+      });
+
+      expect(client.getWebsocketBaseUrl()).toBe(
+        'wss://custom-base-url.googleapis.com/',
+      );
+    });
+
     it('should override base URL with provided values', () => {
       const client = new ApiClient({
         auth: new FakeAuth(),
