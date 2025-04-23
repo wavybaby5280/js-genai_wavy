@@ -1,7 +1,10 @@
 import {z} from 'zod';
 
 import {GoogleGenAI} from '../../src/client';
-import {responseSchemaFromZodType} from '../../src/schema_helper';
+import {
+  functionDeclarationFromZodFunction,
+  responseSchemaFromZodType,
+} from '../../src/schema_helper';
 import * as types from '../../src/types';
 
 const fetchOkOptions = {
@@ -168,6 +171,75 @@ describe('generateContent', () => {
         )['generationConfig']! as Record<string, unknown>
       )['responseSchema'];
       expect(parsedSchema).toEqual(expected);
+    });
+  });
+  describe('can use the results from functionDeclarationFromZodFunction in functionDeclarations field', () => {
+    it('should not throw error when wrapping zod function with the helper function', async () => {
+      const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+      const zodFunction = z
+        .function()
+        .args(z.object({numberField: z.number()}))
+        .returns(z.void())
+        .describe('this is a setParameter function');
+
+      const expected: types.FunctionDeclaration = {
+        description: 'this is a setParameter function',
+        name: 'setParameterFunction',
+        parameters: {
+          type: types.Type.OBJECT,
+          properties: {
+            numberField: {
+              type: types.Type.NUMBER,
+            },
+          },
+          required: ['numberField'],
+        },
+      };
+
+      const fetchSpy = spyOn(global, 'fetch').and.returnValue(
+        Promise.resolve(
+          new Response(
+            JSON.stringify(mockGenerateContentResponse),
+            fetchOkOptions,
+          ),
+        ),
+      );
+
+      await client.models.generateContent({
+        model: 'gemini-1.5-flash-exp',
+        contents: 'Dim the lights so the room feels cozy and warm.',
+        config: {
+          tools: [
+            {
+              functionDeclarations: [
+                functionDeclarationFromZodFunction(client.vertexai, {
+                  name: 'setParameterFunction',
+                  zodFunctionSchema: zodFunction,
+                }),
+              ],
+            },
+          ],
+          toolConfig: {
+            functionCallingConfig: {
+              mode: types.FunctionCallingConfigMode.ANY,
+              allowedFunctionNames: ['setParameterFunction'],
+            },
+          },
+        },
+      });
+
+      const parsedTools = (
+        JSON.parse(
+          fetchSpy.calls.allArgs()[0][1]?.['body'] as string,
+        ) as Record<string, unknown>
+      )['tools'] as unknown[];
+      const parsedFunctionDeclarations = (
+        (parsedTools[0] as Record<string, unknown>)[
+          'functionDeclarations'
+        ] as unknown[]
+      )[0];
+
+      expect(parsedFunctionDeclarations).toEqual(expected);
     });
   });
 });

@@ -1,8 +1,10 @@
 import {z, ZodError} from 'zod';
 
-import {responseSchemaFromZodType} from '../../src/schema_helper';
+import {
+  functionDeclarationFromZodFunction,
+  responseSchemaFromZodType,
+} from '../../src/schema_helper';
 import * as types from '../../src/types';
-
 describe('schema helper', () => {
   describe('responseSchemaFromZodType can convert zod schema to Google AI schema', () => {
     // throw zod error whe item is not JSONSchema.
@@ -795,6 +797,358 @@ describe('schema helper', () => {
       expect(responseSchemaFromZodType(false, uninonArrayAndObjects)).toEqual(
         expected,
       );
+    });
+  });
+  describe('functionDeclarationFromZodFunction can convert zod function to FunctionDeclaration', () => {
+    it('throw error when the function has more than one parameter value', () => {
+      const testParameter = z.object({
+        numberField: z
+          .number()
+          .min(0)
+          .max(100)
+          .describe('this is a number field'),
+      });
+      const setParameterFunction = z
+        .function()
+        .args(testParameter, z.string())
+        .returns(z.void())
+        .describe('this is a setParameter function');
+
+      expect(() => {
+        functionDeclarationFromZodFunction(true, {
+          name: 'setParameterFunction',
+          zodFunctionSchema: setParameterFunction,
+        });
+      }).toThrowError(
+        'Multiple positional parameters are not supported at the moment. Function parameters must be defined using a single object with named properties.',
+      );
+      expect(() => {
+        functionDeclarationFromZodFunction(false, {
+          name: 'setParameterFunction',
+          zodFunctionSchema: setParameterFunction,
+        });
+      }).toThrowError(
+        'Multiple positional parameters are not supported at the moment. Function parameters must be defined using a single object with named properties.',
+      );
+    });
+    it('throw error when the function parameter is not object', () => {
+      const setParameterFunction = z
+        .function()
+        .args(z.string())
+        .returns(z.void())
+        .describe('this is a setParameter function');
+
+      expect(() => {
+        functionDeclarationFromZodFunction(true, {
+          name: 'setParameterFunction',
+          zodFunctionSchema: setParameterFunction,
+        });
+      }).toThrowError(
+        'Function parameter is not object and not void, please check the parameter type.',
+      );
+      expect(() => {
+        functionDeclarationFromZodFunction(false, {
+          name: 'setParameterFunction',
+          zodFunctionSchema: setParameterFunction,
+        });
+      }).toThrowError(
+        'Function parameter is not object and not void, please check the parameter type.',
+      );
+    });
+    it('should process function with object parameters and return value', () => {
+      const setParameter = z.object({
+        numberField: z
+          .number()
+          .min(0)
+          .max(100)
+          .describe('this is a number field'),
+        stringEnumField: z
+          .enum(['daylight', 'cool', 'warm'])
+          .describe('this is a string enum field'),
+        booleanField: z.boolean().describe('this is a boolean field'),
+      });
+
+      const returnValue = z.object({
+        numberField: z
+          .number()
+          .min(0)
+          .max(100)
+          .describe('this is a return number field'),
+      });
+      const setParameterFunction = z
+        .function()
+        .args(setParameter)
+        .returns(returnValue)
+        .describe('this is a setParameter function');
+
+      const expected = {
+        description: 'this is a setParameter function',
+        name: 'setParameterFunction',
+        parameters: {
+          type: types.Type.OBJECT,
+          properties: {
+            numberField: {
+              type: types.Type.NUMBER,
+              minimum: 0,
+              maximum: 100,
+              description: 'this is a number field',
+            },
+            stringEnumField: {
+              type: types.Type.STRING,
+              enum: ['daylight', 'cool', 'warm'],
+              format: 'enum',
+              description: 'this is a string enum field',
+            },
+            booleanField: {
+              type: types.Type.BOOLEAN,
+              description: 'this is a boolean field',
+            },
+          },
+          required: ['numberField', 'stringEnumField', 'booleanField'],
+        },
+        response: {
+          type: types.Type.OBJECT,
+          properties: {
+            numberField: {
+              type: types.Type.NUMBER,
+              minimum: 0,
+              maximum: 100,
+              description: 'this is a return number field',
+            },
+          },
+          required: ['numberField'],
+        },
+      };
+      expect(
+        functionDeclarationFromZodFunction(true, {
+          name: 'setParameterFunction',
+          zodFunctionSchema: setParameterFunction,
+        }),
+      ).toEqual(expected);
+      expect(
+        functionDeclarationFromZodFunction(false, {
+          name: 'setParameterFunction',
+          zodFunctionSchema: setParameterFunction,
+        }),
+      ).toEqual(expected);
+    });
+    it('should process function with object parameters that have two fields with the same type', () => {
+      const setParameter = z.object({
+        numberFieldOne: z
+          .number()
+          .min(0)
+          .max(100)
+          .describe('this is a number field'),
+        numberFieldTwo: z
+          .number()
+          .min(0)
+          .max(100)
+          .describe('this is the other number field'),
+      });
+
+      const returnValue = z.object({
+        numberField: z
+          .number()
+          .min(0)
+          .max(100)
+          .describe('this is a return number field'),
+      });
+      const setParameterFunction = z
+        .function()
+        .args(setParameter)
+        .returns(returnValue)
+        .describe('this is a setParameter function');
+
+      const expected = {
+        description: 'this is a setParameter function',
+        name: 'setParameterFunction',
+        parameters: {
+          type: types.Type.OBJECT,
+          properties: {
+            numberFieldOne: {
+              type: types.Type.NUMBER,
+              minimum: 0,
+              maximum: 100,
+              description: 'this is a number field',
+            },
+            numberFieldTwo: {
+              type: types.Type.NUMBER,
+              minimum: 0,
+              maximum: 100,
+              description: 'this is the other number field',
+            },
+          },
+          required: ['numberFieldOne', 'numberFieldTwo'],
+        },
+        response: {
+          type: types.Type.OBJECT,
+          properties: {
+            numberField: {
+              type: types.Type.NUMBER,
+              minimum: 0,
+              maximum: 100,
+              description: 'this is a return number field',
+            },
+          },
+          required: ['numberField'],
+        },
+      };
+      expect(
+        functionDeclarationFromZodFunction(true, {
+          name: 'setParameterFunction',
+          zodFunctionSchema: setParameterFunction,
+        }),
+      ).toEqual(expected);
+      expect(
+        functionDeclarationFromZodFunction(false, {
+          name: 'setParameterFunction',
+          zodFunctionSchema: setParameterFunction,
+        }),
+      ).toEqual(expected);
+    });
+    it('should process function with void as parameters and have return value', () => {
+      const returnValue = z.object({
+        numberField: z
+          .number()
+          .min(0)
+          .max(100)
+          .describe('this is a return number field'),
+      });
+      const setParameterFunction = z
+        .function()
+        .args(z.void())
+        .returns(returnValue)
+        .describe('this is a setParameter function');
+
+      const expected = {
+        description: 'this is a setParameter function',
+        name: 'setParameterFunction',
+        response: {
+          type: types.Type.OBJECT,
+          properties: {
+            numberField: {
+              type: types.Type.NUMBER,
+              minimum: 0,
+              maximum: 100,
+              description: 'this is a return number field',
+            },
+          },
+          required: ['numberField'],
+        },
+      };
+      expect(
+        functionDeclarationFromZodFunction(true, {
+          name: 'setParameterFunction',
+          zodFunctionSchema: setParameterFunction,
+        }),
+      ).toEqual(expected);
+      expect(
+        functionDeclarationFromZodFunction(false, {
+          name: 'setParameterFunction',
+          zodFunctionSchema: setParameterFunction,
+        }),
+      ).toEqual(expected);
+    });
+    it('should process function with no parameters and have return value', () => {
+      const returnValue = z.object({
+        valueField: z
+          .number()
+          .min(0)
+          .max(100)
+          .describe('this is a return number field'),
+      });
+      const setParameterFunction = z
+        .function()
+        .args()
+        .returns(returnValue)
+        .describe('this is a setParameter function');
+
+      const expected = {
+        description: 'this is a setParameter function',
+        name: 'setParameterFunction',
+        response: {
+          type: types.Type.OBJECT,
+          properties: {
+            valueField: {
+              type: types.Type.NUMBER,
+              minimum: 0,
+              maximum: 100,
+              description: 'this is a return number field',
+            },
+          },
+          required: ['valueField'],
+        },
+      };
+      expect(
+        functionDeclarationFromZodFunction(true, {
+          name: 'setParameterFunction',
+          zodFunctionSchema: setParameterFunction,
+        }),
+      ).toEqual(expected);
+      expect(
+        functionDeclarationFromZodFunction(false, {
+          name: 'setParameterFunction',
+          zodFunctionSchema: setParameterFunction,
+        }),
+      ).toEqual(expected);
+    });
+    it('should process function with parameters and return value to void', () => {
+      const setParameter = z.object({
+        numberField: z
+          .number()
+          .min(0)
+          .max(100)
+          .describe('this is a number field'),
+        stringEnumField: z
+          .enum(['daylight', 'cool', 'warm'])
+          .describe('this is a string enum field'),
+        booleanField: z.boolean().describe('this is a boolean field'),
+      });
+
+      const setParameterFunction = z
+        .function()
+        .args(setParameter)
+        .returns(z.void())
+        .describe('this is a setParameter function');
+
+      const expected = {
+        description: 'this is a setParameter function',
+        name: 'setParameterFunction',
+        parameters: {
+          type: types.Type.OBJECT,
+          properties: {
+            numberField: {
+              type: types.Type.NUMBER,
+              minimum: 0,
+              maximum: 100,
+              description: 'this is a number field',
+            },
+            stringEnumField: {
+              type: types.Type.STRING,
+              enum: ['daylight', 'cool', 'warm'],
+              format: 'enum',
+              description: 'this is a string enum field',
+            },
+            booleanField: {
+              type: types.Type.BOOLEAN,
+              description: 'this is a boolean field',
+            },
+          },
+          required: ['numberField', 'stringEnumField', 'booleanField'],
+        },
+      };
+      expect(
+        functionDeclarationFromZodFunction(true, {
+          name: 'setParameterFunction',
+          zodFunctionSchema: setParameterFunction,
+        }),
+      ).toEqual(expected);
+      expect(
+        functionDeclarationFromZodFunction(false, {
+          name: 'setParameterFunction',
+          zodFunctionSchema: setParameterFunction,
+        }),
+      ).toEqual(expected);
     });
   });
 });

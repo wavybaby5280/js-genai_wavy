@@ -7,8 +7,14 @@
 import {fail} from 'assert';
 import {z} from 'zod';
 
-import {responseSchemaFromZodType} from '../../../src/schema_helper';
-import {GenerateContentResponse} from '../../../src/types';
+import {
+  functionDeclarationFromZodFunction,
+  responseSchemaFromZodType,
+} from '../../../src/schema_helper';
+import {
+  FunctionCallingConfigMode,
+  GenerateContentResponse,
+} from '../../../src/types';
 import {GoogleGenAI} from '../../../src/web/web_client';
 import {createZeroFilledTempFile} from '../../_generate_test_file';
 
@@ -102,6 +108,51 @@ describe('generateContent', () => {
     console.log('mldev response', parsedResponse);
     const validationResult = nestedSchema.safeParse(parsedResponse);
     expect(validationResult.success).toEqual(true);
+  });
+  it('ML Dev should generate function call with given zod function schema', async () => {
+    const stringArgument = z.object({
+      firstString: z.string(),
+      secondString: z.string(),
+    });
+    const concatStringFunction = z
+      .function()
+      .args(stringArgument)
+      .returns(z.void())
+      .describe('this is a concat string function');
+    const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+    const response = await client.models.generateContent({
+      model: 'gemini-1.5-flash',
+      contents: 'put word: hello and word: world into a string',
+      config: {
+        tools: [
+          {
+            functionDeclarations: [
+              functionDeclarationFromZodFunction(client.vertexai, {
+                name: 'concatStringFunction',
+                zodFunctionSchema: concatStringFunction,
+              }),
+            ],
+          },
+        ],
+        toolConfig: {
+          functionCallingConfig: {
+            mode: FunctionCallingConfigMode.ANY,
+            allowedFunctionNames: ['concatStringFunction'],
+          },
+        },
+      },
+    });
+    const functionCallResponse =
+      response.candidates![0].content!['parts']![0].functionCall;
+    expect(functionCallResponse!.name).toEqual('concatStringFunction');
+    const parsedArgument = stringArgument.safeParse(
+      functionCallResponse!.args!,
+    );
+    expect(parsedArgument.success).toEqual(true);
+    expect(parsedArgument.data).toEqual({
+      firstString: 'hello',
+      secondString: 'world',
+    });
   });
 });
 

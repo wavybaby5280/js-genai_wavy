@@ -7,7 +7,7 @@
 import {z} from 'zod';
 import {zodToJsonSchema} from 'zod-to-json-schema';
 
-import {Schema, Type} from './types';
+import {FunctionDeclaration, Schema, Type} from './types';
 
 /**
  * A placeholder name for the zod schema when converting to JSON schema. The
@@ -216,8 +216,9 @@ const jsonSchemaValidator: jsonSchemaValidatorType = z.lazy(() => {
 /**
  * Converts a Zod object into the Gemini schema format.
  *
- * This function first validates the structure of the input `zodSchema` object
- * against an internal representation of JSON Schema (see {@link JSONSchema}).
+ * [Experimental] This function first validates the structure of the input
+ * `zodSchema` object against an internal representation of JSON Schema (see
+ * {@link JSONSchema}).
  * Any mismatch in data types and inrecongnized properties will cause an error.
  *
  * @param vertexai If true, targets Vertex AI schema format; otherwise, targets
@@ -438,4 +439,81 @@ function processJsonSchema(
     }
   }
   return genAISchema;
+}
+
+/**
+ * Object for passing the details of the zod function schema.
+ * This is to set up the named parameters for the functionDeclarationFromZod
+ * function.
+ */
+export interface ZodFunction {
+  // The name of the function.
+  name: string;
+  // The zod function schema. This any here is to support the zod function with no arguments.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  zodFunctionSchema: z.ZodFunction<z.ZodTuple<any, z.ZodTypeAny>, z.ZodTypeAny>;
+}
+
+/**
+ * Converts a Zod function schema definition into a FunctionDeclaration object.
+ *
+ * [Experimental] This function help to convert the zod function to the function
+ * declaration format. Currently, the function only support the function with
+ * one parameter value, the parameter can be object or void.
+ *
+ * @param vertexai If true, targets Vertex AI schema format; otherwise, targets
+ * the Gemini API format.
+ * @param zodFunction The zodFunction object for passing the name and zod
+ *     function
+ * schema. see {@link ZodFunction} for more details.
+ * @return The resulting FunctionDeclaration object. @see {@link FunctionDeclaration}
+ * @throws {ZodError} If the input `zodFunction` contains paramters that can not
+ * be converteed to Schema object @see {@link Schema}
+ * @throws {Error} If the input `zodFunction` contains more than one parameter
+ * or the parameter is not object.
+ */
+export function functionDeclarationFromZodFunction(
+  vertaxai: boolean,
+  zodFunction: ZodFunction,
+): FunctionDeclaration {
+  const functionDeclaration: FunctionDeclaration = {};
+
+  // Process the name of the function.
+  functionDeclaration.name = zodFunction.name;
+  // Process the description of the function.
+  functionDeclaration.description =
+    zodFunction.zodFunctionSchema._def.description;
+  // Process the return value of the function.
+  const zodFunctionReturn = zodFunction.zodFunctionSchema._def.returns;
+  if (!(zodFunctionReturn instanceof z.ZodVoid)) {
+    functionDeclaration.response = processZodSchema(
+      vertaxai,
+      zodFunctionReturn,
+    );
+  }
+  // Process the parameters of the function.
+  const functionParams = zodFunction.zodFunctionSchema._def.args._def
+    .items as z.ZodTypeAny[];
+  if (functionParams.length > 1) {
+    throw new Error(
+      'Multiple positional parameters are not supported at the moment. Function parameters must be defined using a single object with named properties.',
+    );
+  }
+  if (functionParams.length === 1) {
+    const param = functionParams[0];
+    if (param instanceof z.ZodObject) {
+      functionDeclaration.parameters = processZodSchema(
+        vertaxai,
+        functionParams[0],
+      );
+    } else {
+      if (!(param instanceof z.ZodVoid)) {
+        throw new Error(
+          'Function parameter is not object and not void, please check the parameter type.',
+        );
+      }
+    }
+  }
+
+  return functionDeclaration;
 }
