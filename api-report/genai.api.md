@@ -519,6 +519,8 @@ export enum FinishReason {
     // (undocumented)
     IMAGE_SAFETY = "IMAGE_SAFETY",
     // (undocumented)
+    LANGUAGE = "LANGUAGE",
+    // (undocumented)
     MALFORMED_FUNCTION_CALL = "MALFORMED_FUNCTION_CALL",
     // (undocumented)
     MAX_TOKENS = "MAX_TOKENS",
