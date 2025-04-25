@@ -17,6 +17,7 @@ import {Models} from '../models';
 import {NodeAuth} from '../node/_node_auth';
 import {NodeWebSocketFactory} from '../node/_node_websocket';
 import {Operations} from '../operations';
+import {Tunings} from '../tunings';
 
 import {NodeUploader} from './_node_uploader';
 
@@ -76,6 +77,7 @@ export class GoogleGenAI {
   readonly caches: Caches;
   readonly files: Files;
   readonly operations: Operations;
+  readonly tunings: Tunings;
 
   constructor(options: GoogleGenAIOptions) {
     // Validate explicitly set initializer values.
@@ -158,6 +160,7 @@ export class GoogleGenAI {
     this.caches = new Caches(this.apiClient);
     this.files = new Files(this.apiClient);
     this.operations = new Operations(this.apiClient);
+    this.tunings = new Tunings(this.apiClient);
   }
 }
 
