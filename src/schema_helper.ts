@@ -65,7 +65,7 @@ export interface JSONSchema {
   /**
    * This keyword can be used to supply a default JSON value associated
    * with a particular schema. The value should be valid according to the
-   * schema. This is not supported for Gemini API.
+   * schema.
    */
   default?: unknown;
 
@@ -469,7 +469,7 @@ export function functionDeclarationFromZodFunction(
     zodFunction.zodFunctionSchema._def.description;
   // Process the return value of the function.
   const zodFunctionReturn = zodFunction.zodFunctionSchema._def.returns;
-  if (!(zodFunctionReturn instanceof z.ZodVoid)) {
+  if (!(zodFunctionReturn._def.typeName === 'ZodVoid')) {
     functionDeclaration.response = processZodSchema(zodFunctionReturn);
   }
   // Process the parameters of the function.
@@ -482,12 +482,17 @@ export function functionDeclarationFromZodFunction(
   }
   if (functionParams.length === 1) {
     const param = functionParams[0];
-    if (param instanceof z.ZodObject) {
+    if (param._def.typeName === 'ZodObject') {
       functionDeclaration.parameters = processZodSchema(functionParams[0]);
     } else {
-      if (!(param instanceof z.ZodVoid)) {
+      if (param._def.typeName === 'ZodOptional') {
         throw new Error(
-          'Function parameter is not object and not void, please check the parameter type.',
+          'Supllying only optional parameter is not supported at the moment. You can make all the fields inside the parameter object as optional.',
+        );
+      }
+      if (!(param._def.typeName === 'ZodVoid')) {
+        throw new Error(
+          'Function parameter is not object and not void, please check the parameter type. Please wrap the parameter in an object with named properties.',
         );
       }
     }

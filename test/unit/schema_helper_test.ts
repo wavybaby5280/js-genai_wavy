@@ -756,7 +756,15 @@ describe('schema helper', () => {
           zodFunctionSchema: setParameterFunction,
         });
       }).toThrowError(
-        'Function parameter is not object and not void, please check the parameter type.',
+        'Function parameter is not object and not void, please check the parameter type. Please wrap the parameter in an object with named properties.',
+      );
+      expect(() => {
+        functionDeclarationFromZodFunction({
+          name: 'setParameterFunction',
+          zodFunctionSchema: setParameterFunction,
+        });
+      }).toThrowError(
+        'Function parameter is not object and not void, please check the parameter type. Please wrap the parameter in an object with named properties.',
       );
     });
     it('should process function with object parameters and return value', () => {
@@ -1023,6 +1031,252 @@ describe('schema helper', () => {
           zodFunctionSchema: setParameterFunction,
         }),
       ).toEqual(expected);
+    });
+    it('should process function with parameters that have optional fields and return value to void', () => {
+      const setParameter = z.object({
+        numberField: z
+          .number()
+          .min(0)
+          .max(100)
+          .describe('this is a number field'),
+        stringEnumField: z
+          .enum(['daylight', 'cool', 'warm'])
+          .describe('this is a string enum field'),
+        booleanField: z.boolean().describe('this is a boolean field'),
+        optionalField: z
+          .string()
+          .optional()
+          .describe('this is an optional field'),
+      });
+
+      const setParameterFunction = z
+        .function()
+        .args(setParameter)
+        .returns(z.void())
+        .describe('this is a setParameter function');
+
+      const expected = {
+        description: 'this is a setParameter function',
+        name: 'setParameterFunction',
+        parameters: {
+          type: types.Type.OBJECT,
+          properties: {
+            numberField: {
+              type: types.Type.NUMBER,
+              minimum: 0,
+              maximum: 100,
+              description: 'this is a number field',
+            },
+            stringEnumField: {
+              type: types.Type.STRING,
+              enum: ['daylight', 'cool', 'warm'],
+              format: 'enum',
+              description: 'this is a string enum field',
+            },
+            booleanField: {
+              type: types.Type.BOOLEAN,
+              description: 'this is a boolean field',
+            },
+            optionalField: {
+              type: types.Type.STRING,
+              description: 'this is an optional field',
+            },
+          },
+          required: ['numberField', 'stringEnumField', 'booleanField'],
+        },
+      };
+      expect(
+        functionDeclarationFromZodFunction({
+          name: 'setParameterFunction',
+          zodFunctionSchema: setParameterFunction,
+        }),
+      ).toEqual(expected);
+    });
+    it('should process function with parameters that have optional fields and return value to void', () => {
+      const setParameter = z.object({
+        numberField: z
+          .number()
+          .min(0)
+          .max(100)
+          .describe('this is a number field'),
+        stringEnumField: z
+          .enum(['daylight', 'cool', 'warm'])
+          .describe('this is a string enum field'),
+        booleanField: z.boolean().describe('this is a boolean field'),
+        optionalField: z
+          .string()
+          .optional()
+          .describe('this is an optional field'),
+      });
+
+      const setParameterFunction = z
+        .function()
+        .args(setParameter)
+        .returns(z.void())
+        .describe('this is a setParameter function');
+
+      const expected = {
+        description: 'this is a setParameter function',
+        name: 'setParameterFunction',
+        parameters: {
+          type: types.Type.OBJECT,
+          properties: {
+            numberField: {
+              type: types.Type.NUMBER,
+              minimum: 0,
+              maximum: 100,
+              description: 'this is a number field',
+            },
+            stringEnumField: {
+              type: types.Type.STRING,
+              enum: ['daylight', 'cool', 'warm'],
+              format: 'enum',
+              description: 'this is a string enum field',
+            },
+            booleanField: {
+              type: types.Type.BOOLEAN,
+              description: 'this is a boolean field',
+            },
+            optionalField: {
+              type: types.Type.STRING,
+              description: 'this is an optional field',
+            },
+          },
+          required: ['numberField', 'stringEnumField', 'booleanField'],
+        },
+      };
+      expect(
+        functionDeclarationFromZodFunction({
+          name: 'setParameterFunction',
+          zodFunctionSchema: setParameterFunction,
+        }),
+      ).toEqual(expected);
+    });
+    it('should process function with parameters that only have optional fields and return value to void', () => {
+      const setParameter = z.object({
+        numberField: z
+          .number()
+          .min(0)
+          .max(100)
+          .optional()
+          .describe('this is a number field'),
+        stringEnumField: z
+          .enum(['daylight', 'cool', 'warm'])
+          .optional()
+          .describe('this is a string enum field'),
+        booleanField: z
+          .boolean()
+          .optional()
+          .describe('this is a boolean field'),
+        optionalField: z
+          .string()
+          .optional()
+          .describe('this is an optional field'),
+      });
+
+      const setParameterFunction = z
+        .function()
+        .args(setParameter)
+        .returns(z.void())
+        .describe('this is a setParameter function');
+
+      const expected = {
+        description: 'this is a setParameter function',
+        name: 'setParameterFunction',
+        parameters: {
+          type: types.Type.OBJECT,
+          properties: {
+            numberField: {
+              type: types.Type.NUMBER,
+              minimum: 0,
+              maximum: 100,
+              description: 'this is a number field',
+            },
+            stringEnumField: {
+              type: types.Type.STRING,
+              enum: ['daylight', 'cool', 'warm'],
+              format: 'enum',
+              description: 'this is a string enum field',
+            },
+            booleanField: {
+              type: types.Type.BOOLEAN,
+              description: 'this is a boolean field',
+            },
+            optionalField: {
+              type: types.Type.STRING,
+              description: 'this is an optional field',
+            },
+          },
+        },
+      };
+      expect(
+        functionDeclarationFromZodFunction({
+          name: 'setParameterFunction',
+          zodFunctionSchema: setParameterFunction,
+        }),
+      ).toEqual(expected);
+    });
+    it('should throw error when the parameter is zod optional', () => {
+      const setParameter = z
+        .object({
+          numberField: z
+            .number()
+            .min(0)
+            .max(100)
+            .describe('this is a number field'),
+          stringEnumField: z
+            .enum(['daylight', 'cool', 'warm'])
+            .describe('this is a string enum field'),
+          booleanField: z.boolean().describe('this is a boolean field'),
+          optionalField: z
+            .string()
+            .optional()
+            .describe('this is an optional field'),
+        })
+        .optional();
+      const setParameterFunction = z
+        .function()
+        .args(setParameter)
+        .returns(z.void())
+        .describe('this is a setParameter function');
+      expect(() => {
+        functionDeclarationFromZodFunction({
+          name: 'setParameterFunction',
+          zodFunctionSchema: setParameterFunction,
+        });
+      }).toThrowError(
+        'Supllying only optional parameter is not supported at the moment. You can make all the fields inside the parameter object as optional.',
+      );
+    });
+    it('should throw error when the parameter is more than one', () => {
+      const setParameter = z.object({
+        numberField: z
+          .number()
+          .min(0)
+          .max(100)
+          .describe('this is a number field'),
+        stringEnumField: z
+          .enum(['daylight', 'cool', 'warm'])
+          .describe('this is a string enum field'),
+        booleanField: z.boolean().describe('this is a boolean field'),
+        optionalField: z
+          .string()
+          .optional()
+          .describe('this is an optional field'),
+      });
+      const setParameterFunction = z
+        .function()
+        .args(setParameter, z.string())
+        .returns(z.void())
+        .describe('this is a setParameter function');
+      expect(() => {
+        functionDeclarationFromZodFunction({
+          name: 'setParameterFunction',
+          zodFunctionSchema: setParameterFunction,
+        });
+      }).toThrowError(
+        'Multiple positional parameters are not supported at the moment. Function parameters must be defined using a single object with named properties.',
+      );
     });
   });
 });
