@@ -221,8 +221,6 @@ const jsonSchemaValidator: jsonSchemaValidatorType = z.lazy(() => {
  * {@link JSONSchema}).
  * Any mismatch in data types and inrecongnized properties will cause an error.
  *
- * @param vertexai If true, targets Vertex AI schema format; otherwise, targets
- * the Gemini API format.
  * @param zodSchema The Zod schema object to convert. Its structure is validated
  * against the {@link JSONSchema} interface before conversion to JSONSchema
  * schema.
@@ -231,18 +229,15 @@ const jsonSchemaValidator: jsonSchemaValidatorType = z.lazy(() => {
  * JSONSchema structure during the initial validation step.
  * @see {@link JSONSchema} The interface used to validate the input `zodSchema`.
  */
-export function responseSchemaFromZodType(
-  vertexai: boolean,
-  zodSchema: z.ZodType,
-): Schema {
-  return processZodSchema(vertexai, zodSchema);
+export function schemaFromZodType(zodSchema: z.ZodType): Schema {
+  return processZodSchema(zodSchema);
 }
 
-function processZodSchema(vertexai: boolean, zodSchema: z.ZodType): Schema {
+function processZodSchema(zodSchema: z.ZodType): Schema {
   const jsonSchema = zodToJsonSchema(zodSchema, PLACEHOLDER_ZOD_SCHEMA_NAME)
     .definitions![PLACEHOLDER_ZOD_SCHEMA_NAME] as Record<string, unknown>;
   const validatedJsonSchema = jsonSchemaValidator.parse(jsonSchema);
-  return processJsonSchema(vertexai, validatedJsonSchema);
+  return processJsonSchema(validatedJsonSchema);
 }
 
 /*
@@ -304,10 +299,7 @@ function flattenTypeArrayToAnyOf(typeList: string[], resultingSchema: Schema) {
   }
 }
 
-function processJsonSchema(
-  _vertexai: boolean,
-  _jsonSchema: JSONSchema,
-): Schema {
+function processJsonSchema(_jsonSchema: JSONSchema): Schema {
   const genAISchema: Schema = {};
   const schemaFieldNames = ['items'];
   const listSchemaFieldNames = ['anyOf'];
@@ -396,7 +388,6 @@ function processJsonSchema(
         : Type.TYPE_UNSPECIFIED;
     } else if (schemaFieldNames.includes(fieldName)) {
       (genAISchema as Record<string, unknown>)[fieldName] = processJsonSchema(
-        _vertexai,
         fieldValue,
       ) as Record<string, unknown>;
     } else if (listSchemaFieldNames.includes(fieldName)) {
@@ -407,7 +398,7 @@ function processJsonSchema(
           continue;
         }
         listSchemaFieldValue.push(
-          processJsonSchema(_vertexai, item as JSONSchema) as Schema,
+          processJsonSchema(item as JSONSchema) as Schema,
         );
       }
       (genAISchema as Record<string, unknown>)[fieldName] =
@@ -418,7 +409,6 @@ function processJsonSchema(
         fieldValue as Record<string, unknown>,
       )) {
         dictSchemaFieldValue[key] = processJsonSchema(
-          _vertexai,
           value as JSONSchema,
         ) as Schema;
       }
@@ -427,9 +417,6 @@ function processJsonSchema(
     } else {
       if (fieldName === 'enum') {
         genAISchema['format'] = 'enum';
-      }
-      if (fieldName === 'default' && !_vertexai) {
-        throw new Error('Default value is not supported for Gemini API.');
       }
       // additionalProperties is not included in JSONSchema, skipping it.
       if (fieldName === 'additionalProperties') {
@@ -461,8 +448,6 @@ export interface ZodFunction {
  * declaration format. Currently, the function only support the function with
  * one parameter value, the parameter can be object or void.
  *
- * @param vertexai If true, targets Vertex AI schema format; otherwise, targets
- * the Gemini API format.
  * @param zodFunction The zodFunction object for passing the name and zod
  *     function
  * schema. see {@link ZodFunction} for more details.
@@ -473,7 +458,6 @@ export interface ZodFunction {
  * or the parameter is not object.
  */
 export function functionDeclarationFromZodFunction(
-  vertaxai: boolean,
   zodFunction: ZodFunction,
 ): FunctionDeclaration {
   const functionDeclaration: FunctionDeclaration = {};
@@ -486,10 +470,7 @@ export function functionDeclarationFromZodFunction(
   // Process the return value of the function.
   const zodFunctionReturn = zodFunction.zodFunctionSchema._def.returns;
   if (!(zodFunctionReturn instanceof z.ZodVoid)) {
-    functionDeclaration.response = processZodSchema(
-      vertaxai,
-      zodFunctionReturn,
-    );
+    functionDeclaration.response = processZodSchema(zodFunctionReturn);
   }
   // Process the parameters of the function.
   const functionParams = zodFunction.zodFunctionSchema._def.args._def
@@ -502,10 +483,7 @@ export function functionDeclarationFromZodFunction(
   if (functionParams.length === 1) {
     const param = functionParams[0];
     if (param instanceof z.ZodObject) {
-      functionDeclaration.parameters = processZodSchema(
-        vertaxai,
-        functionParams[0],
-      );
+      functionDeclaration.parameters = processZodSchema(functionParams[0]);
     } else {
       if (!(param instanceof z.ZodVoid)) {
         throw new Error(
