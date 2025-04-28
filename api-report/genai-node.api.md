@@ -422,6 +422,23 @@ export class DeleteFileResponse {
 }
 
 // @public
+export interface DeleteModelConfig {
+    abortSignal?: AbortSignal;
+    httpOptions?: HttpOptions;
+}
+
+// @public
+export interface DeleteModelParameters {
+    config?: DeleteModelConfig;
+    // (undocumented)
+    model: string;
+}
+
+// @public (undocumented)
+export class DeleteModelResponse {
+}
+
+// @public
 export interface DistillationDataStats {
     trainingDatasetStats?: DatasetStats;
 }
@@ -1549,12 +1566,14 @@ export class Models extends BaseModule {
     constructor(apiClient: ApiClient);
     computeTokens(params: types.ComputeTokensParameters): Promise<types.ComputeTokensResponse>;
     countTokens(params: types.CountTokensParameters): Promise<types.CountTokensResponse>;
+    delete(params: types.DeleteModelParameters): Promise<types.DeleteModelResponse>;
     embedContent(params: types.EmbedContentParameters): Promise<types.EmbedContentResponse>;
     generateContent: (params: types.GenerateContentParameters) => Promise<types.GenerateContentResponse>;
     generateContentStream: (params: types.GenerateContentParameters) => Promise<AsyncGenerator<types.GenerateContentResponse>>;
     generateImages: (params: types.GenerateImagesParameters) => Promise<types.GenerateImagesResponse>;
     generateVideos(params: types.GenerateVideosParameters): Promise<types.GenerateVideosOperation>;
     get(params: types.GetModelParameters): Promise<types.Model>;
+    update(params: types.UpdateModelParameters): Promise<types.Model>;
 }
 
 // @public
@@ -2167,6 +2186,24 @@ export interface UpdateCachedContentConfig {
 export interface UpdateCachedContentParameters {
     config?: UpdateCachedContentConfig;
     name: string;
+}
+
+// @public
+export interface UpdateModelConfig {
+    abortSignal?: AbortSignal;
+    // (undocumented)
+    description?: string;
+    // (undocumented)
+    displayName?: string;
+    httpOptions?: HttpOptions;
+}
+
+// @public
+export interface UpdateModelParameters {
+    // (undocumented)
+    config?: UpdateModelConfig;
+    // (undocumented)
+    model: string;
 }
 
 // @public

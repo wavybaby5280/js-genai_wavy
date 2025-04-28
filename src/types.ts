@@ -1753,6 +1753,49 @@ export declare interface Model {
   supportedActions?: string[];
 }
 
+/** Configuration for updating a tuned model. */
+export declare interface UpdateModelConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
+  displayName?: string;
+  description?: string;
+}
+
+/** Configuration for updating a tuned model. */
+export declare interface UpdateModelParameters {
+  model: string;
+  config?: UpdateModelConfig;
+}
+
+/** Configuration for deleting a tuned model. */
+export declare interface DeleteModelConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
+}
+
+/** Parameters for deleting a tuned model. */
+export declare interface DeleteModelParameters {
+  model: string;
+  /** Optional parameters for the request. */
+  config?: DeleteModelConfig;
+}
+
+export class DeleteModelResponse {}
+
 /** Generation config. */
 export declare interface GenerationConfig {
   /** Optional. If enabled, audio timestamp will be included in the request to the model. */

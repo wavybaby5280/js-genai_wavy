@@ -608,6 +608,180 @@ export class Models extends BaseModule {
   }
 
   /**
+   * Updates a tuned model by its name.
+   *
+   * @param params - The parameters for updating the model.
+   * @return The response from the API.
+   *
+   * @example
+   * ```ts
+   * const response = await ai.models.update({
+   *   model: 'tuned-model-name',
+   *   config: {
+   *     displayName: 'New display name',
+   *     description: 'New description',
+   *   },
+   * });
+   * ```
+   */
+  async update(params: types.UpdateModelParameters): Promise<types.Model> {
+    let response: Promise<types.Model>;
+    let path: string = '';
+    let queryParams: Record<string, string> = {};
+    if (this.apiClient.isVertexAI()) {
+      const body = converters.updateModelParametersToVertex(
+        this.apiClient,
+        params,
+      );
+      path = common.formatMap(
+        '{model}',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'PATCH',
+          httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json();
+        }) as Promise<types.Model>;
+
+      return response.then((apiResponse) => {
+        const resp = converters.modelFromVertex(this.apiClient, apiResponse);
+
+        return resp as types.Model;
+      });
+    } else {
+      const body = converters.updateModelParametersToMldev(
+        this.apiClient,
+        params,
+      );
+      path = common.formatMap(
+        '{name}',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'PATCH',
+          httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json();
+        }) as Promise<types.Model>;
+
+      return response.then((apiResponse) => {
+        const resp = converters.modelFromMldev(this.apiClient, apiResponse);
+
+        return resp as types.Model;
+      });
+    }
+  }
+
+  /**
+   * Deletes a tuned model by its name.
+   *
+   * @param params - The parameters for deleting the model.
+   * @return The response from the API.
+   *
+   * @example
+   * ```ts
+   * const response = await ai.models.delete({model: 'tuned-model-name'});
+   * ```
+   */
+  async delete(
+    params: types.DeleteModelParameters,
+  ): Promise<types.DeleteModelResponse> {
+    let response: Promise<types.DeleteModelResponse>;
+    let path: string = '';
+    let queryParams: Record<string, string> = {};
+    if (this.apiClient.isVertexAI()) {
+      const body = converters.deleteModelParametersToVertex(
+        this.apiClient,
+        params,
+      );
+      path = common.formatMap(
+        '{name}',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'DELETE',
+          httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json();
+        }) as Promise<types.DeleteModelResponse>;
+
+      return response.then(() => {
+        const resp = converters.deleteModelResponseFromVertex();
+        const typedResp = new types.DeleteModelResponse();
+        Object.assign(typedResp, resp);
+        return typedResp;
+      });
+    } else {
+      const body = converters.deleteModelParametersToMldev(
+        this.apiClient,
+        params,
+      );
+      path = common.formatMap(
+        '{name}',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'DELETE',
+          httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json();
+        }) as Promise<types.DeleteModelResponse>;
+
+      return response.then(() => {
+        const resp = converters.deleteModelResponseFromMldev();
+        const typedResp = new types.DeleteModelResponse();
+        Object.assign(typedResp, resp);
+        return typedResp;
+      });
+    }
+  }
+
+  /**
    * Counts the number of tokens in the given contents. Multimodal input is
    * supported for Gemini models.
    *

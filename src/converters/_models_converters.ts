@@ -1073,6 +1073,76 @@ export function getModelParametersToMldev(
   return toObject;
 }
 
+export function updateModelConfigToMldev(
+  apiClient: ApiClient,
+  fromObject: types.UpdateModelConfig,
+  parentObject: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
+  if (parentObject !== undefined && fromDisplayName != null) {
+    common.setValueByPath(parentObject, ['displayName'], fromDisplayName);
+  }
+
+  const fromDescription = common.getValueByPath(fromObject, ['description']);
+  if (parentObject !== undefined && fromDescription != null) {
+    common.setValueByPath(parentObject, ['description'], fromDescription);
+  }
+
+  return toObject;
+}
+
+export function updateModelParametersToMldev(
+  apiClient: ApiClient,
+  fromObject: types.UpdateModelParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromModel = common.getValueByPath(fromObject, ['model']);
+  if (fromModel != null) {
+    common.setValueByPath(
+      toObject,
+      ['_url', 'name'],
+      t.tModel(apiClient, fromModel),
+    );
+  }
+
+  const fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['config'],
+      updateModelConfigToMldev(apiClient, fromConfig, toObject),
+    );
+  }
+
+  return toObject;
+}
+
+export function deleteModelParametersToMldev(
+  apiClient: ApiClient,
+  fromObject: types.DeleteModelParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromModel = common.getValueByPath(fromObject, ['model']);
+  if (fromModel != null) {
+    common.setValueByPath(
+      toObject,
+      ['_url', 'name'],
+      t.tModel(apiClient, fromModel),
+    );
+  }
+
+  const fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig != null) {
+    common.setValueByPath(toObject, ['config'], fromConfig);
+  }
+
+  return toObject;
+}
+
 export function countTokensConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.CountTokensConfig,
@@ -2423,6 +2493,76 @@ export function getModelParametersToVertex(
   return toObject;
 }
 
+export function updateModelConfigToVertex(
+  apiClient: ApiClient,
+  fromObject: types.UpdateModelConfig,
+  parentObject: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
+  if (parentObject !== undefined && fromDisplayName != null) {
+    common.setValueByPath(parentObject, ['displayName'], fromDisplayName);
+  }
+
+  const fromDescription = common.getValueByPath(fromObject, ['description']);
+  if (parentObject !== undefined && fromDescription != null) {
+    common.setValueByPath(parentObject, ['description'], fromDescription);
+  }
+
+  return toObject;
+}
+
+export function updateModelParametersToVertex(
+  apiClient: ApiClient,
+  fromObject: types.UpdateModelParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromModel = common.getValueByPath(fromObject, ['model']);
+  if (fromModel != null) {
+    common.setValueByPath(
+      toObject,
+      ['_url', 'model'],
+      t.tModel(apiClient, fromModel),
+    );
+  }
+
+  const fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['config'],
+      updateModelConfigToVertex(apiClient, fromConfig, toObject),
+    );
+  }
+
+  return toObject;
+}
+
+export function deleteModelParametersToVertex(
+  apiClient: ApiClient,
+  fromObject: types.DeleteModelParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromModel = common.getValueByPath(fromObject, ['model']);
+  if (fromModel != null) {
+    common.setValueByPath(
+      toObject,
+      ['_url', 'name'],
+      t.tModel(apiClient, fromModel),
+    );
+  }
+
+  const fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig != null) {
+    common.setValueByPath(toObject, ['config'], fromConfig);
+  }
+
+  return toObject;
+}
+
 export function countTokensConfigToVertex(
   apiClient: ApiClient,
   fromObject: types.CountTokensConfig,
@@ -3241,6 +3381,12 @@ export function modelFromMldev(
   return toObject;
 }
 
+export function deleteModelResponseFromMldev(): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  return toObject;
+}
+
 export function countTokensResponseFromMldev(
   apiClient: ApiClient,
   fromObject: types.CountTokensResponse,
@@ -3982,6 +4128,12 @@ export function modelFromVertex(
       tunedModelInfoFromVertex(apiClient, fromTunedModelInfo),
     );
   }
+
+  return toObject;
+}
+
+export function deleteModelResponseFromVertex(): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   return toObject;
 }
