@@ -82,17 +82,13 @@ export function contentToMldev(
 
   const fromParts = common.getValueByPath(fromObject, ['parts']);
   if (fromParts != null) {
-    if (Array.isArray(fromParts)) {
-      common.setValueByPath(
-        toObject,
-        ['parts'],
-        fromParts.map((item) => {
-          return partToMldev(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(toObject, ['parts'], fromParts);
+    let transformedList = fromParts;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return partToMldev(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['parts'], transformedList);
   }
 
   const fromRole = common.getValueByPath(fromObject, ['role']);
@@ -344,21 +340,13 @@ export function toolToMldev(
     'functionDeclarations',
   ]);
   if (fromFunctionDeclarations != null) {
-    if (Array.isArray(fromFunctionDeclarations)) {
-      common.setValueByPath(
-        toObject,
-        ['functionDeclarations'],
-        fromFunctionDeclarations.map((item) => {
-          return functionDeclarationToMldev(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(
-        toObject,
-        ['functionDeclarations'],
-        fromFunctionDeclarations,
-      );
+    let transformedList = fromFunctionDeclarations;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return functionDeclarationToMldev(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['functionDeclarations'], transformedList);
   }
 
   if (common.getValueByPath(fromObject, ['retrieval']) !== undefined) {
@@ -635,43 +623,24 @@ export function generateContentConfigToMldev(
     'safetySettings',
   ]);
   if (parentObject !== undefined && fromSafetySettings != null) {
-    if (Array.isArray(fromSafetySettings)) {
-      common.setValueByPath(
-        parentObject,
-        ['safetySettings'],
-        fromSafetySettings.map((item) => {
-          return safetySettingToMldev(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(
-        parentObject,
-        ['safetySettings'],
-        fromSafetySettings,
-      );
+    let transformedList = fromSafetySettings;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return safetySettingToMldev(apiClient, item);
+      });
     }
+    common.setValueByPath(parentObject, ['safetySettings'], transformedList);
   }
 
   const fromTools = common.getValueByPath(fromObject, ['tools']);
   if (parentObject !== undefined && fromTools != null) {
-    if (Array.isArray(fromTools)) {
-      common.setValueByPath(
-        parentObject,
-        ['tools'],
-        t.tTools(
-          apiClient,
-          t.tTools(apiClient, fromTools).map((item) => {
-            return toolToMldev(apiClient, t.tTool(apiClient, item));
-          }),
-        ),
-      );
-    } else {
-      common.setValueByPath(
-        parentObject,
-        ['tools'],
-        t.tTools(apiClient, fromTools),
-      );
+    let transformedList = t.tTools(apiClient, fromTools);
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return toolToMldev(apiClient, t.tTool(apiClient, item));
+      });
     }
+    common.setValueByPath(parentObject, ['tools'], transformedList);
   }
 
   const fromToolConfig = common.getValueByPath(fromObject, ['toolConfig']);
@@ -763,24 +732,13 @@ export function generateContentParametersToMldev(
 
   const fromContents = common.getValueByPath(fromObject, ['contents']);
   if (fromContents != null) {
-    if (Array.isArray(fromContents)) {
-      common.setValueByPath(
-        toObject,
-        ['contents'],
-        t.tContents(
-          apiClient,
-          t.tContents(apiClient, fromContents).map((item) => {
-            return contentToMldev(apiClient, item);
-          }),
-        ),
-      );
-    } else {
-      common.setValueByPath(
-        toObject,
-        ['contents'],
-        t.tContents(apiClient, fromContents),
-      );
+    let transformedList = t.tContents(apiClient, fromContents);
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return contentToMldev(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['contents'], transformedList);
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
@@ -1186,24 +1144,13 @@ export function countTokensParametersToMldev(
 
   const fromContents = common.getValueByPath(fromObject, ['contents']);
   if (fromContents != null) {
-    if (Array.isArray(fromContents)) {
-      common.setValueByPath(
-        toObject,
-        ['contents'],
-        t.tContents(
-          apiClient,
-          t.tContents(apiClient, fromContents).map((item) => {
-            return contentToMldev(apiClient, item);
-          }),
-        ),
-      );
-    } else {
-      common.setValueByPath(
-        toObject,
-        ['contents'],
-        t.tContents(apiClient, fromContents),
-      );
+    let transformedList = t.tContents(apiClient, fromContents);
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return contentToMldev(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['contents'], transformedList);
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
@@ -1447,17 +1394,13 @@ export function contentToVertex(
 
   const fromParts = common.getValueByPath(fromObject, ['parts']);
   if (fromParts != null) {
-    if (Array.isArray(fromParts)) {
-      common.setValueByPath(
-        toObject,
-        ['parts'],
-        fromParts.map((item) => {
-          return partToVertex(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(toObject, ['parts'], fromParts);
+    let transformedList = fromParts;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return partToVertex(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['parts'], transformedList);
   }
 
   const fromRole = common.getValueByPath(fromObject, ['role']);
@@ -1727,21 +1670,13 @@ export function toolToVertex(
     'functionDeclarations',
   ]);
   if (fromFunctionDeclarations != null) {
-    if (Array.isArray(fromFunctionDeclarations)) {
-      common.setValueByPath(
-        toObject,
-        ['functionDeclarations'],
-        fromFunctionDeclarations.map((item) => {
-          return functionDeclarationToVertex(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(
-        toObject,
-        ['functionDeclarations'],
-        fromFunctionDeclarations,
-      );
+    let transformedList = fromFunctionDeclarations;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return functionDeclarationToVertex(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['functionDeclarations'], transformedList);
   }
 
   const fromRetrieval = common.getValueByPath(fromObject, ['retrieval']);
@@ -2025,43 +1960,24 @@ export function generateContentConfigToVertex(
     'safetySettings',
   ]);
   if (parentObject !== undefined && fromSafetySettings != null) {
-    if (Array.isArray(fromSafetySettings)) {
-      common.setValueByPath(
-        parentObject,
-        ['safetySettings'],
-        fromSafetySettings.map((item) => {
-          return safetySettingToVertex(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(
-        parentObject,
-        ['safetySettings'],
-        fromSafetySettings,
-      );
+    let transformedList = fromSafetySettings;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return safetySettingToVertex(apiClient, item);
+      });
     }
+    common.setValueByPath(parentObject, ['safetySettings'], transformedList);
   }
 
   const fromTools = common.getValueByPath(fromObject, ['tools']);
   if (parentObject !== undefined && fromTools != null) {
-    if (Array.isArray(fromTools)) {
-      common.setValueByPath(
-        parentObject,
-        ['tools'],
-        t.tTools(
-          apiClient,
-          t.tTools(apiClient, fromTools).map((item) => {
-            return toolToVertex(apiClient, t.tTool(apiClient, item));
-          }),
-        ),
-      );
-    } else {
-      common.setValueByPath(
-        parentObject,
-        ['tools'],
-        t.tTools(apiClient, fromTools),
-      );
+    let transformedList = t.tTools(apiClient, fromTools);
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return toolToVertex(apiClient, t.tTool(apiClient, item));
+      });
     }
+    common.setValueByPath(parentObject, ['tools'], transformedList);
   }
 
   const fromToolConfig = common.getValueByPath(fromObject, ['toolConfig']);
@@ -2157,24 +2073,13 @@ export function generateContentParametersToVertex(
 
   const fromContents = common.getValueByPath(fromObject, ['contents']);
   if (fromContents != null) {
-    if (Array.isArray(fromContents)) {
-      common.setValueByPath(
-        toObject,
-        ['contents'],
-        t.tContents(
-          apiClient,
-          t.tContents(apiClient, fromContents).map((item) => {
-            return contentToVertex(apiClient, item);
-          }),
-        ),
-      );
-    } else {
-      common.setValueByPath(
-        toObject,
-        ['contents'],
-        t.tContents(apiClient, fromContents),
-      );
+    let transformedList = t.tContents(apiClient, fromContents);
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return contentToVertex(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['contents'], transformedList);
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
@@ -2584,17 +2489,13 @@ export function countTokensConfigToVertex(
 
   const fromTools = common.getValueByPath(fromObject, ['tools']);
   if (parentObject !== undefined && fromTools != null) {
-    if (Array.isArray(fromTools)) {
-      common.setValueByPath(
-        parentObject,
-        ['tools'],
-        fromTools.map((item) => {
-          return toolToVertex(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(parentObject, ['tools'], fromTools);
+    let transformedList = fromTools;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return toolToVertex(apiClient, item);
+      });
     }
+    common.setValueByPath(parentObject, ['tools'], transformedList);
   }
 
   const fromGenerationConfig = common.getValueByPath(fromObject, [
@@ -2628,24 +2529,13 @@ export function countTokensParametersToVertex(
 
   const fromContents = common.getValueByPath(fromObject, ['contents']);
   if (fromContents != null) {
-    if (Array.isArray(fromContents)) {
-      common.setValueByPath(
-        toObject,
-        ['contents'],
-        t.tContents(
-          apiClient,
-          t.tContents(apiClient, fromContents).map((item) => {
-            return contentToVertex(apiClient, item);
-          }),
-        ),
-      );
-    } else {
-      common.setValueByPath(
-        toObject,
-        ['contents'],
-        t.tContents(apiClient, fromContents),
-      );
+    let transformedList = t.tContents(apiClient, fromContents);
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return contentToVertex(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['contents'], transformedList);
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
@@ -2677,24 +2567,13 @@ export function computeTokensParametersToVertex(
 
   const fromContents = common.getValueByPath(fromObject, ['contents']);
   if (fromContents != null) {
-    if (Array.isArray(fromContents)) {
-      common.setValueByPath(
-        toObject,
-        ['contents'],
-        t.tContents(
-          apiClient,
-          t.tContents(apiClient, fromContents).map((item) => {
-            return contentToVertex(apiClient, item);
-          }),
-        ),
-      );
-    } else {
-      common.setValueByPath(
-        toObject,
-        ['contents'],
-        t.tContents(apiClient, fromContents),
-      );
+    let transformedList = t.tContents(apiClient, fromContents);
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return contentToVertex(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['contents'], transformedList);
   }
 
   const fromConfig = common.getValueByPath(fromObject, ['config']);
@@ -2952,17 +2831,13 @@ export function contentFromMldev(
 
   const fromParts = common.getValueByPath(fromObject, ['parts']);
   if (fromParts != null) {
-    if (Array.isArray(fromParts)) {
-      common.setValueByPath(
-        toObject,
-        ['parts'],
-        fromParts.map((item) => {
-          return partFromMldev(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(toObject, ['parts'], fromParts);
+    let transformedList = fromParts;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return partFromMldev(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['parts'], transformedList);
   }
 
   const fromRole = common.getValueByPath(fromObject, ['role']);
@@ -3069,17 +2944,13 @@ export function generateContentResponseFromMldev(
 
   const fromCandidates = common.getValueByPath(fromObject, ['candidates']);
   if (fromCandidates != null) {
-    if (Array.isArray(fromCandidates)) {
-      common.setValueByPath(
-        toObject,
-        ['candidates'],
-        fromCandidates.map((item) => {
-          return candidateFromMldev(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(toObject, ['candidates'], fromCandidates);
+    let transformedList = fromCandidates;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return candidateFromMldev(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['candidates'], transformedList);
   }
 
   const fromModelVersion = common.getValueByPath(fromObject, ['modelVersion']);
@@ -3138,17 +3009,13 @@ export function embedContentResponseFromMldev(
 
   const fromEmbeddings = common.getValueByPath(fromObject, ['embeddings']);
   if (fromEmbeddings != null) {
-    if (Array.isArray(fromEmbeddings)) {
-      common.setValueByPath(
-        toObject,
-        ['embeddings'],
-        fromEmbeddings.map((item) => {
-          return contentEmbeddingFromMldev(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(toObject, ['embeddings'], fromEmbeddings);
+    let transformedList = fromEmbeddings;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return contentEmbeddingFromMldev(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['embeddings'], transformedList);
   }
 
   const fromMetadata = common.getValueByPath(fromObject, ['metadata']);
@@ -3266,17 +3133,13 @@ export function generateImagesResponseFromMldev(
     'predictions',
   ]);
   if (fromGeneratedImages != null) {
-    if (Array.isArray(fromGeneratedImages)) {
-      common.setValueByPath(
-        toObject,
-        ['generatedImages'],
-        fromGeneratedImages.map((item) => {
-          return generatedImageFromMldev(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(toObject, ['generatedImages'], fromGeneratedImages);
+    let transformedList = fromGeneratedImages;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return generatedImageFromMldev(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['generatedImages'], transformedList);
   }
 
   const fromPositivePromptSafetyAttributes = common.getValueByPath(fromObject, [
@@ -3472,17 +3335,13 @@ export function generateVideosResponseFromMldev(
     'generatedSamples',
   ]);
   if (fromGeneratedVideos != null) {
-    if (Array.isArray(fromGeneratedVideos)) {
-      common.setValueByPath(
-        toObject,
-        ['generatedVideos'],
-        fromGeneratedVideos.map((item) => {
-          return generatedVideoFromMldev(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(toObject, ['generatedVideos'], fromGeneratedVideos);
+    let transformedList = fromGeneratedVideos;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return generatedVideoFromMldev(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['generatedVideos'], transformedList);
   }
 
   const fromRaiMediaFilteredCount = common.getValueByPath(fromObject, [
@@ -3625,17 +3484,13 @@ export function contentFromVertex(
 
   const fromParts = common.getValueByPath(fromObject, ['parts']);
   if (fromParts != null) {
-    if (Array.isArray(fromParts)) {
-      common.setValueByPath(
-        toObject,
-        ['parts'],
-        fromParts.map((item) => {
-          return partFromVertex(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(toObject, ['parts'], fromParts);
+    let transformedList = fromParts;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return partFromVertex(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['parts'], transformedList);
   }
 
   const fromRole = common.getValueByPath(fromObject, ['role']);
@@ -3744,17 +3599,13 @@ export function generateContentResponseFromVertex(
 
   const fromCandidates = common.getValueByPath(fromObject, ['candidates']);
   if (fromCandidates != null) {
-    if (Array.isArray(fromCandidates)) {
-      common.setValueByPath(
-        toObject,
-        ['candidates'],
-        fromCandidates.map((item) => {
-          return candidateFromVertex(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(toObject, ['candidates'], fromCandidates);
+    let transformedList = fromCandidates;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return candidateFromVertex(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['candidates'], transformedList);
   }
 
   const fromCreateTime = common.getValueByPath(fromObject, ['createTime']);
@@ -3862,17 +3713,13 @@ export function embedContentResponseFromVertex(
     'embeddings',
   ]);
   if (fromEmbeddings != null) {
-    if (Array.isArray(fromEmbeddings)) {
-      common.setValueByPath(
-        toObject,
-        ['embeddings'],
-        fromEmbeddings.map((item) => {
-          return contentEmbeddingFromVertex(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(toObject, ['embeddings'], fromEmbeddings);
+    let transformedList = fromEmbeddings;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return contentEmbeddingFromVertex(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['embeddings'], transformedList);
   }
 
   const fromMetadata = common.getValueByPath(fromObject, ['metadata']);
@@ -4000,17 +3847,13 @@ export function generateImagesResponseFromVertex(
     'predictions',
   ]);
   if (fromGeneratedImages != null) {
-    if (Array.isArray(fromGeneratedImages)) {
-      common.setValueByPath(
-        toObject,
-        ['generatedImages'],
-        fromGeneratedImages.map((item) => {
-          return generatedImageFromVertex(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(toObject, ['generatedImages'], fromGeneratedImages);
+    let transformedList = fromGeneratedImages;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return generatedImageFromVertex(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['generatedImages'], transformedList);
   }
 
   const fromPositivePromptSafetyAttributes = common.getValueByPath(fromObject, [
@@ -4103,17 +3946,13 @@ export function modelFromVertex(
 
   const fromEndpoints = common.getValueByPath(fromObject, ['deployedModels']);
   if (fromEndpoints != null) {
-    if (Array.isArray(fromEndpoints)) {
-      common.setValueByPath(
-        toObject,
-        ['endpoints'],
-        fromEndpoints.map((item) => {
-          return endpointFromVertex(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(toObject, ['endpoints'], fromEndpoints);
+    let transformedList = fromEndpoints;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return endpointFromVertex(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['endpoints'], transformedList);
   }
 
   const fromLabels = common.getValueByPath(fromObject, ['labels']);
@@ -4223,17 +4062,13 @@ export function generateVideosResponseFromVertex(
 
   const fromGeneratedVideos = common.getValueByPath(fromObject, ['videos']);
   if (fromGeneratedVideos != null) {
-    if (Array.isArray(fromGeneratedVideos)) {
-      common.setValueByPath(
-        toObject,
-        ['generatedVideos'],
-        fromGeneratedVideos.map((item) => {
-          return generatedVideoFromVertex(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(toObject, ['generatedVideos'], fromGeneratedVideos);
+    let transformedList = fromGeneratedVideos;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return generatedVideoFromVertex(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['generatedVideos'], transformedList);
   }
 
   const fromRaiMediaFilteredCount = common.getValueByPath(fromObject, [

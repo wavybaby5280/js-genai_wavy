@@ -82,17 +82,13 @@ export function contentToMldev(
 
   const fromParts = common.getValueByPath(fromObject, ['parts']);
   if (fromParts != null) {
-    if (Array.isArray(fromParts)) {
-      common.setValueByPath(
-        toObject,
-        ['parts'],
-        fromParts.map((item) => {
-          return partToMldev(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(toObject, ['parts'], fromParts);
+    let transformedList = fromParts;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return partToMldev(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['parts'], transformedList);
   }
 
   const fromRole = common.getValueByPath(fromObject, ['role']);
@@ -303,21 +299,13 @@ export function toolToMldev(
     'functionDeclarations',
   ]);
   if (fromFunctionDeclarations != null) {
-    if (Array.isArray(fromFunctionDeclarations)) {
-      common.setValueByPath(
-        toObject,
-        ['functionDeclarations'],
-        fromFunctionDeclarations.map((item) => {
-          return functionDeclarationToMldev(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(
-        toObject,
-        ['functionDeclarations'],
-        fromFunctionDeclarations,
-      );
+    let transformedList = fromFunctionDeclarations;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return functionDeclarationToMldev(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['functionDeclarations'], transformedList);
   }
 
   if (common.getValueByPath(fromObject, ['retrieval']) !== undefined) {
@@ -419,24 +407,13 @@ export function createCachedContentConfigToMldev(
 
   const fromContents = common.getValueByPath(fromObject, ['contents']);
   if (parentObject !== undefined && fromContents != null) {
-    if (Array.isArray(fromContents)) {
-      common.setValueByPath(
-        parentObject,
-        ['contents'],
-        t.tContents(
-          apiClient,
-          t.tContents(apiClient, fromContents).map((item) => {
-            return contentToMldev(apiClient, item);
-          }),
-        ),
-      );
-    } else {
-      common.setValueByPath(
-        parentObject,
-        ['contents'],
-        t.tContents(apiClient, fromContents),
-      );
+    let transformedList = t.tContents(apiClient, fromContents);
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return contentToMldev(apiClient, item);
+      });
     }
+    common.setValueByPath(parentObject, ['contents'], transformedList);
   }
 
   const fromSystemInstruction = common.getValueByPath(fromObject, [
@@ -452,17 +429,13 @@ export function createCachedContentConfigToMldev(
 
   const fromTools = common.getValueByPath(fromObject, ['tools']);
   if (parentObject !== undefined && fromTools != null) {
-    if (Array.isArray(fromTools)) {
-      common.setValueByPath(
-        parentObject,
-        ['tools'],
-        fromTools.map((item) => {
-          return toolToMldev(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(parentObject, ['tools'], fromTools);
+    let transformedList = fromTools;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return toolToMldev(apiClient, item);
+      });
     }
+    common.setValueByPath(parentObject, ['tools'], transformedList);
   }
 
   const fromToolConfig = common.getValueByPath(fromObject, ['toolConfig']);
@@ -709,17 +682,13 @@ export function contentToVertex(
 
   const fromParts = common.getValueByPath(fromObject, ['parts']);
   if (fromParts != null) {
-    if (Array.isArray(fromParts)) {
-      common.setValueByPath(
-        toObject,
-        ['parts'],
-        fromParts.map((item) => {
-          return partToVertex(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(toObject, ['parts'], fromParts);
+    let transformedList = fromParts;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return partToVertex(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['parts'], transformedList);
   }
 
   const fromRole = common.getValueByPath(fromObject, ['role']);
@@ -945,21 +914,13 @@ export function toolToVertex(
     'functionDeclarations',
   ]);
   if (fromFunctionDeclarations != null) {
-    if (Array.isArray(fromFunctionDeclarations)) {
-      common.setValueByPath(
-        toObject,
-        ['functionDeclarations'],
-        fromFunctionDeclarations.map((item) => {
-          return functionDeclarationToVertex(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(
-        toObject,
-        ['functionDeclarations'],
-        fromFunctionDeclarations,
-      );
+    let transformedList = fromFunctionDeclarations;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return functionDeclarationToVertex(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['functionDeclarations'], transformedList);
   }
 
   const fromRetrieval = common.getValueByPath(fromObject, ['retrieval']);
@@ -1062,24 +1023,13 @@ export function createCachedContentConfigToVertex(
 
   const fromContents = common.getValueByPath(fromObject, ['contents']);
   if (parentObject !== undefined && fromContents != null) {
-    if (Array.isArray(fromContents)) {
-      common.setValueByPath(
-        parentObject,
-        ['contents'],
-        t.tContents(
-          apiClient,
-          t.tContents(apiClient, fromContents).map((item) => {
-            return contentToVertex(apiClient, item);
-          }),
-        ),
-      );
-    } else {
-      common.setValueByPath(
-        parentObject,
-        ['contents'],
-        t.tContents(apiClient, fromContents),
-      );
+    let transformedList = t.tContents(apiClient, fromContents);
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return contentToVertex(apiClient, item);
+      });
     }
+    common.setValueByPath(parentObject, ['contents'], transformedList);
   }
 
   const fromSystemInstruction = common.getValueByPath(fromObject, [
@@ -1095,17 +1045,13 @@ export function createCachedContentConfigToVertex(
 
   const fromTools = common.getValueByPath(fromObject, ['tools']);
   if (parentObject !== undefined && fromTools != null) {
-    if (Array.isArray(fromTools)) {
-      common.setValueByPath(
-        parentObject,
-        ['tools'],
-        fromTools.map((item) => {
-          return toolToVertex(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(parentObject, ['tools'], fromTools);
+    let transformedList = fromTools;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return toolToVertex(apiClient, item);
+      });
     }
+    common.setValueByPath(parentObject, ['tools'], transformedList);
   }
 
   const fromToolConfig = common.getValueByPath(fromObject, ['toolConfig']);
@@ -1350,17 +1296,13 @@ export function listCachedContentsResponseFromMldev(
     'cachedContents',
   ]);
   if (fromCachedContents != null) {
-    if (Array.isArray(fromCachedContents)) {
-      common.setValueByPath(
-        toObject,
-        ['cachedContents'],
-        fromCachedContents.map((item) => {
-          return cachedContentFromMldev(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(toObject, ['cachedContents'], fromCachedContents);
+    let transformedList = fromCachedContents;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return cachedContentFromMldev(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['cachedContents'], transformedList);
   }
 
   return toObject;
@@ -1438,17 +1380,13 @@ export function listCachedContentsResponseFromVertex(
     'cachedContents',
   ]);
   if (fromCachedContents != null) {
-    if (Array.isArray(fromCachedContents)) {
-      common.setValueByPath(
-        toObject,
-        ['cachedContents'],
-        fromCachedContents.map((item) => {
-          return cachedContentFromVertex(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(toObject, ['cachedContents'], fromCachedContents);
+    let transformedList = fromCachedContents;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return cachedContentFromVertex(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['cachedContents'], transformedList);
   }
 
   return toObject;

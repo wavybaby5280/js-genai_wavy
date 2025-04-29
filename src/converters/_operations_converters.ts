@@ -146,17 +146,13 @@ export function generateVideosResponseFromMldev(
     'generatedSamples',
   ]);
   if (fromGeneratedVideos != null) {
-    if (Array.isArray(fromGeneratedVideos)) {
-      common.setValueByPath(
-        toObject,
-        ['generatedVideos'],
-        fromGeneratedVideos.map((item) => {
-          return generatedVideoFromMldev(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(toObject, ['generatedVideos'], fromGeneratedVideos);
+    let transformedList = fromGeneratedVideos;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return generatedVideoFromMldev(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['generatedVideos'], transformedList);
   }
 
   const fromRaiMediaFilteredCount = common.getValueByPath(fromObject, [
@@ -281,17 +277,13 @@ export function generateVideosResponseFromVertex(
 
   const fromGeneratedVideos = common.getValueByPath(fromObject, ['videos']);
   if (fromGeneratedVideos != null) {
-    if (Array.isArray(fromGeneratedVideos)) {
-      common.setValueByPath(
-        toObject,
-        ['generatedVideos'],
-        fromGeneratedVideos.map((item) => {
-          return generatedVideoFromVertex(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(toObject, ['generatedVideos'], fromGeneratedVideos);
+    let transformedList = fromGeneratedVideos;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return generatedVideoFromVertex(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['generatedVideos'], transformedList);
   }
 
   const fromRaiMediaFilteredCount = common.getValueByPath(fromObject, [

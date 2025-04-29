@@ -351,17 +351,13 @@ export function listFilesResponseFromMldev(
 
   const fromFiles = common.getValueByPath(fromObject, ['files']);
   if (fromFiles != null) {
-    if (Array.isArray(fromFiles)) {
-      common.setValueByPath(
-        toObject,
-        ['files'],
-        fromFiles.map((item) => {
-          return fileFromMldev(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(toObject, ['files'], fromFiles);
+    let transformedList = fromFiles;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return fileFromMldev(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['files'], transformedList);
   }
 
   return toObject;

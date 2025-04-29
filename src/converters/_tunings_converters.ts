@@ -104,17 +104,13 @@ export function tuningDatasetToMldev(
 
   const fromExamples = common.getValueByPath(fromObject, ['examples']);
   if (fromExamples != null) {
-    if (Array.isArray(fromExamples)) {
-      common.setValueByPath(
-        toObject,
-        ['examples', 'examples'],
-        fromExamples.map((item) => {
-          return tuningExampleToMldev(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(toObject, ['examples', 'examples'], fromExamples);
+    let transformedList = fromExamples;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return tuningExampleToMldev(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['examples', 'examples'], transformedList);
   }
 
   return toObject;
@@ -599,17 +595,13 @@ export function listTuningJobsResponseFromMldev(
 
   const fromTuningJobs = common.getValueByPath(fromObject, ['tunedModels']);
   if (fromTuningJobs != null) {
-    if (Array.isArray(fromTuningJobs)) {
-      common.setValueByPath(
-        toObject,
-        ['tuningJobs'],
-        fromTuningJobs.map((item) => {
-          return tuningJobFromMldev(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(toObject, ['tuningJobs'], fromTuningJobs);
+    let transformedList = fromTuningJobs;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return tuningJobFromMldev(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['tuningJobs'], transformedList);
   }
 
   return toObject;
@@ -814,17 +806,13 @@ export function listTuningJobsResponseFromVertex(
 
   const fromTuningJobs = common.getValueByPath(fromObject, ['tuningJobs']);
   if (fromTuningJobs != null) {
-    if (Array.isArray(fromTuningJobs)) {
-      common.setValueByPath(
-        toObject,
-        ['tuningJobs'],
-        fromTuningJobs.map((item) => {
-          return tuningJobFromVertex(apiClient, item);
-        }),
-      );
-    } else {
-      common.setValueByPath(toObject, ['tuningJobs'], fromTuningJobs);
+    let transformedList = fromTuningJobs;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return tuningJobFromVertex(apiClient, item);
+      });
     }
+    common.setValueByPath(toObject, ['tuningJobs'], transformedList);
   }
 
   return toObject;
