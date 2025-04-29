@@ -59,7 +59,7 @@ export class Caches extends BaseModule {
    * ```ts
    * const contents = ...; // Initialize the content to cache.
    * const response = await ai.caches.create({
-   *   model: 'gemini-1.5-flash',
+   *   model: 'gemini-2.0-flash-001',
    *   config: {
    *    'contents': contents,
    *    'displayName': 'test cache',
@@ -156,7 +156,7 @@ export class Caches extends BaseModule {
    *
    * @example
    * ```ts
-   * await ai.caches.get({name: 'gemini-1.5-flash'});
+   * await ai.caches.get({name: '...'}); // The server-generated resource name.
    * ```
    */
   async get(
@@ -246,7 +246,7 @@ export class Caches extends BaseModule {
    *
    * @example
    * ```ts
-   * await ai.caches.delete({name: 'gemini-1.5-flash'});
+   * await ai.caches.delete({name: '...'}); // The server-generated resource name.
    * ```
    */
   async delete(
@@ -333,7 +333,7 @@ export class Caches extends BaseModule {
    * @example
    * ```ts
    * const response = await ai.caches.update({
-   *   name: 'gemini-1.5-flash',
+   *   name: '...',  // The server-generated resource name.
    *   config: {'ttl': '7600s'}
    * });
    * ```

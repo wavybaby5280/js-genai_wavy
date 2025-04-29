@@ -2404,7 +2404,7 @@ export declare interface CreateCachedContentConfig {
 
 /** Parameters for caches.create method. */
 export declare interface CreateCachedContentParameters {
-  /** ID of the model to use. Example: gemini-1.5-flash */
+  /** ID of the model to use. Example: gemini-2.0-flash */
   model: string;
   /** Configuration that contains optional parameters.
    */
@@ -3471,7 +3471,7 @@ export declare interface LiveConnectParameters {
 export declare interface CreateChatParameters {
   /** The name of the model to use for the chat session.
 
-      For example: 'gemini-2.0-flash', 'gemini-1.5-pro', etc. See gemini API
+      For example: 'gemini-2.0-flash', 'gemini-2.0-flash-lite', etc. See Gemini API
       docs to find the available models.
        */
   model: string;
