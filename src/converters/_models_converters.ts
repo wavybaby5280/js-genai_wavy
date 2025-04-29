@@ -99,121 +99,6 @@ export function contentToMldev(
   return toObject;
 }
 
-export function schemaToMldev(
-  apiClient: ApiClient,
-  fromObject: types.Schema,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['example']) !== undefined) {
-    throw new Error('example parameter is not supported in Gemini API.');
-  }
-
-  if (common.getValueByPath(fromObject, ['pattern']) !== undefined) {
-    throw new Error('pattern parameter is not supported in Gemini API.');
-  }
-
-  if (common.getValueByPath(fromObject, ['maxLength']) !== undefined) {
-    throw new Error('maxLength parameter is not supported in Gemini API.');
-  }
-
-  if (common.getValueByPath(fromObject, ['minLength']) !== undefined) {
-    throw new Error('minLength parameter is not supported in Gemini API.');
-  }
-
-  if (common.getValueByPath(fromObject, ['minProperties']) !== undefined) {
-    throw new Error('minProperties parameter is not supported in Gemini API.');
-  }
-
-  if (common.getValueByPath(fromObject, ['maxProperties']) !== undefined) {
-    throw new Error('maxProperties parameter is not supported in Gemini API.');
-  }
-
-  const fromAnyOf = common.getValueByPath(fromObject, ['anyOf']);
-  if (fromAnyOf != null) {
-    common.setValueByPath(toObject, ['anyOf'], fromAnyOf);
-  }
-
-  const fromDefault = common.getValueByPath(fromObject, ['default']);
-  if (fromDefault != null) {
-    common.setValueByPath(toObject, ['default'], fromDefault);
-  }
-
-  const fromDescription = common.getValueByPath(fromObject, ['description']);
-  if (fromDescription != null) {
-    common.setValueByPath(toObject, ['description'], fromDescription);
-  }
-
-  const fromEnum = common.getValueByPath(fromObject, ['enum']);
-  if (fromEnum != null) {
-    common.setValueByPath(toObject, ['enum'], fromEnum);
-  }
-
-  const fromFormat = common.getValueByPath(fromObject, ['format']);
-  if (fromFormat != null) {
-    common.setValueByPath(toObject, ['format'], fromFormat);
-  }
-
-  const fromItems = common.getValueByPath(fromObject, ['items']);
-  if (fromItems != null) {
-    common.setValueByPath(toObject, ['items'], fromItems);
-  }
-
-  const fromMaxItems = common.getValueByPath(fromObject, ['maxItems']);
-  if (fromMaxItems != null) {
-    common.setValueByPath(toObject, ['maxItems'], fromMaxItems);
-  }
-
-  const fromMaximum = common.getValueByPath(fromObject, ['maximum']);
-  if (fromMaximum != null) {
-    common.setValueByPath(toObject, ['maximum'], fromMaximum);
-  }
-
-  const fromMinItems = common.getValueByPath(fromObject, ['minItems']);
-  if (fromMinItems != null) {
-    common.setValueByPath(toObject, ['minItems'], fromMinItems);
-  }
-
-  const fromMinimum = common.getValueByPath(fromObject, ['minimum']);
-  if (fromMinimum != null) {
-    common.setValueByPath(toObject, ['minimum'], fromMinimum);
-  }
-
-  const fromNullable = common.getValueByPath(fromObject, ['nullable']);
-  if (fromNullable != null) {
-    common.setValueByPath(toObject, ['nullable'], fromNullable);
-  }
-
-  const fromProperties = common.getValueByPath(fromObject, ['properties']);
-  if (fromProperties != null) {
-    common.setValueByPath(toObject, ['properties'], fromProperties);
-  }
-
-  const fromPropertyOrdering = common.getValueByPath(fromObject, [
-    'propertyOrdering',
-  ]);
-  if (fromPropertyOrdering != null) {
-    common.setValueByPath(toObject, ['propertyOrdering'], fromPropertyOrdering);
-  }
-
-  const fromRequired = common.getValueByPath(fromObject, ['required']);
-  if (fromRequired != null) {
-    common.setValueByPath(toObject, ['required'], fromRequired);
-  }
-
-  const fromTitle = common.getValueByPath(fromObject, ['title']);
-  if (fromTitle != null) {
-    common.setValueByPath(toObject, ['title'], fromTitle);
-  }
-
-  const fromType = common.getValueByPath(fromObject, ['type']);
-  if (fromType != null) {
-    common.setValueByPath(toObject, ['type'], fromType);
-  }
-
-  return toObject;
-}
-
 export function modelSelectionConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.ModelSelectionConfig,
@@ -250,34 +135,6 @@ export function safetySettingToMldev(
   const fromThreshold = common.getValueByPath(fromObject, ['threshold']);
   if (fromThreshold != null) {
     common.setValueByPath(toObject, ['threshold'], fromThreshold);
-  }
-
-  return toObject;
-}
-
-export function functionDeclarationToMldev(
-  apiClient: ApiClient,
-  fromObject: types.FunctionDeclaration,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  if (common.getValueByPath(fromObject, ['response']) !== undefined) {
-    throw new Error('response parameter is not supported in Gemini API.');
-  }
-
-  const fromDescription = common.getValueByPath(fromObject, ['description']);
-  if (fromDescription != null) {
-    common.setValueByPath(toObject, ['description'], fromDescription);
-  }
-
-  const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName != null) {
-    common.setValueByPath(toObject, ['name'], fromName);
-  }
-
-  const fromParameters = common.getValueByPath(fromObject, ['parameters']);
-  if (fromParameters != null) {
-    common.setValueByPath(toObject, ['parameters'], fromParameters);
   }
 
   return toObject;
@@ -336,19 +193,6 @@ export function toolToMldev(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromFunctionDeclarations = common.getValueByPath(fromObject, [
-    'functionDeclarations',
-  ]);
-  if (fromFunctionDeclarations != null) {
-    let transformedList = fromFunctionDeclarations;
-    if (Array.isArray(transformedList)) {
-      transformedList = transformedList.map((item) => {
-        return functionDeclarationToMldev(apiClient, item);
-      });
-    }
-    common.setValueByPath(toObject, ['functionDeclarations'], transformedList);
-  }
-
   if (common.getValueByPath(fromObject, ['retrieval']) !== undefined) {
     throw new Error('retrieval parameter is not supported in Gemini API.');
   }
@@ -374,6 +218,17 @@ export function toolToMldev(
   ]);
   if (fromCodeExecution != null) {
     common.setValueByPath(toObject, ['codeExecution'], fromCodeExecution);
+  }
+
+  const fromFunctionDeclarations = common.getValueByPath(fromObject, [
+    'functionDeclarations',
+  ]);
+  if (fromFunctionDeclarations != null) {
+    common.setValueByPath(
+      toObject,
+      ['functionDeclarations'],
+      fromFunctionDeclarations,
+    );
   }
 
   return toObject;
@@ -603,7 +458,7 @@ export function generateContentConfigToMldev(
     common.setValueByPath(
       toObject,
       ['responseSchema'],
-      schemaToMldev(apiClient, t.tSchema(apiClient, fromResponseSchema)),
+      t.tSchema(apiClient, fromResponseSchema),
     );
   }
 
@@ -1411,131 +1266,6 @@ export function contentToVertex(
   return toObject;
 }
 
-export function schemaToVertex(
-  apiClient: ApiClient,
-  fromObject: types.Schema,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromExample = common.getValueByPath(fromObject, ['example']);
-  if (fromExample != null) {
-    common.setValueByPath(toObject, ['example'], fromExample);
-  }
-
-  const fromPattern = common.getValueByPath(fromObject, ['pattern']);
-  if (fromPattern != null) {
-    common.setValueByPath(toObject, ['pattern'], fromPattern);
-  }
-
-  const fromMaxLength = common.getValueByPath(fromObject, ['maxLength']);
-  if (fromMaxLength != null) {
-    common.setValueByPath(toObject, ['maxLength'], fromMaxLength);
-  }
-
-  const fromMinLength = common.getValueByPath(fromObject, ['minLength']);
-  if (fromMinLength != null) {
-    common.setValueByPath(toObject, ['minLength'], fromMinLength);
-  }
-
-  const fromMinProperties = common.getValueByPath(fromObject, [
-    'minProperties',
-  ]);
-  if (fromMinProperties != null) {
-    common.setValueByPath(toObject, ['minProperties'], fromMinProperties);
-  }
-
-  const fromMaxProperties = common.getValueByPath(fromObject, [
-    'maxProperties',
-  ]);
-  if (fromMaxProperties != null) {
-    common.setValueByPath(toObject, ['maxProperties'], fromMaxProperties);
-  }
-
-  const fromAnyOf = common.getValueByPath(fromObject, ['anyOf']);
-  if (fromAnyOf != null) {
-    common.setValueByPath(toObject, ['anyOf'], fromAnyOf);
-  }
-
-  const fromDefault = common.getValueByPath(fromObject, ['default']);
-  if (fromDefault != null) {
-    common.setValueByPath(toObject, ['default'], fromDefault);
-  }
-
-  const fromDescription = common.getValueByPath(fromObject, ['description']);
-  if (fromDescription != null) {
-    common.setValueByPath(toObject, ['description'], fromDescription);
-  }
-
-  const fromEnum = common.getValueByPath(fromObject, ['enum']);
-  if (fromEnum != null) {
-    common.setValueByPath(toObject, ['enum'], fromEnum);
-  }
-
-  const fromFormat = common.getValueByPath(fromObject, ['format']);
-  if (fromFormat != null) {
-    common.setValueByPath(toObject, ['format'], fromFormat);
-  }
-
-  const fromItems = common.getValueByPath(fromObject, ['items']);
-  if (fromItems != null) {
-    common.setValueByPath(toObject, ['items'], fromItems);
-  }
-
-  const fromMaxItems = common.getValueByPath(fromObject, ['maxItems']);
-  if (fromMaxItems != null) {
-    common.setValueByPath(toObject, ['maxItems'], fromMaxItems);
-  }
-
-  const fromMaximum = common.getValueByPath(fromObject, ['maximum']);
-  if (fromMaximum != null) {
-    common.setValueByPath(toObject, ['maximum'], fromMaximum);
-  }
-
-  const fromMinItems = common.getValueByPath(fromObject, ['minItems']);
-  if (fromMinItems != null) {
-    common.setValueByPath(toObject, ['minItems'], fromMinItems);
-  }
-
-  const fromMinimum = common.getValueByPath(fromObject, ['minimum']);
-  if (fromMinimum != null) {
-    common.setValueByPath(toObject, ['minimum'], fromMinimum);
-  }
-
-  const fromNullable = common.getValueByPath(fromObject, ['nullable']);
-  if (fromNullable != null) {
-    common.setValueByPath(toObject, ['nullable'], fromNullable);
-  }
-
-  const fromProperties = common.getValueByPath(fromObject, ['properties']);
-  if (fromProperties != null) {
-    common.setValueByPath(toObject, ['properties'], fromProperties);
-  }
-
-  const fromPropertyOrdering = common.getValueByPath(fromObject, [
-    'propertyOrdering',
-  ]);
-  if (fromPropertyOrdering != null) {
-    common.setValueByPath(toObject, ['propertyOrdering'], fromPropertyOrdering);
-  }
-
-  const fromRequired = common.getValueByPath(fromObject, ['required']);
-  if (fromRequired != null) {
-    common.setValueByPath(toObject, ['required'], fromRequired);
-  }
-
-  const fromTitle = common.getValueByPath(fromObject, ['title']);
-  if (fromTitle != null) {
-    common.setValueByPath(toObject, ['title'], fromTitle);
-  }
-
-  const fromType = common.getValueByPath(fromObject, ['type']);
-  if (fromType != null) {
-    common.setValueByPath(toObject, ['type'], fromType);
-  }
-
-  return toObject;
-}
-
 export function modelSelectionConfigToVertex(
   apiClient: ApiClient,
   fromObject: types.ModelSelectionConfig,
@@ -1575,39 +1305,6 @@ export function safetySettingToVertex(
   const fromThreshold = common.getValueByPath(fromObject, ['threshold']);
   if (fromThreshold != null) {
     common.setValueByPath(toObject, ['threshold'], fromThreshold);
-  }
-
-  return toObject;
-}
-
-export function functionDeclarationToVertex(
-  apiClient: ApiClient,
-  fromObject: types.FunctionDeclaration,
-): Record<string, unknown> {
-  const toObject: Record<string, unknown> = {};
-
-  const fromResponse = common.getValueByPath(fromObject, ['response']);
-  if (fromResponse != null) {
-    common.setValueByPath(
-      toObject,
-      ['response'],
-      schemaToVertex(apiClient, fromResponse),
-    );
-  }
-
-  const fromDescription = common.getValueByPath(fromObject, ['description']);
-  if (fromDescription != null) {
-    common.setValueByPath(toObject, ['description'], fromDescription);
-  }
-
-  const fromName = common.getValueByPath(fromObject, ['name']);
-  if (fromName != null) {
-    common.setValueByPath(toObject, ['name'], fromName);
-  }
-
-  const fromParameters = common.getValueByPath(fromObject, ['parameters']);
-  if (fromParameters != null) {
-    common.setValueByPath(toObject, ['parameters'], fromParameters);
   }
 
   return toObject;
@@ -1666,19 +1363,6 @@ export function toolToVertex(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  const fromFunctionDeclarations = common.getValueByPath(fromObject, [
-    'functionDeclarations',
-  ]);
-  if (fromFunctionDeclarations != null) {
-    let transformedList = fromFunctionDeclarations;
-    if (Array.isArray(transformedList)) {
-      transformedList = transformedList.map((item) => {
-        return functionDeclarationToVertex(apiClient, item);
-      });
-    }
-    common.setValueByPath(toObject, ['functionDeclarations'], transformedList);
-  }
-
   const fromRetrieval = common.getValueByPath(fromObject, ['retrieval']);
   if (fromRetrieval != null) {
     common.setValueByPath(toObject, ['retrieval'], fromRetrieval);
@@ -1705,6 +1389,17 @@ export function toolToVertex(
   ]);
   if (fromCodeExecution != null) {
     common.setValueByPath(toObject, ['codeExecution'], fromCodeExecution);
+  }
+
+  const fromFunctionDeclarations = common.getValueByPath(fromObject, [
+    'functionDeclarations',
+  ]);
+  if (fromFunctionDeclarations != null) {
+    common.setValueByPath(
+      toObject,
+      ['functionDeclarations'],
+      fromFunctionDeclarations,
+    );
   }
 
   return toObject;
@@ -1934,7 +1629,7 @@ export function generateContentConfigToVertex(
     common.setValueByPath(
       toObject,
       ['responseSchema'],
-      schemaToVertex(apiClient, t.tSchema(apiClient, fromResponseSchema)),
+      t.tSchema(apiClient, fromResponseSchema),
     );
   }
 
