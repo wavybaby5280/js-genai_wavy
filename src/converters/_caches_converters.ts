@@ -117,10 +117,6 @@ export function schemaToMldev(
     throw new Error('pattern parameter is not supported in Gemini API.');
   }
 
-  if (common.getValueByPath(fromObject, ['default']) !== undefined) {
-    throw new Error('default parameter is not supported in Gemini API.');
-  }
-
   if (common.getValueByPath(fromObject, ['maxLength']) !== undefined) {
     throw new Error('maxLength parameter is not supported in Gemini API.');
   }
@@ -140,6 +136,11 @@ export function schemaToMldev(
   const fromAnyOf = common.getValueByPath(fromObject, ['anyOf']);
   if (fromAnyOf != null) {
     common.setValueByPath(toObject, ['anyOf'], fromAnyOf);
+  }
+
+  const fromDefault = common.getValueByPath(fromObject, ['default']);
+  if (fromDefault != null) {
+    common.setValueByPath(toObject, ['default'], fromDefault);
   }
 
   const fromDescription = common.getValueByPath(fromObject, ['description']);
@@ -745,11 +746,6 @@ export function schemaToVertex(
     common.setValueByPath(toObject, ['pattern'], fromPattern);
   }
 
-  const fromDefault = common.getValueByPath(fromObject, ['default']);
-  if (fromDefault != null) {
-    common.setValueByPath(toObject, ['default'], fromDefault);
-  }
-
   const fromMaxLength = common.getValueByPath(fromObject, ['maxLength']);
   if (fromMaxLength != null) {
     common.setValueByPath(toObject, ['maxLength'], fromMaxLength);
@@ -777,6 +773,11 @@ export function schemaToVertex(
   const fromAnyOf = common.getValueByPath(fromObject, ['anyOf']);
   if (fromAnyOf != null) {
     common.setValueByPath(toObject, ['anyOf'], fromAnyOf);
+  }
+
+  const fromDefault = common.getValueByPath(fromObject, ['default']);
+  if (fromDefault != null) {
+    common.setValueByPath(toObject, ['default'], fromDefault);
   }
 
   const fromDescription = common.getValueByPath(fromObject, ['description']);

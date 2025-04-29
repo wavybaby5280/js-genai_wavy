@@ -554,8 +554,6 @@ export declare interface Schema {
   example?: unknown;
   /** Optional. Pattern of the Type.STRING to restrict a string to a regular expression. */
   pattern?: string;
-  /** Optional. Default value of the data. */
-  default?: unknown;
   /** Optional. Maximum length of the Type.STRING */
   maxLength?: string;
   /** Optional. SCHEMA FIELDS FOR TYPE STRING Minimum length of the Type.STRING */
@@ -566,6 +564,8 @@ export declare interface Schema {
   maxProperties?: string;
   /** Optional. The value should be validated against any (one or more) of the subschemas in the list. */
   anyOf?: Schema[];
+  /** Optional. Default value of the data. */
+  default?: unknown;
   /** Optional. The description of the data. */
   description?: string;
   /** Optional. Possible values of the element of primitive type with enum format. Examples: 1. We can define direction as : {type:STRING, format:enum, enum:["EAST", NORTH", "SOUTH", "WEST"]} 2. We can define apartment number as : {type:INTEGER, format:enum, enum:["101", "201", "301"]} */
