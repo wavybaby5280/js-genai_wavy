@@ -244,7 +244,12 @@ export class Chat {
       contents: this.getHistory(true).concat(inputContent),
       config: params.config ?? this.config,
     });
-    this.sendPromise = streamResponse.then(() => undefined);
+    // Resolve the internal tracking of send completion promise - `sendPromise`
+    // for both success and failure response. The actual failure is still
+    // propagated by the `await streamResponse`.
+    this.sendPromise = streamResponse
+      .then(() => undefined)
+      .catch(() => undefined);
     const response = await streamResponse;
     const result = this.processStreamResponse(response, inputContent);
     return result;

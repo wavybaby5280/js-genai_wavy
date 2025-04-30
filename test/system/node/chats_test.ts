@@ -172,6 +172,23 @@ describe('sendMessage', () => {
     });
     console.log('chat.sendMessage response: ', response.text);
   });
+
+  fit('Send message stream with error', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: GEMINI_API_KEY});
+    const chat = client.chats.create({model: 'custom-gemini-2.0-flash'});
+    try {
+      const response = await chat.sendMessageStream({
+        message: 'why is the sky blue?',
+      });
+      console.log('response: ', response);
+    } catch (e: unknown) {
+      console.log('catching error: ', e);
+    }
+
+    // Add an additional async call to the event loop to trigger the potential
+    // promise rejection from the `sendPromise`.
+    await new Promise((resolve) => setTimeout(resolve, 1));
+  });
 });
 
 describe('chats function calling', () => {
