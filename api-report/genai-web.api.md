@@ -1374,6 +1374,7 @@ export class LiveSendToolResponseParameters {
 // @public
 export interface LiveServerContent {
     generationComplete?: boolean;
+    groundingMetadata?: GroundingMetadata;
     inputTranscription?: Transcription;
     interrupted?: boolean;
     modelTurn?: Content;

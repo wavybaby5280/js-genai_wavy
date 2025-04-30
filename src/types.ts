@@ -3062,6 +3062,8 @@ export declare interface LiveServerContent {
   turnComplete?: boolean;
   /** If true, indicates that a client message has interrupted current model generation. If the client is playing out the content in realtime, this is a good signal to stop and empty the current queue. */
   interrupted?: boolean;
+  /** Metadata returned to client when grounding is enabled. */
+  groundingMetadata?: GroundingMetadata;
   /** If true, indicates that the model is done generating. When model is
       interrupted while generating there will be no generation_complete message
       in interrupted turn, it will go through interrupted > turn_complete.

@@ -2008,6 +2008,17 @@ export function liveServerContentFromMldev(
     common.setValueByPath(toObject, ['interrupted'], fromInterrupted);
   }
 
+  const fromGroundingMetadata = common.getValueByPath(fromObject, [
+    'groundingMetadata',
+  ]);
+  if (fromGroundingMetadata != null) {
+    common.setValueByPath(
+      toObject,
+      ['groundingMetadata'],
+      fromGroundingMetadata,
+    );
+  }
+
   const fromGenerationComplete = common.getValueByPath(fromObject, [
     'generationComplete',
   ]);
@@ -2067,6 +2078,17 @@ export function liveServerContentFromVertex(
   const fromInterrupted = common.getValueByPath(fromObject, ['interrupted']);
   if (fromInterrupted != null) {
     common.setValueByPath(toObject, ['interrupted'], fromInterrupted);
+  }
+
+  const fromGroundingMetadata = common.getValueByPath(fromObject, [
+    'groundingMetadata',
+  ]);
+  if (fromGroundingMetadata != null) {
+    common.setValueByPath(
+      toObject,
+      ['groundingMetadata'],
+      fromGroundingMetadata,
+    );
   }
 
   const fromGenerationComplete = common.getValueByPath(fromObject, [
