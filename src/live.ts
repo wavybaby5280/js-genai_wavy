@@ -39,7 +39,7 @@ async function handleWebSocketMessage(
   onmessage: (msg: types.LiveServerMessage) => void,
   event: MessageEvent,
 ): Promise<void> {
-  let serverMessage: types.LiveServerMessage;
+  const serverMessage: types.LiveServerMessage = new types.LiveServerMessage();
   let data: types.LiveServerMessage;
   if (event.data instanceof Blob) {
     data = JSON.parse(await event.data.text()) as types.LiveServerMessage;
@@ -47,9 +47,11 @@ async function handleWebSocketMessage(
     data = JSON.parse(event.data) as types.LiveServerMessage;
   }
   if (apiClient.isVertexAI()) {
-    serverMessage = converters.liveServerMessageFromVertex(apiClient, data);
+    const resp = converters.liveServerMessageFromVertex(apiClient, data);
+    Object.assign(serverMessage, resp);
   } else {
-    serverMessage = converters.liveServerMessageFromMldev(apiClient, data);
+    const resp = converters.liveServerMessageFromMldev(apiClient, data);
+    Object.assign(serverMessage, resp);
   }
 
   onmessage(serverMessage);

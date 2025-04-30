@@ -1415,11 +1415,13 @@ export interface LiveServerGoAway {
 }
 
 // @public
-export interface LiveServerMessage {
+export class LiveServerMessage {
+    get data(): string | undefined;
     goAway?: LiveServerGoAway;
     serverContent?: LiveServerContent;
     sessionResumptionUpdate?: LiveServerSessionResumptionUpdate;
     setupComplete?: LiveServerSetupComplete;
+    get text(): string | undefined;
     toolCall?: LiveServerToolCall;
     toolCallCancellation?: LiveServerToolCallCancellation;
     usageMetadata?: UsageMetadata;

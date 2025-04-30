@@ -20,7 +20,8 @@ async function live(client: GoogleGenAI, model: string) {
     while (!done) {
       message = responseQueue.shift();
       if (message) {
-        console.debug('Received: %s\n', JSON.stringify(message, null, 4));
+        console.debug('Received text: %s\n', message.text);
+        console.debug('Received inline data: %s\n', message.data);
         done = true;
       } else {
         await new Promise((resolve) => setTimeout(resolve, 100));
