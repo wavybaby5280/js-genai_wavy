@@ -431,6 +431,7 @@ export function tBytes(
   // TODO(b/389133914): Remove dummy bytes converter.
   return fromImageBytes;
 }
+
 export function tFileName(
   apiClient: ApiClient,
   fromName: string | unknown,
@@ -443,4 +444,36 @@ export function tFileName(
     return fromName.split('files/')[1];
   }
   return fromName;
+}
+
+export function tModelsUrl(
+  apiClient: ApiClient,
+  baseModels: boolean | unknown,
+): string {
+  let res: string;
+  if (apiClient.isVertexAI()) {
+    res = baseModels ? 'publishers/google/models' : 'models';
+  } else {
+    res = baseModels ? 'models' : 'tunedModels';
+  }
+  return res;
+}
+
+export function tExtractModels(
+  apiClient: ApiClient,
+  response: unknown,
+): Record<string, unknown>[] {
+  for (const key of ['models', 'tunedModels', 'publisherModels']) {
+    if (hasField(response, key)) {
+      return (response as Record<string, unknown>)[key] as Record<
+        string,
+        unknown
+      >[];
+    }
+  }
+  return [];
+}
+
+function hasField(data: unknown, fieldName: string): boolean {
+  return data !== null && typeof data === 'object' && fieldName in data;
 }

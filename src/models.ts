@@ -10,6 +10,7 @@ import {ApiClient} from './_api_client';
 import * as common from './_common';
 import {BaseModule} from './_common';
 import * as converters from './converters/_models_converters';
+import {PagedItem, Pager} from './pagers';
 import * as types from './types';
 
 export class Models extends BaseModule {
@@ -163,6 +164,40 @@ export class Models extends BaseModule {
       }
       return response;
     });
+  };
+
+  list = async (
+    params?: types.ListModelsParameters,
+  ): Promise<Pager<types.Model>> => {
+    const defaultConfig: types.ListModelsConfig = {
+      queryBase: true,
+    };
+    const actualConfig: types.ListModelsConfig = {
+      ...defaultConfig,
+      ...params?.config,
+    };
+    const actualParams: types.ListModelsParameters = {
+      config: actualConfig,
+    };
+
+    if (this.apiClient.isVertexAI()) {
+      if (!actualParams.config!.queryBase) {
+        if (actualParams.config?.filter) {
+          throw new Error(
+            'Filtering tuned models list for Vertex AI is not currently supported',
+          );
+        } else {
+          actualParams.config!.filter = 'labels.tune-type:*';
+        }
+      }
+    }
+
+    return new Pager<types.Model>(
+      PagedItem.PAGED_ITEM_MODELS,
+      (x: types.ListModelsParameters) => this.listInternal(x),
+      await this.listInternal(actualParams),
+      actualParams,
+    );
   };
 
   private async generateContentInternal(
@@ -603,6 +638,87 @@ export class Models extends BaseModule {
         const resp = converters.modelFromMldev(this.apiClient, apiResponse);
 
         return resp as types.Model;
+      });
+    }
+  }
+
+  private async listInternal(
+    params: types.ListModelsParameters,
+  ): Promise<types.ListModelsResponse> {
+    let response: Promise<types.ListModelsResponse>;
+    let path: string = '';
+    let queryParams: Record<string, string> = {};
+    if (this.apiClient.isVertexAI()) {
+      const body = converters.listModelsParametersToVertex(
+        this.apiClient,
+        params,
+      );
+      path = common.formatMap(
+        '{models_url}',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'GET',
+          httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json();
+        }) as Promise<types.ListModelsResponse>;
+
+      return response.then((apiResponse) => {
+        const resp = converters.listModelsResponseFromVertex(
+          this.apiClient,
+          apiResponse,
+        );
+        const typedResp = new types.ListModelsResponse();
+        Object.assign(typedResp, resp);
+        return typedResp;
+      });
+    } else {
+      const body = converters.listModelsParametersToMldev(
+        this.apiClient,
+        params,
+      );
+      path = common.formatMap(
+        '{models_url}',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'GET',
+          httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json();
+        }) as Promise<types.ListModelsResponse>;
+
+      return response.then((apiResponse) => {
+        const resp = converters.listModelsResponseFromMldev(
+          this.apiClient,
+          apiResponse,
+        );
+        const typedResp = new types.ListModelsResponse();
+        Object.assign(typedResp, resp);
+        return typedResp;
       });
     }
   }

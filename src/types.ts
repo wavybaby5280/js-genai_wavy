@@ -1745,6 +1745,32 @@ export declare interface Model {
   supportedActions?: string[];
 }
 
+export declare interface ListModelsConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
+  pageSize?: number;
+  pageToken?: string;
+  filter?: string;
+  /** Set true to list base models, false to list tuned models. */
+  queryBase?: boolean;
+}
+
+export declare interface ListModelsParameters {
+  config?: ListModelsConfig;
+}
+
+export class ListModelsResponse {
+  nextPageToken?: string;
+  models?: Model[];
+}
+
 /** Configuration for updating a tuned model. */
 export declare interface UpdateModelConfig {
   /** Used to override HTTP request options. */

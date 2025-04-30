@@ -887,6 +887,58 @@ export function getModelParametersToMldev(
   return toObject;
 }
 
+export function listModelsConfigToMldev(
+  apiClient: ApiClient,
+  fromObject: types.ListModelsConfig,
+  parentObject: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
+  if (parentObject !== undefined && fromPageSize != null) {
+    common.setValueByPath(parentObject, ['_query', 'pageSize'], fromPageSize);
+  }
+
+  const fromPageToken = common.getValueByPath(fromObject, ['pageToken']);
+  if (parentObject !== undefined && fromPageToken != null) {
+    common.setValueByPath(parentObject, ['_query', 'pageToken'], fromPageToken);
+  }
+
+  const fromFilter = common.getValueByPath(fromObject, ['filter']);
+  if (parentObject !== undefined && fromFilter != null) {
+    common.setValueByPath(parentObject, ['_query', 'filter'], fromFilter);
+  }
+
+  const fromQueryBase = common.getValueByPath(fromObject, ['queryBase']);
+  if (parentObject !== undefined && fromQueryBase != null) {
+    common.setValueByPath(
+      parentObject,
+      ['_url', 'models_url'],
+      t.tModelsUrl(apiClient, fromQueryBase),
+    );
+  }
+
+  return toObject;
+}
+
+export function listModelsParametersToMldev(
+  apiClient: ApiClient,
+  fromObject: types.ListModelsParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['config'],
+      listModelsConfigToMldev(apiClient, fromConfig, toObject),
+    );
+  }
+
+  return toObject;
+}
+
 export function updateModelConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.UpdateModelConfig,
@@ -2094,6 +2146,58 @@ export function getModelParametersToVertex(
   return toObject;
 }
 
+export function listModelsConfigToVertex(
+  apiClient: ApiClient,
+  fromObject: types.ListModelsConfig,
+  parentObject: Record<string, unknown>,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromPageSize = common.getValueByPath(fromObject, ['pageSize']);
+  if (parentObject !== undefined && fromPageSize != null) {
+    common.setValueByPath(parentObject, ['_query', 'pageSize'], fromPageSize);
+  }
+
+  const fromPageToken = common.getValueByPath(fromObject, ['pageToken']);
+  if (parentObject !== undefined && fromPageToken != null) {
+    common.setValueByPath(parentObject, ['_query', 'pageToken'], fromPageToken);
+  }
+
+  const fromFilter = common.getValueByPath(fromObject, ['filter']);
+  if (parentObject !== undefined && fromFilter != null) {
+    common.setValueByPath(parentObject, ['_query', 'filter'], fromFilter);
+  }
+
+  const fromQueryBase = common.getValueByPath(fromObject, ['queryBase']);
+  if (parentObject !== undefined && fromQueryBase != null) {
+    common.setValueByPath(
+      parentObject,
+      ['_url', 'models_url'],
+      t.tModelsUrl(apiClient, fromQueryBase),
+    );
+  }
+
+  return toObject;
+}
+
+export function listModelsParametersToVertex(
+  apiClient: ApiClient,
+  fromObject: types.ListModelsParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromConfig = common.getValueByPath(fromObject, ['config']);
+  if (fromConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['config'],
+      listModelsConfigToVertex(apiClient, fromConfig, toObject),
+    );
+  }
+
+  return toObject;
+}
+
 export function updateModelConfigToVertex(
   apiClient: ApiClient,
   fromObject: types.UpdateModelConfig,
@@ -2940,6 +3044,33 @@ export function modelFromMldev(
   return toObject;
 }
 
+export function listModelsResponseFromMldev(
+  apiClient: ApiClient,
+  fromObject: types.ListModelsResponse,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromNextPageToken = common.getValueByPath(fromObject, [
+    'nextPageToken',
+  ]);
+  if (fromNextPageToken != null) {
+    common.setValueByPath(toObject, ['nextPageToken'], fromNextPageToken);
+  }
+
+  const fromModels = common.getValueByPath(fromObject, ['_self']);
+  if (fromModels != null) {
+    let transformedList = t.tExtractModels(apiClient, fromModels);
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return modelFromMldev(apiClient, item);
+      });
+    }
+    common.setValueByPath(toObject, ['models'], transformedList);
+  }
+
+  return toObject;
+}
+
 export function deleteModelResponseFromMldev(): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3662,6 +3793,33 @@ export function modelFromVertex(
       ['tunedModelInfo'],
       tunedModelInfoFromVertex(apiClient, fromTunedModelInfo),
     );
+  }
+
+  return toObject;
+}
+
+export function listModelsResponseFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.ListModelsResponse,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromNextPageToken = common.getValueByPath(fromObject, [
+    'nextPageToken',
+  ]);
+  if (fromNextPageToken != null) {
+    common.setValueByPath(toObject, ['nextPageToken'], fromNextPageToken);
+  }
+
+  const fromModels = common.getValueByPath(fromObject, ['_self']);
+  if (fromModels != null) {
+    let transformedList = t.tExtractModels(apiClient, fromModels);
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return modelFromVertex(apiClient, item);
+      });
+    }
+    common.setValueByPath(toObject, ['models'], transformedList);
   }
 
   return toObject;

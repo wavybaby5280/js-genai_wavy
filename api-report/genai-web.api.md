@@ -1239,6 +1239,33 @@ export class ListFilesResponse {
     nextPageToken?: string;
 }
 
+// @public (undocumented)
+export interface ListModelsConfig {
+    abortSignal?: AbortSignal;
+    // (undocumented)
+    filter?: string;
+    httpOptions?: HttpOptions;
+    // (undocumented)
+    pageSize?: number;
+    // (undocumented)
+    pageToken?: string;
+    queryBase?: boolean;
+}
+
+// @public (undocumented)
+export interface ListModelsParameters {
+    // (undocumented)
+    config?: ListModelsConfig;
+}
+
+// @public (undocumented)
+export class ListModelsResponse {
+    // (undocumented)
+    models?: Model[];
+    // (undocumented)
+    nextPageToken?: string;
+}
+
 // @public
 export interface ListTuningJobsConfig {
     abortSignal?: AbortSignal;
@@ -1546,6 +1573,8 @@ export class Models extends BaseModule {
     generateImages: (params: types.GenerateImagesParameters) => Promise<types.GenerateImagesResponse>;
     generateVideos(params: types.GenerateVideosParameters): Promise<types.GenerateVideosOperation>;
     get(params: types.GetModelParameters): Promise<types.Model>;
+    // (undocumented)
+    list: (params?: types.ListModelsParameters) => Promise<Pager<types.Model>>;
     update(params: types.UpdateModelParameters): Promise<types.Model>;
 }
 

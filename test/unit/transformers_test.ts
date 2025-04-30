@@ -8,7 +8,9 @@ import {ApiClient} from '../../src/_api_client';
 import {
   tContent,
   tContents,
+  tExtractModels,
   tModel,
+  tModelsUrl,
   tPart,
   tParts,
   tSchema,
@@ -112,6 +114,99 @@ describe('tModel', () => {
         'gemini-2.0-flash',
       ),
     ).toEqual('publishers/google/models/gemini-2.0-flash');
+  });
+});
+
+describe('tModelsUrl', () => {
+  it('should return "publishers/google/models" when baseModels is true and isVertexAI is true', () => {
+    const apiClient = new ApiClient({
+      auth: new FakeAuth(),
+      vertexai: true,
+      uploader: new CrossUploader(),
+    });
+    expect(tModelsUrl(apiClient, true)).toBe('publishers/google/models');
+  });
+
+  it('should return "models" when baseModels is true and isVertexAI is false', () => {
+    const apiClient = new ApiClient({
+      auth: new FakeAuth(),
+      vertexai: false,
+      uploader: new CrossUploader(),
+    });
+    expect(tModelsUrl(apiClient, true)).toBe('models');
+  });
+
+  it('should return "models" when baseModels is false and isVertexAI is true', () => {
+    const apiClient = new ApiClient({
+      auth: new FakeAuth(),
+      vertexai: true,
+      uploader: new CrossUploader(),
+    });
+    expect(tModelsUrl(apiClient, false)).toBe('models');
+  });
+
+  it('should return "tunedModels" when baseModels is false and isVertexAI is false', () => {
+    const apiClient = new ApiClient({
+      auth: new FakeAuth(),
+      vertexai: false,
+      uploader: new CrossUploader(),
+    });
+    expect(tModelsUrl(apiClient, false)).toBe('tunedModels');
+  });
+});
+
+describe('tExtractModels', () => {
+  it('should return empty array when no models, tunedModels, or publisherModels fields exist', () => {
+    const apiClient = new ApiClient({
+      auth: new FakeAuth(),
+      uploader: new CrossUploader(),
+    });
+    const response = {};
+    expect(tExtractModels(apiClient, response)).toEqual([]);
+  });
+
+  it('should return models array when models field exists', () => {
+    const apiClient = new ApiClient({
+      auth: new FakeAuth(),
+      uploader: new CrossUploader(),
+    });
+    const models = [{name: 'model1'}, {name: 'model2'}];
+    const response = {models};
+    expect(tExtractModels(apiClient, response)).toEqual(models);
+  });
+
+  it('should return tunedModels array when tunedModels field exists', () => {
+    const apiClient = new ApiClient({
+      auth: new FakeAuth(),
+      uploader: new CrossUploader(),
+    });
+    const tunedModels = [{name: 'tunedModel1'}, {name: 'tunedModel2'}];
+    const response = {tunedModels};
+    expect(tExtractModels(apiClient, response)).toEqual(tunedModels);
+  });
+
+  it('should return publisherModels array when publisherModels field exists', () => {
+    const apiClient = new ApiClient({
+      auth: new FakeAuth(),
+      uploader: new CrossUploader(),
+    });
+    const publisherModels = [
+      {name: 'publisherModel1'},
+      {name: 'publisherModel2'},
+    ];
+    const response = {publisherModels};
+    expect(tExtractModels(apiClient, response)).toEqual(publisherModels);
+  });
+
+  it('should prioritize models field if multiple fields exist', () => {
+    const apiClient = new ApiClient({
+      auth: new FakeAuth(),
+      uploader: new CrossUploader(),
+    });
+    const models = [{name: 'model1'}, {name: 'model2'}];
+    const tunedModels = [{name: 'tunedModel1'}, {name: 'tunedModel2'}];
+    const response = {models, tunedModels};
+    expect(tExtractModels(apiClient, response)).toEqual(models);
   });
 });
 
