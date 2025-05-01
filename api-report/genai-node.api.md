@@ -531,6 +531,10 @@ export enum EndSensitivity {
 }
 
 // @public
+export interface EnterpriseWebSearch {
+}
+
+// @public
 export interface ExecutableCode {
     code?: string;
     language?: Language;
@@ -2054,6 +2058,7 @@ export interface TokensInfo {
 // @public
 export interface Tool {
     codeExecution?: ToolCodeExecution;
+    enterpriseWebSearch?: EnterpriseWebSearch;
     functionDeclarations?: FunctionDeclaration[];
     googleSearch?: GoogleSearch;
     googleSearchRetrieval?: GoogleSearchRetrieval;

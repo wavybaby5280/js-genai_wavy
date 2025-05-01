@@ -579,6 +579,9 @@ export declare interface GoogleSearchRetrieval {
   dynamicRetrievalConfig?: DynamicRetrievalConfig;
 }
 
+/** Tool to search public web data, powered by Vertex AI Search and Sec4 compliance. */
+export declare interface EnterpriseWebSearch {}
+
 /** Retrieve from Vertex AI Search datastore or engine for grounding. datastore and engine are mutually exclusive. See https://cloud.google.com/products/agent-builder */
 export declare interface VertexAISearch {
   /** Optional. Fully-qualified Vertex AI Search data store resource ID. Format: `projects/{project}/locations/{location}/collections/{collection}/dataStores/{dataStore}` */
@@ -739,6 +742,9 @@ export declare interface Tool {
   googleSearch?: GoogleSearch;
   /** Optional. GoogleSearchRetrieval tool type. Specialized retrieval tool that is powered by Google search. */
   googleSearchRetrieval?: GoogleSearchRetrieval;
+  /** Optional. Enterprise web search tool type. Specialized retrieval
+      tool that is powered by Vertex AI Search and Sec4 compliance. */
+  enterpriseWebSearch?: EnterpriseWebSearch;
   /** Optional. CodeExecution tool type. Enables the model to execute code as part of generation. This field is only used by the Gemini Developer API services. */
   codeExecution?: ToolCodeExecution;
   /** Optional. Function tool type. One or more function declarations to be passed to the model along with the current user query. Model may decide to call a subset of these functions by populating FunctionCall in the response. User should provide a FunctionResponse for each function call in the next turn. Based on the function responses, Model will generate the final response back to the user. Maximum 128 function declarations can be provided. */
