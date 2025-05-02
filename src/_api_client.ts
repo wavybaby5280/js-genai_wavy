@@ -171,16 +171,10 @@ export class ApiClient {
     if (this.clientOptions.vertexai) {
       initHttpOptions.apiVersion =
         this.clientOptions.apiVersion ?? VERTEX_AI_API_DEFAULT_VERSION;
-      // Assume that proj/api key validation occurs before they are passed in.
-      if (this.getProject() || this.getLocation()) {
-        initHttpOptions.baseUrl = `https://${this.clientOptions.location}-aiplatform.googleapis.com/`;
-        this.clientOptions.apiKey = undefined; // unset API key.
-      } else {
-        initHttpOptions.baseUrl = `https://aiplatform.googleapis.com/`;
-        this.clientOptions.project = undefined; // unset project.
-        this.clientOptions.location = undefined; // unset location.
-      }
+      initHttpOptions.baseUrl = this.baseUrlFromProjectLocation();
+      this.normalizeAuthParameters();
     } else {
+      // Gemini API
       initHttpOptions.apiVersion =
         this.clientOptions.apiVersion ?? GOOGLE_AI_API_DEFAULT_VERSION;
       initHttpOptions.baseUrl = `https://generativelanguage.googleapis.com/`;
@@ -196,6 +190,43 @@ export class ApiClient {
         opts.httpOptions,
       );
     }
+  }
+
+  /**
+   * Determines the base URL for Vertex AI based on project and location.
+   * Uses the global endpoint if location is 'global' or if project/location
+   * are not specified (implying API key usage).
+   * @private
+   */
+  private baseUrlFromProjectLocation(): string {
+    if (
+      this.clientOptions.project &&
+      this.clientOptions.location &&
+      this.clientOptions.location !== 'global'
+    ) {
+      // Regional endpoint
+      return `https://${this.clientOptions.location}-aiplatform.googleapis.com/`;
+    }
+    // Global endpoint (covers 'global' location and API key usage)
+    return `https://aiplatform.googleapis.com/`;
+  }
+
+  /**
+   * Normalizes authentication parameters for Vertex AI.
+   * If project and location are provided, API key is cleared.
+   * If project and location are not provided (implying API key usage),
+   * project and location are cleared.
+   * @private
+   */
+  private normalizeAuthParameters(): void {
+    if (this.clientOptions.project && this.clientOptions.location) {
+      // Using project/location for auth, clear potential API key
+      this.clientOptions.apiKey = undefined;
+      return;
+    }
+    // Using API key for auth (or no auth provided yet), clear project/location
+    this.clientOptions.project = undefined;
+    this.clientOptions.location = undefined;
   }
 
   isVertexAI(): boolean {

@@ -230,4 +230,20 @@ describe('Client', () => {
       'https://vertex-base-url.googleapis.com',
     );
   });
+  it('should use global endpoint when location is global for Vertex', () => {
+    const client = new GoogleGenAI({
+      vertexai: true,
+      project: 'test_project',
+      location: 'global',
+    });
+
+    expect(client.vertexai).toBe(true);
+    expect(client['project']).toBe('test_project');
+    expect(client['location']).toBe('global');
+    expect(client['apiClient'].getBaseUrl()).toBe(
+      'https://aiplatform.googleapis.com/',
+    );
+
+    expect(client['apiKey']).toBeUndefined();
+  });
 });
