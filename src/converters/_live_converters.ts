@@ -848,11 +848,14 @@ export function liveConnectConfigToMldev(
     );
   }
 
-  if (
-    common.getValueByPath(fromObject, ['inputAudioTranscription']) !== undefined
-  ) {
-    throw new Error(
-      'inputAudioTranscription parameter is not supported in Gemini API.',
+  const fromInputAudioTranscription = common.getValueByPath(fromObject, [
+    'inputAudioTranscription',
+  ]);
+  if (parentObject !== undefined && fromInputAudioTranscription != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'inputAudioTranscription'],
+      audioTranscriptionConfigToMldev(),
     );
   }
 
@@ -1337,11 +1340,14 @@ export function liveClientSetupToMldev(
     );
   }
 
-  if (
-    common.getValueByPath(fromObject, ['inputAudioTranscription']) !== undefined
-  ) {
-    throw new Error(
-      'inputAudioTranscription parameter is not supported in Gemini API.',
+  const fromInputAudioTranscription = common.getValueByPath(fromObject, [
+    'inputAudioTranscription',
+  ]);
+  if (fromInputAudioTranscription != null) {
+    common.setValueByPath(
+      toObject,
+      ['inputAudioTranscription'],
+      audioTranscriptionConfigToMldev(),
     );
   }
 
