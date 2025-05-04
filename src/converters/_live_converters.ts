@@ -26,6 +26,13 @@ export function partToMldev(
     common.setValueByPath(toObject, ['thought'], fromThought);
   }
 
+  const fromThoughtSignature = common.getValueByPath(fromObject, [
+    'thoughtSignature',
+  ]);
+  if (fromThoughtSignature != null) {
+    common.setValueByPath(toObject, ['thoughtSignature'], fromThoughtSignature);
+  }
+
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
     'codeExecutionResult',
   ]);
@@ -90,6 +97,13 @@ export function partToVertex(
   const fromThought = common.getValueByPath(fromObject, ['thought']);
   if (fromThought != null) {
     common.setValueByPath(toObject, ['thought'], fromThought);
+  }
+
+  const fromThoughtSignature = common.getValueByPath(fromObject, [
+    'thoughtSignature',
+  ]);
+  if (fromThoughtSignature != null) {
+    common.setValueByPath(toObject, ['thoughtSignature'], fromThoughtSignature);
   }
 
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
@@ -1818,6 +1832,13 @@ export function partFromMldev(
     common.setValueByPath(toObject, ['thought'], fromThought);
   }
 
+  const fromThoughtSignature = common.getValueByPath(fromObject, [
+    'thoughtSignature',
+  ]);
+  if (fromThoughtSignature != null) {
+    common.setValueByPath(toObject, ['thoughtSignature'], fromThoughtSignature);
+  }
+
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
     'codeExecutionResult',
   ]);
@@ -1882,6 +1903,13 @@ export function partFromVertex(
   const fromThought = common.getValueByPath(fromObject, ['thought']);
   if (fromThought != null) {
     common.setValueByPath(toObject, ['thought'], fromThought);
+  }
+
+  const fromThoughtSignature = common.getValueByPath(fromObject, [
+    'thoughtSignature',
+  ]);
+  if (fromThoughtSignature != null) {
+    common.setValueByPath(toObject, ['thoughtSignature'], fromThoughtSignature);
   }
 
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
