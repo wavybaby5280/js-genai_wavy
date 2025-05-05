@@ -432,18 +432,73 @@ export function tBytes(
   return fromImageBytes;
 }
 
+function _isFile(origin: unknown): boolean {
+  return (
+    origin !== null &&
+    origin !== undefined &&
+    typeof origin === 'object' &&
+    'name' in origin
+  );
+}
+
+export function isGeneratedVideo(origin: unknown): boolean {
+  return (
+    origin !== null &&
+    origin !== undefined &&
+    typeof origin === 'object' &&
+    'video' in origin
+  );
+}
+
+export function isVideo(origin: unknown): boolean {
+  return (
+    origin !== null &&
+    origin !== undefined &&
+    typeof origin === 'object' &&
+    'uri' in origin
+  );
+}
+
 export function tFileName(
   apiClient: ApiClient,
-  fromName: string | unknown,
-): string {
-  if (typeof fromName !== 'string') {
-    throw new Error('fromName must be a string');
+  fromName: string | types.File | types.GeneratedVideo | types.Video,
+): string | undefined {
+  let name: string | undefined;
+
+  if (_isFile(fromName)) {
+    name = (fromName as types.File).name;
   }
-  // Remove the files/ prefx for MLdev urls to get the actual name of the file.
-  if (fromName.startsWith('files/')) {
-    return fromName.split('files/')[1];
+  if (isVideo(fromName)) {
+    name = (fromName as types.Video).uri;
+    if (name === undefined) {
+      return undefined;
+    }
   }
-  return fromName;
+  if (isGeneratedVideo(fromName)) {
+    name = (fromName as types.GeneratedVideo).video?.uri;
+    if (name === undefined) {
+      return undefined;
+    }
+  }
+  if (typeof fromName === 'string') {
+    name = fromName;
+  }
+
+  if (name === undefined) {
+    throw new Error('Could not extract file name from the provided input.');
+  }
+
+  if (name.startsWith('https://')) {
+    const suffix = name.split('files/')[1];
+    const match = suffix.match(/[a-z0-9]+/);
+    if (match === null) {
+      throw new Error(`Could not extract file name from URI ${name}`);
+    }
+    name = match[0];
+  } else if (name.startsWith('files/')) {
+    name = name.split('files/')[1];
+  }
+  return name;
 }
 
 export function tModelsUrl(

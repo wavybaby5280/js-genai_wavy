@@ -9,6 +9,7 @@ import {
   tContent,
   tContents,
   tExtractModels,
+  tFileName,
   tModel,
   tModelsUrl,
   tPart,
@@ -17,9 +18,8 @@ import {
   tSpeechConfig,
   tTool,
 } from '../../src/_transformers';
-import * as types from '../../src/types';
-
 import {CrossUploader} from '../../src/cross/_cross_uploader';
+import * as types from '../../src/types';
 import {FakeAuth} from '../_fake_auth';
 
 describe('tModel', () => {
@@ -693,5 +693,61 @@ describe('tContents', () => {
         parts: [{text: 'test string 1'}, {text: 'test string 2'}],
       },
     ]);
+  });
+});
+
+describe('tFileName', () => {
+  it('no change', () => {
+    const fileName = 'test file name';
+    expect(
+      tFileName(
+        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        fileName,
+      ),
+    ).toEqual(fileName);
+  });
+
+  it('file starts with files/', () => {
+    const fileName = 'test file name';
+    const fileNameWithFilesPrefix = `files/${fileName}`;
+    expect(
+      tFileName(
+        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        fileNameWithFilesPrefix,
+      ),
+    ).toEqual(fileName);
+  });
+
+  it('video file', () => {
+    const fileName = 'filename';
+    const fileUri = `https://generativelanguage.googleapis.com/v1beta/files/${
+      fileName
+    }:download?alt=media`;
+    expect(
+      tFileName(
+        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        {uri: fileUri},
+      ),
+    ).toEqual(fileName);
+  });
+  it('generated video file', () => {
+    const fileName = 'filename';
+    const fileUri = `https://generativelanguage.googleapis.com/v1beta/files/${
+      fileName
+    }:download?alt=media`;
+    expect(
+      tFileName(
+        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        {video: {uri: fileUri}},
+      ),
+    ).toEqual(fileName);
+  });
+  it('generated video file with no uri', () => {
+    expect(
+      tFileName(
+        new ApiClient({auth: new FakeAuth(), uploader: new CrossUploader()}),
+        {video: {uri: undefined}},
+      ),
+    ).toEqual(undefined);
   });
 });
