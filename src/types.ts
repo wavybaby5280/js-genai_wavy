@@ -53,6 +53,17 @@ export enum Mode {
   MODE_DYNAMIC = 'MODE_DYNAMIC',
 }
 
+/** Type of auth scheme. */
+export enum AuthType {
+  AUTH_TYPE_UNSPECIFIED = 'AUTH_TYPE_UNSPECIFIED',
+  NO_AUTH = 'NO_AUTH',
+  API_KEY_AUTH = 'API_KEY_AUTH',
+  HTTP_BASIC_AUTH = 'HTTP_BASIC_AUTH',
+  GOOGLE_SERVICE_ACCOUNT_AUTH = 'GOOGLE_SERVICE_ACCOUNT_AUTH',
+  OAUTH = 'OAUTH',
+  OIDC_AUTH = 'OIDC_AUTH',
+}
+
 /** Optional. The type of the data. */
 export enum Type {
   TYPE_UNSPECIFIED = 'TYPE_UNSPECIFIED',
@@ -584,6 +595,62 @@ export declare interface GoogleSearchRetrieval {
 /** Tool to search public web data, powered by Vertex AI Search and Sec4 compliance. */
 export declare interface EnterpriseWebSearch {}
 
+/** Config for authentication with API key. */
+export declare interface ApiKeyConfig {
+  /** The API key to be used in the request directly. */
+  apiKeyString?: string;
+}
+
+/** Config for Google Service Account Authentication. */
+export declare interface AuthConfigGoogleServiceAccountConfig {
+  /** Optional. The service account that the extension execution service runs as. - If the service account is specified, the `iam.serviceAccounts.getAccessToken` permission should be granted to Vertex AI Extension Service Agent (https://cloud.google.com/vertex-ai/docs/general/access-control#service-agents) on the specified service account. - If not specified, the Vertex AI Extension Service Agent will be used to execute the Extension. */
+  serviceAccount?: string;
+}
+
+/** Config for HTTP Basic Authentication. */
+export declare interface AuthConfigHttpBasicAuthConfig {
+  /** Required. The name of the SecretManager secret version resource storing the base64 encoded credentials. Format: `projects/{project}/secrets/{secrete}/versions/{version}` - If specified, the `secretmanager.versions.access` permission should be granted to Vertex AI Extension Service Agent (https://cloud.google.com/vertex-ai/docs/general/access-control#service-agents) on the specified resource. */
+  credentialSecret?: string;
+}
+
+/** Config for user oauth. */
+export declare interface AuthConfigOauthConfig {
+  /** Access token for extension endpoint. Only used to propagate token from [[ExecuteExtensionRequest.runtime_auth_config]] at request time. */
+  accessToken?: string;
+  /** The service account used to generate access tokens for executing the Extension. - If the service account is specified, the `iam.serviceAccounts.getAccessToken` permission should be granted to Vertex AI Extension Service Agent (https://cloud.google.com/vertex-ai/docs/general/access-control#service-agents) on the provided service account. */
+  serviceAccount?: string;
+}
+
+/** Config for user OIDC auth. */
+export declare interface AuthConfigOidcConfig {
+  /** OpenID Connect formatted ID token for extension endpoint. Only used to propagate token from [[ExecuteExtensionRequest.runtime_auth_config]] at request time. */
+  idToken?: string;
+  /** The service account used to generate an OpenID Connect (OIDC)-compatible JWT token signed by the Google OIDC Provider (accounts.google.com) for extension endpoint (https://cloud.google.com/iam/docs/create-short-lived-credentials-direct#sa-credentials-oidc). - The audience for the token will be set to the URL in the server url defined in the OpenApi spec. - If the service account is provided, the service account should grant `iam.serviceAccounts.getOpenIdToken` permission to Vertex AI Extension Service Agent (https://cloud.google.com/vertex-ai/docs/general/access-control#service-agents). */
+  serviceAccount?: string;
+}
+
+/** Auth configuration to run the extension. */
+export declare interface AuthConfig {
+  /** Config for API key auth. */
+  apiKeyConfig?: ApiKeyConfig;
+  /** Type of auth scheme. */
+  authType?: AuthType;
+  /** Config for Google Service Account auth. */
+  googleServiceAccountConfig?: AuthConfigGoogleServiceAccountConfig;
+  /** Config for HTTP Basic auth. */
+  httpBasicAuthConfig?: AuthConfigHttpBasicAuthConfig;
+  /** Config for user oauth. */
+  oauthConfig?: AuthConfigOauthConfig;
+  /** Config for user OIDC auth. */
+  oidcConfig?: AuthConfigOidcConfig;
+}
+
+/** Tool to support Google Maps in Model. */
+export declare interface GoogleMaps {
+  /** Optional. Auth config for the Google Maps tool. */
+  authConfig?: AuthConfig;
+}
+
 /** Retrieve from Vertex AI Search datastore or engine for grounding. datastore and engine are mutually exclusive. See https://cloud.google.com/products/agent-builder */
 export declare interface VertexAISearch {
   /** Optional. Fully-qualified Vertex AI Search data store resource ID. Format: `projects/{project}/locations/{location}/collections/{collection}/dataStores/{dataStore}` */
@@ -747,6 +814,9 @@ export declare interface Tool {
   /** Optional. Enterprise web search tool type. Specialized retrieval
       tool that is powered by Vertex AI Search and Sec4 compliance. */
   enterpriseWebSearch?: EnterpriseWebSearch;
+  /** Optional. Google Maps tool type. Specialized retrieval tool
+      that is powered by Google Maps. */
+  googleMaps?: GoogleMaps;
   /** Optional. CodeExecution tool type. Enables the model to execute code as part of generation. This field is only used by the Gemini Developer API services. */
   codeExecution?: ToolCodeExecution;
   /** Optional. Function tool type. One or more function declarations to be passed to the model along with the current user query. Model may decide to call a subset of these functions by populating FunctionCall in the response. User should provide a FunctionResponse for each function call in the next turn. Based on the function responses, Model will generate the final response back to the user. Maximum 128 function declarations can be provided. */
@@ -761,6 +831,27 @@ export declare interface FunctionCallingConfig {
   allowedFunctionNames?: string[];
 }
 
+/** An object that represents a latitude/longitude pair.
+
+  This is expressed as a pair of doubles to represent degrees latitude and
+  degrees longitude. Unless specified otherwise, this object must conform to the
+  <a href="https://en.wikipedia.org/wiki/World_Geodetic_System#1984_version">
+  WGS84 standard</a>. Values must be within normalized ranges.
+   */
+export declare interface LatLng {
+  /** The latitude in degrees. It must be in the range [-90.0, +90.0]. */
+  latitude?: number;
+  /** The longitude in degrees. It must be in the range [-180.0, +180.0] */
+  longitude?: number;
+}
+
+/** Retrieval config.
+ */
+export declare interface RetrievalConfig {
+  /** Optional. The location of the user. */
+  latLng?: LatLng;
+}
+
 /** Tool config.
 
   This config is shared for all tools provided in the request.
@@ -768,6 +859,8 @@ export declare interface FunctionCallingConfig {
 export declare interface ToolConfig {
   /** Optional. Function calling config. */
   functionCallingConfig?: FunctionCallingConfig;
+  /** Optional. Retrieval config. */
+  retrievalConfig?: RetrievalConfig;
 }
 
 /** The configuration for the prebuilt speaker to use. */

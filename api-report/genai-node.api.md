@@ -43,7 +43,62 @@ export enum AdapterSize {
 }
 
 // @public
+export interface ApiKeyConfig {
+    apiKeyString?: string;
+}
+
+// @public
 export interface AudioTranscriptionConfig {
+}
+
+// @public
+export interface AuthConfig {
+    apiKeyConfig?: ApiKeyConfig;
+    authType?: AuthType;
+    googleServiceAccountConfig?: AuthConfigGoogleServiceAccountConfig;
+    httpBasicAuthConfig?: AuthConfigHttpBasicAuthConfig;
+    oauthConfig?: AuthConfigOauthConfig;
+    oidcConfig?: AuthConfigOidcConfig;
+}
+
+// @public
+export interface AuthConfigGoogleServiceAccountConfig {
+    serviceAccount?: string;
+}
+
+// @public
+export interface AuthConfigHttpBasicAuthConfig {
+    credentialSecret?: string;
+}
+
+// @public
+export interface AuthConfigOauthConfig {
+    accessToken?: string;
+    serviceAccount?: string;
+}
+
+// @public
+export interface AuthConfigOidcConfig {
+    idToken?: string;
+    serviceAccount?: string;
+}
+
+// @public
+export enum AuthType {
+    // (undocumented)
+    API_KEY_AUTH = "API_KEY_AUTH",
+    // (undocumented)
+    AUTH_TYPE_UNSPECIFIED = "AUTH_TYPE_UNSPECIFIED",
+    // (undocumented)
+    GOOGLE_SERVICE_ACCOUNT_AUTH = "GOOGLE_SERVICE_ACCOUNT_AUTH",
+    // (undocumented)
+    HTTP_BASIC_AUTH = "HTTP_BASIC_AUTH",
+    // (undocumented)
+    NO_AUTH = "NO_AUTH",
+    // (undocumented)
+    OAUTH = "OAUTH",
+    // (undocumented)
+    OIDC_AUTH = "OIDC_AUTH"
 }
 
 // @public
@@ -996,6 +1051,11 @@ export interface GoogleGenAIOptions {
 }
 
 // @public
+export interface GoogleMaps {
+    authConfig?: AuthConfig;
+}
+
+// @public
 export interface GoogleRpcStatus {
     code?: number;
     details?: Record<string, unknown>[];
@@ -1198,6 +1258,12 @@ export enum Language {
     LANGUAGE_UNSPECIFIED = "LANGUAGE_UNSPECIFIED",
     // (undocumented)
     PYTHON = "PYTHON"
+}
+
+// @public
+export interface LatLng {
+    latitude?: number;
+    longitude?: number;
 }
 
 // @public
@@ -1796,6 +1862,11 @@ export interface Retrieval {
 }
 
 // @public
+export interface RetrievalConfig {
+    latLng?: LatLng;
+}
+
+// @public
 export interface RetrievalMetadata {
     googleSearchDynamicRetrievalScore?: number;
 }
@@ -2061,6 +2132,7 @@ export interface Tool {
     codeExecution?: ToolCodeExecution;
     enterpriseWebSearch?: EnterpriseWebSearch;
     functionDeclarations?: FunctionDeclaration[];
+    googleMaps?: GoogleMaps;
     googleSearch?: GoogleSearch;
     googleSearchRetrieval?: GoogleSearchRetrieval;
     retrieval?: Retrieval;
@@ -2073,6 +2145,7 @@ export interface ToolCodeExecution {
 // @public
 export interface ToolConfig {
     functionCallingConfig?: FunctionCallingConfig;
+    retrievalConfig?: RetrievalConfig;
 }
 
 // @public (undocumented)
