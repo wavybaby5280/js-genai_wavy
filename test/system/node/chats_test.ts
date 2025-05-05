@@ -173,7 +173,7 @@ describe('sendMessage', () => {
     console.log('chat.sendMessage response: ', response.text);
   });
 
-  fit('Send message stream with error', async () => {
+  it('Send message stream with error', async () => {
     const client = new GoogleGenAI({vertexai: false, apiKey: GEMINI_API_KEY});
     const chat = client.chats.create({model: 'custom-gemini-2.0-flash'});
     try {
