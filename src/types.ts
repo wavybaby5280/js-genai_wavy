@@ -2993,6 +2993,16 @@ export declare interface DownloadFileConfig {
   abortSignal?: AbortSignal;
 }
 
+/** Parameters used to download a file. */
+export declare interface DownloadFileParameters {
+  /** The file to download. It can be a file name, a file object or a generated video. */
+  file: DownloadableFileUnion;
+  /** Location where the file should be downloaded to. */
+  downloadPath: string;
+  /** Configuration to for the download operation. */
+  config?: DownloadFileConfig;
+}
+
 /** Configuration for upscaling an image.
 
   For more information on this configuration, refer to
@@ -3762,3 +3772,5 @@ export type SchemaUnion = Schema;
 export type SpeechConfigUnion = SpeechConfig | string;
 
 export type ToolListUnion = Tool[];
+
+export type DownloadableFileUnion = string | File | GeneratedVideo | Video;
