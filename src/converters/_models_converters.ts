@@ -1086,6 +1086,17 @@ export function updateModelConfigToMldev(
     common.setValueByPath(parentObject, ['description'], fromDescription);
   }
 
+  const fromDefaultCheckpointId = common.getValueByPath(fromObject, [
+    'defaultCheckpointId',
+  ]);
+  if (parentObject !== undefined && fromDefaultCheckpointId != null) {
+    common.setValueByPath(
+      parentObject,
+      ['defaultCheckpointId'],
+      fromDefaultCheckpointId,
+    );
+  }
+
   return toObject;
 }
 
@@ -2506,6 +2517,17 @@ export function updateModelConfigToVertex(
     common.setValueByPath(parentObject, ['description'], fromDescription);
   }
 
+  const fromDefaultCheckpointId = common.getValueByPath(fromObject, [
+    'defaultCheckpointId',
+  ]);
+  if (parentObject !== undefined && fromDefaultCheckpointId != null) {
+    common.setValueByPath(
+      parentObject,
+      ['defaultCheckpointId'],
+      fromDefaultCheckpointId,
+    );
+  }
+
   return toObject;
 }
 
@@ -3276,6 +3298,12 @@ export function tunedModelInfoFromMldev(
   return toObject;
 }
 
+export function checkpointFromMldev(): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  return toObject;
+}
+
 export function modelFromMldev(
   apiClient: ApiClient,
   fromObject: types.Model,
@@ -4035,6 +4063,30 @@ export function tunedModelInfoFromVertex(
   return toObject;
 }
 
+export function checkpointFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.Checkpoint,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromCheckpointId = common.getValueByPath(fromObject, ['checkpointId']);
+  if (fromCheckpointId != null) {
+    common.setValueByPath(toObject, ['checkpointId'], fromCheckpointId);
+  }
+
+  const fromEpoch = common.getValueByPath(fromObject, ['epoch']);
+  if (fromEpoch != null) {
+    common.setValueByPath(toObject, ['epoch'], fromEpoch);
+  }
+
+  const fromStep = common.getValueByPath(fromObject, ['step']);
+  if (fromStep != null) {
+    common.setValueByPath(toObject, ['step'], fromStep);
+  }
+
+  return toObject;
+}
+
 export function modelFromVertex(
   apiClient: ApiClient,
   fromObject: types.Model,
@@ -4084,6 +4136,28 @@ export function modelFromVertex(
       ['tunedModelInfo'],
       tunedModelInfoFromVertex(apiClient, fromTunedModelInfo),
     );
+  }
+
+  const fromDefaultCheckpointId = common.getValueByPath(fromObject, [
+    'defaultCheckpointId',
+  ]);
+  if (fromDefaultCheckpointId != null) {
+    common.setValueByPath(
+      toObject,
+      ['defaultCheckpointId'],
+      fromDefaultCheckpointId,
+    );
+  }
+
+  const fromCheckpoints = common.getValueByPath(fromObject, ['checkpoints']);
+  if (fromCheckpoints != null) {
+    let transformedList = fromCheckpoints;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return checkpointFromVertex(apiClient, item);
+      });
+    }
+    common.setValueByPath(toObject, ['checkpoints'], transformedList);
   }
 
   return toObject;
