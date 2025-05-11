@@ -8,6 +8,8 @@ endpoints:
       - X-Goog-Api-Key
       - Authorization
       - X-Goog-User-Project
+      - User-Agent
+      - X-Goog-Api-Client
     response_header_replacements:
       - header: X-Goog-Upload-Url
         regex: "^https://generativelanguage.googleapis.com/"
@@ -21,3 +23,5 @@ endpoints:
       - X-Goog-Api-Key
       - Authorization
       - X-Goog-User-Project
+      - User-Agent
+      - X-Goog-Api-Client

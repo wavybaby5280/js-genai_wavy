@@ -833,7 +833,9 @@ describe('Client Tests', () => {
       }, 30000); // 30 seconds
     });
 
-    it('Vertex AI should return list of caches', async () => {
+    // Disabling as when recording we didn't get cache entries and failed.
+    // TODO(b/416948563): make this test independent of previous state or remove it.
+    xit('Vertex AI should return list of caches', async () => {
       const client = new GoogleGenAI({
         vertexai: true,
         project: GOOGLE_CLOUD_PROJECT,
