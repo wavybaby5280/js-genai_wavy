@@ -200,6 +200,45 @@ export class Models extends BaseModule {
   };
 
   /**
+   * Edits an image based on a prompt, list of reference images, and configuration.
+   *
+   * @param params - The parameters for editing an image.
+   * @return The response from the API.
+   *
+   * @example
+   * ```ts
+   * const response = await client.models.editImage({
+   *  model: 'imagen-3.0-capability-001',
+   *  prompt: 'Generate an image containing a mug with the product logo [1] visible on the side of the mug.',
+   *  referenceImages: [subjectReferenceImage]
+   *  config: {
+   *    numberOfImages: 1,
+   *    includeRaiReason: true,
+   *  },
+   * });
+   * console.log(response?.generatedImages?.[0]?.image?.imageBytes);
+   * ```
+   */
+  editImage = async (
+    params: types.EditImageParameters,
+  ): Promise<types.EditImageResponse> => {
+    const paramsInternal: _internal_types.EditImageParametersInternal = {
+      model: params.model,
+      prompt: params.prompt,
+      referenceImages: [],
+      config: params.config,
+    };
+    if (params.referenceImages) {
+      if (params.referenceImages) {
+        paramsInternal.referenceImages = params.referenceImages.map((img) =>
+          img.toReferenceImageAPI(),
+        );
+      }
+    }
+    return await this.editImageInternal(paramsInternal);
+  };
+
+  /**
    * Upscales an image based on an image, upscale factor, and configuration.
    * Only supported in Vertex AI currently.
    *
@@ -603,6 +642,53 @@ export class Models extends BaseModule {
         Object.assign(typedResp, resp);
         return typedResp;
       });
+    }
+  }
+
+  private async editImageInternal(
+    params: _internal_types.EditImageParametersInternal,
+  ): Promise<types.EditImageResponse> {
+    let response: Promise<types.EditImageResponse>;
+    let path: string = '';
+    let queryParams: Record<string, string> = {};
+    if (this.apiClient.isVertexAI()) {
+      const body = converters.editImageParametersInternalToVertex(
+        this.apiClient,
+        params,
+      );
+      path = common.formatMap(
+        '{model}:predict',
+        body['_url'] as Record<string, unknown>,
+      );
+      queryParams = body['_query'] as Record<string, string>;
+      delete body['config'];
+      delete body['_url'];
+      delete body['_query'];
+
+      response = this.apiClient
+        .request({
+          path: path,
+          queryParams: queryParams,
+          body: JSON.stringify(body),
+          httpMethod: 'POST',
+          httpOptions: params.config?.httpOptions,
+          abortSignal: params.config?.abortSignal,
+        })
+        .then((httpResponse) => {
+          return httpResponse.json();
+        }) as Promise<types.EditImageResponse>;
+
+      return response.then((apiResponse) => {
+        const resp = converters.editImageResponseFromVertex(
+          this.apiClient,
+          apiResponse,
+        );
+        const typedResp = new types.EditImageResponse();
+        Object.assign(typedResp, resp);
+        return typedResp;
+      });
+    } else {
+      throw new Error('This method is only supported by the Vertex AI.');
     }
   }
 

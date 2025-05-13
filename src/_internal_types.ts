@@ -8,6 +8,36 @@
 
 import * as types from './types';
 
+/** Private class that represents a Reference image that is sent to API. */
+export declare interface ReferenceImageAPIInternal {
+  /** The reference image for the editing operation. */
+  referenceImage?: types.Image;
+  /** The id of the reference image. */
+  referenceId?: number;
+  /** The type of the reference image. Only set by the SDK. */
+  referenceType?: string;
+  /** Configuration for the mask reference image. */
+  maskImageConfig?: types.MaskReferenceConfig;
+  /** Configuration for the control reference image. */
+  controlImageConfig?: types.ControlReferenceConfig;
+  /** Configuration for the style reference image. */
+  styleImageConfig?: types.StyleReferenceConfig;
+  /** Configuration for the subject reference image. */
+  subjectImageConfig?: types.SubjectReferenceConfig;
+}
+
+/** Parameters for the request to edit an image. */
+export declare interface EditImageParametersInternal {
+  /** The model to use. */
+  model: string;
+  /** A text description of the edit to apply to the image. */
+  prompt: string;
+  /** The reference images for Imagen 3 editing. */
+  referenceImages: ReferenceImageAPIInternal[];
+  /** Configuration for editing. */
+  config?: types.EditImageConfig;
+}
+
 /** Internal API config for UpscaleImage.
 
   These fields require default values sent to the API which are not intended
