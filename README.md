@@ -266,16 +266,26 @@ or the user. The SDK will throw an exception if you try this.
 
 ## Preview Launch
 
-The SDK is curently in a preview launch stage, per [Google's launch stages](https://cloud.google.com/products?hl=en#section-22) this means:
+The SDK is curently in a preview launch stage, per
+[Google's launch stages](https://cloud.google.com/products?hl=en#section-22)
+this means:
 
-> At Preview, products or features are ready for testing by customers. Preview offerings are often publicly announced, but are not necessarily feature-complete, and no SLAs or technical support commitments are provided for these. Unless stated otherwise by Google, Preview offerings are intended for use in test environments only. The average Preview stage lasts about six months.
+> At Preview, products or features are ready for testing by customers.
+> Preview offerings are often publicly announced, but are not necessarily
+> feature-complete, and no SLAs or technical support commitments are provided
+> for these. Unless stated otherwise by Google, Preview offerings are intended
+> for use in test environments only. The average Preview stage lasts about six
+> months.
 
 ## How is this different from the other Google AI SDKs
-This SDK (`@google/genai`) is Google Deepmind’s "vanilla" SDK for its generative AI offerings, and is where Google Deepmind adds new AI features.
+This SDK (`@google/genai`) is Google Deepmind’s "vanilla" SDK for its generative
+AI offerings, and is where Google Deepmind adds new AI features.
 
 Models hosted either on the [Vertex AI platform](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/overview) or the [Gemini Developer platform](https://ai.google.dev/gemini-api/docs) are accessible through this SDK.
 
-Other SDKs may be offering additional AI frameworks on top of this SDK, or may be targeting specific project environments (like Firebase).
+Other SDKs may be offering additional AI frameworks on top of this SDK, or may
+be targeting specific project environments (like Firebase).
 
-The `@google/generative_language` and `@google-cloud/vertexai` SDKs are previous iterations of this SDK and are no longer receiving new Gemini 2.0+ features.
+The `@google/generative_language` and `@google-cloud/vertexai` SDKs are previous
+iterations of this SDK and are no longer receiving new Gemini 2.0+ features.
 
