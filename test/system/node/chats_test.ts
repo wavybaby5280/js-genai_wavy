@@ -40,10 +40,7 @@ describe('Chats Tests', () => {
     await shutdownTestServer();
   });
 
-  // These tests were observed to send different requests
-  // even in replay mode, disabling until we root cause.
-  // TODO(b/416159544): re-enable these tests.
-  xdescribe('sendMessage', () => {
+  describe('sendMessage', () => {
     const testCases = [
       {
         name: 'Google AI with text',
@@ -210,10 +207,7 @@ describe('Chats Tests', () => {
     });
   });
 
-  // These tests were observed to send different requests
-  // even in replay mode, disabling until we root cause.
-  // TODO(b/416159544): re-enable these tests.
-  xdescribe('chats function calling', () => {
+  describe('chats function calling', () => {
     const testCases = [
       {
         name: 'Google AI with function calling',

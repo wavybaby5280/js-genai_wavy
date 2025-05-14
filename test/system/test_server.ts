@@ -37,7 +37,7 @@ export async function setupTestServer() {
   process.env.TEST_SERVER_SECRETS = `${process.env.GOOGLE_CLOUD_PROJECT},${process.env.GOOGLE_CLOUD_LOCATION}`;
   serverProcess = startTestServer(testServerOptions);
   // TODO(b/416776777): Replace this with some sort of a readiness check.
-  await new Promise((resolve) => setTimeout(resolve, 500));
+  await new Promise((resolve) => setTimeout(resolve, 1000));
   setDefaultBaseUrls({
     geminiUrl: 'http://localhost:1453',
     vertexUrl: 'http://localhost:1454',

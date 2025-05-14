@@ -606,6 +606,53 @@ describe('create chat with history', () => {
     expect(chat.getHistory()).toEqual(comprehensiveHistory);
     expect(chat.getHistory(true)).toEqual(comprehensiveHistory);
   });
+
+  it('mutate history outside of chat session does not affect the chat history', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const externalHistory = [
+      {role: 'user', parts: [{text: 'user content 1'}]},
+      {role: 'model', parts: [{text: 'model content 1'}]},
+    ];
+    const chat = client.chats.create({
+      model: 'gemini-1.5-flash',
+      history: externalHistory,
+    });
+    externalHistory.push(
+      {role: 'user', parts: [{text: 'user content 2'}]},
+      {role: 'model', parts: [{text: 'model content 2'}]},
+    );
+    const expectedHistory = [
+      {role: 'user', parts: [{text: 'user content 1'}]},
+      {role: 'model', parts: [{text: 'model content 1'}]},
+    ];
+
+    expect(chat.getHistory()).toEqual(expectedHistory);
+    expect(chat.getHistory(true)).toEqual(expectedHistory);
+  });
+
+  it('mutate history inside chat session does not affect the external history', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const modelsModule = client.models;
+    const modelResponse = buildGenerateContentResponse({
+      parts: [{text: 'model content 2'}],
+      role: 'model',
+    });
+    spyOn(modelsModule, 'generateContent').and.returnValue(
+      Promise.resolve(modelResponse),
+    );
+    const externalHistory = [
+      {role: 'user', parts: [{text: 'user content 1'}]},
+      {role: 'model', parts: [{text: 'model content 1'}]},
+    ];
+    const chat = client.chats.create({
+      model: 'gemini-1.5-flash',
+      history: externalHistory,
+    });
+    await chat.sendMessage({message: 'user content 2'});
+
+    expect(chat.getHistory().length).toEqual(4);
+    expect(externalHistory.length).toEqual(2);
+  });
 });
 
 describe('getHistory', () => {
@@ -729,5 +776,51 @@ describe('getHistory', () => {
     ];
     expect(chat.getHistory()).toEqual(expectedComprehensiveHistory);
     expect(chat.getHistory(true)).toEqual([]);
+  });
+
+  it('getHistory returns a copy of the history', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const modelsModule = client.models;
+    const mockResponse = buildGenerateContentResponse({
+      parts: [{text: 'new model response'}],
+      role: 'model',
+    });
+    spyOn(modelsModule, 'generateContent').and.returnValue(
+      Promise.resolve(mockResponse),
+    );
+    const chat = client.chats.create({
+      model: 'gemini-1.5-flash',
+      history: [existingInputContent, existingOutputContent],
+    });
+    const fetchedHistory1 = chat.getHistory();
+
+    await chat.sendMessage({message: 'new user content'});
+
+    const fetchedHistory2 = chat.getHistory();
+
+    expect(fetchedHistory1.length).toEqual(2);
+    expect(fetchedHistory2.length).toEqual(4);
+  });
+
+  it('modifying the getHistory does not modify the chat history', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const originalHistory = [
+      {role: 'user', parts: [{text: 'user content 1'}]},
+      {role: 'model', parts: [{text: 'model content 1'}]},
+    ];
+    const chat = client.chats.create({
+      model: 'gemini-1.5-flash',
+      history: originalHistory,
+    });
+
+    const fetchedHistory1 = chat.getHistory();
+    fetchedHistory1.push(
+      {role: 'user', parts: [{text: 'user content 2'}]},
+      {role: 'model', parts: [{text: 'model content 2'}]},
+    );
+
+    const fetchedHistory2 = chat.getHistory();
+
+    expect(fetchedHistory2).toEqual(originalHistory);
   });
 });

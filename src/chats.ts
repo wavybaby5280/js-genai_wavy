@@ -138,7 +138,9 @@ export class Chats {
       this.modelsModule,
       params.model,
       params.config,
-      params.history,
+      // Deep copy the history to avoid mutating the history outside of the
+      // chat session.
+      structuredClone(params.history),
     );
   }
 }
@@ -273,7 +275,12 @@ export class Chat {
    *     chat session.
    */
   getHistory(curated: boolean = false): types.Content[] {
-    return curated ? extractCuratedHistory(this.history) : this.history;
+    const history = curated
+      ? extractCuratedHistory(this.history)
+      : this.history;
+    // Deep copy the history to avoid mutating the history outside of the
+    // chat session.
+    return structuredClone(history);
   }
 
   private async *processStreamResponse(
