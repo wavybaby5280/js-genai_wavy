@@ -245,6 +245,73 @@ export function contentToVertex(
   return toObject;
 }
 
+export function functionDeclarationToMldev(
+  apiClient: ApiClient,
+  fromObject: types.FunctionDeclaration,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromBehavior = common.getValueByPath(fromObject, ['behavior']);
+  if (fromBehavior != null) {
+    common.setValueByPath(toObject, ['behavior'], fromBehavior);
+  }
+
+  const fromDescription = common.getValueByPath(fromObject, ['description']);
+  if (fromDescription != null) {
+    common.setValueByPath(toObject, ['description'], fromDescription);
+  }
+
+  const fromName = common.getValueByPath(fromObject, ['name']);
+  if (fromName != null) {
+    common.setValueByPath(toObject, ['name'], fromName);
+  }
+
+  const fromParameters = common.getValueByPath(fromObject, ['parameters']);
+  if (fromParameters != null) {
+    common.setValueByPath(toObject, ['parameters'], fromParameters);
+  }
+
+  const fromResponse = common.getValueByPath(fromObject, ['response']);
+  if (fromResponse != null) {
+    common.setValueByPath(toObject, ['response'], fromResponse);
+  }
+
+  return toObject;
+}
+
+export function functionDeclarationToVertex(
+  apiClient: ApiClient,
+  fromObject: types.FunctionDeclaration,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (common.getValueByPath(fromObject, ['behavior']) !== undefined) {
+    throw new Error('behavior parameter is not supported in Vertex AI.');
+  }
+
+  const fromDescription = common.getValueByPath(fromObject, ['description']);
+  if (fromDescription != null) {
+    common.setValueByPath(toObject, ['description'], fromDescription);
+  }
+
+  const fromName = common.getValueByPath(fromObject, ['name']);
+  if (fromName != null) {
+    common.setValueByPath(toObject, ['name'], fromName);
+  }
+
+  const fromParameters = common.getValueByPath(fromObject, ['parameters']);
+  if (fromParameters != null) {
+    common.setValueByPath(toObject, ['parameters'], fromParameters);
+  }
+
+  const fromResponse = common.getValueByPath(fromObject, ['response']);
+  if (fromResponse != null) {
+    common.setValueByPath(toObject, ['response'], fromResponse);
+  }
+
+  return toObject;
+}
+
 export function googleSearchToMldev(): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -520,6 +587,19 @@ export function toolToMldev(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
+  const fromFunctionDeclarations = common.getValueByPath(fromObject, [
+    'functionDeclarations',
+  ]);
+  if (fromFunctionDeclarations != null) {
+    let transformedList = fromFunctionDeclarations;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return functionDeclarationToMldev(apiClient, item);
+      });
+    }
+    common.setValueByPath(toObject, ['functionDeclarations'], transformedList);
+  }
+
   if (common.getValueByPath(fromObject, ['retrieval']) !== undefined) {
     throw new Error('retrieval parameter is not supported in Gemini API.');
   }
@@ -559,17 +639,6 @@ export function toolToMldev(
     common.setValueByPath(toObject, ['codeExecution'], fromCodeExecution);
   }
 
-  const fromFunctionDeclarations = common.getValueByPath(fromObject, [
-    'functionDeclarations',
-  ]);
-  if (fromFunctionDeclarations != null) {
-    common.setValueByPath(
-      toObject,
-      ['functionDeclarations'],
-      fromFunctionDeclarations,
-    );
-  }
-
   return toObject;
 }
 
@@ -578,6 +647,19 @@ export function toolToVertex(
   fromObject: types.Tool,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
+
+  const fromFunctionDeclarations = common.getValueByPath(fromObject, [
+    'functionDeclarations',
+  ]);
+  if (fromFunctionDeclarations != null) {
+    let transformedList = fromFunctionDeclarations;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return functionDeclarationToVertex(apiClient, item);
+      });
+    }
+    common.setValueByPath(toObject, ['functionDeclarations'], transformedList);
+  }
 
   const fromRetrieval = common.getValueByPath(fromObject, ['retrieval']);
   if (fromRetrieval != null) {
@@ -625,17 +707,6 @@ export function toolToVertex(
   ]);
   if (fromCodeExecution != null) {
     common.setValueByPath(toObject, ['codeExecution'], fromCodeExecution);
-  }
-
-  const fromFunctionDeclarations = common.getValueByPath(fromObject, [
-    'functionDeclarations',
-  ]);
-  if (fromFunctionDeclarations != null) {
-    common.setValueByPath(
-      toObject,
-      ['functionDeclarations'],
-      fromFunctionDeclarations,
-    );
   }
 
   return toObject;
@@ -1843,6 +1914,16 @@ export function functionResponseToMldev(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
+  const fromWillContinue = common.getValueByPath(fromObject, ['willContinue']);
+  if (fromWillContinue != null) {
+    common.setValueByPath(toObject, ['willContinue'], fromWillContinue);
+  }
+
+  const fromScheduling = common.getValueByPath(fromObject, ['scheduling']);
+  if (fromScheduling != null) {
+    common.setValueByPath(toObject, ['scheduling'], fromScheduling);
+  }
+
   const fromId = common.getValueByPath(fromObject, ['id']);
   if (fromId != null) {
     common.setValueByPath(toObject, ['id'], fromId);
@@ -1867,8 +1948,17 @@ export function functionResponseToVertex(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  if (common.getValueByPath(fromObject, ['id']) !== undefined) {
-    throw new Error('id parameter is not supported in Vertex AI.');
+  if (common.getValueByPath(fromObject, ['willContinue']) !== undefined) {
+    throw new Error('willContinue parameter is not supported in Vertex AI.');
+  }
+
+  if (common.getValueByPath(fromObject, ['scheduling']) !== undefined) {
+    throw new Error('scheduling parameter is not supported in Vertex AI.');
+  }
+
+  const fromId = common.getValueByPath(fromObject, ['id']);
+  if (fromId != null) {
+    common.setValueByPath(toObject, ['id'], fromId);
   }
 
   const fromName = common.getValueByPath(fromObject, ['name']);

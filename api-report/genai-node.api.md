@@ -120,6 +120,16 @@ export interface BaseUrlParameters {
 }
 
 // @public
+export enum Behavior {
+    // (undocumented)
+    BLOCKING = "BLOCKING",
+    // (undocumented)
+    NON_BLOCKING = "NON_BLOCKING",
+    // (undocumented)
+    UNSPECIFIED = "UNSPECIFIED"
+}
+
+// @public
 interface Blob_2 {
     data?: string;
     displayName?: string;
@@ -815,6 +825,7 @@ export enum FunctionCallingConfigMode {
 
 // @public
 export interface FunctionDeclaration {
+    behavior?: Behavior;
     description?: string;
     name?: string;
     parameters?: Schema;
@@ -826,6 +837,20 @@ export class FunctionResponse {
     id?: string;
     name?: string;
     response?: Record<string, unknown>;
+    scheduling?: FunctionResponseScheduling;
+    willContinue?: boolean;
+}
+
+// @public
+export enum FunctionResponseScheduling {
+    // (undocumented)
+    INTERRUPT = "INTERRUPT",
+    // (undocumented)
+    SCHEDULING_UNSPECIFIED = "SCHEDULING_UNSPECIFIED",
+    // (undocumented)
+    SILENT = "SILENT",
+    // (undocumented)
+    WHEN_IDLE = "WHEN_IDLE"
 }
 
 // @public

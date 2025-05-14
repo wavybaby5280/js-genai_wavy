@@ -49,6 +49,17 @@ export enum HarmBlockThreshold {
   OFF = 'OFF',
 }
 
+/** Optional. The type of the data. */
+export enum Type {
+  TYPE_UNSPECIFIED = 'TYPE_UNSPECIFIED',
+  STRING = 'STRING',
+  NUMBER = 'NUMBER',
+  INTEGER = 'INTEGER',
+  BOOLEAN = 'BOOLEAN',
+  ARRAY = 'ARRAY',
+  OBJECT = 'OBJECT',
+}
+
 /** The mode of the predictor to be used in dynamic retrieval. */
 export enum Mode {
   MODE_UNSPECIFIED = 'MODE_UNSPECIFIED',
@@ -64,17 +75,6 @@ export enum AuthType {
   GOOGLE_SERVICE_ACCOUNT_AUTH = 'GOOGLE_SERVICE_ACCOUNT_AUTH',
   OAUTH = 'OAUTH',
   OIDC_AUTH = 'OIDC_AUTH',
-}
-
-/** Optional. The type of the data. */
-export enum Type {
-  TYPE_UNSPECIFIED = 'TYPE_UNSPECIFIED',
-  STRING = 'STRING',
-  NUMBER = 'NUMBER',
-  INTEGER = 'INTEGER',
-  BOOLEAN = 'BOOLEAN',
-  ARRAY = 'ARRAY',
-  OBJECT = 'OBJECT',
 }
 
 /** Output only. The reason why the model stopped generating tokens.
@@ -179,6 +179,13 @@ export enum FeatureSelectionPreference {
   PRIORITIZE_QUALITY = 'PRIORITIZE_QUALITY',
   BALANCED = 'BALANCED',
   PRIORITIZE_COST = 'PRIORITIZE_COST',
+}
+
+/** Defines the function behavior. Defaults to `BLOCKING`. */
+export enum Behavior {
+  UNSPECIFIED = 'UNSPECIFIED',
+  BLOCKING = 'BLOCKING',
+  NON_BLOCKING = 'NON_BLOCKING',
 }
 
 /** Config for the dynamic retrieval config mode. */
@@ -309,6 +316,14 @@ export enum TurnCoverage {
   TURN_INCLUDES_ALL_INPUT = 'TURN_INCLUDES_ALL_INPUT',
 }
 
+/** Specifies how the response should be scheduled in the conversation. */
+export enum FunctionResponseScheduling {
+  SCHEDULING_UNSPECIFIED = 'SCHEDULING_UNSPECIFIED',
+  SILENT = 'SILENT',
+  WHEN_IDLE = 'WHEN_IDLE',
+  INTERRUPT = 'INTERRUPT',
+}
+
 /** Content blob. */
 export declare interface Blob {
   /** Optional. Display name of the blob. Used to provide a label or filename to distinguish blobs. This field is not currently used in the Gemini GenerateContent calls. */
@@ -364,8 +379,11 @@ export declare interface FunctionCall {
 
 /** A function response. */
 export class FunctionResponse {
-  /** The id of the function call this response is for. Populated by the client
-   to match the corresponding function call `id`. */
+  /** Signals that function call continues, and more responses will be returned, turning the function call into a generator. Is only applicable to NON_BLOCKING function calls (see FunctionDeclaration.behavior for details), ignored otherwise. If false, the default, future responses will not be considered. Is only applicable to NON_BLOCKING function calls, is ignored otherwise. If set to false, future responses will not be considered. It is allowed to return empty `response` with `will_continue=False` to signal that the function call is finished. */
+  willContinue?: boolean;
+  /** Specifies how the response should be scheduled in the conversation. Only applicable to NON_BLOCKING function calls, is ignored otherwise. Defaults to WHEN_IDLE. */
+  scheduling?: FunctionResponseScheduling;
+  /** Optional. The id of the function call this response is for. Populated by the client to match the corresponding function call `id`. */
   id?: string;
   /** Required. The name of the function to call. Matches [FunctionDeclaration.name] and [FunctionCall.name]. */
   name?: string;
@@ -589,6 +607,72 @@ export declare interface SafetySetting {
   threshold?: HarmBlockThreshold;
 }
 
+/** Schema is used to define the format of input/output data. Represents a select subset of an [OpenAPI 3.0 schema object](https://spec.openapis.org/oas/v3.0.3#schema-object). More fields may be added in the future as needed. */
+export declare interface Schema {
+  /** Optional. The value should be validated against any (one or more) of the subschemas in the list. */
+  anyOf?: Schema[];
+  /** Optional. Default value of the data. */
+  default?: unknown;
+  /** Optional. The description of the data. */
+  description?: string;
+  /** Optional. Possible values of the element of primitive type with enum format. Examples: 1. We can define direction as : {type:STRING, format:enum, enum:["EAST", NORTH", "SOUTH", "WEST"]} 2. We can define apartment number as : {type:INTEGER, format:enum, enum:["101", "201", "301"]} */
+  enum?: string[];
+  /** Optional. Example of the object. Will only populated when the object is the root. */
+  example?: unknown;
+  /** Optional. The format of the data. Supported formats: for NUMBER type: "float", "double" for INTEGER type: "int32", "int64" for STRING type: "email", "byte", etc */
+  format?: string;
+  /** Optional. SCHEMA FIELDS FOR TYPE ARRAY Schema of the elements of Type.ARRAY. */
+  items?: Schema;
+  /** Optional. Maximum number of the elements for Type.ARRAY. */
+  maxItems?: string;
+  /** Optional. Maximum length of the Type.STRING */
+  maxLength?: string;
+  /** Optional. Maximum number of the properties for Type.OBJECT. */
+  maxProperties?: string;
+  /** Optional. Maximum value of the Type.INTEGER and Type.NUMBER */
+  maximum?: number;
+  /** Optional. Minimum number of the elements for Type.ARRAY. */
+  minItems?: string;
+  /** Optional. SCHEMA FIELDS FOR TYPE STRING Minimum length of the Type.STRING */
+  minLength?: string;
+  /** Optional. Minimum number of the properties for Type.OBJECT. */
+  minProperties?: string;
+  /** Optional. SCHEMA FIELDS FOR TYPE INTEGER and NUMBER Minimum value of the Type.INTEGER and Type.NUMBER */
+  minimum?: number;
+  /** Optional. Indicates if the value may be null. */
+  nullable?: boolean;
+  /** Optional. Pattern of the Type.STRING to restrict a string to a regular expression. */
+  pattern?: string;
+  /** Optional. SCHEMA FIELDS FOR TYPE OBJECT Properties of Type.OBJECT. */
+  properties?: Record<string, Schema>;
+  /** Optional. The order of the properties. Not a standard field in open api spec. Only used to support the order of the properties. */
+  propertyOrdering?: string[];
+  /** Optional. Required properties of Type.OBJECT. */
+  required?: string[];
+  /** Optional. The title of the Schema. */
+  title?: string;
+  /** Optional. The type of the data. */
+  type?: Type;
+}
+
+/** Defines a function that the model can generate JSON inputs for.
+
+  The inputs are based on `OpenAPI 3.0 specifications
+  <https://spec.openapis.org/oas/v3.0.3>`_.
+   */
+export declare interface FunctionDeclaration {
+  /** Defines the function behavior. */
+  behavior?: Behavior;
+  /** Optional. Description and purpose of the function. Model uses it to decide how and whether to call the function. */
+  description?: string;
+  /** Required. The name of the function to call. Must start with a letter or an underscore. Must be a-z, A-Z, 0-9, or contain underscores, dots and dashes, with a maximum length of 64. */
+  name?: string;
+  /** Optional. Describes the parameters to this function in JSON Schema Object format. Reflects the Open API 3.03 Parameter Object. string Key: the name of the parameter. Parameter names are case sensitive. Schema Value: the Schema defining the type used for the parameter. For function with no parameters, this can be left unset. Parameter names must start with a letter or an underscore and must only contain chars a-z, A-Z, 0-9, or underscores with a maximum length of 64. Example with 1 required and 1 optional parameter: type: OBJECT properties: param1: type: STRING param2: type: INTEGER required: - param1 */
+  parameters?: Schema;
+  /** Optional. Describes the output from this function in JSON Schema format. Reflects the Open API 3.03 Response Object. The Schema defines the type used for the response value of the function. */
+  response?: Schema;
+}
+
 /** Tool to support Google Search in Model. Powered by Google. */
 export declare interface GoogleSearch {}
 
@@ -756,68 +840,10 @@ export declare interface Retrieval {
 /** Tool that executes code generated by the model, and automatically returns the result to the model. See also [ExecutableCode]and [CodeExecutionResult] which are input and output to this tool. */
 export declare interface ToolCodeExecution {}
 
-/** Schema is used to define the format of input/output data. Represents a select subset of an [OpenAPI 3.0 schema object](https://spec.openapis.org/oas/v3.0.3#schema-object). More fields may be added in the future as needed. */
-export declare interface Schema {
-  /** Optional. The value should be validated against any (one or more) of the subschemas in the list. */
-  anyOf?: Schema[];
-  /** Optional. Default value of the data. */
-  default?: unknown;
-  /** Optional. The description of the data. */
-  description?: string;
-  /** Optional. Possible values of the element of primitive type with enum format. Examples: 1. We can define direction as : {type:STRING, format:enum, enum:["EAST", NORTH", "SOUTH", "WEST"]} 2. We can define apartment number as : {type:INTEGER, format:enum, enum:["101", "201", "301"]} */
-  enum?: string[];
-  /** Optional. Example of the object. Will only populated when the object is the root. */
-  example?: unknown;
-  /** Optional. The format of the data. Supported formats: for NUMBER type: "float", "double" for INTEGER type: "int32", "int64" for STRING type: "email", "byte", etc */
-  format?: string;
-  /** Optional. SCHEMA FIELDS FOR TYPE ARRAY Schema of the elements of Type.ARRAY. */
-  items?: Schema;
-  /** Optional. Maximum number of the elements for Type.ARRAY. */
-  maxItems?: string;
-  /** Optional. Maximum length of the Type.STRING */
-  maxLength?: string;
-  /** Optional. Maximum number of the properties for Type.OBJECT. */
-  maxProperties?: string;
-  /** Optional. Maximum value of the Type.INTEGER and Type.NUMBER */
-  maximum?: number;
-  /** Optional. Minimum number of the elements for Type.ARRAY. */
-  minItems?: string;
-  /** Optional. SCHEMA FIELDS FOR TYPE STRING Minimum length of the Type.STRING */
-  minLength?: string;
-  /** Optional. Minimum number of the properties for Type.OBJECT. */
-  minProperties?: string;
-  /** Optional. SCHEMA FIELDS FOR TYPE INTEGER and NUMBER Minimum value of the Type.INTEGER and Type.NUMBER */
-  minimum?: number;
-  /** Optional. Indicates if the value may be null. */
-  nullable?: boolean;
-  /** Optional. Pattern of the Type.STRING to restrict a string to a regular expression. */
-  pattern?: string;
-  /** Optional. SCHEMA FIELDS FOR TYPE OBJECT Properties of Type.OBJECT. */
-  properties?: Record<string, Schema>;
-  /** Optional. The order of the properties. Not a standard field in open api spec. Only used to support the order of the properties. */
-  propertyOrdering?: string[];
-  /** Optional. Required properties of Type.OBJECT. */
-  required?: string[];
-  /** Optional. The title of the Schema. */
-  title?: string;
-  /** Optional. The type of the data. */
-  type?: Type;
-}
-
-/** Structured representation of a function declaration as defined by the [OpenAPI 3.0 specification](https://spec.openapis.org/oas/v3.0.3). Included in this declaration are the function name, description, parameters and response type. This FunctionDeclaration is a representation of a block of code that can be used as a `Tool` by the model and executed by the client. */
-export declare interface FunctionDeclaration {
-  /** Optional. Description and purpose of the function. Model uses it to decide how and whether to call the function. */
-  description?: string;
-  /** Required. The name of the function to call. Must start with a letter or an underscore. Must be a-z, A-Z, 0-9, or contain underscores, dots and dashes, with a maximum length of 64. */
-  name?: string;
-  /** Optional. Describes the parameters to this function in JSON Schema Object format. Reflects the Open API 3.03 Parameter Object. string Key: the name of the parameter. Parameter names are case sensitive. Schema Value: the Schema defining the type used for the parameter. For function with no parameters, this can be left unset. Parameter names must start with a letter or an underscore and must only contain chars a-z, A-Z, 0-9, or underscores with a maximum length of 64. Example with 1 required and 1 optional parameter: type: OBJECT properties: param1: type: STRING param2: type: INTEGER required: - param1 */
-  parameters?: Schema;
-  /** Optional. Describes the output from this function in JSON Schema format. Reflects the Open API 3.03 Response Object. The Schema defines the type used for the response value of the function. */
-  response?: Schema;
-}
-
 /** Tool details of a tool that the model may use to generate a response. */
 export declare interface Tool {
+  /** List of function declarations that the tool supports. */
+  functionDeclarations?: FunctionDeclaration[];
   /** Optional. Retrieval tool type. System will always execute the provided retrieval tool(s) to get external knowledge to answer the prompt. Retrieval results are presented to the model for generation. */
   retrieval?: Retrieval;
   /** Optional. Google Search tool type. Specialized retrieval tool
@@ -833,8 +859,6 @@ export declare interface Tool {
   googleMaps?: GoogleMaps;
   /** Optional. CodeExecution tool type. Enables the model to execute code as part of generation. This field is only used by the Gemini Developer API services. */
   codeExecution?: ToolCodeExecution;
-  /** Optional. Function tool type. One or more function declarations to be passed to the model along with the current user query. Model may decide to call a subset of these functions by populating FunctionCall in the response. User should provide a FunctionResponse for each function call in the next turn. Based on the function responses, Model will generate the final response back to the user. Maximum 128 function declarations can be provided. */
-  functionDeclarations?: FunctionDeclaration[];
 }
 
 /** Function calling config. */
