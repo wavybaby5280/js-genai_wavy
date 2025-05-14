@@ -428,9 +428,25 @@ const schemaTypeUnion = z.union([
 // Declare the type for the schema variable.
 type jsonSchemaValidatorType = z.ZodType<JSONSchema>;
 
-export const jsonSchemaValidator: jsonSchemaValidatorType = z.lazy(() => {
-  return z
-    .object({
+/**
+ * Creates a zod validator for JSONSchema.
+ *
+ * @param strictMode Whether to enable strict mode, default to true. When
+ * strict mode is enabled, the zod validator will throw error if there
+ * are unrecognized fields in the input data. If strict mode is
+ * disabled, the zod validator will ignore the unrecognized fields, only
+ * populate the fields that are listed in the JSONSchema. Regardless of
+ * the mode the type mismatch will always result in an error, for example
+ * items field should be a single JSONSchema, but for tuple type it would
+ * be an array of JSONSchema, this will always result in an error.
+ * @return The zod validator for JSONSchema.
+ */
+export function createJsonSchemaValidator(
+  strictMode: boolean = true,
+): jsonSchemaValidatorType {
+  const jsonSchemaValidator: jsonSchemaValidatorType = z.lazy(() => {
+    // Define the base object shape *inside* the z.lazy callback
+    const baseShape = z.object({
       // --- Type ---
       type: schemaTypeUnion.optional(),
 
@@ -469,9 +485,13 @@ export const jsonSchemaValidator: jsonSchemaValidatorType = z.lazy(() => {
       // JSONSchema, will not be communicated to the model, it is here purely
       // for enabling the zod validation strict mode.
       additionalProperties: z.boolean().optional(),
-    })
-    .strict();
-});
+    });
+
+    // Conditionally apply .strict() based on the flag
+    return strictMode ? baseShape.strict() : baseShape;
+  });
+  return jsonSchemaValidator;
+}
 
 /*
 Handle type field:
@@ -535,7 +555,7 @@ function flattenTypeArrayToAnyOf(
   }
 }
 
-function processJsonSchema(
+export function processJsonSchema(
   _jsonSchema: JSONSchema | types.Schema | Record<string, unknown>,
 ): types.Schema {
   const genAISchema: types.Schema = {};
@@ -673,7 +693,7 @@ export function tSchema(
 ): types.Schema {
   if (Object.keys(schema as Record<string, unknown>).includes('$schema')) {
     delete (schema as Record<string, unknown>)['$schema'];
-    const validatedJsonSchema = jsonSchemaValidator.parse(schema);
+    const validatedJsonSchema = createJsonSchemaValidator().parse(schema);
     return processJsonSchema(validatedJsonSchema);
   } else {
     return processJsonSchema(schema as types.Schema);

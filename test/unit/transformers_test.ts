@@ -9,6 +9,7 @@ import {zodToJsonSchema} from 'zod-to-json-schema';
 
 import {ApiClient} from '../../src/_api_client';
 import {
+  createJsonSchemaValidator,
   tContent,
   tContents,
   tExtractModels,
@@ -288,6 +289,25 @@ describe('tTool', () => {
     const tool = {functionDeclarations: [{name: 'function-name'}]};
     expect(tTool(vertexApiClient, tool)).toEqual(tool);
     expect(tTool(mlDevApiClient, tool)).toEqual(tool);
+  });
+});
+
+describe('createJsonSchemaValidator', () => {
+  it('should not throw error when strict mode is disabled for additional properties', () => {
+    const setSchema = z.object({setField: z.set(z.string())});
+    const validator = createJsonSchemaValidator(false);
+    expect(() =>
+      validator.parse(zodToJsonSchema(setSchema) as Record<string, unknown>),
+    ).not.toThrowError();
+  });
+  it('should throw error when strict mode is disabled for additional properties', () => {
+    const setSchema = z.object({
+      setField: z.set(z.string()),
+    });
+    const validator = createJsonSchemaValidator();
+    expect(() =>
+      validator.parse(zodToJsonSchema(setSchema) as Record<string, unknown>),
+    ).toThrowError();
   });
 });
 
