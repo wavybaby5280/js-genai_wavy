@@ -14,18 +14,28 @@ const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
 async function generateContentFromMLDev() {
   const ai = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
 
-  const zodSchema = z.array(
-    z.object({
-      recipeName: z.string().describe('Name of the recipe'),
-    }),
-  );
+  const zodSchema = z.object({
+    ingredients: z.array(z.string()).describe('Ingredients of the recipe'),
+    timeItTook: z.string().describe('Time it took to cook the recipe'),
+    recipeName: z.string().describe('Name of the recipe'),
+  });
+
+  const schemaToBeProcessed = zodToJsonSchema(zodSchema) as Record<
+    string,
+    unknown
+  >;
+  schemaToBeProcessed['propertyOrdering'] = [
+    'timeItTook',
+    'recipeName',
+    'ingredients',
+  ];
 
   const response = await ai.models.generateContent({
     model: 'gemini-2.0-flash',
     contents: 'List 3 popular cookie recipes.',
     config: {
       responseMimeType: 'application/json',
-      responseSchema: zodToJsonSchema(zodSchema),
+      responseSchema: schemaToBeProcessed,
     },
   });
 
@@ -39,18 +49,28 @@ async function generateContentFromVertexAI() {
     location: GOOGLE_CLOUD_LOCATION,
   });
 
-  const zodSchema = z.array(
-    z.object({
-      recipeName: z.string().describe('Name of the recipe'),
-    }),
-  );
+  const zodSchema = z.object({
+    ingredients: z.array(z.string()).describe('Ingredients of the recipe'),
+    timeItTook: z.string().describe('Time it took to cook the recipe'),
+    recipeName: z.string().describe('Name of the recipe'),
+  });
+
+  const schemaToBeProcessed = zodToJsonSchema(zodSchema) as Record<
+    string,
+    unknown
+  >;
+  schemaToBeProcessed['propertyOrdering'] = [
+    'timeItTook',
+    'recipeName',
+    'ingredients',
+  ];
 
   const response = await ai.models.generateContent({
     model: 'gemini-2.0-flash',
     contents: 'List 3 popular cookie recipes.',
     config: {
       responseMimeType: 'application/json',
-      responseSchema: zodToJsonSchema(zodSchema),
+      responseSchema: schemaToBeProcessed,
     },
   });
 

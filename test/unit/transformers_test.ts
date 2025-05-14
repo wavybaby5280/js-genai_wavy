@@ -616,6 +616,46 @@ describe('tSchema', () => {
       expected,
     );
   });
+  it('should process propertyOrdering', () => {
+    const objectWithPropertyOrdering = z.object({
+      simpleString: z.string(),
+      simpleObject: z.object({
+        innerString: z.string(),
+        anotherInnerString: z.string(),
+      }),
+    });
+    const jsonSchemaFromZod = zodToJsonSchema(
+      objectWithPropertyOrdering,
+    ) as Record<string, unknown>;
+
+    jsonSchemaFromZod['propertyOrdering'] = ['simpleObject', 'simpleString'];
+
+    const expected = {
+      type: types.Type.OBJECT,
+      properties: {
+        simpleString: {
+          type: types.Type.STRING,
+        },
+        simpleObject: {
+          type: types.Type.OBJECT,
+          properties: {
+            innerString: {
+              type: types.Type.STRING,
+            },
+            anotherInnerString: {
+              type: types.Type.STRING,
+            },
+          },
+          required: ['innerString', 'anotherInnerString'],
+        },
+      },
+      required: ['simpleString', 'simpleObject'],
+      propertyOrdering: ['simpleObject', 'simpleString'],
+    };
+
+    expect(tSchema(vertexApiClient, jsonSchemaFromZod)).toEqual(expected);
+    expect(tSchema(mlDevApiClient, jsonSchemaFromZod)).toEqual(expected);
+  });
   it('should process primitive types directly', () => {
     const stringDirectly = z
       .string()

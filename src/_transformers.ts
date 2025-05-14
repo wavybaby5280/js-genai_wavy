@@ -288,7 +288,11 @@ type JSONSchemaType =
   | 'null';
 
 /**
- * A subset of JSON Schema according to 2020-12 JSON Schema draft.
+ * A subset of JSON Schema according to 2020-12 JSON Schema draft, plus one
+ * additional google only field: propertyOrdering. The propertyOrdering field
+ * is used to specify the order of the properties in the object. see details in
+ * https://ai.google.dev/gemini-api/docs/structured-output#property-ordering
+ * for more details.
  *
  * Represents a subset of a JSON Schema object that can be used by Gemini API.
  * The difference between this interface and the Schema interface is that this
@@ -407,6 +411,13 @@ export interface JSONSchema {
    * the schema of the possible values.
    */
   anyOf?: JSONSchema[];
+
+  /**
+   * The order of the properties. Not a standard field in OpenAPI spec.
+   * Only used to support the order of the properties. see details in
+   * https://ai.google.dev/gemini-api/docs/structured-output#property-ordering
+   */
+  propertyOrdering?: string[];
 }
 
 const jsonSchemaTypeValidator = z.enum([
@@ -468,6 +479,7 @@ export function createJsonSchemaValidator(
       required: z.array(z.string()).optional(),
       minProperties: z.coerce.string().optional(),
       maxProperties: z.coerce.string().optional(),
+      propertyOrdering: z.array(z.string()).optional(),
 
       // --- Numeric Validations ---
       minimum: z.number().optional(),
