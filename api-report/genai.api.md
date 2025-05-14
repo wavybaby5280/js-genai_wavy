@@ -2017,7 +2017,7 @@ export interface Schema {
 }
 
 // @public (undocumented)
-export type SchemaUnion = Schema;
+export type SchemaUnion = Schema | unknown;
 
 // @public
 export interface SearchEntryPoint {

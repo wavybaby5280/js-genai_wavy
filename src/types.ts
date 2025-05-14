@@ -3983,7 +3983,7 @@ export type ContentUnion = Content | PartUnion[] | PartUnion;
 
 export type ContentListUnion = Content | Content[] | PartUnion | PartUnion[];
 
-export type SchemaUnion = Schema;
+export type SchemaUnion = Schema | unknown;
 
 export type SpeechConfigUnion = SpeechConfig | string;
 

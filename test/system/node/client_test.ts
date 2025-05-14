@@ -7,12 +7,9 @@
 import {fail} from 'assert';
 import {GoogleAuthOptions} from 'google-auth-library';
 import {z} from 'zod';
+import {zodToJsonSchema} from 'zod-to-json-schema';
 
 import {GoogleGenAI} from '../../../src/node/node_client';
-import {
-  functionDeclarationFromZodFunction,
-  schemaFromZodType,
-} from '../../../src/schema_helper';
 import {
   FunctionCallingConfigMode,
   GenerateContentResponse,
@@ -171,7 +168,7 @@ describe('Client Tests', () => {
         }
       }
     });
-    it('ML Dev should generate content with given zod schema', async () => {
+    it('ML Dev should generate content with given valid json schema', async () => {
       const innerObject = z.object({
         innerString: z.string(),
         innerNumber: z.number(),
@@ -203,7 +200,7 @@ describe('Client Tests', () => {
         contents: 'populate the following object',
         config: {
           responseMimeType: 'application/json',
-          responseSchema: schemaFromZodType(nestedSchema),
+          responseSchema: zodToJsonSchema(nestedSchema),
         },
       });
       const parsedResponse = JSON.parse(
@@ -214,7 +211,7 @@ describe('Client Tests', () => {
       expect(validationResult.success).toEqual(true);
     });
 
-    it('Vertex AI should generate content with given zod schema', async () => {
+    it('Vertex AI should generate content with given valid json schema', async () => {
       const innerObject = z.object({
         innerString: z.string(),
         innerNumber: z.number(),
@@ -251,7 +248,7 @@ describe('Client Tests', () => {
         contents: 'populate the following object',
         config: {
           responseMimeType: 'application/json',
-          responseSchema: schemaFromZodType(nestedSchema),
+          responseSchema: zodToJsonSchema(nestedSchema),
         },
       });
       const parsedResponse = JSON.parse(
@@ -261,16 +258,12 @@ describe('Client Tests', () => {
       const validationResult = nestedSchema.safeParse(parsedResponse);
       expect(validationResult.success).toEqual(true);
     });
-    it('ML Dev should generate function call with given zod function schema', async () => {
+    it('ML Dev should be able to help build the FunctionDeclaration', async () => {
       const stringArgument = z.object({
         firstString: z.string(),
         secondString: z.string(),
       });
-      const concatStringFunction = z
-        .function()
-        .args(stringArgument)
-        .returns(z.void())
-        .describe('this is a concat string function');
+
       const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
       const response = await client.models.generateContent({
         model: 'gemini-1.5-flash',
@@ -279,10 +272,14 @@ describe('Client Tests', () => {
           tools: [
             {
               functionDeclarations: [
-                functionDeclarationFromZodFunction({
+                {
                   name: 'concatStringFunction',
-                  zodFunctionSchema: concatStringFunction,
-                }),
+                  description: 'this is a concat string function',
+                  parameters: zodToJsonSchema(stringArgument) as Record<
+                    string,
+                    unknown
+                  >,
+                },
               ],
             },
           ],
@@ -307,58 +304,11 @@ describe('Client Tests', () => {
       });
     });
   });
-  it('ML Dev should generate function call with given zod function schema no separate function parameter def', async () => {
-    const concatStringFunction = z
-      .function()
-      .args(z.object({firstString: z.string(), secondString: z.string()}))
-      .returns(z.void())
-      .describe('this is a concat string function');
-    const client = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
-    const response = await client.models.generateContent({
-      model: 'gemini-1.5-flash',
-      contents: 'put word: hello and word: world into a string',
-      config: {
-        tools: [
-          {
-            functionDeclarations: [
-              functionDeclarationFromZodFunction({
-                name: 'concatStringFunction',
-                zodFunctionSchema: concatStringFunction,
-              }),
-            ],
-          },
-        ],
-        toolConfig: {
-          functionCallingConfig: {
-            mode: FunctionCallingConfigMode.ANY,
-            allowedFunctionNames: ['concatStringFunction'],
-          },
-        },
-      },
-    });
-    const functionCallResponse =
-      response.candidates![0].content!['parts']![0].functionCall;
-    expect(functionCallResponse!.name).toEqual('concatStringFunction');
-    const parsedArgument =
-      concatStringFunction._def.args._def.items![0].safeParse(
-        functionCallResponse!.args!,
-      );
-    expect(parsedArgument.success).toEqual(true);
-    expect(parsedArgument.data).toEqual({
-      firstString: 'hello',
-      secondString: 'world',
-    });
-  });
-  it('Vertex AI should generate function call with given zod function schema', async () => {
+  it('Vertex AI should be able to help build the FunctionDeclaration', async () => {
     const stringArgument = z.object({
       firstString: z.string(),
       secondString: z.string(),
     });
-    const concatStringFunction = z
-      .function()
-      .args(stringArgument)
-      .returns(z.string())
-      .describe('this is a concat string function');
     const client = new GoogleGenAI({
       vertexai: true,
       project: GOOGLE_CLOUD_PROJECT,
@@ -371,10 +321,14 @@ describe('Client Tests', () => {
         tools: [
           {
             functionDeclarations: [
-              functionDeclarationFromZodFunction({
+              {
                 name: 'concatStringFunction',
-                zodFunctionSchema: concatStringFunction,
-              }),
+                description: 'this is a concat string function',
+                parameters: zodToJsonSchema(stringArgument) as Record<
+                  string,
+                  unknown
+                >,
+              },
             ],
           },
         ],
