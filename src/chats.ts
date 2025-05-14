@@ -41,10 +41,6 @@ function isValidContent(content: types.Content): boolean {
 /**
  * Validates the history contains the correct roles.
  *
- * @remarks
- * Expects the history to start with a user turn and then alternate between
- * user and model turns.
- *
  * @throws Error if the history does not start with a user turn.
  * @throws Error if the history contains an invalid role.
  */
@@ -52,9 +48,6 @@ function validateHistory(history: types.Content[]) {
   // Empty history is valid.
   if (history.length === 0) {
     return;
-  }
-  if (history[0].role !== 'user') {
-    throw new Error('History must start with a user turn.');
   }
   for (const content of history) {
     if (content.role !== 'user' && content.role !== 'model') {
@@ -80,10 +73,9 @@ function extractCuratedHistory(
   const curatedHistory: types.Content[] = [];
   const length = comprehensiveHistory.length;
   let i = 0;
-  let userInput = comprehensiveHistory[0];
   while (i < length) {
     if (comprehensiveHistory[i].role === 'user') {
-      userInput = comprehensiveHistory[i];
+      curatedHistory.push(comprehensiveHistory[i]);
       i++;
     } else {
       const modelOutput: types.Content[] = [];
@@ -96,8 +88,10 @@ function extractCuratedHistory(
         i++;
       }
       if (isValid) {
-        curatedHistory.push(userInput);
         curatedHistory.push(...modelOutput);
+      } else {
+        // Remove the last user input when model content is invalid.
+        curatedHistory.pop();
       }
     }
   }
