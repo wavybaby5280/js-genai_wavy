@@ -4,6 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {
+  ListToolsResult,
+  Tool as McpTool,
+} from '@modelcontextprotocol/sdk/types.js';
 import {z} from 'zod';
 
 import {ApiClient} from './_api_client';
@@ -420,6 +424,31 @@ export interface JSONSchema {
   propertyOrdering?: string[];
 }
 
+// The fields that are supported by JSONSchema. Must be kept in sync with the
+// JSONSchema interface above.
+export const supportedJsonSchemaFields = new Set<string>([
+  'type',
+  'format',
+  'title',
+  'description',
+  'default',
+  'items',
+  'minItems',
+  'maxItems',
+  'enum',
+  'properties',
+  'required',
+  'minProperties',
+  'maxProperties',
+  'minimum',
+  'maximum',
+  'minLength',
+  'maxLength',
+  'pattern',
+  'anyOf',
+  'propertyOrdering',
+]);
+
 const jsonSchemaTypeValidator = z.enum([
   'string',
   'number',
@@ -753,12 +782,25 @@ export function tTool(apiClient: ApiClient, tool: types.Tool): types.Tool {
 
 export function tTools(
   apiClient: ApiClient,
-  tool: types.Tool[] | unknown,
+  tools: types.ToolListUnion | unknown,
 ): types.Tool[] {
-  if (!Array.isArray(tool)) {
-    throw new Error('tool is required and must be an array of Tools');
+  // Check if the incoming type is defined.
+  if (tools === undefined || tools === null) {
+    throw new Error('tools is required');
   }
-  return tool;
+  if (!Array.isArray(tools)) {
+    throw new Error('tools is required and must be an array of Tools');
+  }
+  const result: types.Tool[] = [];
+  for (const tool of tools) {
+    // If the incoming type is an MCP tool, convert it to a Gemini tool.
+    if (typeof tool === 'object' && 'inputSchema' in tool) {
+      result.push(mcpToGeminiTool(tool as McpTool));
+    } else {
+      result.push(tool as types.Tool);
+    }
+  }
+  return result;
 }
 
 /**
@@ -979,4 +1021,85 @@ export function tExtractModels(
 
 function hasField(data: unknown, fieldName: string): boolean {
   return data !== null && typeof data === 'object' && fieldName in data;
+}
+
+export function mcpToGeminiTool(mcpTool: McpTool): types.Tool {
+  const mcpToolSchema = mcpTool as Record<string, unknown>;
+  const functionDeclaration = {
+    name: mcpToolSchema['name'],
+    description: mcpToolSchema['description'],
+    parameters: processJsonSchema(
+      filterToJsonSchema(
+        mcpToolSchema['inputSchema'] as Record<string, unknown>,
+      ),
+    ),
+  };
+
+  const geminiTool = {
+    functionDeclarations: [
+      functionDeclaration as unknown as types.FunctionDeclaration,
+    ],
+  };
+
+  return geminiTool;
+}
+
+export function mcpToGeminiTools(
+  listToolsResult: ListToolsResult,
+): types.Tool[] {
+  return listToolsResult.tools.map(mcpToGeminiTool);
+}
+
+// Filters the list schema field to only include fields that are supported by
+// JSONSchema.
+function filterListSchemaField(fieldValue: unknown): Record<string, unknown>[] {
+  const listSchemaFieldValue: Record<string, unknown>[] = [];
+  for (const listFieldValue of fieldValue as Record<string, unknown>[]) {
+    listSchemaFieldValue.push(filterToJsonSchema(listFieldValue));
+  }
+  return listSchemaFieldValue;
+}
+
+// Filters the dict schema field to only include fields that are supported by
+// JSONSchema.
+function filterDictSchemaField(fieldValue: unknown): Record<string, unknown> {
+  const dictSchemaFieldValue: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(
+    fieldValue as Record<string, unknown>,
+  )) {
+    const valueRecord = value as Record<string, unknown>;
+    dictSchemaFieldValue[key] = filterToJsonSchema(valueRecord);
+  }
+  return dictSchemaFieldValue;
+}
+
+// Filters the schema to only include fields that are supported by JSONSchema.
+function filterToJsonSchema(
+  schema: Record<string, unknown>,
+): Record<string, unknown> {
+  const schemaFieldNames: Set<string> = new Set(['items']); // 'additional_properties' to come
+  const listSchemaFieldNames: Set<string> = new Set(['anyOf']); // 'one_of', 'all_of', 'not' to come
+  const dictSchemaFieldNames: Set<string> = new Set(['properties']); // 'defs' to come
+  const filteredSchema: Record<string, unknown> = {};
+
+  for (const [fieldName, fieldValue] of Object.entries(schema)) {
+    if (schemaFieldNames.has(fieldName)) {
+      filteredSchema[fieldName] = filterToJsonSchema(
+        fieldValue as Record<string, unknown>,
+      );
+    } else if (listSchemaFieldNames.has(fieldName)) {
+      filteredSchema[fieldName] = filterListSchemaField(fieldValue);
+    } else if (dictSchemaFieldNames.has(fieldName)) {
+      filteredSchema[fieldName] = filterDictSchemaField(fieldValue);
+    } else if (fieldName === 'type') {
+      const typeValue = (fieldValue as string).toUpperCase();
+      filteredSchema[fieldName] = Object.keys(types.Type).includes(typeValue)
+        ? (typeValue as types.Type)
+        : types.Type.TYPE_UNSPECIFIED;
+    } else if (supportedJsonSchemaFields.has(fieldName)) {
+      filteredSchema[fieldName] = fieldValue;
+    }
+  }
+
+  return filteredSchema;
 }

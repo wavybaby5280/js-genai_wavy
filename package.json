@@ -95,6 +95,7 @@
     "typescript-eslint": "8.24.1"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.11.0",
     "google-auth-library": "^9.14.2",
     "test-server-sdk": "^0.2.1",
     "ws": "^8.18.0",

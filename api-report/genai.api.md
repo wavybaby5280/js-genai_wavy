@@ -5,6 +5,7 @@
 ```ts
 
 import { GoogleAuthOptions } from 'google-auth-library';
+import { Tool as Tool_2 } from '@modelcontextprotocol/sdk/types.js';
 
 // @public
 export interface ActivityEnd {
@@ -2236,7 +2237,10 @@ export interface ToolConfig {
 }
 
 // @public (undocumented)
-export type ToolListUnion = Tool[];
+export type ToolListUnion = ToolUnion[];
+
+// @public (undocumented)
+export type ToolUnion = Tool | Tool_2;
 
 // @public
 export enum TrafficType {

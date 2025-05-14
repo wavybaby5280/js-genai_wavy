@@ -21,6 +21,7 @@ import {
   tSchema,
   tSpeechConfig,
   tTool,
+  tTools,
 } from '../../src/_transformers';
 import {CrossDownloader} from '../../src/cross/_cross_downloader';
 import {CrossUploader} from '../../src/cross/_cross_uploader';
@@ -308,6 +309,102 @@ describe('createJsonSchemaValidator', () => {
     expect(() =>
       validator.parse(zodToJsonSchema(setSchema) as Record<string, unknown>),
     ).toThrowError();
+  });
+});
+
+describe('tTools', () => {
+  it('no change', () => {
+    const tools = [{functionDeclarations: [{name: 'function-name'}]}];
+    expect(
+      tTools(
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
+        tools,
+      ),
+    ).toEqual(tools);
+  });
+  it('null', () => {
+    expect(() => {
+      tTools(
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
+        null,
+      );
+    }).toThrowError('tools is required');
+  });
+  it('undefined', () => {
+    expect(() => {
+      tTools(
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
+        undefined,
+      );
+    }).toThrowError('tools is required');
+  });
+  it('empty array', () => {
+    expect(
+      tTools(
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
+        [],
+      ),
+    ).toEqual([]);
+  });
+  it('MCP tools', () => {
+    const mcpTools = {
+      tools: [
+        {
+          name: 'function-name',
+          description: 'function-description',
+          inputSchema: {},
+        },
+      ],
+    };
+    const expectedTools = [
+      {
+        functionDeclarations: [
+          {
+            name: 'function-name',
+            description: 'function-description',
+            parameters: {},
+          },
+        ],
+      },
+    ];
+    expect(
+      tTools(
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
+        mcpTools.tools,
+      ),
+    ).toEqual(expectedTools);
+  });
+  it('non array', () => {
+    expect(() => {
+      tTools(
+        new ApiClient({
+          auth: new FakeAuth(),
+          uploader: new CrossUploader(),
+          downloader: new CrossDownloader(),
+        }),
+        {},
+      );
+    }).toThrowError('tools is required and must be an array of Tools');
   });
 });
 

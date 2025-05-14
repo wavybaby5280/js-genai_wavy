@@ -25,6 +25,7 @@ const externalDeps = [
   'node:stream',
   'zod',
   'zod-to-json-schema',
+  '@modelcontextprotocol/sdk',
 ];
 
 export default [
