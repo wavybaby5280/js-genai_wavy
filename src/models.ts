@@ -11,6 +11,7 @@ import * as common from './_common';
 import {BaseModule} from './_common';
 import * as _internal_types from './_internal_types';
 import * as converters from './converters/_models_converters';
+import {hasMcpToolUsage, setMcpUsageHeader} from './mcp/_mcp';
 import {PagedItem, Pager} from './pagers';
 import * as types from './types';
 
@@ -60,6 +61,18 @@ export class Models extends BaseModule {
   generateContent = async (
     params: types.GenerateContentParameters,
   ): Promise<types.GenerateContentResponse> => {
+    if (
+      params.config &&
+      params.config.tools &&
+      hasMcpToolUsage(params.config.tools)
+    ) {
+      if (!params.config.httpOptions) {
+        params.config.httpOptions = {headers: {}};
+      }
+      setMcpUsageHeader(
+        params.config.httpOptions.headers as Record<string, string>,
+      );
+    }
     return await this.generateContentInternal(params);
   };
 
@@ -107,6 +120,18 @@ export class Models extends BaseModule {
   generateContentStream = async (
     params: types.GenerateContentParameters,
   ): Promise<AsyncGenerator<types.GenerateContentResponse>> => {
+    if (
+      params.config &&
+      params.config.tools &&
+      hasMcpToolUsage(params.config.tools)
+    ) {
+      if (!params.config.httpOptions) {
+        params.config.httpOptions = {headers: {}};
+      }
+      setMcpUsageHeader(
+        params.config.httpOptions.headers as Record<string, string>,
+      );
+    }
     return await this.generateContentStreamInternal(params);
   };
 

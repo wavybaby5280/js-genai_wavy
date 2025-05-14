@@ -7,6 +7,7 @@
 import {ListToolsResultSchema} from '@modelcontextprotocol/sdk/types.js';
 
 import {mcpToGeminiTools} from '../../src/_transformers';
+import {hasMcpToolUsage, setMcpUsageHeader} from '../../src/mcp/_mcp';
 import * as types from '../../src/types';
 
 describe('mcpToGeminiTools', () => {
@@ -218,5 +219,59 @@ describe('mcpToGeminiTools', () => {
         ],
       },
     ]);
+  });
+});
+
+describe('hasMcpToolUsage', () => {
+  it('should return true for MCP tools', () => {
+    const mcpTools = {
+      tools: [
+        {
+          name: 'tool',
+          description: 'tool-description',
+          inputSchema: {
+            type: 'object',
+            properties: {},
+          },
+        },
+      ],
+    };
+
+    const parsedMcpTools = ListToolsResultSchema.parse(mcpTools);
+    expect(hasMcpToolUsage(parsedMcpTools.tools)).toBeTrue();
+  });
+
+  it('should return false for Gemini tools', () => {
+    const tools = [
+      {
+        functionDeclarations: [
+          {
+            name: 'tool',
+            description: 'tool-description',
+            parameters: {
+              type: types.Type.OBJECT,
+              properties: {
+                property: {
+                  type: types.Type.OBJECT,
+                  items: {
+                    type: types.Type.STRING,
+                    description: 'item-description',
+                  },
+                },
+              },
+            },
+          },
+        ],
+      },
+    ];
+    expect(hasMcpToolUsage(tools)).toBeFalse();
+  });
+});
+
+describe('setMcpUsageHeader', () => {
+  it('should set the MCP version label in the Google API client header', () => {
+    const headers: Record<string, string> = {};
+    setMcpUsageHeader(headers);
+    expect(headers['x-goog-api-client']).toEqual('mcp_used/unknown');
   });
 });

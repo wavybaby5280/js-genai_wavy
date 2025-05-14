@@ -16,6 +16,7 @@ import * as t from './_transformers';
 import {WebSocket, WebSocketCallbacks, WebSocketFactory} from './_websocket';
 import * as converters from './converters/_live_converters';
 import {contentToMldev, contentToVertex} from './converters/_models_converters';
+import {hasMcpToolUsage, setMcpUsageHeader} from './mcp/_mcp';
 import * as types from './types';
 
 const FUNCTION_RESPONSE_REQUIRES_ID =
@@ -115,6 +116,14 @@ export class Live {
     const websocketBaseUrl = this.apiClient.getWebsocketBaseUrl();
     const apiVersion = this.apiClient.getApiVersion();
     let url: string;
+    const defaultHeaders = this.apiClient.getDefaultHeaders();
+    if (
+      params.config &&
+      params.config.tools &&
+      hasMcpToolUsage(params.config.tools)
+    ) {
+      setMcpUsageHeader(defaultHeaders);
+    }
     const headers = mapToHeaders(this.apiClient.getDefaultHeaders());
     if (this.apiClient.isVertexAI()) {
       url = `${websocketBaseUrl}/ws/google.cloud.aiplatform.${
