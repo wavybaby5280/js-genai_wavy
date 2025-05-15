@@ -53,12 +53,24 @@ export default [
     external: externalDeps,
   },
 
-  // The `node/` module, commonjs only (dist/node/index.js)
+  // The `node/` CommonJS module (dist/node/index.js)
   {
     input: 'src/node/index.ts',
     output: {
       file: pkg.exports['./node']['require'],
       format: 'cjs',
+      sourcemap: true,
+    },
+    plugins: rollupPlugins,
+    external: externalDeps,
+  },
+
+  // The `node/` ES module (dist/node/index.mjs)
+  {
+    input: 'src/node/index.ts',
+    output: {
+      file: pkg.exports['./node']['import'],
+      format: 'es',
       sourcemap: true,
     },
     plugins: rollupPlugins,

@@ -17,6 +17,7 @@
       "node": {
         "types": "./dist/node/node.d.ts",
         "require": "./dist/node/index.js",
+        "import": "./dist/node/index.mjs",
         "default": "./dist/node/index.js"
       },
       "types": "./dist/genai.d.ts",
@@ -32,6 +33,7 @@
     "./node": {
       "types": "./dist/node/node.d.ts",
       "require": "./dist/node/index.js",
+      "import": "./dist/node/index.mjs",
       "default": "./dist/node/index.js"
     }
   },
