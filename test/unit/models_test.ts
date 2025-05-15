@@ -1,6 +1,9 @@
+import {Client as McpClient} from '@modelcontextprotocol/sdk/client/index.js';
+import {InMemoryTransport} from '@modelcontextprotocol/sdk/inMemory.js';
+import {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
 import {z} from 'zod';
-
 import {zodToJsonSchema} from 'zod-to-json-schema';
+
 import {GoogleGenAI} from '../../src/client.js';
 import * as types from '../../src/types.js';
 
@@ -21,6 +24,75 @@ const mockGenerateContentResponse: types.GenerateContentResponse =
             parts: [
               {
                 text: 'The',
+              },
+            ],
+            role: 'model',
+          },
+          finishReason: types.FinishReason.STOP,
+          index: 0,
+        },
+      ],
+      usageMetadata: {
+        promptTokenCount: 8,
+        candidatesTokenCount: 1,
+        totalTokenCount: 9,
+      },
+    },
+    types.GenerateContentResponse.prototype,
+  );
+
+const mockGenerateContentResponseWithFunctionCall: types.GenerateContentResponse =
+  Object.setPrototypeOf(
+    {
+      candidates: [
+        {
+          content: {
+            parts: [
+              {
+                functionCall: {
+                  name: 'print',
+                  args: {
+                    text: 'Hello World',
+                    color: 'red',
+                  },
+                },
+              },
+              {
+                functionCall: {
+                  name: 'beep',
+                },
+              },
+            ],
+            role: 'model',
+          },
+          finishReason: types.FinishReason.STOP,
+          index: 0,
+        },
+      ],
+      usageMetadata: {
+        promptTokenCount: 8,
+        candidatesTokenCount: 1,
+        totalTokenCount: 9,
+      },
+    },
+    types.GenerateContentResponse.prototype,
+  );
+
+const mockGenerateContentResponseWithAnotherFunctionCall: types.GenerateContentResponse =
+  Object.setPrototypeOf(
+    {
+      candidates: [
+        {
+          content: {
+            parts: [
+              {
+                functionCall: {
+                  name: 'print',
+                  args: {
+                    text: 'Hello World again',
+                    color: 'blue',
+                  },
+                },
               },
             ],
             role: 'model',
@@ -236,4 +308,325 @@ describe('generateContent', () => {
       expect(parsedFunctionDeclarations).toEqual(expected);
     });
   });
+  describe('can use the mcp client', () => {
+    it('should take multiple mcp clients and conduct AFC', async () => {
+      const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+      const mcpClientList = [
+        await spinUpPrintingServer(),
+        await spinUpBeepingServer(),
+      ];
+
+      const mockResponses = [
+        Promise.resolve(
+          new Response(
+            JSON.stringify(mockGenerateContentResponseWithFunctionCall),
+            fetchOkOptions,
+          ),
+        ),
+        Promise.resolve(
+          new Response(
+            JSON.stringify(mockGenerateContentResponseWithAnotherFunctionCall),
+            fetchOkOptions,
+          ),
+        ),
+        Promise.resolve(
+          new Response(
+            JSON.stringify(mockGenerateContentResponse),
+            fetchOkOptions,
+          ),
+        ),
+      ];
+      const fetchSpy = spyOn(global, 'fetch').and.returnValues(
+        ...mockResponses,
+      );
+      await client.models.generateContent({
+        model: 'gemini-1.5-flash-exp',
+        contents:
+          'Use the printer to print a simple math question in red and the answer in blue, and beep with the beeper',
+        config: {
+          tools: mcpClientList,
+          toolConfig: {
+            functionCallingConfig: {
+              mode: types.FunctionCallingConfigMode.ANY,
+              allowedFunctionNames: ['print', 'beep'],
+            },
+          },
+        },
+      });
+      const allArgs = fetchSpy.calls.allArgs();
+      const tools = JSON.parse(allArgs[0][1]?.['body'] as string)[
+        'tools'
+      ] as types.Tool[];
+      expect(
+        tools.includes({
+          functionDeclarations: [
+            {
+              name: 'print',
+              description: 'Print text to the console',
+              parameters: {
+                type: types.Type.OBJECT,
+                properties: {
+                  text: {
+                    type: types.Type.STRING,
+                  },
+                  color: {
+                    type: types.Type.STRING,
+                  },
+                },
+                required: ['text', 'color'],
+              },
+            },
+          ],
+        }),
+      );
+      expect(
+        tools.includes({
+          functionDeclarations: [
+            {
+              name: 'beep',
+              description: 'Beep with the beeper',
+              parameters: {
+                type: types.Type.OBJECT,
+                properties: {},
+                required: [],
+              },
+            },
+          ],
+        }),
+      );
+    });
+    it('should throw error when there are mcp tools and non-mcp tools', async () => {
+      const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+      const mixedToolsList: types.ToolListUnion = [
+        await spinUpPrintingServer(),
+        {
+          functionDeclarations: [
+            {
+              name: 'controlLight',
+              description:
+                'Set the brightness and color temperature of a room light.',
+              parameters: zodToJsonSchema(
+                z.object({
+                  brightness: z.number(),
+                  colorTemperature: z.string(),
+                }),
+              ) as Record<string, unknown>,
+            },
+          ],
+        },
+      ];
+      try {
+        await client.models.generateContent({
+          model: 'gemini-1.5-flash-exp',
+          contents:
+            'Use the printer to print a simple math question in red and the answer in blue, and beep with the beeper',
+          config: {
+            tools: mixedToolsList,
+            toolConfig: {
+              functionCallingConfig: {
+                mode: types.FunctionCallingConfigMode.ANY,
+                allowedFunctionNames: ['print'],
+              },
+            },
+          },
+        });
+      } catch (e) {
+        expect((e as Error).message).toEqual(
+          'Automatic function calling with MCP clients and non MCP tools is not yet supported.',
+        );
+      }
+    });
+  });
+  it('should throw error when there are two tools with the same name', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const mcpClientList = [
+      await spinUpPrintingServer(),
+      await spinUpPrintingServer(),
+    ];
+
+    try {
+      await client.models.generateContent({
+        model: 'gemini-1.5-flash-exp',
+        contents:
+          'Use the printer to print a simple math question in red and the answer in blue, and beep with the beeper',
+        config: {
+          tools: mcpClientList,
+          toolConfig: {
+            functionCallingConfig: {
+              mode: types.FunctionCallingConfigMode.ANY,
+              allowedFunctionNames: ['print'],
+            },
+          },
+        },
+      });
+    } catch (e) {
+      expect((e as Error).message).toEqual(
+        'Duplicate function name print found in MCP tools. Please ensure function names are unique.',
+      );
+    }
+  });
+  it('should handle the error thrown by the underlying tool and wrap it in the response', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const throwingClient = await spinUpThrowingServer();
+
+    const mockResponseWithThrowingFunctionCall: types.GenerateContentResponse =
+      Object.setPrototypeOf(
+        {
+          candidates: [
+            {
+              content: {
+                parts: [
+                  {
+                    functionCall: {
+                      name: 'throwError',
+                      args: {},
+                    },
+                  },
+                ],
+                role: 'model',
+              },
+              finishReason: types.FinishReason.STOP,
+              index: 0,
+            },
+          ],
+          usageMetadata: {
+            promptTokenCount: 8,
+            candidatesTokenCount: 1,
+            totalTokenCount: 9,
+          },
+        },
+        types.GenerateContentResponse.prototype,
+      );
+    const mockResponses = [
+      Promise.resolve(
+        new Response(
+          JSON.stringify(mockResponseWithThrowingFunctionCall),
+          fetchOkOptions,
+        ),
+      ),
+      Promise.resolve(
+        new Response(
+          JSON.stringify(mockGenerateContentResponse),
+          fetchOkOptions,
+        ),
+      ),
+    ];
+    const fetchSpy = spyOn(global, 'fetch').and.returnValues(...mockResponses);
+
+    await client.models.generateContent({
+      model: 'gemini-1.5-flash-exp',
+      contents: 'Call the throwing tool.',
+      config: {
+        tools: [throwingClient],
+        toolConfig: {
+          functionCallingConfig: {
+            mode: types.FunctionCallingConfigMode.ANY,
+            allowedFunctionNames: ['throwError'],
+          },
+        },
+      },
+    });
+
+    const allArgs = fetchSpy.calls.allArgs();
+    // The significant of the 2nd call is, this call's content contains the
+    // tool error result and send it back to the model.
+    const actual2ndCall = JSON.parse(allArgs[1][1]?.['body'] as string);
+    const expected2ndCall = JSON.parse(
+      '{"contents":[{"parts":[{"text":"Call the throwing tool."}],"role":"user"},{"parts":[{"functionCall":{"name":"throwError","args":{}}}],"role":"model"},{"parts":[{"functionResponse":{"name":"throwError","response":{"error":{"content":[{"type":"text","text":"Error from throwing tool"}],"isError":true}}}}],"role":"user"}],"tools":[{"functionDeclarations":[{"name":"throwError","parameters":{"type":"OBJECT"}}]}],"toolConfig":{"functionCallingConfig":{"mode":"ANY","allowedFunctionNames":["throwError"]}},"generationConfig":{}}',
+    );
+    expect(actual2ndCall).toEqual(expected2ndCall);
+  });
 });
+
+async function spinUpPrintingServer(): Promise<McpClient> {
+  const server = new McpServer({
+    name: 'printer',
+    version: '1.0.0',
+  });
+
+  const colorMap: {[key: string]: string} = {
+    red: '\x1b[31m',
+    green: '\x1b[32m',
+    blue: '\x1b[34m',
+    white: '\x1b[37m',
+    reset: '\x1b[0m', // Resets all text attributes to default
+  };
+
+  server.tool(
+    'print',
+    {
+      text: z.string(),
+      color: z.string().regex(/red|blue|green|white/),
+    },
+    async ({text, color}) => {
+      if (colorMap[color]) {
+        console.log(colorMap[color] + text);
+        console.log(colorMap.reset);
+      } else {
+        console.log(text);
+      }
+
+      return {
+        content: [],
+      };
+    },
+  );
+
+  const transports = InMemoryTransport.createLinkedPair();
+  await server.connect(transports[0]);
+
+  const client = new McpClient({
+    name: 'printer',
+    version: '1.0.0',
+  });
+  client.connect(transports[1]);
+
+  return client;
+}
+
+async function spinUpBeepingServer(): Promise<McpClient> {
+  const server = new McpServer({
+    name: 'beeper',
+    version: '1.0.0',
+  });
+
+  server.tool('beep', async () => {
+    process.stdout.write('\u0007');
+    return {
+      content: [],
+    };
+  });
+
+  const transports = InMemoryTransport.createLinkedPair();
+  await server.connect(transports[0]);
+
+  const client = new McpClient({
+    name: 'beeper',
+    version: '1.0.0',
+  });
+  client.connect(transports[1]);
+
+  return client;
+}
+
+async function spinUpThrowingServer(): Promise<McpClient> {
+  const server = new McpServer({
+    name: 'throwingTool',
+    version: '1.0.0',
+  });
+
+  server.tool('throwError', async () => {
+    throw new Error('Error from throwing tool');
+  });
+
+  const transports = InMemoryTransport.createLinkedPair();
+  await server.connect(transports[0]);
+
+  const client = new McpClient({
+    name: 'throwingTool',
+    version: '1.0.0',
+  });
+  client.connect(transports[1]);
+
+  return client;
+}

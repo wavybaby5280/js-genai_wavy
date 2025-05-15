@@ -10,8 +10,15 @@ import {ApiClient} from './_api_client.js';
 import * as common from './_common.js';
 import {BaseModule} from './_common.js';
 import * as _internal_types from './_internal_types.js';
+import {tContents} from './_transformers.js';
 import * as converters from './converters/_models_converters.js';
-import {hasMcpToolUsage, setMcpUsageHeader} from './mcp/_mcp.js';
+import {
+  McpToGenAIToolAdapter,
+  hasMcpClientTools,
+  hasMcpToolUsage,
+  hasNonMcpTools,
+  setMcpUsageHeader,
+} from './mcp/_mcp.js';
 import {PagedItem, Pager} from './pagers.js';
 import * as types from './types.js';
 
@@ -73,7 +80,46 @@ export class Models extends BaseModule {
         params.config.httpOptions.headers as Record<string, string>,
       );
     }
-    return await this.generateContentInternal(params);
+    if (!hasMcpClientTools(params)) {
+      return await this.generateContentInternal(params);
+    }
+
+    if (hasNonMcpTools(params)) {
+      throw new Error(
+        'Automatic function calling with MCP clients and non MCP tools is not yet supported.',
+      );
+    }
+
+    const mcpAdaptor = await McpToGenAIToolAdapter.create(
+      this.apiClient,
+      params.config!.tools!,
+    );
+    params.config!.tools = mcpAdaptor.listTools();
+
+    let response: types.GenerateContentResponse;
+    let functionResponseContent: types.Content;
+    // TODO(b/407601661): - In next cl implement a maximum retry config.
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      response = await this.generateContentInternal(params);
+      if (!response.functionCalls || response.functionCalls!.length === 0) {
+        break;
+      }
+
+      const responseContent: types.Content = response.candidates![0].content!;
+      const functionResponseParts = await mcpAdaptor.callTool(
+        response.functionCalls!,
+      );
+      functionResponseContent = {
+        role: 'user',
+        parts: functionResponseParts,
+      };
+
+      params.contents = tContents(this.apiClient, params.contents);
+      (params.contents as types.Content[]).push(responseContent);
+      (params.contents as types.Content[]).push(functionResponseContent);
+    }
+    return response;
   };
 
   /**
