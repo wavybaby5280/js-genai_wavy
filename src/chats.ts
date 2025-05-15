@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {ApiClient} from './_api_client';
-import * as t from './_transformers';
-import {Models} from './models';
-import * as types from './types';
+import {ApiClient} from './_api_client.js';
+import * as t from './_transformers.js';
+import {Models} from './models.js';
+import * as types from './types.js';
 
 /**
  * Returns true if the response is valid, false otherwise.

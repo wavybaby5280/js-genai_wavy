@@ -4,18 +4,18 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {ApiClient, SDK_VERSION} from '../../src/_api_client';
+import {ApiClient, SDK_VERSION} from '../../src/_api_client.js';
 import {
   WebSocket,
   WebSocketCallbacks,
   WebSocketFactory,
-} from '../../src/_websocket';
-import * as converters from '../../src/converters/_live_converters';
-import {CrossDownloader} from '../../src/cross/_cross_downloader';
-import {CrossUploader} from '../../src/cross/_cross_uploader';
-import {Live} from '../../src/live';
-import * as types from '../../src/types';
-import {FakeAuth} from '../_fake_auth';
+} from '../../src/_websocket.js';
+import * as converters from '../../src/converters/_live_converters.js';
+import {CrossDownloader} from '../../src/cross/_cross_downloader.js';
+import {CrossUploader} from '../../src/cross/_cross_uploader.js';
+import {Live} from '../../src/live.js';
+import * as types from '../../src/types.js';
+import {FakeAuth} from '../_fake_auth.js';
 
 class FakeWebSocketFactory implements WebSocketFactory {
   create(

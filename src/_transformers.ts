@@ -10,8 +10,8 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 import {z} from 'zod';
 
-import {ApiClient} from './_api_client';
-import * as types from './types';
+import {ApiClient} from './_api_client.js';
+import * as types from './types.js';
 
 export function tModel(apiClient: ApiClient, model: string | unknown): string {
   if (!model || typeof model !== 'string') {

@@ -2,6 +2,7 @@
   "name": "@google/genai",
   "version": "0.14.0",
   "description": "",
+  "type": "module",
   "main": "dist/node/index.js",
   "module": "dist/web/index.mjs",
   "browser": "dist/web/index.mjs",
@@ -38,10 +39,10 @@
     "prepare": "npm run build-prod",
     "build": "rollup -c && api-extractor run --local --verbose && api-extractor run -c api-extractor.node.json --local --verbose&& api-extractor run -c api-extractor.web.json --local --verbose",
     "build-prod": "rollup -c && api-extractor run --verbose && api-extractor run -c api-extractor.node.json --verbose && api-extractor run -c api-extractor.web.json --verbose",
-    "unit-test": "tsx node_modules/jasmine/bin/jasmine test/unit/**/*_test.ts test/unit/*_test.ts",
-    "system-test": "ts-node node_modules/jasmine/bin/jasmine test/system/**/*_test.ts",
-    "test-server-tests": "GOOGLE_CLOUD_PROJECT=googcloudproj GOOGLE_CLOUD_LOCATION=googcloudloc tsx node_modules/jasmine/bin/jasmine test/system/node/*_test.ts !test/system/node/live_test.ts",
-    "test-server-tests:record": "tsx node_modules/jasmine/bin/jasmine --fail-fast test/system/node/*_test.ts !test/system/node/live_test.ts -- --record",
+    "unit-test": "tsc && jasmine dist/test/unit/**/*_test.js dist/test/unit/*_test.js",
+    "system-test": "tsc && jasmine dist/test/system/**/*_test.js",
+    "test-server-tests": "tsc && GOOGLE_CLOUD_PROJECT=googcloudproj GOOGLE_CLOUD_LOCATION=googcloudloc jasmine dist/test/system/node/*_test.js !dist/test/system/node/live_test.js",
+    "test-server-tests:record": "tsc && jasmine--fail-fast dist/test/system/node/*_test.js !dist/test/system/node/live_test.js -- --record",
     "docs": "typedoc && ts-node scripts/add_docsite_license_headers.ts",
     "pages-main": "ts-node scripts/generate_pages.ts main",
     "pages-release": "ts-node scripts/generate_pages.ts release",
@@ -96,11 +97,13 @@
     "typescript-eslint": "8.24.1"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.11.0",
     "google-auth-library": "^9.14.2",
     "ws": "^8.18.0",
     "zod": "^3.22.4",
     "zod-to-json-schema": "^3.22.4"
+  },
+  "peerDependencies": {
+    "@modelcontextprotocol/sdk": "^1.11.0"
   },
   "repository": {
     "type": "git",

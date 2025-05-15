@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {GOOGLE_API_CLIENT_HEADER} from '../_api_client';
-import {ToolListUnion} from '../types';
+import {GOOGLE_API_CLIENT_HEADER} from '../_api_client.js';
+import {ToolListUnion} from '../types.js';
 
 // TODO: b/416041229 - Determine how to retrieve the MCP package version.
 export const MCP_LABEL = 'mcp_used/unknown';

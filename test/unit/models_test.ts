@@ -1,8 +1,8 @@
 import {z} from 'zod';
 
 import {zodToJsonSchema} from 'zod-to-json-schema';
-import {GoogleGenAI} from '../../src/client';
-import * as types from '../../src/types';
+import {GoogleGenAI} from '../../src/client.js';
+import * as types from '../../src/types.js';
 
 const fetchOkOptions = {
   status: 200,

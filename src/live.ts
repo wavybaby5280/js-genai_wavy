@@ -10,14 +10,17 @@
  * @experimental
  */
 
-import {ApiClient} from './_api_client';
-import {Auth} from './_auth';
-import * as t from './_transformers';
-import {WebSocket, WebSocketCallbacks, WebSocketFactory} from './_websocket';
-import * as converters from './converters/_live_converters';
-import {contentToMldev, contentToVertex} from './converters/_models_converters';
-import {hasMcpToolUsage, setMcpUsageHeader} from './mcp/_mcp';
-import * as types from './types';
+import {ApiClient} from './_api_client.js';
+import {Auth} from './_auth.js';
+import * as t from './_transformers.js';
+import {WebSocket, WebSocketCallbacks, WebSocketFactory} from './_websocket.js';
+import * as converters from './converters/_live_converters.js';
+import {
+  contentToMldev,
+  contentToVertex,
+} from './converters/_models_converters.js';
+import {hasMcpToolUsage, setMcpUsageHeader} from './mcp/_mcp.js';
+import * as types from './types.js';
 
 const FUNCTION_RESPONSE_REQUIRES_ID =
   'FunctionResponse request must have an `id` field from the response of a ToolCall.FunctionalCalls in Google AI.';

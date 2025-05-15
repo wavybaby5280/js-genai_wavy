@@ -7,7 +7,7 @@
 import {z} from 'zod';
 import {zodToJsonSchema} from 'zod-to-json-schema';
 
-import {ApiClient} from '../../src/_api_client';
+import {ApiClient} from '../../src/_api_client.js';
 import {
   createJsonSchemaValidator,
   tContent,
@@ -22,11 +22,11 @@ import {
   tSpeechConfig,
   tTool,
   tTools,
-} from '../../src/_transformers';
-import {CrossDownloader} from '../../src/cross/_cross_downloader';
-import {CrossUploader} from '../../src/cross/_cross_uploader';
-import * as types from '../../src/types';
-import {FakeAuth} from '../_fake_auth';
+} from '../../src/_transformers.js';
+import {CrossDownloader} from '../../src/cross/_cross_downloader.js';
+import {CrossUploader} from '../../src/cross/_cross_uploader.js';
+import * as types from '../../src/types.js';
+import {FakeAuth} from '../_fake_auth.js';
 
 describe('tModel', () => {
   it('empty string', () => {

@@ -4,14 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {GoogleGenAI} from '../../src/client';
-import {Models} from '../../src/models';
+import {GoogleGenAI} from '../../src/client.js';
+import {Models} from '../../src/models.js';
 import {
   Content,
   FinishReason,
   GenerateContentResponse,
   Type,
-} from '../../src/types';
+} from '../../src/types.js';
 
 function buildGenerateContentResponse(
   content: Content,

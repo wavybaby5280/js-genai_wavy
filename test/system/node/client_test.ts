@@ -9,14 +9,14 @@ import {GoogleAuthOptions} from 'google-auth-library';
 import {z} from 'zod';
 import {zodToJsonSchema} from 'zod-to-json-schema';
 
-import {GoogleGenAI} from '../../../src/node/node_client';
+import {GoogleGenAI} from '../../../src/node/node_client.js';
 import {
   FunctionCallingConfigMode,
   GenerateContentResponse,
   Part,
-} from '../../../src/types';
-import {createZeroFilledTempFile} from '../../_generate_test_file';
-import {setupTestServer, shutdownTestServer} from '../test_server';
+} from '../../../src/types.js';
+import {createZeroFilledTempFile} from '../../_generate_test_file.js';
+import {setupTestServer, shutdownTestServer} from '../test_server.js';
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;

@@ -6,9 +6,9 @@
 
 import {ListToolsResultSchema} from '@modelcontextprotocol/sdk/types.js';
 
-import {mcpToGeminiTools} from '../../src/_transformers';
-import {hasMcpToolUsage, setMcpUsageHeader} from '../../src/mcp/_mcp';
-import * as types from '../../src/types';
+import {mcpToGeminiTools} from '../../src/_transformers.js';
+import {hasMcpToolUsage, setMcpUsageHeader} from '../../src/mcp/_mcp.js';
+import * as types from '../../src/types.js';
 
 describe('mcpToGeminiTools', () => {
   it('return empty array from empty tools list', () => {
