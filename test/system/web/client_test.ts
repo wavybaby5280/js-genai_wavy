@@ -6,14 +6,14 @@
 
 import {fail} from 'assert';
 import {z} from 'zod';
-
 import {zodToJsonSchema} from 'zod-to-json-schema';
+
 import {
   FunctionCallingConfigMode,
   GenerateContentResponse,
-} from '../../../src/types';
-import {GoogleGenAI} from '../../../src/web/web_client';
-import {createZeroFilledTempFile} from '../../_generate_test_file';
+} from '../../../src/types.js';
+import {GoogleGenAI} from '../../../src/web/web_client.js';
+import {createZeroFilledTempFile} from '../../_generate_test_file.js';
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
