@@ -4,6 +4,7 @@
 
 ```ts
 
+import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { GoogleAuthOptions } from 'google-auth-library';
 import { Tool as Tool_2 } from '@modelcontextprotocol/sdk/types.js';
 
@@ -2265,7 +2266,7 @@ export interface ToolConfig {
 export type ToolListUnion = ToolUnion[];
 
 // @public (undocumented)
-export type ToolUnion = Tool | Tool_2;
+export type ToolUnion = Tool | Tool_2 | Client;
 
 // @public
 export enum TrafficType {
