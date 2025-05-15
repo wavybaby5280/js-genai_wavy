@@ -202,8 +202,41 @@ export function functionDeclarationToMldev(
   return toObject;
 }
 
-export function googleSearchToMldev(): Record<string, unknown> {
+export function intervalToMldev(
+  apiClient: ApiClient,
+  fromObject: types.Interval,
+): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
+
+  const fromStartTime = common.getValueByPath(fromObject, ['startTime']);
+  if (fromStartTime != null) {
+    common.setValueByPath(toObject, ['startTime'], fromStartTime);
+  }
+
+  const fromEndTime = common.getValueByPath(fromObject, ['endTime']);
+  if (fromEndTime != null) {
+    common.setValueByPath(toObject, ['endTime'], fromEndTime);
+  }
+
+  return toObject;
+}
+
+export function googleSearchToMldev(
+  apiClient: ApiClient,
+  fromObject: types.GoogleSearch,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromTimeRangeFilter = common.getValueByPath(fromObject, [
+    'timeRangeFilter',
+  ]);
+  if (fromTimeRangeFilter != null) {
+    common.setValueByPath(
+      toObject,
+      ['timeRangeFilter'],
+      intervalToMldev(apiClient, fromTimeRangeFilter),
+    );
+  }
 
   return toObject;
 }
@@ -362,7 +395,11 @@ export function toolToMldev(
 
   const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
   if (fromGoogleSearch != null) {
-    common.setValueByPath(toObject, ['googleSearch'], googleSearchToMldev());
+    common.setValueByPath(
+      toObject,
+      ['googleSearch'],
+      googleSearchToMldev(apiClient, fromGoogleSearch),
+    );
   }
 
   const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
@@ -1639,8 +1676,41 @@ export function functionDeclarationToVertex(
   return toObject;
 }
 
-export function googleSearchToVertex(): Record<string, unknown> {
+export function intervalToVertex(
+  apiClient: ApiClient,
+  fromObject: types.Interval,
+): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
+
+  const fromStartTime = common.getValueByPath(fromObject, ['startTime']);
+  if (fromStartTime != null) {
+    common.setValueByPath(toObject, ['startTime'], fromStartTime);
+  }
+
+  const fromEndTime = common.getValueByPath(fromObject, ['endTime']);
+  if (fromEndTime != null) {
+    common.setValueByPath(toObject, ['endTime'], fromEndTime);
+  }
+
+  return toObject;
+}
+
+export function googleSearchToVertex(
+  apiClient: ApiClient,
+  fromObject: types.GoogleSearch,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromTimeRangeFilter = common.getValueByPath(fromObject, [
+    'timeRangeFilter',
+  ]);
+  if (fromTimeRangeFilter != null) {
+    common.setValueByPath(
+      toObject,
+      ['timeRangeFilter'],
+      intervalToVertex(apiClient, fromTimeRangeFilter),
+    );
+  }
 
   return toObject;
 }
@@ -1811,7 +1881,11 @@ export function toolToVertex(
 
   const fromGoogleSearch = common.getValueByPath(fromObject, ['googleSearch']);
   if (fromGoogleSearch != null) {
-    common.setValueByPath(toObject, ['googleSearch'], googleSearchToVertex());
+    common.setValueByPath(
+      toObject,
+      ['googleSearch'],
+      googleSearchToVertex(apiClient, fromGoogleSearch),
+    );
   }
 
   const fromGoogleSearchRetrieval = common.getValueByPath(fromObject, [
