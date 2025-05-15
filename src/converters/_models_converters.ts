@@ -331,6 +331,12 @@ export function googleMapsToMldev(
   return toObject;
 }
 
+export function urlContextToMldev(): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  return toObject;
+}
+
 export function toolToMldev(
   apiClient: ApiClient,
   fromObject: types.Tool,
@@ -380,6 +386,11 @@ export function toolToMldev(
 
   if (common.getValueByPath(fromObject, ['googleMaps']) !== undefined) {
     throw new Error('googleMaps parameter is not supported in Gemini API.');
+  }
+
+  const fromUrlContext = common.getValueByPath(fromObject, ['urlContext']);
+  if (fromUrlContext != null) {
+    common.setValueByPath(toObject, ['urlContext'], urlContextToMldev());
   }
 
   const fromCodeExecution = common.getValueByPath(fromObject, [
@@ -1768,6 +1779,12 @@ export function googleMapsToVertex(
   return toObject;
 }
 
+export function urlContextToVertex(): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  return toObject;
+}
+
 export function toolToVertex(
   apiClient: ApiClient,
   fromObject: types.Tool,
@@ -1826,6 +1843,10 @@ export function toolToVertex(
       ['googleMaps'],
       googleMapsToVertex(apiClient, fromGoogleMaps),
     );
+  }
+
+  if (common.getValueByPath(fromObject, ['urlContext']) !== undefined) {
+    throw new Error('urlContext parameter is not supported in Vertex AI.');
   }
 
   const fromCodeExecution = common.getValueByPath(fromObject, [
@@ -3606,6 +3627,51 @@ export function citationMetadataFromMldev(
   return toObject;
 }
 
+export function urlMetadataFromMldev(
+  apiClient: ApiClient,
+  fromObject: types.UrlMetadata,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromRetrievedUrl = common.getValueByPath(fromObject, ['retrievedUrl']);
+  if (fromRetrievedUrl != null) {
+    common.setValueByPath(toObject, ['retrievedUrl'], fromRetrievedUrl);
+  }
+
+  const fromUrlRetrievalStatus = common.getValueByPath(fromObject, [
+    'urlRetrievalStatus',
+  ]);
+  if (fromUrlRetrievalStatus != null) {
+    common.setValueByPath(
+      toObject,
+      ['urlRetrievalStatus'],
+      fromUrlRetrievalStatus,
+    );
+  }
+
+  return toObject;
+}
+
+export function urlContextMetadataFromMldev(
+  apiClient: ApiClient,
+  fromObject: types.UrlContextMetadata,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromUrlMetadata = common.getValueByPath(fromObject, ['urlMetadata']);
+  if (fromUrlMetadata != null) {
+    let transformedList = fromUrlMetadata;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return urlMetadataFromMldev(apiClient, item);
+      });
+    }
+    common.setValueByPath(toObject, ['urlMetadata'], transformedList);
+  }
+
+  return toObject;
+}
+
 export function candidateFromMldev(
   apiClient: ApiClient,
   fromObject: types.Candidate,
@@ -3640,6 +3706,17 @@ export function candidateFromMldev(
   const fromFinishReason = common.getValueByPath(fromObject, ['finishReason']);
   if (fromFinishReason != null) {
     common.setValueByPath(toObject, ['finishReason'], fromFinishReason);
+  }
+
+  const fromUrlContextMetadata = common.getValueByPath(fromObject, [
+    'urlContextMetadata',
+  ]);
+  if (fromUrlContextMetadata != null) {
+    common.setValueByPath(
+      toObject,
+      ['urlContextMetadata'],
+      urlContextMetadataFromMldev(apiClient, fromUrlContextMetadata),
+    );
   }
 
   const fromAvgLogprobs = common.getValueByPath(fromObject, ['avgLogprobs']);
@@ -4315,6 +4392,51 @@ export function citationMetadataFromVertex(
   const fromCitations = common.getValueByPath(fromObject, ['citations']);
   if (fromCitations != null) {
     common.setValueByPath(toObject, ['citations'], fromCitations);
+  }
+
+  return toObject;
+}
+
+export function urlMetadataFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.UrlMetadata,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromRetrievedUrl = common.getValueByPath(fromObject, ['retrievedUrl']);
+  if (fromRetrievedUrl != null) {
+    common.setValueByPath(toObject, ['retrievedUrl'], fromRetrievedUrl);
+  }
+
+  const fromUrlRetrievalStatus = common.getValueByPath(fromObject, [
+    'urlRetrievalStatus',
+  ]);
+  if (fromUrlRetrievalStatus != null) {
+    common.setValueByPath(
+      toObject,
+      ['urlRetrievalStatus'],
+      fromUrlRetrievalStatus,
+    );
+  }
+
+  return toObject;
+}
+
+export function urlContextMetadataFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.UrlContextMetadata,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromUrlMetadata = common.getValueByPath(fromObject, ['urlMetadata']);
+  if (fromUrlMetadata != null) {
+    let transformedList = fromUrlMetadata;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return urlMetadataFromVertex(apiClient, item);
+      });
+    }
+    common.setValueByPath(toObject, ['urlMetadata'], transformedList);
   }
 
   return toObject;

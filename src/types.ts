@@ -203,6 +203,13 @@ export enum FunctionCallingConfigMode {
   NONE = 'NONE',
 }
 
+/** Status of the url retrieval. */
+export enum UrlRetrievalStatus {
+  URL_RETRIEVAL_STATUS_UNSPECIFIED = 'URL_RETRIEVAL_STATUS_UNSPECIFIED',
+  URL_RETRIEVAL_STATUS_SUCCESS = 'URL_RETRIEVAL_STATUS_SUCCESS',
+  URL_RETRIEVAL_STATUS_ERROR = 'URL_RETRIEVAL_STATUS_ERROR',
+}
+
 /** Enum that controls the safety filter level for objectionable content. */
 export enum SafetyFilterLevel {
   BLOCK_LOW_AND_ABOVE = 'BLOCK_LOW_AND_ABOVE',
@@ -750,6 +757,9 @@ export declare interface GoogleMaps {
   authConfig?: AuthConfig;
 }
 
+/** Tool to support URL context retrieval. */
+export declare interface UrlContext {}
+
 /** Retrieve from Vertex AI Search datastore or engine for grounding. datastore and engine are mutually exclusive. See https://cloud.google.com/products/agent-builder */
 export declare interface VertexAISearch {
   /** Optional. Fully-qualified Vertex AI Search data store resource ID. Format: `projects/{project}/locations/{location}/collections/{collection}/dataStores/{dataStore}` */
@@ -858,6 +868,8 @@ export declare interface Tool {
   /** Optional. Google Maps tool type. Specialized retrieval tool
       that is powered by Google Maps. */
   googleMaps?: GoogleMaps;
+  /** Optional. Tool to support URL context retrieval. */
+  urlContext?: UrlContext;
   /** Optional. CodeExecution tool type. Enables the model to execute code as part of generation. This field is only used by the Gemini Developer API services. */
   codeExecution?: ToolCodeExecution;
 }
@@ -1139,6 +1151,20 @@ export declare interface CitationMetadata {
   citations?: Citation[];
 }
 
+/** Context for a single url retrieval. */
+export declare interface UrlMetadata {
+  /** The URL retrieved by the tool. */
+  retrievedUrl?: string;
+  /** Status of the url retrieval. */
+  urlRetrievalStatus?: UrlRetrievalStatus;
+}
+
+/** Metadata related to url context retrieval tool. */
+export declare interface UrlContextMetadata {
+  /** List of url context. */
+  urlMetadata?: UrlMetadata[];
+}
+
 /** Chunk from context retrieved by the retrieval tools. */
 export declare interface GroundingChunkRetrievedContext {
   /** Text of the attribution. */
@@ -1277,6 +1303,8 @@ export declare interface Candidate {
       If empty, the model has not stopped generating the tokens.
        */
   finishReason?: FinishReason;
+  /** Metadata related to url context retrieval tool. */
+  urlContextMetadata?: UrlContextMetadata;
   /** Output only. Average log probability score of the candidate. */
   avgLogprobs?: number;
   /** Output only. Metadata specifies sources used to ground generated content. */
@@ -3461,6 +3489,8 @@ export declare interface LiveServerContent {
       model turn.
        */
   outputTranscription?: Transcription;
+  /** Metadata related to url context retrieval tool. */
+  urlContextMetadata?: UrlContextMetadata;
 }
 
 /** Request for the client to execute the `function_calls` and return the responses with the matching `id`s. */

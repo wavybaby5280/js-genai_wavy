@@ -201,6 +201,7 @@ export interface Candidate {
     logprobsResult?: LogprobsResult;
     safetyRatings?: SafetyRating[];
     tokenCount?: number;
+    urlContextMetadata?: UrlContextMetadata;
 }
 
 // @public
@@ -1579,6 +1580,7 @@ export interface LiveServerContent {
     modelTurn?: Content;
     outputTranscription?: Transcription;
     turnComplete?: boolean;
+    urlContextMetadata?: UrlContextMetadata;
 }
 
 // @public
@@ -2250,6 +2252,7 @@ export interface Tool {
     googleSearch?: GoogleSearch;
     googleSearchRetrieval?: GoogleSearchRetrieval;
     retrieval?: Retrieval;
+    urlContext?: UrlContext;
 }
 
 // @public
@@ -2449,6 +2452,31 @@ export interface UpscaleImageParameters {
 // @public (undocumented)
 export class UpscaleImageResponse {
     generatedImages?: GeneratedImage[];
+}
+
+// @public
+export interface UrlContext {
+}
+
+// @public
+export interface UrlContextMetadata {
+    urlMetadata?: UrlMetadata[];
+}
+
+// @public
+export interface UrlMetadata {
+    retrievedUrl?: string;
+    urlRetrievalStatus?: UrlRetrievalStatus;
+}
+
+// @public
+export enum UrlRetrievalStatus {
+    // (undocumented)
+    URL_RETRIEVAL_STATUS_ERROR = "URL_RETRIEVAL_STATUS_ERROR",
+    // (undocumented)
+    URL_RETRIEVAL_STATUS_SUCCESS = "URL_RETRIEVAL_STATUS_SUCCESS",
+    // (undocumented)
+    URL_RETRIEVAL_STATUS_UNSPECIFIED = "URL_RETRIEVAL_STATUS_UNSPECIFIED"
 }
 
 // @public

@@ -289,6 +289,12 @@ export function googleMapsToMldev(
   return toObject;
 }
 
+export function urlContextToMldev(): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  return toObject;
+}
+
 export function toolToMldev(
   apiClient: ApiClient,
   fromObject: types.Tool,
@@ -338,6 +344,11 @@ export function toolToMldev(
 
   if (common.getValueByPath(fromObject, ['googleMaps']) !== undefined) {
     throw new Error('googleMaps parameter is not supported in Gemini API.');
+  }
+
+  const fromUrlContext = common.getValueByPath(fromObject, ['urlContext']);
+  if (fromUrlContext != null) {
+    common.setValueByPath(toObject, ['urlContext'], urlContextToMldev());
   }
 
   const fromCodeExecution = common.getValueByPath(fromObject, [
@@ -948,6 +959,12 @@ export function googleMapsToVertex(
   return toObject;
 }
 
+export function urlContextToVertex(): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  return toObject;
+}
+
 export function toolToVertex(
   apiClient: ApiClient,
   fromObject: types.Tool,
@@ -1006,6 +1023,10 @@ export function toolToVertex(
       ['googleMaps'],
       googleMapsToVertex(apiClient, fromGoogleMaps),
     );
+  }
+
+  if (common.getValueByPath(fromObject, ['urlContext']) !== undefined) {
+    throw new Error('urlContext parameter is not supported in Vertex AI.');
   }
 
   const fromCodeExecution = common.getValueByPath(fromObject, [
