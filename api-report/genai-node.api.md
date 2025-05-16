@@ -113,6 +113,13 @@ export interface AutomaticActivityDetection {
 }
 
 // @public
+export interface AutomaticFunctionCallingConfig {
+    disable?: boolean;
+    ignoreCallHistory?: boolean;
+    maximumRemoteCalls?: number;
+}
+
+// @public
 export interface BaseUrlParameters {
     // (undocumented)
     geminiUrl?: string;
@@ -187,6 +194,12 @@ export class Caches extends BaseModule {
     // Warning: (ae-forgotten-export) The symbol "types" needs to be exported by the entry point index.d.ts
     list: (params?: types.ListCachedContentsParameters) => Promise<Pager<types.CachedContent>>;
     update(params: types.UpdateCachedContentParameters): Promise<types.CachedContent>;
+}
+
+// @public
+export interface CallableTool {
+    callTool(functionCalls: FunctionCall[]): Promise<Part[]>;
+    tool(): Tool;
 }
 
 // @public
@@ -859,6 +872,7 @@ export enum FunctionResponseScheduling {
 export interface GenerateContentConfig {
     abortSignal?: AbortSignal;
     audioTimestamp?: boolean;
+    automaticFunctionCalling?: AutomaticFunctionCallingConfig;
     cachedContent?: string;
     candidateCount?: number;
     frequencyPenalty?: number;
@@ -896,6 +910,7 @@ export interface GenerateContentParameters {
 
 // @public
 export class GenerateContentResponse {
+    automaticFunctionCallingHistory?: Content[];
     candidates?: Candidate[];
     get codeExecutionResult(): string | undefined;
     createTime?: string;
@@ -1167,6 +1182,7 @@ export interface GoogleRpcStatus {
 
 // @public
 export interface GoogleSearch {
+    timeRangeFilter?: Interval;
 }
 
 // @public
@@ -1325,6 +1341,12 @@ export enum ImagePromptLanguage {
     ja = "ja",
     // (undocumented)
     ko = "ko"
+}
+
+// @public
+export interface Interval {
+    endTime?: string;
+    startTime?: string;
 }
 
 // @public
@@ -2281,7 +2303,7 @@ export interface ToolConfig {
 export type ToolListUnion = ToolUnion[];
 
 // @public (undocumented)
-export type ToolUnion = Tool | Tool_2 | Client;
+export type ToolUnion = Tool | Tool_2 | Client | CallableTool;
 
 // @public
 export enum TrafficType {
@@ -2537,6 +2559,7 @@ export interface Video {
 // @public
 export interface VideoMetadata {
     endOffset?: string;
+    fps?: number;
     startOffset?: string;
 }
 

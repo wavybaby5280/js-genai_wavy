@@ -77,6 +77,33 @@ const mockGenerateContentResponseWithFunctionCall: types.GenerateContentResponse
     },
     types.GenerateContentResponse.prototype,
   );
+const mockGenerateContentResponseWithSingleFunctionCall: types.GenerateContentResponse =
+  Object.setPrototypeOf(
+    {
+      candidates: [
+        {
+          content: {
+            parts: [
+              {
+                functionCall: {
+                  name: 'beep',
+                },
+              },
+            ],
+            role: 'model',
+          },
+          finishReason: types.FinishReason.STOP,
+          index: 0,
+        },
+      ],
+      usageMetadata: {
+        promptTokenCount: 8,
+        candidatesTokenCount: 1,
+        totalTokenCount: 9,
+      },
+    },
+    types.GenerateContentResponse.prototype,
+  );
 
 const mockGenerateContentResponseWithAnotherFunctionCall: types.GenerateContentResponse =
   Object.setPrototypeOf(
@@ -395,7 +422,7 @@ describe('generateContent', () => {
         }),
       );
     });
-    it('should throw error when there are mcp tools and non-mcp tools', async () => {
+    it('should throw error when there are mcp tools and non-mcp tools when AFC is enabled', async () => {
       const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
       const mixedToolsList: types.ToolListUnion = [
         await spinUpPrintingServer(),
@@ -535,6 +562,168 @@ describe('generateContent', () => {
       '{"contents":[{"parts":[{"text":"Call the throwing tool."}],"role":"user"},{"parts":[{"functionCall":{"name":"throwError","args":{}}}],"role":"model"},{"parts":[{"functionResponse":{"name":"throwError","response":{"error":{"content":[{"type":"text","text":"Error from throwing tool"}],"isError":true}}}}],"role":"user"}],"tools":[{"functionDeclarations":[{"name":"throwError","parameters":{"type":"OBJECT"}}]}],"toolConfig":{"functionCallingConfig":{"mode":"ANY","allowedFunctionNames":["throwError"]}},"generationConfig":{}}',
     );
     expect(actual2ndCall).toEqual(expected2ndCall);
+  });
+  it('should not conduct AFC when afc is disabled', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const mcpClientList = [await spinUpPrintingServer()];
+    const mockResponses = [
+      Promise.resolve(
+        new Response(
+          JSON.stringify(mockGenerateContentResponseWithFunctionCall),
+          fetchOkOptions,
+        ),
+      ),
+    ];
+    const fetchSpy = spyOn(global, 'fetch').and.returnValues(...mockResponses);
+    const consoleLogSpy = spyOn(console, 'log');
+    await client.models.generateContent({
+      model: 'gemini-1.5-flash-exp',
+      contents: 'Call the throwing tool.',
+      config: {
+        tools: mcpClientList,
+        toolConfig: {
+          functionCallingConfig: {
+            mode: types.FunctionCallingConfigMode.ANY,
+            allowedFunctionNames: ['throwError'],
+          },
+        },
+        automaticFunctionCalling: {
+          disable: true,
+        },
+      },
+    });
+
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    expect(consoleLogSpy).not.toHaveBeenCalled();
+  });
+  it('should conduct AFC according the maximumRemoteCalls', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const mcpClientList = [await spinUpBeepingServer()];
+    const expectedNumberOfCalls = 3;
+    const mockResponses = [];
+    for (let i = 0; i < 20; i++) {
+      mockResponses.push(
+        Promise.resolve(
+          new Response(
+            JSON.stringify(mockGenerateContentResponseWithSingleFunctionCall),
+            fetchOkOptions,
+          ),
+        ),
+      );
+    }
+
+    const fetchSpy = spyOn(global, 'fetch').and.returnValues(...mockResponses);
+    const consoleBeepSpy = spyOn(process.stdout, 'write').and.callThrough();
+    await client.models.generateContent({
+      model: 'gemini-1.5-flash-exp',
+      contents: 'Call the printing tool.',
+      config: {
+        tools: mcpClientList,
+        toolConfig: {
+          functionCallingConfig: {
+            mode: types.FunctionCallingConfigMode.ANY,
+          },
+        },
+        automaticFunctionCalling: {
+          maximumRemoteCalls: 3,
+        },
+      },
+    });
+    expect(fetchSpy).toHaveBeenCalledTimes(expectedNumberOfCalls);
+    expect(consoleBeepSpy).toHaveBeenCalledTimes(expectedNumberOfCalls);
+  });
+  it('should append AFC history when ignoreCallHistory is false', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const mcpClientList = [
+      await spinUpPrintingServer(),
+      await spinUpBeepingServer(),
+    ];
+
+    const mockResponses = [
+      Promise.resolve(
+        new Response(
+          JSON.stringify(mockGenerateContentResponseWithFunctionCall),
+          fetchOkOptions,
+        ),
+      ),
+      Promise.resolve(
+        new Response(
+          JSON.stringify(mockGenerateContentResponse),
+          fetchOkOptions,
+        ),
+      ),
+    ];
+    spyOn(global, 'fetch').and.returnValues(...mockResponses);
+    const response = await client.models.generateContent({
+      model: 'gemini-1.5-flash-exp',
+      contents:
+        'Use the printer to print a simple math question in red and the answer in blue, and beep with the beeper',
+      config: {
+        tools: mcpClientList,
+        toolConfig: {
+          functionCallingConfig: {
+            mode: types.FunctionCallingConfigMode.ANY,
+          },
+        },
+      },
+    });
+    // This is the response.automaticFunctionCallingHistory
+    // [
+    //   {
+    //     "role": "user",
+    //     "parts": [
+    //       {
+    //         "text": "Use the printer to print a simple math question in red
+    //         and the answer in blue, and beep with the beeper"
+    //       }
+    //     ]
+    //   },
+    //   {
+    //     "parts": [
+    //       {
+    //         "functionCall": {
+    //           "name": "print",
+    //           "args": {
+    //             "text": "Hello World",
+    //             "color": "red"
+    //           }
+    //         }
+    //       },
+    //       {
+    //         "functionCall": {
+    //           "name": "beep"
+    //         }
+    //       }
+    //     ],
+    //     "role": "model"
+    //   },
+    //   {
+    //     "role": "user",
+    //     "parts": [
+    //       {
+    //         "functionResponse": {
+    //           "name": "print",
+    //           "response": {
+    //             "content": []
+    //           }
+    //         }
+    //       },
+    //       {
+    //         "functionResponse": {
+    //           "name": "beep",
+    //           "response": {
+    //             "content": []
+    //           }
+    //         }
+    //       }
+    //     ]
+    //   }
+    // ]
+    expect(response.automaticFunctionCallingHistory).toEqual(
+      JSON.parse(
+        '[{"role":"user","parts":[{"text":"Use the printer to print a simple math question in red and the answer in blue, and beep with the beeper"}]},{"parts":[{"functionCall":{"name":"print","args":{"text":"Hello World","color":"red"}}},{"functionCall":{"name":"beep"}}],"role":"model"},{"role":"user","parts":[{"functionResponse":{"name":"print","response":{"content":[]}}},{"functionResponse":{"name":"beep","response":{"content":[]}}}]}]',
+      ),
+    );
   });
 });
 

@@ -979,6 +979,28 @@ export declare interface SpeechConfig {
   languageCode?: string;
 }
 
+/** The configuration for automatic function calling. */
+export declare interface AutomaticFunctionCallingConfig {
+  /** Whether to disable automatic function calling.
+      If not set or set to False, will enable automatic function calling.
+      If set to True, will disable automatic function calling.
+       */
+  disable?: boolean;
+  /** If automatic function calling is enabled,
+      maximum number of remote calls for automatic function calling.
+      This number should be a positive integer.
+      If not set, SDK will set maximum number of remote calls to 10.
+       */
+  maximumRemoteCalls?: number;
+  /** If automatic function calling is enabled,
+      whether to ignore call history to the response.
+      If not set, SDK will set ignore_call_history to false,
+      and will append the call history to
+      GenerateContentResponse.automatic_function_calling_history.
+       */
+  ignoreCallHistory?: boolean;
+}
+
 /** The thinking features configuration. */
 export declare interface ThinkingConfig {
   /** Indicates whether to include thoughts in the response. If true, thoughts are returned only if the model supports thought and thoughts are available.
@@ -1138,6 +1160,9 @@ export declare interface GenerateContentConfig {
        model.
        */
   audioTimestamp?: boolean;
+  /** The configuration for automatic function calling.
+   */
+  automaticFunctionCalling?: AutomaticFunctionCallingConfig;
   /** The thinking features configuration.
    */
   thinkingConfig?: ThinkingConfig;
@@ -1412,6 +1437,9 @@ export class GenerateContentResponse {
   /** Identifier for each response.
    */
   responseId?: string;
+  /** The history of automatic function calling.
+   */
+  automaticFunctionCallingHistory?: Content[];
   /** Output only. The model version used to generate the response. */
   modelVersion?: string;
   /** Output only. Content filter results for a prompt sent in the request. Note: Sent only in the first stream chunk. Only happens when no candidates were generated due to content violations. */
