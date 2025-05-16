@@ -332,6 +332,17 @@ export enum FunctionResponseScheduling {
   INTERRUPT = 'INTERRUPT',
 }
 
+/** Describes how the video in the Part should be used by the model. */
+export declare interface VideoMetadata {
+  /** The frame rate of the video sent to the model. If not specified, the
+        default value will be 1.0. The fps range is (0.0, 24.0]. */
+  fps?: number;
+  /** Optional. The end offset of the video. */
+  endOffset?: string;
+  /** Optional. The start offset of the video. */
+  startOffset?: string;
+}
+
 /** Content blob. */
 export declare interface Blob {
   /** Optional. Display name of the blob. Used to provide a label or filename to distinguish blobs. This field is not currently used in the Gemini GenerateContent calls. */
@@ -340,14 +351,6 @@ export declare interface Blob {
   data?: string;
   /** Required. The IANA standard MIME type of the source data. */
   mimeType?: string;
-}
-
-/** Metadata describes the input video content. */
-export declare interface VideoMetadata {
-  /** Optional. The end offset of the video. */
-  endOffset?: string;
-  /** Optional. The start offset of the video. */
-  startOffset?: string;
 }
 
 /** Result of executing the [ExecutableCode]. Always follows a `part` containing the [ExecutableCode]. */

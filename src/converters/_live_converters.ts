@@ -223,6 +223,54 @@ export function speechConfigToVertex(
   return toObject;
 }
 
+export function videoMetadataToMldev(
+  apiClient: ApiClient,
+  fromObject: types.VideoMetadata,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromFps = common.getValueByPath(fromObject, ['fps']);
+  if (fromFps != null) {
+    common.setValueByPath(toObject, ['fps'], fromFps);
+  }
+
+  const fromEndOffset = common.getValueByPath(fromObject, ['endOffset']);
+  if (fromEndOffset != null) {
+    common.setValueByPath(toObject, ['endOffset'], fromEndOffset);
+  }
+
+  const fromStartOffset = common.getValueByPath(fromObject, ['startOffset']);
+  if (fromStartOffset != null) {
+    common.setValueByPath(toObject, ['startOffset'], fromStartOffset);
+  }
+
+  return toObject;
+}
+
+export function videoMetadataToVertex(
+  apiClient: ApiClient,
+  fromObject: types.VideoMetadata,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromFps = common.getValueByPath(fromObject, ['fps']);
+  if (fromFps != null) {
+    common.setValueByPath(toObject, ['fps'], fromFps);
+  }
+
+  const fromEndOffset = common.getValueByPath(fromObject, ['endOffset']);
+  if (fromEndOffset != null) {
+    common.setValueByPath(toObject, ['endOffset'], fromEndOffset);
+  }
+
+  const fromStartOffset = common.getValueByPath(fromObject, ['startOffset']);
+  if (fromStartOffset != null) {
+    common.setValueByPath(toObject, ['startOffset'], fromStartOffset);
+  }
+
+  return toObject;
+}
+
 export function blobToMldev(
   apiClient: ApiClient,
   fromObject: types.Blob,
@@ -276,8 +324,15 @@ export function partToMldev(
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
-  if (common.getValueByPath(fromObject, ['videoMetadata']) !== undefined) {
-    throw new Error('videoMetadata parameter is not supported in Gemini API.');
+  const fromVideoMetadata = common.getValueByPath(fromObject, [
+    'videoMetadata',
+  ]);
+  if (fromVideoMetadata != null) {
+    common.setValueByPath(
+      toObject,
+      ['videoMetadata'],
+      videoMetadataToMldev(apiClient, fromVideoMetadata),
+    );
   }
 
   const fromThought = common.getValueByPath(fromObject, ['thought']);
@@ -347,7 +402,11 @@ export function partToVertex(
     'videoMetadata',
   ]);
   if (fromVideoMetadata != null) {
-    common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
+    common.setValueByPath(
+      toObject,
+      ['videoMetadata'],
+      videoMetadataToVertex(apiClient, fromVideoMetadata),
+    );
   }
 
   const fromThought = common.getValueByPath(fromObject, ['thought']);
@@ -2441,6 +2500,54 @@ export function liveServerSetupCompleteFromVertex(): Record<string, unknown> {
   return toObject;
 }
 
+export function videoMetadataFromMldev(
+  apiClient: ApiClient,
+  fromObject: types.VideoMetadata,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromFps = common.getValueByPath(fromObject, ['fps']);
+  if (fromFps != null) {
+    common.setValueByPath(toObject, ['fps'], fromFps);
+  }
+
+  const fromEndOffset = common.getValueByPath(fromObject, ['endOffset']);
+  if (fromEndOffset != null) {
+    common.setValueByPath(toObject, ['endOffset'], fromEndOffset);
+  }
+
+  const fromStartOffset = common.getValueByPath(fromObject, ['startOffset']);
+  if (fromStartOffset != null) {
+    common.setValueByPath(toObject, ['startOffset'], fromStartOffset);
+  }
+
+  return toObject;
+}
+
+export function videoMetadataFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.VideoMetadata,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromFps = common.getValueByPath(fromObject, ['fps']);
+  if (fromFps != null) {
+    common.setValueByPath(toObject, ['fps'], fromFps);
+  }
+
+  const fromEndOffset = common.getValueByPath(fromObject, ['endOffset']);
+  if (fromEndOffset != null) {
+    common.setValueByPath(toObject, ['endOffset'], fromEndOffset);
+  }
+
+  const fromStartOffset = common.getValueByPath(fromObject, ['startOffset']);
+  if (fromStartOffset != null) {
+    common.setValueByPath(toObject, ['startOffset'], fromStartOffset);
+  }
+
+  return toObject;
+}
+
 export function blobFromMldev(
   apiClient: ApiClient,
   fromObject: types.Blob,
@@ -2489,6 +2596,17 @@ export function partFromMldev(
   fromObject: types.Part,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
+
+  const fromVideoMetadata = common.getValueByPath(fromObject, [
+    'videoMetadata',
+  ]);
+  if (fromVideoMetadata != null) {
+    common.setValueByPath(
+      toObject,
+      ['videoMetadata'],
+      videoMetadataFromMldev(apiClient, fromVideoMetadata),
+    );
+  }
 
   const fromThought = common.getValueByPath(fromObject, ['thought']);
   if (fromThought != null) {
@@ -2557,7 +2675,11 @@ export function partFromVertex(
     'videoMetadata',
   ]);
   if (fromVideoMetadata != null) {
-    common.setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
+    common.setValueByPath(
+      toObject,
+      ['videoMetadata'],
+      videoMetadataFromVertex(apiClient, fromVideoMetadata),
+    );
   }
 
   const fromThought = common.getValueByPath(fromObject, ['thought']);
