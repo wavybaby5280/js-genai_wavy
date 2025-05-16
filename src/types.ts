@@ -3106,6 +3106,23 @@ export interface UploadFileParameters {
   config?: UploadFileConfig;
 }
 
+/**
+ * CallableTool is an invokable tool that can be executed with external
+ * application (e.g., via Model Context Protocol) or local functions with
+ * function calling.
+ */
+export interface CallableTool {
+  /**
+   * Returns tool that can be called by Gemini.
+   */
+  tool(): Tool;
+  /**
+   * Executes the callable tool with the given function call arguments and
+   * returns the response parts from the tool execution.
+   */
+  callTool(functionCalls: FunctionCall[]): Promise<Part[]>;
+}
+
 /** Response for the create file method. */
 export class CreateFileResponse {
   /** Used to retain the full HTTP response. */
@@ -4081,7 +4098,7 @@ export type SchemaUnion = Schema | unknown;
 
 export type SpeechConfigUnion = SpeechConfig | string;
 
-export type ToolUnion = Tool | McpTool | McpClient;
+export type ToolUnion = Tool | McpTool | McpClient | CallableTool;
 
 export type ToolListUnion = ToolUnion[];
 
