@@ -10,6 +10,7 @@ export * from '../chats.js';
 export {GoogleGenAIOptions} from '../client.js';
 export {Files} from '../files.js';
 export * from '../live.js';
+export {mcpToTool} from '../mcp/_mcp.js';
 export {Models} from '../models.js';
 export {Operations} from '../operations.js';
 export {PagedItem, Pager} from '../pagers.js';

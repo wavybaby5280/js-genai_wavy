@@ -1708,6 +1708,9 @@ export enum MaskReferenceMode {
 }
 
 // @public
+export function mcpToTool(clients: Client[]): CallableTool;
+
+// @public
 export enum MediaModality {
     AUDIO = "AUDIO",
     DOCUMENT = "DOCUMENT",

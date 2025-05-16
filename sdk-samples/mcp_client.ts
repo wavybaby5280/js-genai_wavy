@@ -3,7 +3,7 @@
  * Copyright 2025 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
-import {FunctionCallingConfigMode, GoogleGenAI} from '@google/genai';
+import {FunctionCallingConfigMode, GoogleGenAI, mcpToTool} from '@google/genai';
 import {Client} from '@modelcontextprotocol/sdk/client/index.js';
 import {InMemoryTransport} from '@modelcontextprotocol/sdk/inMemory.js';
 import {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
@@ -18,45 +18,19 @@ async function mcpSample(ai: GoogleGenAI) {
   const printingClient = await spinUpPrintingServer();
   const beepingClient = await spinUpBeepingServer();
 
-  const mcpTools = [
-    ...(await printingClient.listTools()).tools,
-    // TODO(b/417514940): this currently fails
-    // ...(await beepingClient.listTools()).tools,
-  ];
-
-  const allowedFunctionNames = mcpTools.map((t) => t.name);
-
-  const response = await ai.models.generateContent({
-    model: 'gemini-2.0-flash',
+  await ai.models.generateContent({
+    model: 'gemini-2.5-flash-preview-04-17',
     contents:
-      'Use the printer to print a simple math question in red and the answer in blue, and beep with the beeper',
+      'Use the printer to print a simple math question in red and the answer in blue, and beep with the beeper, also tell me a joke. IMPORTANT DONT FORGET TO BEEP AT THE END',
     config: {
-      tools: mcpTools,
+      tools: [mcpToTool([printingClient, beepingClient])],
       toolConfig: {
         functionCallingConfig: {
-          mode: FunctionCallingConfigMode.ANY,
-          allowedFunctionNames: allowedFunctionNames,
+          mode: FunctionCallingConfigMode.AUTO,
         },
       },
     },
   });
-
-  for (const part of response.candidates![0].content!.parts!) {
-    if (part.functionCall) {
-      const name = part.functionCall.name!;
-      const args = part.functionCall.args;
-
-      if (name === 'print') {
-        printingClient.callTool({
-          name: name,
-          arguments: args,
-        });
-      }
-      if (name === 'beep') {
-        beepingClient.callTool({name: name});
-      }
-    }
-  }
 }
 
 async function spinUpPrintingServer(): Promise<Client> {
