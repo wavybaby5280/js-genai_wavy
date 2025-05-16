@@ -3220,6 +3220,16 @@ export declare interface CreateCachedContentConfig {
   /** Configuration for the tools to use. This config is shared for all tools.
    */
   toolConfig?: ToolConfig;
+  /** The Cloud KMS resource identifier of the customer managed
+      encryption key used to protect a resource.
+      The key needs to be in the same region as where the compute resource is
+      created. See
+      https://cloud.google.com/vertex-ai/docs/general/cmek for more
+      details. If this is set, then all created CachedContent objects
+      will be encrypted with the provided encryption key.
+      Allowed formats: projects/{project}/locations/{location}/keyRings/{key_ring}/cryptoKeys/{crypto_key}
+       */
+  kmsKeyName?: string;
 }
 
 /** Parameters for caches.create method. */

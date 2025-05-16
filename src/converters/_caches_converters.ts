@@ -586,6 +586,10 @@ export function createCachedContentConfigToMldev(
     );
   }
 
+  if (common.getValueByPath(fromObject, ['kmsKeyName']) !== undefined) {
+    throw new Error('kmsKeyName parameter is not supported in Gemini API.');
+  }
+
   return toObject;
 }
 
@@ -1338,6 +1342,15 @@ export function createCachedContentConfigToVertex(
       parentObject,
       ['toolConfig'],
       toolConfigToVertex(apiClient, fromToolConfig),
+    );
+  }
+
+  const fromKmsKeyName = common.getValueByPath(fromObject, ['kmsKeyName']);
+  if (parentObject !== undefined && fromKmsKeyName != null) {
+    common.setValueByPath(
+      parentObject,
+      ['encryption_spec', 'kmsKeyName'],
+      fromKmsKeyName,
     );
   }
 
