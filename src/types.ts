@@ -935,8 +935,7 @@ export declare interface ToolConfig {
 
 /** The configuration for the prebuilt speaker to use. */
 export declare interface PrebuiltVoiceConfig {
-  /** The name of the prebuilt voice to use.
-   */
+  /** The name of the prebuilt voice to use. */
   voiceName?: string;
 }
 
@@ -947,11 +946,30 @@ export declare interface VoiceConfig {
   prebuiltVoiceConfig?: PrebuiltVoiceConfig;
 }
 
+/** The configuration for the speaker to use. */
+export declare interface SpeakerVoiceConfig {
+  /** The name of the speaker to use. Should be the same as in the
+          prompt. */
+  speaker?: string;
+  /** The configuration for the voice to use. */
+  voiceConfig?: VoiceConfig;
+}
+
+/** The configuration for the multi-speaker setup. */
+export declare interface MultiSpeakerVoiceConfig {
+  /** The configuration for the speaker to use. */
+  speakerVoiceConfigs?: SpeakerVoiceConfig[];
+}
+
 /** The speech generation configuration. */
 export declare interface SpeechConfig {
   /** The configuration for the speaker to use.
    */
   voiceConfig?: VoiceConfig;
+  /** The configuration for the multi-speaker setup.
+          It is mutually exclusive with the voice_config field.
+           */
+  multiSpeakerVoiceConfig?: MultiSpeakerVoiceConfig;
   /** Language code (ISO 639. e.g. en-US) for the speech synthesization.
       Only available for Live API.
        */

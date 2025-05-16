@@ -760,6 +760,18 @@ export function tSpeechConfig(
   }
 }
 
+export function tLiveSpeechConfig(
+  apiClient: ApiClient,
+  speechConfig: types.SpeechConfig | object,
+): types.SpeechConfig {
+  if ('multiSpeakerVoiceConfig' in speechConfig) {
+    throw new Error(
+      'multiSpeakerVoiceConfig is not supported in the live API.',
+    );
+  }
+  return speechConfig;
+}
+
 export function tTool(apiClient: ApiClient, tool: types.Tool): types.Tool {
   if (tool.functionDeclarations) {
     for (const functionDeclaration of tool.functionDeclarations) {

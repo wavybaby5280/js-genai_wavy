@@ -1765,6 +1765,11 @@ export interface ModelSelectionConfig {
 }
 
 // @public
+export interface MultiSpeakerVoiceConfig {
+    speakerVoiceConfigs?: SpeakerVoiceConfig[];
+}
+
+// @public
 export interface Operation {
     done?: boolean;
     error?: Record<string, unknown>;
@@ -2096,8 +2101,15 @@ export interface SlidingWindow {
 }
 
 // @public
+export interface SpeakerVoiceConfig {
+    speaker?: string;
+    voiceConfig?: VoiceConfig;
+}
+
+// @public
 export interface SpeechConfig {
     languageCode?: string;
+    multiSpeakerVoiceConfig?: MultiSpeakerVoiceConfig;
     voiceConfig?: VoiceConfig;
 }
 

@@ -11,6 +11,218 @@ import * as common from '../_common.js';
 import * as t from '../_transformers.js';
 import * as types from '../types.js';
 
+export function prebuiltVoiceConfigToMldev(
+  apiClient: ApiClient,
+  fromObject: types.PrebuiltVoiceConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromVoiceName = common.getValueByPath(fromObject, ['voiceName']);
+  if (fromVoiceName != null) {
+    common.setValueByPath(toObject, ['voiceName'], fromVoiceName);
+  }
+
+  return toObject;
+}
+
+export function prebuiltVoiceConfigToVertex(
+  apiClient: ApiClient,
+  fromObject: types.PrebuiltVoiceConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromVoiceName = common.getValueByPath(fromObject, ['voiceName']);
+  if (fromVoiceName != null) {
+    common.setValueByPath(toObject, ['voiceName'], fromVoiceName);
+  }
+
+  return toObject;
+}
+
+export function voiceConfigToMldev(
+  apiClient: ApiClient,
+  fromObject: types.VoiceConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromPrebuiltVoiceConfig = common.getValueByPath(fromObject, [
+    'prebuiltVoiceConfig',
+  ]);
+  if (fromPrebuiltVoiceConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['prebuiltVoiceConfig'],
+      prebuiltVoiceConfigToMldev(apiClient, fromPrebuiltVoiceConfig),
+    );
+  }
+
+  return toObject;
+}
+
+export function voiceConfigToVertex(
+  apiClient: ApiClient,
+  fromObject: types.VoiceConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromPrebuiltVoiceConfig = common.getValueByPath(fromObject, [
+    'prebuiltVoiceConfig',
+  ]);
+  if (fromPrebuiltVoiceConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['prebuiltVoiceConfig'],
+      prebuiltVoiceConfigToVertex(apiClient, fromPrebuiltVoiceConfig),
+    );
+  }
+
+  return toObject;
+}
+
+export function speakerVoiceConfigToMldev(
+  apiClient: ApiClient,
+  fromObject: types.SpeakerVoiceConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromSpeaker = common.getValueByPath(fromObject, ['speaker']);
+  if (fromSpeaker != null) {
+    common.setValueByPath(toObject, ['speaker'], fromSpeaker);
+  }
+
+  const fromVoiceConfig = common.getValueByPath(fromObject, ['voiceConfig']);
+  if (fromVoiceConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['voiceConfig'],
+      voiceConfigToMldev(apiClient, fromVoiceConfig),
+    );
+  }
+
+  return toObject;
+}
+
+export function speakerVoiceConfigToVertex(
+  apiClient: ApiClient,
+  fromObject: types.SpeakerVoiceConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (common.getValueByPath(fromObject, ['speaker']) !== undefined) {
+    throw new Error('speaker parameter is not supported in Vertex AI.');
+  }
+
+  if (common.getValueByPath(fromObject, ['voiceConfig']) !== undefined) {
+    throw new Error('voiceConfig parameter is not supported in Vertex AI.');
+  }
+
+  return toObject;
+}
+
+export function multiSpeakerVoiceConfigToMldev(
+  apiClient: ApiClient,
+  fromObject: types.MultiSpeakerVoiceConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromSpeakerVoiceConfigs = common.getValueByPath(fromObject, [
+    'speakerVoiceConfigs',
+  ]);
+  if (fromSpeakerVoiceConfigs != null) {
+    let transformedList = fromSpeakerVoiceConfigs;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return speakerVoiceConfigToMldev(apiClient, item);
+      });
+    }
+    common.setValueByPath(toObject, ['speakerVoiceConfigs'], transformedList);
+  }
+
+  return toObject;
+}
+
+export function multiSpeakerVoiceConfigToVertex(
+  apiClient: ApiClient,
+  fromObject: types.MultiSpeakerVoiceConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (
+    common.getValueByPath(fromObject, ['speakerVoiceConfigs']) !== undefined
+  ) {
+    throw new Error(
+      'speakerVoiceConfigs parameter is not supported in Vertex AI.',
+    );
+  }
+
+  return toObject;
+}
+
+export function speechConfigToMldev(
+  apiClient: ApiClient,
+  fromObject: types.SpeechConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromVoiceConfig = common.getValueByPath(fromObject, ['voiceConfig']);
+  if (fromVoiceConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['voiceConfig'],
+      voiceConfigToMldev(apiClient, fromVoiceConfig),
+    );
+  }
+
+  const fromMultiSpeakerVoiceConfig = common.getValueByPath(fromObject, [
+    'multiSpeakerVoiceConfig',
+  ]);
+  if (fromMultiSpeakerVoiceConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['multiSpeakerVoiceConfig'],
+      multiSpeakerVoiceConfigToMldev(apiClient, fromMultiSpeakerVoiceConfig),
+    );
+  }
+
+  const fromLanguageCode = common.getValueByPath(fromObject, ['languageCode']);
+  if (fromLanguageCode != null) {
+    common.setValueByPath(toObject, ['languageCode'], fromLanguageCode);
+  }
+
+  return toObject;
+}
+
+export function speechConfigToVertex(
+  apiClient: ApiClient,
+  fromObject: types.SpeechConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromVoiceConfig = common.getValueByPath(fromObject, ['voiceConfig']);
+  if (fromVoiceConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['voiceConfig'],
+      voiceConfigToVertex(apiClient, fromVoiceConfig),
+    );
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['multiSpeakerVoiceConfig']) !== undefined
+  ) {
+    throw new Error(
+      'multiSpeakerVoiceConfig parameter is not supported in Vertex AI.',
+    );
+  }
+
+  const fromLanguageCode = common.getValueByPath(fromObject, ['languageCode']);
+  if (fromLanguageCode != null) {
+    common.setValueByPath(toObject, ['languageCode'], fromLanguageCode);
+  }
+
+  return toObject;
+}
+
 export function blobToMldev(
   apiClient: ApiClient,
   fromObject: types.Blob,
@@ -1208,7 +1420,10 @@ export function liveConnectConfigToMldev(
     common.setValueByPath(
       parentObject,
       ['setup', 'generationConfig', 'speechConfig'],
-      fromSpeechConfig,
+      speechConfigToMldev(
+        apiClient,
+        t.tLiveSpeechConfig(apiClient, fromSpeechConfig),
+      ),
     );
   }
 
@@ -1387,7 +1602,10 @@ export function liveConnectConfigToVertex(
     common.setValueByPath(
       parentObject,
       ['setup', 'generationConfig', 'speechConfig'],
-      fromSpeechConfig,
+      speechConfigToVertex(
+        apiClient,
+        t.tLiveSpeechConfig(apiClient, fromSpeechConfig),
+      ),
     );
   }
 

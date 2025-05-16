@@ -554,6 +554,75 @@ describe('live', () => {
     expect(session).toBeDefined();
   });
 
+  it('connect should reject multi speaker speech config', async () => {
+    const apiClient = new ApiClient({
+      auth: new FakeAuth(),
+      apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
+      vertexai: true,
+      project: 'test-project',
+      location: 'test-location',
+    });
+    const websocketFactory = new FakeWebSocketFactory();
+    const live = new Live(apiClient, new FakeAuth(), websocketFactory);
+
+    let websocket = new FakeWebSocket(
+      '',
+      {},
+      {
+        onopen: function () {},
+        onmessage: function (_e: MessageEvent) {},
+        onerror: function (_e: ErrorEvent) {},
+        onclose: function (_e: CloseEvent) {},
+      },
+    );
+    spyOn(websocket, 'connect').and.callThrough();
+    spyOn(websocketFactory, 'create').and.callFake(
+      (url, headers, callbacks) => {
+        // Update the websocket spy instance with callbacks provided by
+        // the websocket factory.
+        websocket = new FakeWebSocket(url, headers, callbacks);
+        spyOn(websocket, 'connect').and.callThrough();
+        const _websocketSpy = spyOn(websocket, 'send').and.callThrough();
+        return websocket;
+      },
+    );
+
+    try {
+      const _ = await live.connect({
+        model: 'models/gemini-2.0-flash-live-001',
+        config: {
+          speechConfig: {
+            multiSpeakerVoiceConfig: {
+              speakerVoiceConfigs: [
+                {
+                  speaker: 'Alice',
+                  voiceConfig: {prebuiltVoiceConfig: {voiceName: 'leda'}},
+                },
+                {
+                  speaker: 'Bob',
+                  voiceConfig: {prebuiltVoiceConfig: {voiceName: 'kore'}},
+                },
+              ],
+            },
+          },
+        },
+        callbacks: {
+          onmessage: function (e: types.LiveServerMessage) {
+            void e;
+          },
+        },
+      });
+    } catch (e) {
+      if (e instanceof Error) {
+        expect(e.message).toBe(
+          'multiSpeakerVoiceConfig is not supported in the live API.',
+        );
+      }
+    }
+  });
+
   it('session should return goAway message', async () => {
     const apiClient = new ApiClient({
       auth: new FakeAuth(),
