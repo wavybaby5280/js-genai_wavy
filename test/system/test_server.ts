@@ -38,6 +38,9 @@ const testServerOptions: TestServerOptions = {
 let serverProcess: ChildProcess | null = null;
 
 export async function setupTestServer() {
+  if (!process.argv.includes('--test-server')) {
+    return;
+  }
   process.env.TEST_SERVER_SECRETS = `${process.env.GOOGLE_CLOUD_PROJECT},${process.env.GOOGLE_CLOUD_LOCATION}`;
   serverProcess = startTestServer(testServerOptions);
   // TODO(b/416776777): Replace this with some sort of a readiness check.
