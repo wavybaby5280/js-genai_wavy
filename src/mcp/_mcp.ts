@@ -7,9 +7,10 @@
 import {Client as McpClient} from '@modelcontextprotocol/sdk/client/index.js';
 import {Tool as McpTool} from '@modelcontextprotocol/sdk/types.js';
 
-import {ApiClient, GOOGLE_API_CLIENT_HEADER} from '../_api_client.js';
-import {tTools} from '../_transformers.js';
+import {GOOGLE_API_CLIENT_HEADER} from '../_api_client.js';
+import {mcpToolsToGeminiTool} from '../_transformers.js';
 import {
+  CallableTool,
   FunctionCall,
   GenerateContentParameters,
   Part,
@@ -23,7 +24,7 @@ export const MCP_LABEL = 'mcp_used/unknown';
 // Checks whether the list of tools contains any MCP tools.
 export function hasMcpToolUsage(tools: ToolListUnion): boolean {
   for (const tool of tools) {
-    if (tool instanceof McpClient) {
+    if (isMcpCallableTool(tool)) {
       return true;
     }
     if (typeof tool === 'object' && 'inputSchema' in tool) {
@@ -44,74 +45,91 @@ export function setMcpUsageHeader(headers: Record<string, string>) {
 // Checks whether the list of tools contains any MCP clients. Will return true
 // if there is at least one MCP client.
 export function hasMcpClientTools(params: GenerateContentParameters): boolean {
-  return (
-    params.config?.tools?.some((tool) => tool instanceof McpClient) ?? false
-  );
+  return params.config?.tools?.some((tool) => isMcpCallableTool(tool)) ?? false;
 }
 
 // Checks whether the list of tools contains any non-MCP tools. Will return true
 // if there is at least one non-MCP tool.
 export function hasNonMcpTools(params: GenerateContentParameters): boolean {
   return (
-    params.config?.tools?.some((tool) => !(tool instanceof McpClient)) ?? false
+    params.config?.tools?.some((tool) => !isMcpCallableTool(tool)) ?? false
   );
 }
 
-export class McpToGenAIToolAdapter {
-  private readonly functionNameToMcpClient: Record<string, McpClient>;
-  private readonly tools: Tool[];
+// Returns true if the object is a MCP CallableTool, otherwise false.
+function isMcpCallableTool(object: unknown): boolean {
+  // TODO: b/418266406 - Add a more robust check for the MCP CallableTool.
+  return (
+    object !== null &&
+    typeof object === 'object' &&
+    'tool' in object &&
+    'callTool' in object
+  );
+}
 
-  private constructor(
-    functionNameToMcpClient: Record<string, McpClient>,
-    tools: Tool[],
-  ) {
-    this.functionNameToMcpClient = functionNameToMcpClient;
-    this.tools = tools;
+/**
+ * McpCallableTool can be used for model inference and invoking MCP clients with
+ * given function call arguments.
+ *
+ * @experimental Built-in MCP support is a preview feature, may change in future
+ * versions.
+ */
+export class McpCallableTool implements CallableTool {
+  private readonly mcpClients;
+  private mcpTools: McpTool[] = [];
+  private functionNameToMcpClient: Record<string, McpClient> = {};
+
+  private constructor(mcpClients: McpClient[] = []) {
+    this.mcpClients = mcpClients;
   }
 
   /**
-   * Asynchronously creates and initializes an McpToGenAIToolAdapter instance.
-   * @param mcpClientsList - A list of McpClient instances.
-   * @return A Promise that resolves to a fully initialized
-   *     McpToGenAIToolAdapter instance.
+   * Creates a McpCallableTool.
    */
-  public static async create(
-    apiClient: ApiClient,
-    mcpClientsList: ToolListUnion,
-  ): Promise<McpToGenAIToolAdapter> {
+  public static create(mcpClients: McpClient[]): McpCallableTool {
+    return new McpCallableTool(mcpClients);
+  }
+
+  /**
+   * Validates the function names are not duplicate and initialize the function
+   * name to MCP client mapping.
+   *
+   * @throws {Error} if the MCP tools from the MCP clients have duplicate tool
+   *     names.
+   */
+  async initialize() {
+    if (this.mcpTools.length > 0) {
+      return;
+    }
+
     const functionMap: Record<string, McpClient> = {};
-    const allTools: Tool[] = [];
-
-    for (const mcpClient of mcpClientsList) {
-      const toolListFromMcpClient = await (mcpClient as McpClient).listTools();
-
-      const toolsFromCurrentClient = tTools(
-        apiClient,
-        toolListFromMcpClient.tools as McpTool[],
-      );
-      allTools.push(...toolsFromCurrentClient);
-
-      for (const tool of toolListFromMcpClient.tools) {
-        const toolName = tool.name as string;
-        if (functionMap[toolName]) {
+    const mcpTools: McpTool[] = [];
+    for (const mcpClient of this.mcpClients) {
+      const mcpToolList = await mcpClient.listTools();
+      mcpTools.push(...mcpToolList.tools);
+      for (const mcpTool of mcpToolList.tools) {
+        const mcpToolName = mcpTool.name as string;
+        if (functionMap[mcpToolName]) {
           throw new Error(
             `Duplicate function name ${
-              toolName
+              mcpToolName
             } found in MCP tools. Please ensure function names are unique.`,
           );
         }
-        functionMap[toolName] = mcpClient as McpClient;
+        functionMap[mcpToolName] = mcpClient;
       }
     }
-
-    return new McpToGenAIToolAdapter(functionMap, allTools);
+    this.mcpTools = mcpTools;
+    this.functionNameToMcpClient = functionMap;
   }
 
-  listTools(): Tool[] {
-    return this.tools;
+  public async tool(): Promise<Tool> {
+    await this.initialize();
+    return mcpToolsToGeminiTool(this.mcpTools);
   }
 
-  async callTool(functionCalls: FunctionCall[]): Promise<Part[]> {
+  public async callTool(functionCalls: FunctionCall[]): Promise<Part[]> {
+    await this.initialize();
     const functionCallResponseParts: Part[] = [];
     for (const functionCall of functionCalls) {
       const mcpClient = this.functionNameToMcpClient[functionCall.name!];
@@ -130,4 +148,17 @@ export class McpToGenAIToolAdapter {
     }
     return functionCallResponseParts;
   }
+}
+
+/**
+ * Creates a McpCallableTool from an array of MCP client
+ *
+ * The callable tool can invoke the MCP clients with given function call
+ * arguments. (often for automatic function calling).
+ *
+ * @experimental Built-in MCP support is a preview feature, may change in future
+ * versions.
+ */
+export function mcpToTool(clients: McpClient[]): CallableTool {
+  return McpCallableTool.create(clients);
 }

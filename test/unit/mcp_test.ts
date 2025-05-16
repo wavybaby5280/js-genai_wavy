@@ -4,11 +4,23 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {ListToolsResultSchema} from '@modelcontextprotocol/sdk/types.js';
+import {
+  ListToolsResultSchema,
+  Tool as McpTool,
+} from '@modelcontextprotocol/sdk/types.js';
 
-import {mcpToGeminiTools} from '../../src/_transformers.js';
-import {hasMcpToolUsage, setMcpUsageHeader} from '../../src/mcp/_mcp.js';
+import {
+  mcpToGeminiTools,
+  mcpToolsToGeminiTool,
+} from '../../src/_transformers.js';
+import {
+  hasMcpToolUsage,
+  mcpToTool,
+  setMcpUsageHeader,
+} from '../../src/mcp/_mcp.js';
 import * as types from '../../src/types.js';
+
+import {spinUpPrintingServer} from './test_mcp_server.js';
 
 describe('mcpToGeminiTools', () => {
   it('return empty array from empty tools list', () => {
@@ -222,23 +234,91 @@ describe('mcpToGeminiTools', () => {
   });
 });
 
-describe('hasMcpToolUsage', () => {
-  it('should return true for MCP tools', () => {
-    const mcpTools = {
-      tools: [
+describe('mcpToolsToGeminiTool', () => {
+  const mcpTool1: McpTool = {
+    name: 'tool-1',
+    description: 'tool-1-description',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        property: {
+          type: 'object',
+          items: {
+            type: 'string',
+            description: 'item-description',
+          },
+        },
+      },
+    },
+  };
+  const mcpTool2: McpTool = {
+    name: 'tool-2',
+    description: 'tool-2-description',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        property: {
+          type: 'object',
+          items: {
+            type: 'string',
+            description: 'item-description',
+          },
+        },
+      },
+    },
+  };
+
+  it('return empty array from empty tools list', () => {
+    expect(mcpToolsToGeminiTool([])).toEqual({functionDeclarations: []});
+  });
+
+  it('should process multiple MCP tools to single Gemini tool', () => {
+    const mcpTools: McpTool[] = [mcpTool1, mcpTool2];
+
+    expect(mcpToolsToGeminiTool(mcpTools)).toEqual({
+      functionDeclarations: [
         {
-          name: 'tool',
-          description: 'tool-description',
-          inputSchema: {
-            type: 'object',
-            properties: {},
+          name: 'tool-1',
+          description: 'tool-1-description',
+          parameters: {
+            type: types.Type.OBJECT,
+            properties: {
+              property: {
+                type: types.Type.OBJECT,
+                items: {
+                  type: types.Type.STRING,
+                  description: 'item-description',
+                },
+              },
+            },
+          },
+        },
+        {
+          name: 'tool-2',
+          description: 'tool-2-description',
+          parameters: {
+            type: types.Type.OBJECT,
+            properties: {
+              property: {
+                type: types.Type.OBJECT,
+                items: {
+                  type: types.Type.STRING,
+                  description: 'item-description',
+                },
+              },
+            },
           },
         },
       ],
-    };
+    });
+  });
+});
 
-    const parsedMcpTools = ListToolsResultSchema.parse(mcpTools);
-    expect(hasMcpToolUsage(parsedMcpTools.tools)).toBeTrue();
+describe('hasMcpToolUsage', () => {
+  it('should return true for McpCallableTool', async () => {
+    const mcpCallableTool = mcpToTool([await spinUpPrintingServer()]);
+
+    expect(hasMcpToolUsage([mcpCallableTool])).toBeTrue();
   });
 
   it('should return false for Gemini tools', () => {
@@ -273,5 +353,19 @@ describe('setMcpUsageHeader', () => {
     const headers: Record<string, string> = {};
     setMcpUsageHeader(headers);
     expect(headers['x-goog-api-client']).toEqual('mcp_used/unknown');
+  });
+});
+
+describe('mcpToTool', () => {
+  it('throw error when MCP clients have duplicate function names', async () => {
+    const mcpClient = await spinUpPrintingServer();
+
+    try {
+      mcpToTool([mcpClient, mcpClient]);
+    } catch (e) {
+      expect((e as Error).message).toEqual(
+        'Duplicate function name print found in MCP tools. Please ensure function names are unique.',
+      );
+    }
   });
 });

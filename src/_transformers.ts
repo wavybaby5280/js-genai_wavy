@@ -1062,6 +1062,32 @@ export function mcpToGeminiTools(
   return listToolsResult.tools.map(mcpToGeminiTool);
 }
 
+/**
+ * Converts a list of MCP tools to a single Gemini tool with a list of function
+ * declarations.
+ */
+export function mcpToolsToGeminiTool(mcpTools: McpTool[]): types.Tool {
+  const functionDeclarations: types.FunctionDeclaration[] = [];
+  const toolNames = new Set<string>();
+  for (const mcpTool of mcpTools) {
+    const mcpToolName = mcpTool.name as string;
+    if (toolNames.has(mcpToolName)) {
+      throw new Error(
+        `Duplicate function name ${
+          mcpToolName
+        } found in MCP tools. Please ensure function names are unique.`,
+      );
+    }
+    toolNames.add(mcpToolName);
+    const geminiTool = mcpToGeminiTool(mcpTool);
+    if (geminiTool.functionDeclarations) {
+      functionDeclarations.push(...geminiTool.functionDeclarations);
+    }
+  }
+
+  return {functionDeclarations: functionDeclarations};
+}
+
 // Filters the list schema field to only include fields that are supported by
 // JSONSchema.
 function filterListSchemaField(fieldValue: unknown): Record<string, unknown>[] {

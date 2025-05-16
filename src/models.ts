@@ -18,7 +18,6 @@ import * as _internal_types from './_internal_types.js';
 import {tContents} from './_transformers.js';
 import * as converters from './converters/_models_converters.js';
 import {
-  McpToGenAIToolAdapter,
   hasMcpClientTools,
   hasMcpToolUsage,
   hasNonMcpTools,
@@ -89,17 +88,25 @@ export class Models extends BaseModule {
       return await this.generateContentInternal(params);
     }
 
+    // TODO: b/418266406 - Improve the check for CallableTools and Tools.
     if (hasNonMcpTools(params)) {
       throw new Error(
-        'Automatic function calling with MCP clients and non MCP tools is not yet supported.',
+        'Automatic function calling with CallableTools and Tools is not yet supported.',
       );
     }
 
-    const mcpAdaptor = await McpToGenAIToolAdapter.create(
-      this.apiClient,
-      params.config!.tools!,
-    );
-    params.config!.tools = mcpAdaptor.listTools();
+    // TODO: b/418261898 - replace with transformCallableTools
+    const inputTools = params.config?.tools ?? [];
+    const convertedTools: types.Tool[] = [];
+    for (const tool of inputTools) {
+      if (this.isCallableTool(tool)) {
+        const callableTool = tool as types.CallableTool;
+        convertedTools.push(await callableTool.tool());
+      } else {
+        convertedTools.push(tool as types.Tool);
+      }
+    }
+    params.config!.tools = convertedTools;
 
     let response: types.GenerateContentResponse;
     let functionResponseContent: types.Content;
@@ -118,9 +125,14 @@ export class Models extends BaseModule {
       }
 
       const responseContent: types.Content = response.candidates![0].content!;
-      const functionResponseParts = await mcpAdaptor.callTool(
-        response.functionCalls!,
-      );
+      const functionResponseParts: types.Part[] = [];
+      for (const tool of inputTools) {
+        if (this.isCallableTool(tool)) {
+          const callableTool = tool as types.CallableTool;
+          const parts = await callableTool.callTool(response.functionCalls!);
+          functionResponseParts.push(...parts);
+        }
+      }
 
       remoteCalls++;
 
@@ -250,7 +262,7 @@ export class Models extends BaseModule {
   }
 
   private isCallableTool(tool: types.ToolUnion): boolean {
-    return 'callTool' in tool;
+    return 'callTool' in tool && typeof tool.callTool === 'function';
   }
 
   private async initAfcToolsMap(

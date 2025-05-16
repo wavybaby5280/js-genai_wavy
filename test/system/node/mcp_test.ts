@@ -9,6 +9,7 @@ import {InMemoryTransport} from '@modelcontextprotocol/sdk/inMemory.js';
 import {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
 import {z} from 'zod';
 
+import {mcpToTool} from '../../../src/mcp/_mcp.js';
 import {GoogleGenAI} from '../../../src/node/node_client.js';
 import {FunctionCallingConfigMode} from '../../../src/types.js';
 import {setupTestServer, shutdownTestServer} from '../test_server.js';
@@ -29,10 +30,10 @@ describe('MCP related client Tests', () => {
   describe('generateContent', () => {
     it('ML Dev should take a list of MCPClients and conduct automated function calling', async () => {
       const ai = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
-      const mcpClientList = [
+      const mcpCallableTool = mcpToTool([
         await spinUpPrintingServer(),
         await spinUpBeepingServer(),
-      ];
+      ]);
       const consoleLogSpy = spyOn(console, 'log').and.callThrough();
       const consoleBeepSpy = spyOn(process.stdout, 'write').and.callThrough();
       await ai.models.generateContent({
@@ -40,7 +41,7 @@ describe('MCP related client Tests', () => {
         contents:
           'Use the printer to print a simple word: hello in blue, and beep with the beeper',
         config: {
-          tools: mcpClientList,
+          tools: [mcpCallableTool],
           toolConfig: {
             functionCallingConfig: {
               mode: FunctionCallingConfigMode.AUTO,
@@ -57,13 +58,13 @@ describe('MCP related client Tests', () => {
         project: GOOGLE_CLOUD_PROJECT,
         location: GOOGLE_CLOUD_LOCATION,
       });
-      const mcpClientList = [await spinUpPrintingServer()];
+      const mcpCallableTool = mcpToTool([await spinUpPrintingServer()]);
       const consoleLogSpy = spyOn(console, 'log').and.callThrough();
       await ai.models.generateContent({
         model: 'gemini-2.0-flash',
         contents: 'Use the printer to print a simple word: hello in red',
         config: {
-          tools: mcpClientList,
+          tools: [mcpCallableTool],
           toolConfig: {
             functionCallingConfig: {
               mode: FunctionCallingConfigMode.AUTO,
