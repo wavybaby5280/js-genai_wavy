@@ -199,7 +199,7 @@ export class Caches extends BaseModule {
 // @public
 export interface CallableTool {
     callTool(functionCalls: FunctionCall[]): Promise<Part[]>;
-    tool(): Tool;
+    tool(): Promise<Tool>;
 }
 
 // @public

@@ -201,8 +201,167 @@ export class Models extends BaseModule {
         params.config.httpOptions.headers as Record<string, string>,
       );
     }
-    return await this.generateContentStreamInternal(params);
+
+    const afcMaxRemoteCalls =
+      params.config?.automaticFunctionCalling?.maximumRemoteCalls;
+    if (
+      afcMaxRemoteCalls &&
+      afcMaxRemoteCalls > 0 &&
+      !params.config?.automaticFunctionCalling?.disable
+    ) {
+      return await this.processAfcStream(params);
+    } else {
+      const transformedParams = await this.transformCallableTools(params);
+      return await this.generateContentStreamInternal(transformedParams);
+    }
   };
+
+  /**
+   * Transforms the CallableTools in the parameters to be simply Tools, it
+   * copies the params into a new object and replaces the tools, it does not
+   * modify the original params.
+   */
+  private async transformCallableTools(
+    params: types.GenerateContentParameters,
+  ): Promise<types.GenerateContentParameters> {
+    const tools = params.config?.tools;
+    if (!tools) {
+      return params;
+    }
+    const transformedTools = await Promise.all(
+      tools.map(async (tool) => {
+        if (this.isCallableTool(tool)) {
+          const callableTool = tool as types.CallableTool;
+          return await callableTool.tool();
+        }
+        return tool;
+      }),
+    );
+    const newParams: types.GenerateContentParameters = {
+      model: params.model,
+      contents: params.contents,
+      config: {
+        ...params.config,
+        tools: transformedTools,
+      },
+    };
+    newParams.config!.tools = transformedTools;
+    return newParams;
+  }
+
+  private isCallableTool(tool: types.ToolUnion): boolean {
+    return 'callTool' in tool;
+  }
+
+  private async initAfcToolsMap(
+    params: types.GenerateContentParameters,
+  ): Promise<Map<string, types.CallableTool>> {
+    const afcTools: Map<string, types.CallableTool> = new Map();
+    for (const tool of params.config?.tools ?? []) {
+      if (this.isCallableTool(tool)) {
+        const callableTool = tool as types.CallableTool;
+        const toolDeclaration = await callableTool.tool();
+        for (const declaration of toolDeclaration.functionDeclarations ?? []) {
+          if (!declaration.name) {
+            throw new Error('Function declaration name is required.');
+          }
+          if (afcTools.has(declaration.name)) {
+            throw new Error(
+              `Duplicate tool declaration name: ${declaration.name}`,
+            );
+          }
+          afcTools.set(declaration.name, callableTool);
+        }
+      }
+    }
+    return afcTools;
+  }
+
+  private async processAfcStream(
+    params: types.GenerateContentParameters,
+  ): Promise<AsyncGenerator<types.GenerateContentResponse>> {
+    const maxRemoteCalls =
+      params.config?.automaticFunctionCalling?.maximumRemoteCalls ?? 0;
+    let wereFunctionsCalled = false;
+    let remoteCallCount = 0;
+    const afcToolsMap = await this.initAfcToolsMap(params);
+    return (async function* (
+      models: Models,
+      afcTools: Map<string, types.CallableTool>,
+      params: types.GenerateContentParameters,
+    ) {
+      while (remoteCallCount < maxRemoteCalls) {
+        if (wereFunctionsCalled) {
+          remoteCallCount++;
+          wereFunctionsCalled = false;
+        }
+        const transformedParams = await models.transformCallableTools(params);
+        const response =
+          await models.generateContentStreamInternal(transformedParams);
+
+        const functionResponses: types.Part[] = [];
+        const responseContents: types.Content[] = [];
+
+        for await (const chunk of response) {
+          yield chunk;
+          if (chunk.candidates && chunk.candidates[0]?.content) {
+            responseContents.push(chunk.candidates[0].content);
+            for (const part of chunk.candidates[0].content.parts ?? []) {
+              if (part.functionCall) {
+                if (!part.functionCall.name) {
+                  throw new Error(
+                    'Function call was not returned by the model.',
+                  );
+                }
+                if (!afcTools.has(part.functionCall.name)) {
+                  throw new Error(
+                    `Automatic function calling was requested, but not all the tools the model used implement the CallableTool interface. Available tools: ${afcTools.keys()}, mising tool: ${
+                      part.functionCall.name
+                    }`,
+                  );
+                } else {
+                  const responseParts = await afcTools
+                    .get(part.functionCall.name)!
+                    .callTool([part.functionCall]);
+                  functionResponses.push(...responseParts);
+                }
+              }
+            }
+          }
+        }
+
+        if (functionResponses.length > 0) {
+          wereFunctionsCalled = true;
+          const typedResponseChunk = new types.GenerateContentResponse();
+          typedResponseChunk.candidates = [
+            {
+              content: {
+                role: 'user',
+                parts: functionResponses,
+              },
+            },
+          ];
+
+          yield typedResponseChunk;
+
+          const newContents: types.Content[] = [];
+          newContents.push(...responseContents);
+          newContents.push({
+            role: 'user',
+            parts: functionResponses,
+          });
+          const updatedContents = tContents(
+            models.apiClient,
+            params.contents,
+          ).concat(newContents);
+
+          params.contents = updatedContents;
+        } else {
+          break;
+        }
+      }
+    })(this, afcToolsMap, params);
+  }
 
   /**
    * Generates an image based on a text description and configuration.
