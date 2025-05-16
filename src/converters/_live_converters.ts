@@ -2488,6 +2488,428 @@ export function liveClientMessageToVertex(
   return toObject;
 }
 
+export function liveMusicConnectParametersToMldev(
+  apiClient: ApiClient,
+  fromObject: types.LiveMusicConnectParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromModel = common.getValueByPath(fromObject, ['model']);
+  if (fromModel != null) {
+    common.setValueByPath(toObject, ['setup', 'model'], fromModel);
+  }
+
+  const fromCallbacks = common.getValueByPath(fromObject, ['callbacks']);
+  if (fromCallbacks != null) {
+    common.setValueByPath(toObject, ['callbacks'], fromCallbacks);
+  }
+
+  return toObject;
+}
+
+export function liveMusicConnectParametersToVertex(
+  apiClient: ApiClient,
+  fromObject: types.LiveMusicConnectParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (common.getValueByPath(fromObject, ['model']) !== undefined) {
+    throw new Error('model parameter is not supported in Vertex AI.');
+  }
+
+  if (common.getValueByPath(fromObject, ['callbacks']) !== undefined) {
+    throw new Error('callbacks parameter is not supported in Vertex AI.');
+  }
+
+  return toObject;
+}
+
+export function weightedPromptToMldev(
+  apiClient: ApiClient,
+  fromObject: types.WeightedPrompt,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromText = common.getValueByPath(fromObject, ['text']);
+  if (fromText != null) {
+    common.setValueByPath(toObject, ['text'], fromText);
+  }
+
+  const fromWeight = common.getValueByPath(fromObject, ['weight']);
+  if (fromWeight != null) {
+    common.setValueByPath(toObject, ['weight'], fromWeight);
+  }
+
+  return toObject;
+}
+
+export function weightedPromptToVertex(
+  apiClient: ApiClient,
+  fromObject: types.WeightedPrompt,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (common.getValueByPath(fromObject, ['text']) !== undefined) {
+    throw new Error('text parameter is not supported in Vertex AI.');
+  }
+
+  if (common.getValueByPath(fromObject, ['weight']) !== undefined) {
+    throw new Error('weight parameter is not supported in Vertex AI.');
+  }
+
+  return toObject;
+}
+
+export function liveMusicSetClientContentParametersToMldev(
+  apiClient: ApiClient,
+  fromObject: types.LiveMusicSetClientContentParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromWeightedPrompts = common.getValueByPath(fromObject, [
+    'weightedPrompts',
+  ]);
+  if (fromWeightedPrompts != null) {
+    let transformedList = fromWeightedPrompts;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return weightedPromptToMldev(apiClient, item);
+      });
+    }
+    common.setValueByPath(toObject, ['weightedPrompts'], transformedList);
+  }
+
+  return toObject;
+}
+
+export function liveMusicSetClientContentParametersToVertex(
+  apiClient: ApiClient,
+  fromObject: types.LiveMusicSetClientContentParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (common.getValueByPath(fromObject, ['weightedPrompts']) !== undefined) {
+    throw new Error('weightedPrompts parameter is not supported in Vertex AI.');
+  }
+
+  return toObject;
+}
+
+export function liveMusicGenerationConfigToMldev(
+  apiClient: ApiClient,
+  fromObject: types.LiveMusicGenerationConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromTemperature = common.getValueByPath(fromObject, ['temperature']);
+  if (fromTemperature != null) {
+    common.setValueByPath(toObject, ['temperature'], fromTemperature);
+  }
+
+  const fromTopK = common.getValueByPath(fromObject, ['topK']);
+  if (fromTopK != null) {
+    common.setValueByPath(toObject, ['topK'], fromTopK);
+  }
+
+  const fromSeed = common.getValueByPath(fromObject, ['seed']);
+  if (fromSeed != null) {
+    common.setValueByPath(toObject, ['seed'], fromSeed);
+  }
+
+  const fromGuidance = common.getValueByPath(fromObject, ['guidance']);
+  if (fromGuidance != null) {
+    common.setValueByPath(toObject, ['guidance'], fromGuidance);
+  }
+
+  const fromBpm = common.getValueByPath(fromObject, ['bpm']);
+  if (fromBpm != null) {
+    common.setValueByPath(toObject, ['bpm'], fromBpm);
+  }
+
+  const fromDensity = common.getValueByPath(fromObject, ['density']);
+  if (fromDensity != null) {
+    common.setValueByPath(toObject, ['density'], fromDensity);
+  }
+
+  const fromBrightness = common.getValueByPath(fromObject, ['brightness']);
+  if (fromBrightness != null) {
+    common.setValueByPath(toObject, ['brightness'], fromBrightness);
+  }
+
+  const fromScale = common.getValueByPath(fromObject, ['scale']);
+  if (fromScale != null) {
+    common.setValueByPath(toObject, ['scale'], fromScale);
+  }
+
+  const fromMuteBass = common.getValueByPath(fromObject, ['muteBass']);
+  if (fromMuteBass != null) {
+    common.setValueByPath(toObject, ['muteBass'], fromMuteBass);
+  }
+
+  const fromMuteDrums = common.getValueByPath(fromObject, ['muteDrums']);
+  if (fromMuteDrums != null) {
+    common.setValueByPath(toObject, ['muteDrums'], fromMuteDrums);
+  }
+
+  const fromOnlyBassAndDrums = common.getValueByPath(fromObject, [
+    'onlyBassAndDrums',
+  ]);
+  if (fromOnlyBassAndDrums != null) {
+    common.setValueByPath(toObject, ['onlyBassAndDrums'], fromOnlyBassAndDrums);
+  }
+
+  const fromMusicGenerationMode = common.getValueByPath(fromObject, [
+    'musicGenerationMode',
+  ]);
+  if (fromMusicGenerationMode != null) {
+    common.setValueByPath(
+      toObject,
+      ['musicGenerationMode'],
+      fromMusicGenerationMode,
+    );
+  }
+
+  return toObject;
+}
+
+export function liveMusicGenerationConfigToVertex(
+  apiClient: ApiClient,
+  fromObject: types.LiveMusicGenerationConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (common.getValueByPath(fromObject, ['temperature']) !== undefined) {
+    throw new Error('temperature parameter is not supported in Vertex AI.');
+  }
+
+  if (common.getValueByPath(fromObject, ['topK']) !== undefined) {
+    throw new Error('topK parameter is not supported in Vertex AI.');
+  }
+
+  if (common.getValueByPath(fromObject, ['seed']) !== undefined) {
+    throw new Error('seed parameter is not supported in Vertex AI.');
+  }
+
+  if (common.getValueByPath(fromObject, ['guidance']) !== undefined) {
+    throw new Error('guidance parameter is not supported in Vertex AI.');
+  }
+
+  if (common.getValueByPath(fromObject, ['bpm']) !== undefined) {
+    throw new Error('bpm parameter is not supported in Vertex AI.');
+  }
+
+  if (common.getValueByPath(fromObject, ['density']) !== undefined) {
+    throw new Error('density parameter is not supported in Vertex AI.');
+  }
+
+  if (common.getValueByPath(fromObject, ['brightness']) !== undefined) {
+    throw new Error('brightness parameter is not supported in Vertex AI.');
+  }
+
+  if (common.getValueByPath(fromObject, ['scale']) !== undefined) {
+    throw new Error('scale parameter is not supported in Vertex AI.');
+  }
+
+  if (common.getValueByPath(fromObject, ['muteBass']) !== undefined) {
+    throw new Error('muteBass parameter is not supported in Vertex AI.');
+  }
+
+  if (common.getValueByPath(fromObject, ['muteDrums']) !== undefined) {
+    throw new Error('muteDrums parameter is not supported in Vertex AI.');
+  }
+
+  if (common.getValueByPath(fromObject, ['onlyBassAndDrums']) !== undefined) {
+    throw new Error(
+      'onlyBassAndDrums parameter is not supported in Vertex AI.',
+    );
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['musicGenerationMode']) !== undefined
+  ) {
+    throw new Error(
+      'musicGenerationMode parameter is not supported in Vertex AI.',
+    );
+  }
+
+  return toObject;
+}
+
+export function liveMusicSetConfigParametersToMldev(
+  apiClient: ApiClient,
+  fromObject: types.LiveMusicSetConfigParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromMusicGenerationConfig = common.getValueByPath(fromObject, [
+    'musicGenerationConfig',
+  ]);
+  if (fromMusicGenerationConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['musicGenerationConfig'],
+      liveMusicGenerationConfigToMldev(apiClient, fromMusicGenerationConfig),
+    );
+  }
+
+  return toObject;
+}
+
+export function liveMusicSetConfigParametersToVertex(
+  apiClient: ApiClient,
+  fromObject: types.LiveMusicSetConfigParameters,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (
+    common.getValueByPath(fromObject, ['musicGenerationConfig']) !== undefined
+  ) {
+    throw new Error(
+      'musicGenerationConfig parameter is not supported in Vertex AI.',
+    );
+  }
+
+  return toObject;
+}
+
+export function liveMusicClientSetupToMldev(
+  apiClient: ApiClient,
+  fromObject: types.LiveMusicClientSetup,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromModel = common.getValueByPath(fromObject, ['model']);
+  if (fromModel != null) {
+    common.setValueByPath(toObject, ['model'], fromModel);
+  }
+
+  return toObject;
+}
+
+export function liveMusicClientSetupToVertex(
+  apiClient: ApiClient,
+  fromObject: types.LiveMusicClientSetup,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (common.getValueByPath(fromObject, ['model']) !== undefined) {
+    throw new Error('model parameter is not supported in Vertex AI.');
+  }
+
+  return toObject;
+}
+
+export function liveMusicClientContentToMldev(
+  apiClient: ApiClient,
+  fromObject: types.LiveMusicClientContent,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromWeightedPrompts = common.getValueByPath(fromObject, [
+    'weightedPrompts',
+  ]);
+  if (fromWeightedPrompts != null) {
+    let transformedList = fromWeightedPrompts;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return weightedPromptToMldev(apiClient, item);
+      });
+    }
+    common.setValueByPath(toObject, ['weightedPrompts'], transformedList);
+  }
+
+  return toObject;
+}
+
+export function liveMusicClientContentToVertex(
+  apiClient: ApiClient,
+  fromObject: types.LiveMusicClientContent,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (common.getValueByPath(fromObject, ['weightedPrompts']) !== undefined) {
+    throw new Error('weightedPrompts parameter is not supported in Vertex AI.');
+  }
+
+  return toObject;
+}
+
+export function liveMusicClientMessageToMldev(
+  apiClient: ApiClient,
+  fromObject: types.LiveMusicClientMessage,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromSetup = common.getValueByPath(fromObject, ['setup']);
+  if (fromSetup != null) {
+    common.setValueByPath(
+      toObject,
+      ['setup'],
+      liveMusicClientSetupToMldev(apiClient, fromSetup),
+    );
+  }
+
+  const fromClientContent = common.getValueByPath(fromObject, [
+    'clientContent',
+  ]);
+  if (fromClientContent != null) {
+    common.setValueByPath(
+      toObject,
+      ['clientContent'],
+      liveMusicClientContentToMldev(apiClient, fromClientContent),
+    );
+  }
+
+  const fromMusicGenerationConfig = common.getValueByPath(fromObject, [
+    'musicGenerationConfig',
+  ]);
+  if (fromMusicGenerationConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['musicGenerationConfig'],
+      liveMusicGenerationConfigToMldev(apiClient, fromMusicGenerationConfig),
+    );
+  }
+
+  const fromPlaybackControl = common.getValueByPath(fromObject, [
+    'playbackControl',
+  ]);
+  if (fromPlaybackControl != null) {
+    common.setValueByPath(toObject, ['playbackControl'], fromPlaybackControl);
+  }
+
+  return toObject;
+}
+
+export function liveMusicClientMessageToVertex(
+  apiClient: ApiClient,
+  fromObject: types.LiveMusicClientMessage,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (common.getValueByPath(fromObject, ['setup']) !== undefined) {
+    throw new Error('setup parameter is not supported in Vertex AI.');
+  }
+
+  if (common.getValueByPath(fromObject, ['clientContent']) !== undefined) {
+    throw new Error('clientContent parameter is not supported in Vertex AI.');
+  }
+
+  if (
+    common.getValueByPath(fromObject, ['musicGenerationConfig']) !== undefined
+  ) {
+    throw new Error(
+      'musicGenerationConfig parameter is not supported in Vertex AI.',
+    );
+  }
+
+  if (common.getValueByPath(fromObject, ['playbackControl']) !== undefined) {
+    throw new Error('playbackControl parameter is not supported in Vertex AI.');
+  }
+
+  return toObject;
+}
+
 export function liveServerSetupCompleteFromMldev(): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -3736,6 +4158,359 @@ export function liveServerMessageFromVertex(
       ),
     );
   }
+
+  return toObject;
+}
+
+export function liveMusicServerSetupCompleteFromMldev(): Record<
+  string,
+  unknown
+> {
+  const toObject: Record<string, unknown> = {};
+
+  return toObject;
+}
+
+export function liveMusicServerSetupCompleteFromVertex(): Record<
+  string,
+  unknown
+> {
+  const toObject: Record<string, unknown> = {};
+
+  return toObject;
+}
+
+export function weightedPromptFromMldev(
+  apiClient: ApiClient,
+  fromObject: types.WeightedPrompt,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromText = common.getValueByPath(fromObject, ['text']);
+  if (fromText != null) {
+    common.setValueByPath(toObject, ['text'], fromText);
+  }
+
+  const fromWeight = common.getValueByPath(fromObject, ['weight']);
+  if (fromWeight != null) {
+    common.setValueByPath(toObject, ['weight'], fromWeight);
+  }
+
+  return toObject;
+}
+
+export function weightedPromptFromVertex(): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  return toObject;
+}
+
+export function liveMusicClientContentFromMldev(
+  apiClient: ApiClient,
+  fromObject: types.LiveMusicClientContent,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromWeightedPrompts = common.getValueByPath(fromObject, [
+    'weightedPrompts',
+  ]);
+  if (fromWeightedPrompts != null) {
+    let transformedList = fromWeightedPrompts;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return weightedPromptFromMldev(apiClient, item);
+      });
+    }
+    common.setValueByPath(toObject, ['weightedPrompts'], transformedList);
+  }
+
+  return toObject;
+}
+
+export function liveMusicClientContentFromVertex(): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  return toObject;
+}
+
+export function liveMusicGenerationConfigFromMldev(
+  apiClient: ApiClient,
+  fromObject: types.LiveMusicGenerationConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromTemperature = common.getValueByPath(fromObject, ['temperature']);
+  if (fromTemperature != null) {
+    common.setValueByPath(toObject, ['temperature'], fromTemperature);
+  }
+
+  const fromTopK = common.getValueByPath(fromObject, ['topK']);
+  if (fromTopK != null) {
+    common.setValueByPath(toObject, ['topK'], fromTopK);
+  }
+
+  const fromSeed = common.getValueByPath(fromObject, ['seed']);
+  if (fromSeed != null) {
+    common.setValueByPath(toObject, ['seed'], fromSeed);
+  }
+
+  const fromGuidance = common.getValueByPath(fromObject, ['guidance']);
+  if (fromGuidance != null) {
+    common.setValueByPath(toObject, ['guidance'], fromGuidance);
+  }
+
+  const fromBpm = common.getValueByPath(fromObject, ['bpm']);
+  if (fromBpm != null) {
+    common.setValueByPath(toObject, ['bpm'], fromBpm);
+  }
+
+  const fromDensity = common.getValueByPath(fromObject, ['density']);
+  if (fromDensity != null) {
+    common.setValueByPath(toObject, ['density'], fromDensity);
+  }
+
+  const fromBrightness = common.getValueByPath(fromObject, ['brightness']);
+  if (fromBrightness != null) {
+    common.setValueByPath(toObject, ['brightness'], fromBrightness);
+  }
+
+  const fromScale = common.getValueByPath(fromObject, ['scale']);
+  if (fromScale != null) {
+    common.setValueByPath(toObject, ['scale'], fromScale);
+  }
+
+  const fromMuteBass = common.getValueByPath(fromObject, ['muteBass']);
+  if (fromMuteBass != null) {
+    common.setValueByPath(toObject, ['muteBass'], fromMuteBass);
+  }
+
+  const fromMuteDrums = common.getValueByPath(fromObject, ['muteDrums']);
+  if (fromMuteDrums != null) {
+    common.setValueByPath(toObject, ['muteDrums'], fromMuteDrums);
+  }
+
+  const fromOnlyBassAndDrums = common.getValueByPath(fromObject, [
+    'onlyBassAndDrums',
+  ]);
+  if (fromOnlyBassAndDrums != null) {
+    common.setValueByPath(toObject, ['onlyBassAndDrums'], fromOnlyBassAndDrums);
+  }
+
+  const fromMusicGenerationMode = common.getValueByPath(fromObject, [
+    'musicGenerationMode',
+  ]);
+  if (fromMusicGenerationMode != null) {
+    common.setValueByPath(
+      toObject,
+      ['musicGenerationMode'],
+      fromMusicGenerationMode,
+    );
+  }
+
+  return toObject;
+}
+
+export function liveMusicGenerationConfigFromVertex(): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  return toObject;
+}
+
+export function liveMusicSourceMetadataFromMldev(
+  apiClient: ApiClient,
+  fromObject: types.LiveMusicSourceMetadata,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromClientContent = common.getValueByPath(fromObject, [
+    'clientContent',
+  ]);
+  if (fromClientContent != null) {
+    common.setValueByPath(
+      toObject,
+      ['clientContent'],
+      liveMusicClientContentFromMldev(apiClient, fromClientContent),
+    );
+  }
+
+  const fromMusicGenerationConfig = common.getValueByPath(fromObject, [
+    'musicGenerationConfig',
+  ]);
+  if (fromMusicGenerationConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['musicGenerationConfig'],
+      liveMusicGenerationConfigFromMldev(apiClient, fromMusicGenerationConfig),
+    );
+  }
+
+  return toObject;
+}
+
+export function liveMusicSourceMetadataFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.LiveMusicSourceMetadata,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromClientContent = common.getValueByPath(fromObject, [
+    'clientContent',
+  ]);
+  if (fromClientContent != null) {
+    common.setValueByPath(
+      toObject,
+      ['clientContent'],
+      liveMusicClientContentFromVertex(),
+    );
+  }
+
+  const fromMusicGenerationConfig = common.getValueByPath(fromObject, [
+    'musicGenerationConfig',
+  ]);
+  if (fromMusicGenerationConfig != null) {
+    common.setValueByPath(
+      toObject,
+      ['musicGenerationConfig'],
+      liveMusicGenerationConfigFromVertex(),
+    );
+  }
+
+  return toObject;
+}
+
+export function audioChunkFromMldev(
+  apiClient: ApiClient,
+  fromObject: types.AudioChunk,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromData = common.getValueByPath(fromObject, ['data']);
+  if (fromData != null) {
+    common.setValueByPath(toObject, ['data'], fromData);
+  }
+
+  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+  if (fromMimeType != null) {
+    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+  }
+
+  const fromSourceMetadata = common.getValueByPath(fromObject, [
+    'sourceMetadata',
+  ]);
+  if (fromSourceMetadata != null) {
+    common.setValueByPath(
+      toObject,
+      ['sourceMetadata'],
+      liveMusicSourceMetadataFromMldev(apiClient, fromSourceMetadata),
+    );
+  }
+
+  return toObject;
+}
+
+export function audioChunkFromVertex(): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  return toObject;
+}
+
+export function liveMusicServerContentFromMldev(
+  apiClient: ApiClient,
+  fromObject: types.LiveMusicServerContent,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromAudioChunks = common.getValueByPath(fromObject, ['audioChunks']);
+  if (fromAudioChunks != null) {
+    let transformedList = fromAudioChunks;
+    if (Array.isArray(transformedList)) {
+      transformedList = transformedList.map((item) => {
+        return audioChunkFromMldev(apiClient, item);
+      });
+    }
+    common.setValueByPath(toObject, ['audioChunks'], transformedList);
+  }
+
+  return toObject;
+}
+
+export function liveMusicServerContentFromVertex(): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  return toObject;
+}
+
+export function liveMusicFilteredPromptFromMldev(
+  apiClient: ApiClient,
+  fromObject: types.LiveMusicFilteredPrompt,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromText = common.getValueByPath(fromObject, ['text']);
+  if (fromText != null) {
+    common.setValueByPath(toObject, ['text'], fromText);
+  }
+
+  const fromFilteredReason = common.getValueByPath(fromObject, [
+    'filteredReason',
+  ]);
+  if (fromFilteredReason != null) {
+    common.setValueByPath(toObject, ['filteredReason'], fromFilteredReason);
+  }
+
+  return toObject;
+}
+
+export function liveMusicFilteredPromptFromVertex(): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  return toObject;
+}
+
+export function liveMusicServerMessageFromMldev(
+  apiClient: ApiClient,
+  fromObject: types.LiveMusicServerMessage,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromSetupComplete = common.getValueByPath(fromObject, [
+    'setupComplete',
+  ]);
+  if (fromSetupComplete != null) {
+    common.setValueByPath(
+      toObject,
+      ['setupComplete'],
+      liveMusicServerSetupCompleteFromMldev(),
+    );
+  }
+
+  const fromServerContent = common.getValueByPath(fromObject, [
+    'serverContent',
+  ]);
+  if (fromServerContent != null) {
+    common.setValueByPath(
+      toObject,
+      ['serverContent'],
+      liveMusicServerContentFromMldev(apiClient, fromServerContent),
+    );
+  }
+
+  const fromFilteredPrompt = common.getValueByPath(fromObject, [
+    'filteredPrompt',
+  ]);
+  if (fromFilteredPrompt != null) {
+    common.setValueByPath(
+      toObject,
+      ['filteredPrompt'],
+      liveMusicFilteredPromptFromMldev(apiClient, fromFilteredPrompt),
+    );
+  }
+
+  return toObject;
+}
+
+export function liveMusicServerMessageFromVertex(): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
 
   return toObject;
 }

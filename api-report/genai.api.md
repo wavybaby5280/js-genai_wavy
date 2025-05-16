@@ -40,6 +40,13 @@ export interface ApiKeyConfig {
 }
 
 // @public
+export interface AudioChunk {
+    data?: string;
+    mimeType?: string;
+    sourceMetadata?: LiveMusicSourceMetadata;
+}
+
+// @public
 export interface AudioTranscriptionConfig {
 }
 
@@ -339,6 +346,7 @@ export interface CreateCachedContentConfig {
     displayName?: string;
     expireTime?: string;
     httpOptions?: HttpOptions;
+    kmsKeyName?: string;
     systemInstruction?: ContentUnion;
     toolConfig?: ToolConfig;
     tools?: Tool[];
@@ -1484,6 +1492,101 @@ export interface LiveConnectParameters {
 }
 
 // @public
+export interface LiveMusicCallbacks {
+    onclose?: ((e: CloseEvent) => void) | null;
+    onerror?: ((e: ErrorEvent) => void) | null;
+    onmessage: (e: LiveMusicServerMessage) => void;
+}
+
+// @public
+export interface LiveMusicClientContent {
+    weightedPrompts?: WeightedPrompt[];
+}
+
+// @public
+export interface LiveMusicClientMessage {
+    clientContent?: LiveMusicClientContent;
+    musicGenerationConfig?: LiveMusicGenerationConfig;
+    playbackControl?: LiveMusicPlaybackControl;
+    setup?: LiveMusicClientSetup;
+}
+
+// @public
+export interface LiveMusicClientSetup {
+    model?: string;
+}
+
+// @public
+export interface LiveMusicConnectParameters {
+    callbacks: LiveMusicCallbacks;
+    model: string;
+}
+
+// @public
+export interface LiveMusicFilteredPrompt {
+    filteredReason?: string;
+    text?: string;
+}
+
+// @public
+export interface LiveMusicGenerationConfig {
+    bpm?: number;
+    brightness?: number;
+    density?: number;
+    guidance?: number;
+    musicGenerationMode?: MusicGenerationMode;
+    muteBass?: boolean;
+    muteDrums?: boolean;
+    onlyBassAndDrums?: boolean;
+    scale?: Scale;
+    seed?: number;
+    temperature?: number;
+    topK?: number;
+}
+
+// @public
+export enum LiveMusicPlaybackControl {
+    PAUSE = "PAUSE",
+    PLAY = "PLAY",
+    PLAYBACK_CONTROL_UNSPECIFIED = "PLAYBACK_CONTROL_UNSPECIFIED",
+    RESET_CONTEXT = "RESET_CONTEXT",
+    STOP = "STOP"
+}
+
+// @public
+export interface LiveMusicServerContent {
+    audioChunks?: AudioChunk[];
+}
+
+// @public
+export class LiveMusicServerMessage {
+    get audioChunk(): AudioChunk | undefined;
+    filteredPrompt?: LiveMusicFilteredPrompt;
+    serverContent?: LiveMusicServerContent;
+    setupComplete?: LiveMusicServerSetupComplete;
+}
+
+// @public
+export interface LiveMusicServerSetupComplete {
+}
+
+// @public
+export interface LiveMusicSetClientContentParameters {
+    weightedPrompts: WeightedPrompt[];
+}
+
+// @public
+export interface LiveMusicSetConfigParameters {
+    musicGenerationConfig: LiveMusicGenerationConfig;
+}
+
+// @public
+export interface LiveMusicSourceMetadata {
+    clientContent?: LiveMusicClientContent;
+    musicGenerationConfig?: LiveMusicGenerationConfig;
+}
+
+// @public
 export interface LiveSendClientContentParameters {
     turnComplete?: boolean;
     turns?: ContentListUnion;
@@ -1685,6 +1788,13 @@ export interface ModelSelectionConfig {
 // @public
 export interface MultiSpeakerVoiceConfig {
     speakerVoiceConfigs?: SpeakerVoiceConfig[];
+}
+
+// @public
+export enum MusicGenerationMode {
+    DIVERSITY = "DIVERSITY",
+    MUSIC_GENERATION_MODE_UNSPECIFIED = "MUSIC_GENERATION_MODE_UNSPECIFIED",
+    QUALITY = "QUALITY"
 }
 
 // @public
@@ -1936,6 +2046,23 @@ export interface SafetySetting {
     category?: HarmCategory;
     method?: HarmBlockMethod;
     threshold?: HarmBlockThreshold;
+}
+
+// @public
+export enum Scale {
+    A_FLAT_MAJOR_F_MINOR = "A_FLAT_MAJOR_F_MINOR",
+    A_MAJOR_G_FLAT_MINOR = "A_MAJOR_G_FLAT_MINOR",
+    B_FLAT_MAJOR_G_MINOR = "B_FLAT_MAJOR_G_MINOR",
+    B_MAJOR_A_FLAT_MINOR = "B_MAJOR_A_FLAT_MINOR",
+    C_MAJOR_A_MINOR = "C_MAJOR_A_MINOR",
+    D_FLAT_MAJOR_B_FLAT_MINOR = "D_FLAT_MAJOR_B_FLAT_MINOR",
+    D_MAJOR_B_MINOR = "D_MAJOR_B_MINOR",
+    E_FLAT_MAJOR_C_MINOR = "E_FLAT_MAJOR_C_MINOR",
+    E_MAJOR_D_FLAT_MINOR = "E_MAJOR_D_FLAT_MINOR",
+    F_MAJOR_D_MINOR = "F_MAJOR_D_MINOR",
+    G_FLAT_MAJOR_E_FLAT_MINOR = "G_FLAT_MAJOR_E_FLAT_MINOR",
+    G_MAJOR_E_MINOR = "G_MAJOR_E_MINOR",
+    SCALE_UNSPECIFIED = "SCALE_UNSPECIFIED"
 }
 
 // @public
@@ -2439,6 +2566,12 @@ export interface VideoMetadata {
 // @public
 export interface VoiceConfig {
     prebuiltVoiceConfig?: PrebuiltVoiceConfig;
+}
+
+// @public
+export interface WeightedPrompt {
+    text?: string;
+    weight?: number;
 }
 
 // (No @packageDocumentation comment for this package)

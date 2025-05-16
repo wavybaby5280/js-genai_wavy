@@ -713,6 +713,106 @@ export enum FunctionResponseScheduling {
   INTERRUPT = 'INTERRUPT',
 }
 
+/** Scale of the generated music. */
+export enum Scale {
+  /**
+   * Default value. This value is unused.
+   */
+  SCALE_UNSPECIFIED = 'SCALE_UNSPECIFIED',
+  /**
+   * C major or A minor.
+   */
+  C_MAJOR_A_MINOR = 'C_MAJOR_A_MINOR',
+  /**
+   * Db major or Bb minor.
+   */
+  D_FLAT_MAJOR_B_FLAT_MINOR = 'D_FLAT_MAJOR_B_FLAT_MINOR',
+  /**
+   * D major or B minor.
+   */
+  D_MAJOR_B_MINOR = 'D_MAJOR_B_MINOR',
+  /**
+   * Eb major or C minor
+   */
+  E_FLAT_MAJOR_C_MINOR = 'E_FLAT_MAJOR_C_MINOR',
+  /**
+   * E major or Db minor.
+   */
+  E_MAJOR_D_FLAT_MINOR = 'E_MAJOR_D_FLAT_MINOR',
+  /**
+   * F major or D minor.
+   */
+  F_MAJOR_D_MINOR = 'F_MAJOR_D_MINOR',
+  /**
+   * Gb major or Eb minor.
+   */
+  G_FLAT_MAJOR_E_FLAT_MINOR = 'G_FLAT_MAJOR_E_FLAT_MINOR',
+  /**
+   * G major or E minor.
+   */
+  G_MAJOR_E_MINOR = 'G_MAJOR_E_MINOR',
+  /**
+   * Ab major or F minor.
+   */
+  A_FLAT_MAJOR_F_MINOR = 'A_FLAT_MAJOR_F_MINOR',
+  /**
+   * A major or Gb minor.
+   */
+  A_MAJOR_G_FLAT_MINOR = 'A_MAJOR_G_FLAT_MINOR',
+  /**
+   * Bb major or G minor.
+   */
+  B_FLAT_MAJOR_G_MINOR = 'B_FLAT_MAJOR_G_MINOR',
+  /**
+   * B major or Ab minor.
+   */
+  B_MAJOR_A_FLAT_MINOR = 'B_MAJOR_A_FLAT_MINOR',
+}
+
+/** The mode of music generation. */
+export enum MusicGenerationMode {
+  /**
+   * This value is unused.
+   */
+  MUSIC_GENERATION_MODE_UNSPECIFIED = 'MUSIC_GENERATION_MODE_UNSPECIFIED',
+  /**
+   * Steer text prompts to regions of latent space with higher quality
+      music.
+   */
+  QUALITY = 'QUALITY',
+  /**
+   * Steer text prompts to regions of latent space with a larger diversity
+      of music.
+   */
+  DIVERSITY = 'DIVERSITY',
+}
+
+/** The playback control signal to apply to the music generation. */
+export enum LiveMusicPlaybackControl {
+  /**
+   * This value is unused.
+   */
+  PLAYBACK_CONTROL_UNSPECIFIED = 'PLAYBACK_CONTROL_UNSPECIFIED',
+  /**
+   * Start generating the music.
+   */
+  PLAY = 'PLAY',
+  /**
+   * Hold the music generation. Use PLAY to resume from the current position.
+   */
+  PAUSE = 'PAUSE',
+  /**
+   * Stop the music generation and reset the context (prompts retained).
+      Use PLAY to restart the music generation.
+   */
+  STOP = 'STOP',
+  /**
+   * Reset the context of the music generation without stopping it.
+      Retains the current prompts and config.
+   */
+  RESET_CONTEXT = 'RESET_CONTEXT',
+}
+
 /** Describes how the video in the Part should be used by the model. */
 export declare interface VideoMetadata {
   /** The frame rate of the video sent to the model. If not specified, the
@@ -3520,31 +3620,6 @@ export interface LiveCallbacks {
   onclose?: ((e: CloseEvent) => void) | null;
 }
 
-/** Parameters for the upload file method. */
-export interface UploadFileParameters {
-  /** The string path to the file to be uploaded or a Blob object. */
-  file: string | globalThis.Blob;
-  /** Configuration that contains optional parameters. */
-  config?: UploadFileConfig;
-}
-
-/**
- * CallableTool is an invokable tool that can be executed with external
- * application (e.g., via Model Context Protocol) or local functions with
- * function calling.
- */
-export interface CallableTool {
-  /**
-   * Returns tool that can be called by Gemini.
-   */
-  tool(): Promise<Tool>;
-  /**
-   * Executes the callable tool with the given function call arguments and
-   * returns the response parts from the tool execution.
-   */
-  callTool(functionCalls: FunctionCall[]): Promise<Part[]>;
-}
-
 /** Response for the create file method. */
 export class CreateFileResponse {
   /** Used to retain the full HTTP response. */
@@ -4496,6 +4571,205 @@ export declare interface LiveSendClientContentParameters {
 export class LiveSendToolResponseParameters {
   /** Tool responses to send to the session. */
   functionResponses: FunctionResponse[] | FunctionResponse = [];
+}
+
+/** Message to be sent by the system when connecting to the API. */
+export declare interface LiveMusicClientSetup {
+  /** The model's resource name. Format: `models/{model}`. */
+  model?: string;
+}
+
+/** Maps a prompt to a relative weight to steer music generation. */
+export declare interface WeightedPrompt {
+  /** Text prompt. */
+  text?: string;
+  /** Weight of the prompt. The weight is used to control the relative
+      importance of the prompt. Higher weights are more important than lower
+      weights.
+
+      Weight must not be 0. Weights of all weighted_prompts in this
+      LiveMusicClientContent message will be normalized. */
+  weight?: number;
+}
+
+/** User input to start or steer the music. */
+export declare interface LiveMusicClientContent {
+  /** Weighted prompts as the model input. */
+  weightedPrompts?: WeightedPrompt[];
+}
+
+/** Configuration for music generation. */
+export declare interface LiveMusicGenerationConfig {
+  /** Controls the variance in audio generation. Higher values produce
+      higher variance. Range is [0.0, 3.0]. */
+  temperature?: number;
+  /** Controls how the model selects tokens for output. Samples the topK
+      tokens with the highest probabilities. Range is [1, 1000]. */
+  topK?: number;
+  /** Seeds audio generation. If not set, the request uses a randomly
+      generated seed. */
+  seed?: number;
+  /** Controls how closely the model follows prompts.
+      Higher guidance follows more closely, but will make transitions more
+      abrupt. Range is [0.0, 6.0]. */
+  guidance?: number;
+  /** Beats per minute. Range is [60, 200]. */
+  bpm?: number;
+  /** Density of sounds. Range is [0.0, 1.0]. */
+  density?: number;
+  /** Brightness of the music. Range is [0.0, 1.0]. */
+  brightness?: number;
+  /** Scale of the generated music. */
+  scale?: Scale;
+  /** Whether the audio output should contain bass. */
+  muteBass?: boolean;
+  /** Whether the audio output should contain drums. */
+  muteDrums?: boolean;
+  /** Whether the audio output should contain only bass and drums. */
+  onlyBassAndDrums?: boolean;
+  /** The mode of music generation. Default mode is QUALITY. */
+  musicGenerationMode?: MusicGenerationMode;
+}
+
+/** Messages sent by the client in the LiveMusicClientMessage call. */
+export declare interface LiveMusicClientMessage {
+  /** Message to be sent in the first (and only in the first) `LiveMusicClientMessage`.
+      Clients should wait for a `LiveMusicSetupComplete` message before
+      sending any additional messages. */
+  setup?: LiveMusicClientSetup;
+  /** User input to influence music generation. */
+  clientContent?: LiveMusicClientContent;
+  /** Configuration for music generation. */
+  musicGenerationConfig?: LiveMusicGenerationConfig;
+  /** Playback control signal for the music generation. */
+  playbackControl?: LiveMusicPlaybackControl;
+}
+
+/** Sent in response to a `LiveMusicClientSetup` message from the client. */
+export declare interface LiveMusicServerSetupComplete {}
+
+/** Prompts and config used for generating this audio chunk. */
+export declare interface LiveMusicSourceMetadata {
+  /** Weighted prompts for generating this audio chunk. */
+  clientContent?: LiveMusicClientContent;
+  /** Music generation config for generating this audio chunk. */
+  musicGenerationConfig?: LiveMusicGenerationConfig;
+}
+
+/** Representation of an audio chunk. */
+export declare interface AudioChunk {
+  /** Raw byets of audio data. */
+  data?: string;
+  /** MIME type of the audio chunk. */
+  mimeType?: string;
+  /** Prompts and config used for generating this audio chunk. */
+  sourceMetadata?: LiveMusicSourceMetadata;
+}
+
+/** Server update generated by the model in response to client messages.
+
+  Content is generated as quickly as possible, and not in real time.
+  Clients may choose to buffer and play it out in real time.
+   */
+export declare interface LiveMusicServerContent {
+  /** The audio chunks that the model has generated. */
+  audioChunks?: AudioChunk[];
+}
+
+/** A prompt that was filtered with the reason. */
+export declare interface LiveMusicFilteredPrompt {
+  /** The text prompt that was filtered. */
+  text?: string;
+  /** The reason the prompt was filtered. */
+  filteredReason?: string;
+}
+
+/** Response message for the LiveMusicClientMessage call. */
+export class LiveMusicServerMessage {
+  /** Message sent in response to a `LiveMusicClientSetup` message from the client.
+      Clients should wait for this message before sending any additional messages. */
+  setupComplete?: LiveMusicServerSetupComplete;
+  /** Content generated by the model in response to client messages. */
+  serverContent?: LiveMusicServerContent;
+  /** A prompt that was filtered with the reason. */
+  filteredPrompt?: LiveMusicFilteredPrompt;
+  /**
+   * Returns the first audio chunk from the server content, if present.
+   *
+   * @remarks
+   * If there are no audio chunks in the response, undefined will be returned.
+   */
+  get audioChunk(): AudioChunk | undefined {
+    if (
+      this.serverContent &&
+      this.serverContent.audioChunks &&
+      this.serverContent.audioChunks.length > 0
+    ) {
+      return this.serverContent.audioChunks[0];
+    }
+    return undefined;
+  }
+}
+
+/** Callbacks for the realtime music API. */
+export interface LiveMusicCallbacks {
+  /**
+   * Called when a message is received from the server.
+   */
+  onmessage: (e: LiveMusicServerMessage) => void;
+  /**
+   * Called when an error occurs.
+   */
+  onerror?: ((e: ErrorEvent) => void) | null;
+  /**
+   * Called when the websocket connection is closed.
+   */
+  onclose?: ((e: CloseEvent) => void) | null;
+}
+
+/** Parameters for the upload file method. */
+export interface UploadFileParameters {
+  /** The string path to the file to be uploaded or a Blob object. */
+  file: string | globalThis.Blob;
+  /** Configuration that contains optional parameters. */
+  config?: UploadFileConfig;
+}
+
+/**
+ * CallableTool is an invokable tool that can be executed with external
+ * application (e.g., via Model Context Protocol) or local functions with
+ * function calling.
+ */
+export interface CallableTool {
+  /**
+   * Returns tool that can be called by Gemini.
+   */
+  tool(): Promise<Tool>;
+  /**
+   * Executes the callable tool with the given function call arguments and
+   * returns the response parts from the tool execution.
+   */
+  callTool(functionCalls: FunctionCall[]): Promise<Part[]>;
+}
+
+/** Parameters for connecting to the live API. */
+export declare interface LiveMusicConnectParameters {
+  /** The model's resource name. */
+  model: string;
+  /** Callbacks invoked on server events. */
+  callbacks: LiveMusicCallbacks;
+}
+
+/** Parameters for setting config for the live API. */
+export declare interface LiveMusicSetConfigParameters {
+  /** Configuration for music generation. */
+  musicGenerationConfig: LiveMusicGenerationConfig;
+}
+
+/** Parameters for setting client content for the live API. */
+export declare interface LiveMusicSetClientContentParameters {
+  /** A map of text prompts to weights to use for the generation request. */
+  weightedPrompts: WeightedPrompt[];
 }
 
 /** Parameters for the get method of the operations module. */
