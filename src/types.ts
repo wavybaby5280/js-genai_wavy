@@ -3146,7 +3146,7 @@ export interface CallableTool {
   /**
    * Returns tool that can be called by Gemini.
    */
-  tool(): Tool;
+  tool(): Promise<Tool>;
   /**
    * Executes the callable tool with the given function call arguments and
    * returns the response parts from the tool execution.
