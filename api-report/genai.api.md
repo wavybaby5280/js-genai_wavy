@@ -14,11 +14,8 @@ export interface ActivityEnd {
 
 // @public
 export enum ActivityHandling {
-    // (undocumented)
     ACTIVITY_HANDLING_UNSPECIFIED = "ACTIVITY_HANDLING_UNSPECIFIED",
-    // (undocumented)
     NO_INTERRUPTION = "NO_INTERRUPTION",
-    // (undocumented)
     START_OF_ACTIVITY_INTERRUPTS = "START_OF_ACTIVITY_INTERRUPTS"
 }
 
@@ -28,19 +25,12 @@ export interface ActivityStart {
 
 // @public
 export enum AdapterSize {
-    // (undocumented)
     ADAPTER_SIZE_EIGHT = "ADAPTER_SIZE_EIGHT",
-    // (undocumented)
     ADAPTER_SIZE_FOUR = "ADAPTER_SIZE_FOUR",
-    // (undocumented)
     ADAPTER_SIZE_ONE = "ADAPTER_SIZE_ONE",
-    // (undocumented)
     ADAPTER_SIZE_SIXTEEN = "ADAPTER_SIZE_SIXTEEN",
-    // (undocumented)
     ADAPTER_SIZE_THIRTY_TWO = "ADAPTER_SIZE_THIRTY_TWO",
-    // (undocumented)
     ADAPTER_SIZE_TWO = "ADAPTER_SIZE_TWO",
-    // (undocumented)
     ADAPTER_SIZE_UNSPECIFIED = "ADAPTER_SIZE_UNSPECIFIED"
 }
 
@@ -87,19 +77,13 @@ export interface AuthConfigOidcConfig {
 
 // @public
 export enum AuthType {
-    // (undocumented)
     API_KEY_AUTH = "API_KEY_AUTH",
     // (undocumented)
     AUTH_TYPE_UNSPECIFIED = "AUTH_TYPE_UNSPECIFIED",
-    // (undocumented)
     GOOGLE_SERVICE_ACCOUNT_AUTH = "GOOGLE_SERVICE_ACCOUNT_AUTH",
-    // (undocumented)
     HTTP_BASIC_AUTH = "HTTP_BASIC_AUTH",
-    // (undocumented)
     NO_AUTH = "NO_AUTH",
-    // (undocumented)
     OAUTH = "OAUTH",
-    // (undocumented)
     OIDC_AUTH = "OIDC_AUTH"
 }
 
@@ -129,11 +113,8 @@ export interface BaseUrlParameters {
 
 // @public
 export enum Behavior {
-    // (undocumented)
     BLOCKING = "BLOCKING",
-    // (undocumented)
     NON_BLOCKING = "NON_BLOCKING",
-    // (undocumented)
     UNSPECIFIED = "UNSPECIFIED"
 }
 
@@ -150,15 +131,10 @@ export type BlobImageUnion = Blob_2;
 
 // @public
 export enum BlockedReason {
-    // (undocumented)
     BLOCKED_REASON_UNSPECIFIED = "BLOCKED_REASON_UNSPECIFIED",
-    // (undocumented)
     BLOCKLIST = "BLOCKLIST",
-    // (undocumented)
     OTHER = "OTHER",
-    // (undocumented)
     PROHIBITED_CONTENT = "PROHIBITED_CONTENT",
-    // (undocumented)
     SAFETY = "SAFETY"
 }
 
@@ -575,9 +551,7 @@ export interface DynamicRetrievalConfig {
 
 // @public
 export enum DynamicRetrievalConfigMode {
-    // (undocumented)
     MODE_DYNAMIC = "MODE_DYNAMIC",
-    // (undocumented)
     MODE_UNSPECIFIED = "MODE_UNSPECIFIED"
 }
 
@@ -677,11 +651,8 @@ export interface Endpoint {
 
 // @public
 export enum EndSensitivity {
-    // (undocumented)
     END_SENSITIVITY_HIGH = "END_SENSITIVITY_HIGH",
-    // (undocumented)
     END_SENSITIVITY_LOW = "END_SENSITIVITY_LOW",
-    // (undocumented)
     END_SENSITIVITY_UNSPECIFIED = "END_SENSITIVITY_UNSPECIFIED"
 }
 
@@ -787,29 +758,17 @@ export interface FileStatus {
 
 // @public
 export enum FinishReason {
-    // (undocumented)
     BLOCKLIST = "BLOCKLIST",
-    // (undocumented)
     FINISH_REASON_UNSPECIFIED = "FINISH_REASON_UNSPECIFIED",
-    // (undocumented)
     IMAGE_SAFETY = "IMAGE_SAFETY",
-    // (undocumented)
     LANGUAGE = "LANGUAGE",
-    // (undocumented)
     MALFORMED_FUNCTION_CALL = "MALFORMED_FUNCTION_CALL",
-    // (undocumented)
     MAX_TOKENS = "MAX_TOKENS",
-    // (undocumented)
     OTHER = "OTHER",
-    // (undocumented)
     PROHIBITED_CONTENT = "PROHIBITED_CONTENT",
-    // (undocumented)
     RECITATION = "RECITATION",
-    // (undocumented)
     SAFETY = "SAFETY",
-    // (undocumented)
     SPII = "SPII",
-    // (undocumented)
     STOP = "STOP"
 }
 
@@ -828,13 +787,9 @@ export interface FunctionCallingConfig {
 
 // @public
 export enum FunctionCallingConfigMode {
-    // (undocumented)
     ANY = "ANY",
-    // (undocumented)
     AUTO = "AUTO",
-    // (undocumented)
     MODE_UNSPECIFIED = "MODE_UNSPECIFIED",
-    // (undocumented)
     NONE = "NONE"
 }
 
@@ -858,13 +813,9 @@ export class FunctionResponse {
 
 // @public
 export enum FunctionResponseScheduling {
-    // (undocumented)
     INTERRUPT = "INTERRUPT",
-    // (undocumented)
     SCHEDULING_UNSPECIFIED = "SCHEDULING_UNSPECIFIED",
-    // (undocumented)
     SILENT = "SILENT",
-    // (undocumented)
     WHEN_IDLE = "WHEN_IDLE"
 }
 
@@ -1236,71 +1187,46 @@ export interface GroundingSupport {
 
 // @public
 export enum HarmBlockMethod {
-    // (undocumented)
     HARM_BLOCK_METHOD_UNSPECIFIED = "HARM_BLOCK_METHOD_UNSPECIFIED",
-    // (undocumented)
     PROBABILITY = "PROBABILITY",
-    // (undocumented)
     SEVERITY = "SEVERITY"
 }
 
 // @public
 export enum HarmBlockThreshold {
-    // (undocumented)
     BLOCK_LOW_AND_ABOVE = "BLOCK_LOW_AND_ABOVE",
-    // (undocumented)
     BLOCK_MEDIUM_AND_ABOVE = "BLOCK_MEDIUM_AND_ABOVE",
-    // (undocumented)
     BLOCK_NONE = "BLOCK_NONE",
-    // (undocumented)
     BLOCK_ONLY_HIGH = "BLOCK_ONLY_HIGH",
-    // (undocumented)
     HARM_BLOCK_THRESHOLD_UNSPECIFIED = "HARM_BLOCK_THRESHOLD_UNSPECIFIED",
-    // (undocumented)
     OFF = "OFF"
 }
 
 // @public
 export enum HarmCategory {
-    // (undocumented)
     HARM_CATEGORY_CIVIC_INTEGRITY = "HARM_CATEGORY_CIVIC_INTEGRITY",
-    // (undocumented)
     HARM_CATEGORY_DANGEROUS_CONTENT = "HARM_CATEGORY_DANGEROUS_CONTENT",
-    // (undocumented)
     HARM_CATEGORY_HARASSMENT = "HARM_CATEGORY_HARASSMENT",
-    // (undocumented)
     HARM_CATEGORY_HATE_SPEECH = "HARM_CATEGORY_HATE_SPEECH",
-    // (undocumented)
     HARM_CATEGORY_SEXUALLY_EXPLICIT = "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-    // (undocumented)
     HARM_CATEGORY_UNSPECIFIED = "HARM_CATEGORY_UNSPECIFIED"
 }
 
 // @public
 export enum HarmProbability {
-    // (undocumented)
     HARM_PROBABILITY_UNSPECIFIED = "HARM_PROBABILITY_UNSPECIFIED",
-    // (undocumented)
     HIGH = "HIGH",
-    // (undocumented)
     LOW = "LOW",
-    // (undocumented)
     MEDIUM = "MEDIUM",
-    // (undocumented)
     NEGLIGIBLE = "NEGLIGIBLE"
 }
 
 // @public
 export enum HarmSeverity {
-    // (undocumented)
     HARM_SEVERITY_HIGH = "HARM_SEVERITY_HIGH",
-    // (undocumented)
     HARM_SEVERITY_LOW = "HARM_SEVERITY_LOW",
-    // (undocumented)
     HARM_SEVERITY_MEDIUM = "HARM_SEVERITY_MEDIUM",
-    // (undocumented)
     HARM_SEVERITY_NEGLIGIBLE = "HARM_SEVERITY_NEGLIGIBLE",
-    // (undocumented)
     HARM_SEVERITY_UNSPECIFIED = "HARM_SEVERITY_UNSPECIFIED"
 }
 
@@ -1351,37 +1277,23 @@ export interface Interval {
 
 // @public
 export enum JobState {
-    // (undocumented)
     JOB_STATE_CANCELLED = "JOB_STATE_CANCELLED",
-    // (undocumented)
     JOB_STATE_CANCELLING = "JOB_STATE_CANCELLING",
-    // (undocumented)
     JOB_STATE_EXPIRED = "JOB_STATE_EXPIRED",
-    // (undocumented)
     JOB_STATE_FAILED = "JOB_STATE_FAILED",
-    // (undocumented)
     JOB_STATE_PARTIALLY_SUCCEEDED = "JOB_STATE_PARTIALLY_SUCCEEDED",
-    // (undocumented)
     JOB_STATE_PAUSED = "JOB_STATE_PAUSED",
-    // (undocumented)
     JOB_STATE_PENDING = "JOB_STATE_PENDING",
-    // (undocumented)
     JOB_STATE_QUEUED = "JOB_STATE_QUEUED",
-    // (undocumented)
     JOB_STATE_RUNNING = "JOB_STATE_RUNNING",
-    // (undocumented)
     JOB_STATE_SUCCEEDED = "JOB_STATE_SUCCEEDED",
-    // (undocumented)
     JOB_STATE_UNSPECIFIED = "JOB_STATE_UNSPECIFIED",
-    // (undocumented)
     JOB_STATE_UPDATING = "JOB_STATE_UPDATING"
 }
 
 // @public
 export enum Language {
-    // (undocumented)
     LANGUAGE_UNSPECIFIED = "LANGUAGE_UNSPECIFIED",
-    // (undocumented)
     PYTHON = "PYTHON"
 }
 
@@ -1694,41 +1606,27 @@ export enum MaskReferenceMode {
 
 // @public
 export enum MediaModality {
-    // (undocumented)
     AUDIO = "AUDIO",
-    // (undocumented)
     DOCUMENT = "DOCUMENT",
-    // (undocumented)
     IMAGE = "IMAGE",
-    // (undocumented)
     MODALITY_UNSPECIFIED = "MODALITY_UNSPECIFIED",
-    // (undocumented)
     TEXT = "TEXT",
-    // (undocumented)
     VIDEO = "VIDEO"
 }
 
 // @public
 export enum MediaResolution {
-    // (undocumented)
     MEDIA_RESOLUTION_HIGH = "MEDIA_RESOLUTION_HIGH",
-    // (undocumented)
     MEDIA_RESOLUTION_LOW = "MEDIA_RESOLUTION_LOW",
-    // (undocumented)
     MEDIA_RESOLUTION_MEDIUM = "MEDIA_RESOLUTION_MEDIUM",
-    // (undocumented)
     MEDIA_RESOLUTION_UNSPECIFIED = "MEDIA_RESOLUTION_UNSPECIFIED"
 }
 
 // @public
 export enum Modality {
-    // (undocumented)
     AUDIO = "AUDIO",
-    // (undocumented)
     IMAGE = "IMAGE",
-    // (undocumented)
     MODALITY_UNSPECIFIED = "MODALITY_UNSPECIFIED",
-    // (undocumented)
     TEXT = "TEXT"
 }
 
@@ -1740,9 +1638,7 @@ export interface ModalityTokenCount {
 
 // @public
 export enum Mode {
-    // (undocumented)
     MODE_DYNAMIC = "MODE_DYNAMIC",
-    // (undocumented)
     MODE_UNSPECIFIED = "MODE_UNSPECIFIED"
 }
 
@@ -1813,13 +1709,9 @@ export class Operations extends BaseModule {
 
 // @public
 export enum Outcome {
-    // (undocumented)
     OUTCOME_DEADLINE_EXCEEDED = "OUTCOME_DEADLINE_EXCEEDED",
-    // (undocumented)
     OUTCOME_FAILED = "OUTCOME_FAILED",
-    // (undocumented)
     OUTCOME_OK = "OUTCOME_OK",
-    // (undocumented)
     OUTCOME_UNSPECIFIED = "OUTCOME_UNSPECIFIED"
 }
 
@@ -2140,11 +2032,8 @@ export type SpeechConfigUnion = SpeechConfig | string;
 
 // @public
 export enum StartSensitivity {
-    // (undocumented)
     START_SENSITIVITY_HIGH = "START_SENSITIVITY_HIGH",
-    // (undocumented)
     START_SENSITIVITY_LOW = "START_SENSITIVITY_LOW",
-    // (undocumented)
     START_SENSITIVITY_UNSPECIFIED = "START_SENSITIVITY_UNSPECIFIED"
 }
 
@@ -2307,11 +2196,8 @@ export type ToolUnion = Tool | Tool_2 | Client | CallableTool;
 
 // @public
 export enum TrafficType {
-    // (undocumented)
     ON_DEMAND = "ON_DEMAND",
-    // (undocumented)
     PROVISIONED_THROUGHPUT = "PROVISIONED_THROUGHPUT",
-    // (undocumented)
     TRAFFIC_TYPE_UNSPECIFIED = "TRAFFIC_TYPE_UNSPECIFIED"
 }
 
@@ -2391,29 +2277,19 @@ export interface TuningValidationDataset {
 
 // @public
 export enum TurnCoverage {
-    // (undocumented)
     TURN_COVERAGE_UNSPECIFIED = "TURN_COVERAGE_UNSPECIFIED",
-    // (undocumented)
     TURN_INCLUDES_ALL_INPUT = "TURN_INCLUDES_ALL_INPUT",
-    // (undocumented)
     TURN_INCLUDES_ONLY_ACTIVITY = "TURN_INCLUDES_ONLY_ACTIVITY"
 }
 
 // @public
 export enum Type {
-    // (undocumented)
     ARRAY = "ARRAY",
-    // (undocumented)
     BOOLEAN = "BOOLEAN",
-    // (undocumented)
     INTEGER = "INTEGER",
-    // (undocumented)
     NUMBER = "NUMBER",
-    // (undocumented)
     OBJECT = "OBJECT",
-    // (undocumented)
     STRING = "STRING",
-    // (undocumented)
     TYPE_UNSPECIFIED = "TYPE_UNSPECIFIED"
 }
 
@@ -2505,11 +2381,8 @@ export interface UrlMetadata {
 
 // @public
 export enum UrlRetrievalStatus {
-    // (undocumented)
     URL_RETRIEVAL_STATUS_ERROR = "URL_RETRIEVAL_STATUS_ERROR",
-    // (undocumented)
     URL_RETRIEVAL_STATUS_SUCCESS = "URL_RETRIEVAL_STATUS_SUCCESS",
-    // (undocumented)
     URL_RETRIEVAL_STATUS_UNSPECIFIED = "URL_RETRIEVAL_STATUS_UNSPECIFIED"
 }
 

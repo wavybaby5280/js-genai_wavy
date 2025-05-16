@@ -11,70 +11,178 @@ import {Tool as McpTool} from '@modelcontextprotocol/sdk/types.js';
 
 /** Required. Outcome of the code execution. */
 export enum Outcome {
+  /**
+   * Unspecified status. This value should not be used.
+   */
   OUTCOME_UNSPECIFIED = 'OUTCOME_UNSPECIFIED',
+  /**
+   * Code execution completed successfully.
+   */
   OUTCOME_OK = 'OUTCOME_OK',
+  /**
+   * Code execution finished but with a failure. `stderr` should contain the reason.
+   */
   OUTCOME_FAILED = 'OUTCOME_FAILED',
+  /**
+   * Code execution ran for too long, and was cancelled. There may or may not be a partial output present.
+   */
   OUTCOME_DEADLINE_EXCEEDED = 'OUTCOME_DEADLINE_EXCEEDED',
 }
 
 /** Required. Programming language of the `code`. */
 export enum Language {
+  /**
+   * Unspecified language. This value should not be used.
+   */
   LANGUAGE_UNSPECIFIED = 'LANGUAGE_UNSPECIFIED',
+  /**
+   * Python >= 3.10, with numpy and simpy available.
+   */
   PYTHON = 'PYTHON',
 }
 
 /** Required. Harm category. */
 export enum HarmCategory {
+  /**
+   * The harm category is unspecified.
+   */
   HARM_CATEGORY_UNSPECIFIED = 'HARM_CATEGORY_UNSPECIFIED',
+  /**
+   * The harm category is hate speech.
+   */
   HARM_CATEGORY_HATE_SPEECH = 'HARM_CATEGORY_HATE_SPEECH',
+  /**
+   * The harm category is dangerous content.
+   */
   HARM_CATEGORY_DANGEROUS_CONTENT = 'HARM_CATEGORY_DANGEROUS_CONTENT',
+  /**
+   * The harm category is harassment.
+   */
   HARM_CATEGORY_HARASSMENT = 'HARM_CATEGORY_HARASSMENT',
+  /**
+   * The harm category is sexually explicit content.
+   */
   HARM_CATEGORY_SEXUALLY_EXPLICIT = 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
+  /**
+   * The harm category is civic integrity.
+   */
   HARM_CATEGORY_CIVIC_INTEGRITY = 'HARM_CATEGORY_CIVIC_INTEGRITY',
 }
 
 /** Optional. Specify if the threshold is used for probability or severity score. If not specified, the threshold is used for probability score. */
 export enum HarmBlockMethod {
+  /**
+   * The harm block method is unspecified.
+   */
   HARM_BLOCK_METHOD_UNSPECIFIED = 'HARM_BLOCK_METHOD_UNSPECIFIED',
+  /**
+   * The harm block method uses both probability and severity scores.
+   */
   SEVERITY = 'SEVERITY',
+  /**
+   * The harm block method uses the probability score.
+   */
   PROBABILITY = 'PROBABILITY',
 }
 
 /** Required. The harm block threshold. */
 export enum HarmBlockThreshold {
+  /**
+   * Unspecified harm block threshold.
+   */
   HARM_BLOCK_THRESHOLD_UNSPECIFIED = 'HARM_BLOCK_THRESHOLD_UNSPECIFIED',
+  /**
+   * Block low threshold and above (i.e. block more).
+   */
   BLOCK_LOW_AND_ABOVE = 'BLOCK_LOW_AND_ABOVE',
+  /**
+   * Block medium threshold and above.
+   */
   BLOCK_MEDIUM_AND_ABOVE = 'BLOCK_MEDIUM_AND_ABOVE',
+  /**
+   * Block only high threshold (i.e. block less).
+   */
   BLOCK_ONLY_HIGH = 'BLOCK_ONLY_HIGH',
+  /**
+   * Block none.
+   */
   BLOCK_NONE = 'BLOCK_NONE',
+  /**
+   * Turn off the safety filter.
+   */
   OFF = 'OFF',
 }
 
 /** Optional. The type of the data. */
 export enum Type {
+  /**
+   * Not specified, should not be used.
+   */
   TYPE_UNSPECIFIED = 'TYPE_UNSPECIFIED',
+  /**
+   * OpenAPI string type
+   */
   STRING = 'STRING',
+  /**
+   * OpenAPI number type
+   */
   NUMBER = 'NUMBER',
+  /**
+   * OpenAPI integer type
+   */
   INTEGER = 'INTEGER',
+  /**
+   * OpenAPI boolean type
+   */
   BOOLEAN = 'BOOLEAN',
+  /**
+   * OpenAPI array type
+   */
   ARRAY = 'ARRAY',
+  /**
+   * OpenAPI object type
+   */
   OBJECT = 'OBJECT',
 }
 
 /** The mode of the predictor to be used in dynamic retrieval. */
 export enum Mode {
+  /**
+   * Always trigger retrieval.
+   */
   MODE_UNSPECIFIED = 'MODE_UNSPECIFIED',
+  /**
+   * Run retrieval only when system decides it is necessary.
+   */
   MODE_DYNAMIC = 'MODE_DYNAMIC',
 }
 
 /** Type of auth scheme. */
 export enum AuthType {
   AUTH_TYPE_UNSPECIFIED = 'AUTH_TYPE_UNSPECIFIED',
+  /**
+   * No Auth.
+   */
   NO_AUTH = 'NO_AUTH',
+  /**
+   * API Key Auth.
+   */
   API_KEY_AUTH = 'API_KEY_AUTH',
+  /**
+   * HTTP Basic Auth.
+   */
   HTTP_BASIC_AUTH = 'HTTP_BASIC_AUTH',
+  /**
+   * Google Service Account Auth.
+   */
   GOOGLE_SERVICE_ACCOUNT_AUTH = 'GOOGLE_SERVICE_ACCOUNT_AUTH',
+  /**
+   * OAuth auth.
+   */
   OAUTH = 'OAUTH',
+  /**
+   * OpenID Connect (OIDC) Auth.
+   */
   OIDC_AUTH = 'OIDC_AUTH',
 }
 
@@ -83,94 +191,265 @@ export enum AuthType {
   If empty, the model has not stopped generating the tokens.
    */
 export enum FinishReason {
+  /**
+   * The finish reason is unspecified.
+   */
   FINISH_REASON_UNSPECIFIED = 'FINISH_REASON_UNSPECIFIED',
+  /**
+   * Token generation reached a natural stopping point or a configured stop sequence.
+   */
   STOP = 'STOP',
+  /**
+   * Token generation reached the configured maximum output tokens.
+   */
   MAX_TOKENS = 'MAX_TOKENS',
+  /**
+   * Token generation stopped because the content potentially contains safety violations. NOTE: When streaming, [content][] is empty if content filters blocks the output.
+   */
   SAFETY = 'SAFETY',
+  /**
+   * The token generation stopped because of potential recitation.
+   */
   RECITATION = 'RECITATION',
+  /**
+   * The token generation stopped because of using an unsupported language.
+   */
   LANGUAGE = 'LANGUAGE',
+  /**
+   * All other reasons that stopped the token generation.
+   */
   OTHER = 'OTHER',
+  /**
+   * Token generation stopped because the content contains forbidden terms.
+   */
   BLOCKLIST = 'BLOCKLIST',
+  /**
+   * Token generation stopped for potentially containing prohibited content.
+   */
   PROHIBITED_CONTENT = 'PROHIBITED_CONTENT',
+  /**
+   * Token generation stopped because the content potentially contains Sensitive Personally Identifiable Information (SPII).
+   */
   SPII = 'SPII',
+  /**
+   * The function call generated by the model is invalid.
+   */
   MALFORMED_FUNCTION_CALL = 'MALFORMED_FUNCTION_CALL',
+  /**
+   * Token generation stopped because generated images have safety violations.
+   */
   IMAGE_SAFETY = 'IMAGE_SAFETY',
 }
 
 /** Output only. Harm probability levels in the content. */
 export enum HarmProbability {
+  /**
+   * Harm probability unspecified.
+   */
   HARM_PROBABILITY_UNSPECIFIED = 'HARM_PROBABILITY_UNSPECIFIED',
+  /**
+   * Negligible level of harm.
+   */
   NEGLIGIBLE = 'NEGLIGIBLE',
+  /**
+   * Low level of harm.
+   */
   LOW = 'LOW',
+  /**
+   * Medium level of harm.
+   */
   MEDIUM = 'MEDIUM',
+  /**
+   * High level of harm.
+   */
   HIGH = 'HIGH',
 }
 
 /** Output only. Harm severity levels in the content. */
 export enum HarmSeverity {
+  /**
+   * Harm severity unspecified.
+   */
   HARM_SEVERITY_UNSPECIFIED = 'HARM_SEVERITY_UNSPECIFIED',
+  /**
+   * Negligible level of harm severity.
+   */
   HARM_SEVERITY_NEGLIGIBLE = 'HARM_SEVERITY_NEGLIGIBLE',
+  /**
+   * Low level of harm severity.
+   */
   HARM_SEVERITY_LOW = 'HARM_SEVERITY_LOW',
+  /**
+   * Medium level of harm severity.
+   */
   HARM_SEVERITY_MEDIUM = 'HARM_SEVERITY_MEDIUM',
+  /**
+   * High level of harm severity.
+   */
   HARM_SEVERITY_HIGH = 'HARM_SEVERITY_HIGH',
 }
 
 /** Output only. Blocked reason. */
 export enum BlockedReason {
+  /**
+   * Unspecified blocked reason.
+   */
   BLOCKED_REASON_UNSPECIFIED = 'BLOCKED_REASON_UNSPECIFIED',
+  /**
+   * Candidates blocked due to safety.
+   */
   SAFETY = 'SAFETY',
+  /**
+   * Candidates blocked due to other reason.
+   */
   OTHER = 'OTHER',
+  /**
+   * Candidates blocked due to the terms which are included from the terminology blocklist.
+   */
   BLOCKLIST = 'BLOCKLIST',
+  /**
+   * Candidates blocked due to prohibited content.
+   */
   PROHIBITED_CONTENT = 'PROHIBITED_CONTENT',
 }
 
 /** Output only. Traffic type. This shows whether a request consumes Pay-As-You-Go or Provisioned Throughput quota. */
 export enum TrafficType {
+  /**
+   * Unspecified request traffic type.
+   */
   TRAFFIC_TYPE_UNSPECIFIED = 'TRAFFIC_TYPE_UNSPECIFIED',
+  /**
+   * Type for Pay-As-You-Go traffic.
+   */
   ON_DEMAND = 'ON_DEMAND',
+  /**
+   * Type for Provisioned Throughput traffic.
+   */
   PROVISIONED_THROUGHPUT = 'PROVISIONED_THROUGHPUT',
 }
 
 /** Server content modalities. */
 export enum Modality {
+  /**
+   * The modality is unspecified.
+   */
   MODALITY_UNSPECIFIED = 'MODALITY_UNSPECIFIED',
+  /**
+   * Indicates the model should return text
+   */
   TEXT = 'TEXT',
+  /**
+   * Indicates the model should return images.
+   */
   IMAGE = 'IMAGE',
+  /**
+   * Indicates the model should return images.
+   */
   AUDIO = 'AUDIO',
 }
 
 /** The media resolution to use. */
 export enum MediaResolution {
+  /**
+   * Media resolution has not been set
+   */
   MEDIA_RESOLUTION_UNSPECIFIED = 'MEDIA_RESOLUTION_UNSPECIFIED',
+  /**
+   * Media resolution set to low (64 tokens).
+   */
   MEDIA_RESOLUTION_LOW = 'MEDIA_RESOLUTION_LOW',
+  /**
+   * Media resolution set to medium (256 tokens).
+   */
   MEDIA_RESOLUTION_MEDIUM = 'MEDIA_RESOLUTION_MEDIUM',
+  /**
+   * Media resolution set to high (zoomed reframing with 256 tokens).
+   */
   MEDIA_RESOLUTION_HIGH = 'MEDIA_RESOLUTION_HIGH',
 }
 
 /** Output only. The detailed state of the job. */
 export enum JobState {
+  /**
+   * The job state is unspecified.
+   */
   JOB_STATE_UNSPECIFIED = 'JOB_STATE_UNSPECIFIED',
+  /**
+   * The job has been just created or resumed and processing has not yet begun.
+   */
   JOB_STATE_QUEUED = 'JOB_STATE_QUEUED',
+  /**
+   * The service is preparing to run the job.
+   */
   JOB_STATE_PENDING = 'JOB_STATE_PENDING',
+  /**
+   * The job is in progress.
+   */
   JOB_STATE_RUNNING = 'JOB_STATE_RUNNING',
+  /**
+   * The job completed successfully.
+   */
   JOB_STATE_SUCCEEDED = 'JOB_STATE_SUCCEEDED',
+  /**
+   * The job failed.
+   */
   JOB_STATE_FAILED = 'JOB_STATE_FAILED',
+  /**
+   * The job is being cancelled. From this state the job may only go to either `JOB_STATE_SUCCEEDED`, `JOB_STATE_FAILED` or `JOB_STATE_CANCELLED`.
+   */
   JOB_STATE_CANCELLING = 'JOB_STATE_CANCELLING',
+  /**
+   * The job has been cancelled.
+   */
   JOB_STATE_CANCELLED = 'JOB_STATE_CANCELLED',
+  /**
+   * The job has been stopped, and can be resumed.
+   */
   JOB_STATE_PAUSED = 'JOB_STATE_PAUSED',
+  /**
+   * The job has expired.
+   */
   JOB_STATE_EXPIRED = 'JOB_STATE_EXPIRED',
+  /**
+   * The job is being updated. Only jobs in the `RUNNING` state can be updated. After updating, the job goes back to the `RUNNING` state.
+   */
   JOB_STATE_UPDATING = 'JOB_STATE_UPDATING',
+  /**
+   * The job is partially succeeded, some results may be missing due to errors.
+   */
   JOB_STATE_PARTIALLY_SUCCEEDED = 'JOB_STATE_PARTIALLY_SUCCEEDED',
 }
 
 /** Optional. Adapter size for tuning. */
 export enum AdapterSize {
+  /**
+   * Adapter size is unspecified.
+   */
   ADAPTER_SIZE_UNSPECIFIED = 'ADAPTER_SIZE_UNSPECIFIED',
+  /**
+   * Adapter size 1.
+   */
   ADAPTER_SIZE_ONE = 'ADAPTER_SIZE_ONE',
+  /**
+   * Adapter size 2.
+   */
   ADAPTER_SIZE_TWO = 'ADAPTER_SIZE_TWO',
+  /**
+   * Adapter size 4.
+   */
   ADAPTER_SIZE_FOUR = 'ADAPTER_SIZE_FOUR',
+  /**
+   * Adapter size 8.
+   */
   ADAPTER_SIZE_EIGHT = 'ADAPTER_SIZE_EIGHT',
+  /**
+   * Adapter size 16.
+   */
   ADAPTER_SIZE_SIXTEEN = 'ADAPTER_SIZE_SIXTEEN',
+  /**
+   * Adapter size 32.
+   */
   ADAPTER_SIZE_THIRTY_TWO = 'ADAPTER_SIZE_THIRTY_TWO',
 }
 
@@ -184,29 +463,65 @@ export enum FeatureSelectionPreference {
 
 /** Defines the function behavior. Defaults to `BLOCKING`. */
 export enum Behavior {
+  /**
+   * This value is unused.
+   */
   UNSPECIFIED = 'UNSPECIFIED',
+  /**
+   * If set, the system will wait to receive the function response before continuing the conversation.
+   */
   BLOCKING = 'BLOCKING',
+  /**
+   * If set, the system will not wait to receive the function response. Instead, it will attempt to handle function responses as they become available while maintaining the conversation between the user and the model.
+   */
   NON_BLOCKING = 'NON_BLOCKING',
 }
 
 /** Config for the dynamic retrieval config mode. */
 export enum DynamicRetrievalConfigMode {
+  /**
+   * Always trigger retrieval.
+   */
   MODE_UNSPECIFIED = 'MODE_UNSPECIFIED',
+  /**
+   * Run retrieval only when system decides it is necessary.
+   */
   MODE_DYNAMIC = 'MODE_DYNAMIC',
 }
 
 /** Config for the function calling config mode. */
 export enum FunctionCallingConfigMode {
+  /**
+   * The function calling config mode is unspecified. Should not be used.
+   */
   MODE_UNSPECIFIED = 'MODE_UNSPECIFIED',
+  /**
+   * Default model behavior, model decides to predict either function calls or natural language response.
+   */
   AUTO = 'AUTO',
+  /**
+   * Model is constrained to always predicting function calls only. If "allowed_function_names" are set, the predicted function calls will be limited to any one of "allowed_function_names", else the predicted function calls will be any one of the provided "function_declarations".
+   */
   ANY = 'ANY',
+  /**
+   * Model will not predict any function calls. Model behavior is same as when not passing any function declarations.
+   */
   NONE = 'NONE',
 }
 
 /** Status of the url retrieval. */
 export enum UrlRetrievalStatus {
+  /**
+   * Default value. This value is unused
+   */
   URL_RETRIEVAL_STATUS_UNSPECIFIED = 'URL_RETRIEVAL_STATUS_UNSPECIFIED',
+  /**
+   * Url retrieval is successful.
+   */
   URL_RETRIEVAL_STATUS_SUCCESS = 'URL_RETRIEVAL_STATUS_SUCCESS',
+  /**
+   * Url retrieval is failed due to error.
+   */
   URL_RETRIEVAL_STATUS_ERROR = 'URL_RETRIEVAL_STATUS_ERROR',
 }
 
@@ -288,47 +603,113 @@ export enum FileSource {
 
 /** Server content modalities. */
 export enum MediaModality {
+  /**
+   * The modality is unspecified.
+   */
   MODALITY_UNSPECIFIED = 'MODALITY_UNSPECIFIED',
+  /**
+   * Plain text.
+   */
   TEXT = 'TEXT',
+  /**
+   * Images.
+   */
   IMAGE = 'IMAGE',
+  /**
+   * Video.
+   */
   VIDEO = 'VIDEO',
+  /**
+   * Audio.
+   */
   AUDIO = 'AUDIO',
+  /**
+   * Document, e.g. PDF.
+   */
   DOCUMENT = 'DOCUMENT',
 }
 
 /** Start of speech sensitivity. */
 export enum StartSensitivity {
+  /**
+   * The default is START_SENSITIVITY_LOW.
+   */
   START_SENSITIVITY_UNSPECIFIED = 'START_SENSITIVITY_UNSPECIFIED',
+  /**
+   * Automatic detection will detect the start of speech more often.
+   */
   START_SENSITIVITY_HIGH = 'START_SENSITIVITY_HIGH',
+  /**
+   * Automatic detection will detect the start of speech less often.
+   */
   START_SENSITIVITY_LOW = 'START_SENSITIVITY_LOW',
 }
 
 /** End of speech sensitivity. */
 export enum EndSensitivity {
+  /**
+   * The default is END_SENSITIVITY_LOW.
+   */
   END_SENSITIVITY_UNSPECIFIED = 'END_SENSITIVITY_UNSPECIFIED',
+  /**
+   * Automatic detection ends speech more often.
+   */
   END_SENSITIVITY_HIGH = 'END_SENSITIVITY_HIGH',
+  /**
+   * Automatic detection ends speech less often.
+   */
   END_SENSITIVITY_LOW = 'END_SENSITIVITY_LOW',
 }
 
 /** The different ways of handling user activity. */
 export enum ActivityHandling {
+  /**
+   * If unspecified, the default behavior is `START_OF_ACTIVITY_INTERRUPTS`.
+   */
   ACTIVITY_HANDLING_UNSPECIFIED = 'ACTIVITY_HANDLING_UNSPECIFIED',
+  /**
+   * If true, start of activity will interrupt the model's response (also called "barge in"). The model's current response will be cut-off in the moment of the interruption. This is the default behavior.
+   */
   START_OF_ACTIVITY_INTERRUPTS = 'START_OF_ACTIVITY_INTERRUPTS',
+  /**
+   * The model's response will not be interrupted.
+   */
   NO_INTERRUPTION = 'NO_INTERRUPTION',
 }
 
 /** Options about which input is included in the user's turn. */
 export enum TurnCoverage {
+  /**
+   * If unspecified, the default behavior is `TURN_INCLUDES_ONLY_ACTIVITY`.
+   */
   TURN_COVERAGE_UNSPECIFIED = 'TURN_COVERAGE_UNSPECIFIED',
+  /**
+   * The users turn only includes activity since the last turn, excluding inactivity (e.g. silence on the audio stream). This is the default behavior.
+   */
   TURN_INCLUDES_ONLY_ACTIVITY = 'TURN_INCLUDES_ONLY_ACTIVITY',
+  /**
+   * The users turn includes all realtime input since the last turn, including inactivity (e.g. silence on the audio stream).
+   */
   TURN_INCLUDES_ALL_INPUT = 'TURN_INCLUDES_ALL_INPUT',
 }
 
 /** Specifies how the response should be scheduled in the conversation. */
 export enum FunctionResponseScheduling {
+  /**
+   * This value is unused.
+   */
   SCHEDULING_UNSPECIFIED = 'SCHEDULING_UNSPECIFIED',
+  /**
+   * Only add the result to the conversation context, do not interrupt or trigger generation.
+   */
   SILENT = 'SILENT',
+  /**
+   * Add the result to the conversation context, and prompt to generate output without interrupting ongoing generation.
+   */
   WHEN_IDLE = 'WHEN_IDLE',
+  /**
+   * Add the result to the conversation context, interrupt ongoing generation and prompt to generate output.
+   */
   INTERRUPT = 'INTERRUPT',
 }
 
