@@ -547,7 +547,7 @@ describe('generateContent', () => {
   });
   it('should not conduct AFC when afc is disabled', async () => {
     const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
-    const mcpClientList = [await spinUpPrintingServer()];
+    const callableTool = mcpToTool([await spinUpPrintingServer()]);
     const mockResponses = [
       Promise.resolve(
         new Response(
@@ -562,7 +562,7 @@ describe('generateContent', () => {
       model: 'gemini-1.5-flash-exp',
       contents: 'Call the throwing tool.',
       config: {
-        tools: mcpClientList,
+        tools: [callableTool],
         toolConfig: {
           functionCallingConfig: {
             mode: types.FunctionCallingConfigMode.ANY,

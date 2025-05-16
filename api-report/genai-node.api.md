@@ -6,7 +6,6 @@
 
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { GoogleAuthOptions } from 'google-auth-library';
-import { Tool as Tool_2 } from '@modelcontextprotocol/sdk/types.js';
 
 // @public
 export interface ActivityEnd {
@@ -2322,7 +2321,7 @@ export interface ToolConfig {
 export type ToolListUnion = ToolUnion[];
 
 // @public (undocumented)
-export type ToolUnion = Tool | Tool_2 | Client | CallableTool;
+export type ToolUnion = Tool | CallableTool;
 
 // @public
 export enum TrafficType {
