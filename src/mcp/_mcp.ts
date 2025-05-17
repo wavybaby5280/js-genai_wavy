@@ -132,19 +132,21 @@ export class McpCallableTool implements CallableTool {
     await this.initialize();
     const functionCallResponseParts: Part[] = [];
     for (const functionCall of functionCalls) {
-      const mcpClient = this.functionNameToMcpClient[functionCall.name!];
-      const callToolResponse = await mcpClient.callTool({
-        name: functionCall.name!,
-        arguments: functionCall.args,
-      });
-      functionCallResponseParts.push({
-        functionResponse: {
-          name: functionCall.name,
-          response: callToolResponse.isError
-            ? {error: callToolResponse}
-            : (callToolResponse as Record<string, unknown>),
-        },
-      });
+      if (functionCall.name! in this.functionNameToMcpClient) {
+        const mcpClient = this.functionNameToMcpClient[functionCall.name!];
+        const callToolResponse = await mcpClient.callTool({
+          name: functionCall.name!,
+          arguments: functionCall.args,
+        });
+        functionCallResponseParts.push({
+          functionResponse: {
+            name: functionCall.name,
+            response: callToolResponse.isError
+              ? {error: callToolResponse}
+              : (callToolResponse as Record<string, unknown>),
+          },
+        });
+      }
     }
     return functionCallResponseParts;
   }

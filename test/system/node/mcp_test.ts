@@ -28,7 +28,7 @@ describe('MCP related client Tests', () => {
   });
 
   describe('generateContent', () => {
-    it('ML Dev should take a list of MCPClients and conduct automated function calling', async () => {
+    it('ML Dev one CallableTool with MCPClients and conduct automated function calling', async () => {
       const ai = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
       const mcpCallableTool = mcpToTool([
         await spinUpPrintingServer(),
@@ -42,6 +42,28 @@ describe('MCP related client Tests', () => {
           'Use the printer to print a simple word: hello in blue, and beep with the beeper',
         config: {
           tools: [mcpCallableTool],
+          toolConfig: {
+            functionCallingConfig: {
+              mode: FunctionCallingConfigMode.AUTO,
+            },
+          },
+        },
+      });
+      expect(consoleLogSpy).toHaveBeenCalledWith('\x1b[34mhello');
+      expect(consoleBeepSpy).toHaveBeenCalledWith('\u0007');
+    });
+    it('ML Dev Multiple CallableTool with MCPClients and conduct automated function calling', async () => {
+      const ai = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+      const callableTool1 = mcpToTool([await spinUpPrintingServer()]);
+      const callableTool2 = mcpToTool([await spinUpBeepingServer()]);
+      const consoleLogSpy = spyOn(console, 'log').and.callThrough();
+      const consoleBeepSpy = spyOn(process.stdout, 'write').and.callThrough();
+      await ai.models.generateContent({
+        model: 'gemini-2.0-flash',
+        contents:
+          'Use the printer to print a simple word: hello in blue, and beep with the beeper',
+        config: {
+          tools: [callableTool1, callableTool2],
           toolConfig: {
             functionCallingConfig: {
               mode: FunctionCallingConfigMode.AUTO,
