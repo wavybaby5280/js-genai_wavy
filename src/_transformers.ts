@@ -4,10 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {
-  ListToolsResult,
-  Tool as McpTool,
-} from '@modelcontextprotocol/sdk/types.js';
+import {Tool as McpTool} from '@modelcontextprotocol/sdk/types.js';
 import {z} from 'zod';
 
 import {ApiClient} from './_api_client.js';
@@ -805,12 +802,7 @@ export function tTools(
   }
   const result: types.Tool[] = [];
   for (const tool of tools) {
-    // If the incoming type is an MCP tool, convert it to a Gemini tool.
-    if (typeof tool === 'object' && 'inputSchema' in tool) {
-      result.push(mcpToGeminiTool(tool as McpTool));
-    } else {
-      result.push(tool as types.Tool);
-    }
+    result.push(tool as types.Tool);
   }
   return result;
 }
@@ -1035,9 +1027,12 @@ function hasField(data: unknown, fieldName: string): boolean {
   return data !== null && typeof data === 'object' && fieldName in data;
 }
 
-export function mcpToGeminiTool(mcpTool: McpTool): types.Tool {
+export function mcpToGeminiTool(
+  mcpTool: McpTool,
+  config: types.CallableToolConfig = {},
+): types.Tool {
   const mcpToolSchema = mcpTool as Record<string, unknown>;
-  const functionDeclaration = {
+  const functionDeclaration: Record<string, unknown> = {
     name: mcpToolSchema['name'],
     description: mcpToolSchema['description'],
     parameters: processJsonSchema(
@@ -1046,6 +1041,9 @@ export function mcpToGeminiTool(mcpTool: McpTool): types.Tool {
       ),
     ),
   };
+  if (config.behavior) {
+    functionDeclaration['behavior'] = config.behavior;
+  }
 
   const geminiTool = {
     functionDeclarations: [
@@ -1056,17 +1054,14 @@ export function mcpToGeminiTool(mcpTool: McpTool): types.Tool {
   return geminiTool;
 }
 
-export function mcpToGeminiTools(
-  listToolsResult: ListToolsResult,
-): types.Tool[] {
-  return listToolsResult.tools.map(mcpToGeminiTool);
-}
-
 /**
  * Converts a list of MCP tools to a single Gemini tool with a list of function
  * declarations.
  */
-export function mcpToolsToGeminiTool(mcpTools: McpTool[]): types.Tool {
+export function mcpToolsToGeminiTool(
+  mcpTools: McpTool[],
+  config: types.CallableToolConfig = {},
+): types.Tool {
   const functionDeclarations: types.FunctionDeclaration[] = [];
   const toolNames = new Set<string>();
   for (const mcpTool of mcpTools) {
@@ -1079,7 +1074,7 @@ export function mcpToolsToGeminiTool(mcpTools: McpTool[]): types.Tool {
       );
     }
     toolNames.add(mcpToolName);
-    const geminiTool = mcpToGeminiTool(mcpTool);
+    const geminiTool = mcpToGeminiTool(mcpTool, config);
     if (geminiTool.functionDeclarations) {
       functionDeclarations.push(...geminiTool.functionDeclarations);
     }

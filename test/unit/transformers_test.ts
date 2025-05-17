@@ -362,38 +362,6 @@ describe('tTools', () => {
       ),
     ).toEqual([]);
   });
-  it('MCP tools', () => {
-    const mcpTools = {
-      tools: [
-        {
-          name: 'function-name',
-          description: 'function-description',
-          inputSchema: {},
-        },
-      ],
-    };
-    const expectedTools = [
-      {
-        functionDeclarations: [
-          {
-            name: 'function-name',
-            description: 'function-description',
-            parameters: {},
-          },
-        ],
-      },
-    ];
-    expect(
-      tTools(
-        new ApiClient({
-          auth: new FakeAuth(),
-          uploader: new CrossUploader(),
-          downloader: new CrossDownloader(),
-        }),
-        mcpTools.tools,
-      ),
-    ).toEqual(expectedTools);
-  });
   it('non array', () => {
     expect(() => {
       tTools(

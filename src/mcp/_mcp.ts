@@ -11,6 +11,7 @@ import {GOOGLE_API_CLIENT_HEADER} from '../_api_client.js';
 import {mcpToolsToGeminiTool} from '../_transformers.js';
 import {
   CallableTool,
+  CallableToolConfig,
   FunctionCall,
   GenerateContentParameters,
   Part,
@@ -78,16 +79,24 @@ export class McpCallableTool implements CallableTool {
   private readonly mcpClients;
   private mcpTools: McpTool[] = [];
   private functionNameToMcpClient: Record<string, McpClient> = {};
+  private readonly config: CallableToolConfig;
 
-  private constructor(mcpClients: McpClient[] = []) {
+  private constructor(
+    mcpClients: McpClient[] = [],
+    config: CallableToolConfig,
+  ) {
     this.mcpClients = mcpClients;
+    this.config = config;
   }
 
   /**
    * Creates a McpCallableTool.
    */
-  public static create(mcpClients: McpClient[]): McpCallableTool {
-    return new McpCallableTool(mcpClients);
+  public static create(
+    mcpClients: McpClient[],
+    config: CallableToolConfig,
+  ): McpCallableTool {
+    return new McpCallableTool(mcpClients, config);
   }
 
   /**
@@ -125,7 +134,7 @@ export class McpCallableTool implements CallableTool {
 
   public async tool(): Promise<Tool> {
     await this.initialize();
-    return mcpToolsToGeminiTool(this.mcpTools);
+    return mcpToolsToGeminiTool(this.mcpTools, this.config);
   }
 
   public async callTool(functionCalls: FunctionCall[]): Promise<Part[]> {
@@ -161,6 +170,9 @@ export class McpCallableTool implements CallableTool {
  * @experimental Built-in MCP support is a preview feature, may change in future
  * versions.
  */
-export function mcpToTool(clients: McpClient[]): CallableTool {
-  return McpCallableTool.create(clients);
+export function mcpToTool(
+  clients: McpClient[],
+  config: CallableToolConfig = {},
+): CallableTool {
+  return McpCallableTool.create(clients, config);
 }

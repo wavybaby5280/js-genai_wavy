@@ -185,6 +185,11 @@ export interface CallableTool {
 }
 
 // @public
+export interface CallableToolConfig {
+    behavior?: Behavior;
+}
+
+// @public
 export interface Candidate {
     avgLogprobs?: number;
     citationMetadata?: CitationMetadata;
@@ -1707,7 +1712,7 @@ export enum MaskReferenceMode {
 }
 
 // @public
-export function mcpToTool(clients: Client[]): CallableTool;
+export function mcpToTool(clients: Client[], config?: CallableToolConfig): CallableTool;
 
 // @public
 export enum MediaModality {

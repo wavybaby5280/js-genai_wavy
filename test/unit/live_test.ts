@@ -14,8 +14,10 @@ import * as converters from '../../src/converters/_live_converters.js';
 import {CrossDownloader} from '../../src/cross/_cross_downloader.js';
 import {CrossUploader} from '../../src/cross/_cross_uploader.js';
 import {Live} from '../../src/live.js';
+import {mcpToTool} from '../../src/mcp/_mcp.js';
 import * as types from '../../src/types.js';
 import {FakeAuth} from '../_fake_auth.js';
+import {spinUpPrintingServer} from './test_mcp_server.js';
 
 class FakeWebSocketFactory implements WebSocketFactory {
   create(
@@ -621,6 +623,64 @@ describe('live', () => {
         );
       }
     }
+  });
+
+  it('connect should send setup message with MCP tools', async () => {
+    const apiClient = new ApiClient({
+      auth: new FakeAuth(),
+      apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
+      project: 'test-project',
+      location: 'test-location',
+    });
+    const websocketFactory = new FakeWebSocketFactory();
+    const live = new Live(apiClient, new FakeAuth(), websocketFactory);
+
+    let websocket = new FakeWebSocket(
+      '',
+      {},
+      {
+        onopen: function () {},
+        onmessage: function (_e: MessageEvent) {},
+        onerror: function (_e: ErrorEvent) {},
+        onclose: function (_e: CloseEvent) {},
+      },
+    );
+    spyOn(websocket, 'connect').and.callThrough();
+    let websocketSpy = spyOn(websocket, 'send').and.callThrough();
+    spyOn(websocketFactory, 'create').and.callFake(
+      (url, headers, callbacks) => {
+        // Update the websocket spy instance with callbacks provided by
+        // the websocket factory.
+        websocket = new FakeWebSocket(url, headers, callbacks);
+        spyOn(websocket, 'connect').and.callThrough();
+        websocketSpy = spyOn(websocket, 'send').and.callThrough();
+        return websocket;
+      },
+    );
+
+    const callableTool = mcpToTool([await spinUpPrintingServer()], {
+      behavior: types.Behavior.NON_BLOCKING,
+    });
+
+    const session = await live.connect({
+      model: 'models/gemini-2.0-flash-live-001',
+      config: {
+        tools: [callableTool],
+      },
+      callbacks: {
+        onmessage: function (e: types.LiveServerMessage) {
+          void e;
+        },
+      },
+    });
+
+    const websocketSpyCall = websocketSpy.calls.all()[0];
+    expect(websocketSpyCall.args[0]).toBe(
+      '{"setup":{"model":"models/gemini-2.0-flash-live-001","tools":[{"functionDeclarations":[{"behavior":"NON_BLOCKING","name":"print","parameters":{"type":"OBJECT","properties":{"text":{"type":"STRING"},"color":{"type":"STRING","pattern":"red|blue|green|white"}},"required":["text","color"]}}]}]}}',
+    );
+    expect(session).toBeDefined();
   });
 
   it('session should return goAway message', async () => {

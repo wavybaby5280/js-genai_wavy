@@ -78,7 +78,8 @@ export class Live {
      Establishes a connection to the specified model with the given
      configuration and returns a Session object representing that connection.
 
-     @experimental
+     @experimental Built-in MCP support is a preview feature, may change in
+     future versions.
 
      @remarks
 
@@ -210,6 +211,19 @@ export class Live {
         'Setting `LiveConnectConfig.generation_config` is deprecated, please set the fields on `LiveConnectConfig` directly. This will become an error in a future version (not before Q3 2025).',
       );
     }
+    const inputTools = params.config?.tools ?? [];
+    const convertedTools: types.Tool[] = [];
+    for (const tool of inputTools) {
+      if (this.isCallableTool(tool)) {
+        const callableTool = tool as types.CallableTool;
+        convertedTools.push(await callableTool.tool());
+      } else {
+        convertedTools.push(tool as types.Tool);
+      }
+    }
+    if (convertedTools.length > 0) {
+      params.config!.tools = convertedTools;
+    }
     const liveConnectParameters: types.LiveConnectParameters = {
       model: transformedModel,
       config: params.config,
@@ -229,6 +243,11 @@ export class Live {
     delete clientMessage['config'];
     conn.send(JSON.stringify(clientMessage));
     return new Session(conn, this.apiClient);
+  }
+
+  // TODO: b/416041229 - Abstract this method to a common place.
+  private isCallableTool(tool: types.ToolUnion): boolean {
+    return 'callTool' in tool && typeof tool.callTool === 'function';
   }
 }
 

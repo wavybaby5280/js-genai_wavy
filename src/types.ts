@@ -4749,6 +4749,16 @@ export interface CallableTool {
   callTool(functionCalls: FunctionCall[]): Promise<Part[]>;
 }
 
+/**
+ * CallableToolConfig is the configuration for a callable tool.
+ */
+export interface CallableToolConfig {
+  /**
+   * Specifies the model's behavior after invoking this tool.
+   */
+  behavior?: Behavior;
+}
+
 /** Parameters for connecting to the live API. */
 export declare interface LiveMusicConnectParameters {
   /** The model's resource name. */

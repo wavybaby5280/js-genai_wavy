@@ -4,13 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {
-  ListToolsResultSchema,
-  Tool as McpTool,
-} from '@modelcontextprotocol/sdk/types.js';
+import {Tool as McpTool, ToolSchema} from '@modelcontextprotocol/sdk/types.js';
 
 import {
-  mcpToGeminiTools,
+  mcpToGeminiTool,
   mcpToolsToGeminiTool,
 } from '../../src/_transformers.js';
 import {
@@ -22,115 +19,122 @@ import * as types from '../../src/types.js';
 
 import {spinUpPrintingServer} from './test_mcp_server.js';
 
-describe('mcpToGeminiTools', () => {
-  it('return empty array from empty tools list', () => {
-    expect(mcpToGeminiTools({tools: []})).toEqual([]);
-  });
-
+describe('mcpToGeminiTool', () => {
   it('should filter unknown JsonSchema fields', () => {
-    const mcpTools = {
-      tools: [
+    const mcpTool = {
+      name: 'tool',
+      description: 'tool-description',
+      inputSchema: {
+        type: 'object',
+        properties: {},
+        unknownField: 'unknownField',
+        unknownObject: {},
+      },
+    };
+
+    const parsedMcpTool = ToolSchema.parse(mcpTool);
+    expect(mcpToGeminiTool(parsedMcpTool)).toEqual({
+      functionDeclarations: [
         {
           name: 'tool',
           description: 'tool-description',
-          inputSchema: {
-            type: 'object',
+          parameters: {
+            type: types.Type.OBJECT,
             properties: {},
-            unknownField: 'unknownField',
-            unknownObject: {},
           },
         },
       ],
-    };
-
-    const parsedMcpTools = ListToolsResultSchema.parse(mcpTools);
-    expect(mcpToGeminiTools(parsedMcpTools)).toEqual([
-      {
-        functionDeclarations: [
-          {
-            name: 'tool',
-            description: 'tool-description',
-            parameters: {
-              type: types.Type.OBJECT,
-              properties: {},
-            },
-          },
-        ],
-      },
-    ]);
+    });
   });
 
   it('should process items', () => {
-    const mcpTools = {
-      tools: [
+    const mcpTool = {
+      name: 'tool',
+      description: 'tool-description',
+      inputSchema: {
+        type: 'object',
+        properties: {
+          property: {
+            type: 'object',
+            items: {
+              type: 'string',
+              description: 'item-description',
+              unknownField: 'unknownField',
+              unknownObject: {},
+            },
+          },
+        },
+      },
+    };
+
+    const parsedMcpTool = ToolSchema.parse(mcpTool);
+    expect(mcpToGeminiTool(parsedMcpTool)).toEqual({
+      functionDeclarations: [
         {
           name: 'tool',
           description: 'tool-description',
-          inputSchema: {
-            type: 'object',
+          parameters: {
+            type: types.Type.OBJECT,
             properties: {
               property: {
-                type: 'object',
+                type: types.Type.OBJECT,
                 items: {
-                  type: 'string',
+                  type: types.Type.STRING,
                   description: 'item-description',
-                  unknownField: 'unknownField',
-                  unknownObject: {},
                 },
               },
             },
           },
         },
       ],
-    };
-
-    const parsedMcpTools = ListToolsResultSchema.parse(mcpTools);
-    expect(mcpToGeminiTools(parsedMcpTools)).toEqual([
-      {
-        functionDeclarations: [
-          {
-            name: 'tool',
-            description: 'tool-description',
-            parameters: {
-              type: types.Type.OBJECT,
-              properties: {
-                property: {
-                  type: types.Type.OBJECT,
-                  items: {
-                    type: types.Type.STRING,
-                    description: 'item-description',
-                  },
-                },
-              },
-            },
-          },
-        ],
-      },
-    ]);
+    });
   });
 
   it('should process anyOf', () => {
-    const mcpTools = {
-      tools: [
+    const mcpTool = {
+      name: 'tool',
+      description: 'tool-description',
+      inputSchema: {
+        type: 'object',
+        properties: {
+          property: {
+            anyOf: [
+              {
+                type: 'string',
+                description: 'anyOf-description-1',
+                unknownField: 'unknownField',
+                unknownObject: {},
+              },
+              {
+                type: 'number',
+                description: 'anyOf-description-2',
+                unknownField: 'unknownField',
+                unknownObject: {},
+              },
+            ],
+          },
+        },
+      },
+    };
+
+    const parsedMcpTool = ToolSchema.parse(mcpTool);
+    expect(mcpToGeminiTool(parsedMcpTool)).toEqual({
+      functionDeclarations: [
         {
           name: 'tool',
           description: 'tool-description',
-          inputSchema: {
-            type: 'object',
+          parameters: {
+            type: types.Type.OBJECT,
             properties: {
               property: {
                 anyOf: [
                   {
-                    type: 'string',
+                    type: types.Type.STRING,
                     description: 'anyOf-description-1',
-                    unknownField: 'unknownField',
-                    unknownObject: {},
                   },
                   {
-                    type: 'number',
+                    type: types.Type.NUMBER,
                     description: 'anyOf-description-2',
-                    unknownField: 'unknownField',
-                    unknownObject: {},
                   },
                 ],
               },
@@ -138,61 +142,56 @@ describe('mcpToGeminiTools', () => {
           },
         },
       ],
-    };
-
-    const parsedMcpTools = ListToolsResultSchema.parse(mcpTools);
-    expect(mcpToGeminiTools(parsedMcpTools)).toEqual([
-      {
-        functionDeclarations: [
-          {
-            name: 'tool',
-            description: 'tool-description',
-            parameters: {
-              type: types.Type.OBJECT,
-              properties: {
-                property: {
-                  anyOf: [
-                    {
-                      type: types.Type.STRING,
-                      description: 'anyOf-description-1',
-                    },
-                    {
-                      type: types.Type.NUMBER,
-                      description: 'anyOf-description-2',
-                    },
-                  ],
-                },
-              },
-            },
-          },
-        ],
-      },
-    ]);
+    });
   });
 
   it('should process properties', () => {
-    const mcpTools = {
-      tools: [
+    const mcpTool = {
+      name: 'tool',
+      description: 'tool-description',
+      inputSchema: {
+        type: 'object',
+        properties: {
+          property: {
+            type: 'object',
+            properties: {
+              parameter1: {
+                type: 'string',
+                description: 'parameter1-description',
+                unknownField: 'unknownField',
+                unknownObject: {},
+              },
+              parameter2: {
+                type: 'string',
+                description: 'parameter2-description',
+                unknownField: 'unknownField',
+                unknownObject: {},
+              },
+            },
+          },
+        },
+      },
+    };
+
+    const parsedMcpTool = ToolSchema.parse(mcpTool);
+    expect(mcpToGeminiTool(parsedMcpTool)).toEqual({
+      functionDeclarations: [
         {
           name: 'tool',
           description: 'tool-description',
-          inputSchema: {
-            type: 'object',
+          parameters: {
+            type: types.Type.OBJECT,
             properties: {
               property: {
-                type: 'object',
+                type: types.Type.OBJECT,
                 properties: {
                   parameter1: {
-                    type: 'string',
+                    type: types.Type.STRING,
                     description: 'parameter1-description',
-                    unknownField: 'unknownField',
-                    unknownObject: {},
                   },
                   parameter2: {
-                    type: 'string',
+                    type: types.Type.STRING,
                     description: 'parameter2-description',
-                    unknownField: 'unknownField',
-                    unknownObject: {},
                   },
                 },
               },
@@ -200,37 +199,37 @@ describe('mcpToGeminiTools', () => {
           },
         },
       ],
+    });
+  });
+
+  it('should set behavior', () => {
+    const mcpTool = {
+      name: 'tool',
+      description: 'tool-description',
+      inputSchema: {
+        type: 'object',
+        properties: {},
+      },
     };
 
-    const parsedMcpTools = ListToolsResultSchema.parse(mcpTools);
-    expect(mcpToGeminiTools(parsedMcpTools)).toEqual([
-      {
-        functionDeclarations: [
-          {
-            name: 'tool',
-            description: 'tool-description',
-            parameters: {
-              type: types.Type.OBJECT,
-              properties: {
-                property: {
-                  type: types.Type.OBJECT,
-                  properties: {
-                    parameter1: {
-                      type: types.Type.STRING,
-                      description: 'parameter1-description',
-                    },
-                    parameter2: {
-                      type: types.Type.STRING,
-                      description: 'parameter2-description',
-                    },
-                  },
-                },
-              },
-            },
+    const parsedMcpTool = ToolSchema.parse(mcpTool);
+    expect(
+      mcpToGeminiTool(parsedMcpTool, {
+        behavior: types.Behavior.NON_BLOCKING,
+      }),
+    ).toEqual({
+      functionDeclarations: [
+        {
+          name: 'tool',
+          description: 'tool-description',
+          parameters: {
+            type: types.Type.OBJECT,
+            properties: {},
           },
-        ],
-      },
-    ]);
+          behavior: types.Behavior.NON_BLOCKING,
+        },
+      ],
+    });
   });
 });
 
@@ -308,6 +307,53 @@ describe('mcpToolsToGeminiTool', () => {
               },
             },
           },
+        },
+      ],
+    });
+  });
+
+  it('should process multiple MCP tools with config', () => {
+    const mcpTools: McpTool[] = [mcpTool1, mcpTool2];
+
+    expect(
+      mcpToolsToGeminiTool(mcpTools, {
+        behavior: types.Behavior.NON_BLOCKING,
+      }),
+    ).toEqual({
+      functionDeclarations: [
+        {
+          name: 'tool-1',
+          description: 'tool-1-description',
+          parameters: {
+            type: types.Type.OBJECT,
+            properties: {
+              property: {
+                type: types.Type.OBJECT,
+                items: {
+                  type: types.Type.STRING,
+                  description: 'item-description',
+                },
+              },
+            },
+          },
+          behavior: types.Behavior.NON_BLOCKING,
+        },
+        {
+          name: 'tool-2',
+          description: 'tool-2-description',
+          parameters: {
+            type: types.Type.OBJECT,
+            properties: {
+              property: {
+                type: types.Type.OBJECT,
+                items: {
+                  type: types.Type.STRING,
+                  description: 'item-description',
+                },
+              },
+            },
+          },
+          behavior: types.Behavior.NON_BLOCKING,
         },
       ],
     });
