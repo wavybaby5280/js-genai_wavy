@@ -319,7 +319,7 @@ export class Models extends BaseModule {
           if (chunk.candidates && chunk.candidates[0]?.content) {
             responseContents.push(chunk.candidates[0].content);
             for (const part of chunk.candidates[0].content.parts ?? []) {
-              if (part.functionCall) {
+              if (remoteCallCount < maxRemoteCalls && part.functionCall) {
                 if (!part.functionCall.name) {
                   throw new Error(
                     'Function call was not returned by the model.',

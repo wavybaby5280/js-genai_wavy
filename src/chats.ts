@@ -307,7 +307,7 @@ export class Chat {
     let outputContents: types.Content[] = [];
     if (
       modelOutput.length > 0 &&
-      modelOutput.every((content) => content.role === 'model')
+      modelOutput.every((content) => content.role !== undefined)
     ) {
       outputContents = modelOutput;
     } else {
