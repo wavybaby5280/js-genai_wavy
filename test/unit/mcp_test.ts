@@ -362,7 +362,7 @@ describe('mcpToolsToGeminiTool', () => {
 
 describe('hasMcpToolUsage', () => {
   it('should return true for McpCallableTool', async () => {
-    const mcpCallableTool = mcpToTool([await spinUpPrintingServer()]);
+    const mcpCallableTool = mcpToTool(await spinUpPrintingServer());
 
     expect(hasMcpToolUsage([mcpCallableTool])).toBeTrue();
   });
@@ -407,7 +407,7 @@ describe('mcpToTool', () => {
     const mcpClient = await spinUpPrintingServer();
 
     try {
-      mcpToTool([mcpClient, mcpClient]);
+      mcpToTool(mcpClient, mcpClient);
     } catch (e) {
       expect((e as Error).message).toEqual(
         'Duplicate function name print found in MCP tools. Please ensure function names are unique.',

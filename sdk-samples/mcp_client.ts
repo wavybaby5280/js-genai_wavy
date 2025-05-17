@@ -23,7 +23,7 @@ async function mcpSample(ai: GoogleGenAI) {
     contents:
       'Use the printer to print a simple math question in red and the answer in blue, and beep with the beeper, also tell me a joke. IMPORTANT DONT FORGET TO BEEP AT THE END',
     config: {
-      tools: [mcpToTool([printingClient, beepingClient])],
+      tools: [mcpToTool(printingClient, beepingClient)],
       toolConfig: {
         functionCallingConfig: {
           mode: FunctionCallingConfigMode.AUTO,

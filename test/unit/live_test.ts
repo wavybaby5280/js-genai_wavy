@@ -660,7 +660,7 @@ describe('live', () => {
       },
     );
 
-    const callableTool = mcpToTool([await spinUpPrintingServer()], {
+    const callableTool = mcpToTool(await spinUpPrintingServer(), {
       behavior: types.Behavior.NON_BLOCKING,
     });
 

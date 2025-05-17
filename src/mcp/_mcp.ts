@@ -68,6 +68,26 @@ function isMcpCallableTool(object: unknown): boolean {
   );
 }
 
+// List all tools from the MCP client.
+async function* listAllTools(
+  mcpClient: McpClient,
+  maxTools: number = 100,
+): AsyncGenerator<McpTool> {
+  let cursor: string | undefined = undefined;
+  let numTools = 0;
+  while (numTools < maxTools) {
+    const t = await mcpClient.listTools({cursor});
+    for (const tool of t.tools) {
+      yield tool;
+      numTools++;
+    }
+    if (!t.nextCursor) {
+      break;
+    }
+    cursor = t.nextCursor;
+  }
+}
+
 /**
  * McpCallableTool can be used for model inference and invoking MCP clients with
  * given function call arguments.
@@ -114,9 +134,8 @@ export class McpCallableTool implements CallableTool {
     const functionMap: Record<string, McpClient> = {};
     const mcpTools: McpTool[] = [];
     for (const mcpClient of this.mcpClients) {
-      const mcpToolList = await mcpClient.listTools();
-      mcpTools.push(...mcpToolList.tools);
-      for (const mcpTool of mcpToolList.tools) {
+      for await (const mcpTool of listAllTools(mcpClient)) {
+        mcpTools.push(mcpTool);
         const mcpToolName = mcpTool.name as string;
         if (functionMap[mcpToolName]) {
           throw new Error(
@@ -161,18 +180,37 @@ export class McpCallableTool implements CallableTool {
   }
 }
 
+function isMcpClient(client: unknown): client is McpClient {
+  return (
+    client !== null &&
+    typeof client === 'object' &&
+    'listTools' in client &&
+    typeof client.listTools === 'function'
+  );
+}
+
 /**
- * Creates a McpCallableTool from an array of MCP client
+ * Creates a McpCallableTool from MCP clients and an optional config.
  *
  * The callable tool can invoke the MCP clients with given function call
  * arguments. (often for automatic function calling).
+ * Use the config to modify tool parameters such as behavior.
  *
  * @experimental Built-in MCP support is a preview feature, may change in future
  * versions.
  */
 export function mcpToTool(
-  clients: McpClient[],
-  config: CallableToolConfig = {},
+  ...args: [...McpClient[], CallableToolConfig | McpClient]
 ): CallableTool {
-  return McpCallableTool.create(clients, config);
+  if (args.length === 0) {
+    throw new Error('No MCP clients provided');
+  }
+  const maybeConfig = args[args.length - 1];
+  if (isMcpClient(maybeConfig)) {
+    return McpCallableTool.create(args as McpClient[], {});
+  }
+  return McpCallableTool.create(
+    args.slice(0, args.length - 1) as McpClient[],
+    maybeConfig,
+  );
 }

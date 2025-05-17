@@ -348,10 +348,10 @@ describe('generateContent', () => {
   describe('can use the mcp client', () => {
     it('should take multiple mcp clients and conduct AFC', async () => {
       const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
-      const callableTool = mcpToTool([
+      const callableTool = mcpToTool(
         await spinUpPrintingServer(),
         await spinUpBeepingServer(),
-      ]);
+      );
 
       const mockResponses = [
         Promise.resolve(
@@ -435,7 +435,7 @@ describe('generateContent', () => {
     it('should throw error when there are CallableTools and Tools when AFC is enabled', async () => {
       const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
       const mixedToolsList: types.ToolListUnion = [
-        await mcpToTool([await spinUpPrintingServer()]),
+        await mcpToTool(await spinUpPrintingServer()),
         {
           functionDeclarations: [
             {
@@ -476,7 +476,7 @@ describe('generateContent', () => {
   });
   it('should handle the error thrown by the underlying tool and wrap it in the response', async () => {
     const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
-    const callableTool = mcpToTool([await spinUpThrowingServer()]);
+    const callableTool = mcpToTool(await spinUpThrowingServer());
 
     const mockResponseWithThrowingFunctionCall: types.GenerateContentResponse =
       Object.setPrototypeOf(
@@ -547,7 +547,7 @@ describe('generateContent', () => {
   });
   it('should not conduct AFC when afc is disabled', async () => {
     const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
-    const callableTool = mcpToTool([await spinUpPrintingServer()]);
+    const callableTool = mcpToTool(await spinUpPrintingServer());
     const mockResponses = [
       Promise.resolve(
         new Response(
@@ -580,7 +580,7 @@ describe('generateContent', () => {
   });
   it('should conduct AFC according the maximumRemoteCalls', async () => {
     const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
-    const callableTool = mcpToTool([await spinUpBeepingServer()]);
+    const callableTool = mcpToTool(await spinUpBeepingServer());
     const expectedNumberOfCalls = 3;
     const mockResponses = [];
     for (let i = 0; i < 20; i++) {
@@ -616,10 +616,10 @@ describe('generateContent', () => {
   });
   it('should append AFC history when ignoreCallHistory is false', async () => {
     const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
-    const mcpCallableTool = mcpToTool([
+    const mcpCallableTool = mcpToTool(
       await spinUpPrintingServer(),
       await spinUpBeepingServer(),
-    ]);
+    );
 
     const mockResponses = [
       Promise.resolve(

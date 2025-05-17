@@ -30,10 +30,10 @@ describe('MCP related client Tests', () => {
   describe('generateContent', () => {
     it('ML Dev one CallableTool with MCPClients and conduct automated function calling', async () => {
       const ai = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
-      const mcpCallableTool = mcpToTool([
+      const mcpCallableTool = mcpToTool(
         await spinUpPrintingServer(),
         await spinUpBeepingServer(),
-      ]);
+      );
       const consoleLogSpy = spyOn(console, 'log').and.callThrough();
       const consoleBeepSpy = spyOn(process.stdout, 'write').and.callThrough();
       await ai.models.generateContent({
@@ -54,8 +54,8 @@ describe('MCP related client Tests', () => {
     });
     it('ML Dev Multiple CallableTool with MCPClients and conduct automated function calling', async () => {
       const ai = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
-      const callableTool1 = mcpToTool([await spinUpPrintingServer()]);
-      const callableTool2 = mcpToTool([await spinUpBeepingServer()]);
+      const callableTool1 = mcpToTool(await spinUpPrintingServer());
+      const callableTool2 = mcpToTool(await spinUpBeepingServer());
       const consoleLogSpy = spyOn(console, 'log').and.callThrough();
       const consoleBeepSpy = spyOn(process.stdout, 'write').and.callThrough();
       await ai.models.generateContent({
@@ -80,7 +80,7 @@ describe('MCP related client Tests', () => {
         project: GOOGLE_CLOUD_PROJECT,
         location: GOOGLE_CLOUD_LOCATION,
       });
-      const mcpCallableTool = mcpToTool([await spinUpPrintingServer()]);
+      const mcpCallableTool = mcpToTool(await spinUpPrintingServer());
       const consoleLogSpy = spyOn(console, 'log').and.callThrough();
       await ai.models.generateContent({
         model: 'gemini-2.0-flash',

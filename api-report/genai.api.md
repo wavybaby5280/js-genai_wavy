@@ -1712,7 +1712,7 @@ export enum MaskReferenceMode {
 }
 
 // @public
-export function mcpToTool(clients: Client[], config?: CallableToolConfig): CallableTool;
+export function mcpToTool(...args: [...Client[], CallableToolConfig | Client]): CallableTool;
 
 // @public
 export enum MediaModality {
