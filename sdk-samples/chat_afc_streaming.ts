@@ -64,9 +64,6 @@ async function chatFromMLDev() {
           mode: FunctionCallingConfigMode.AUTO,
         },
       },
-      automaticFunctionCalling: {
-        maximumRemoteCalls: 1,
-      },
       systemInstruction:
         'You are a helpful assistant. You can control the brightness and color temperature of a room light, once you have succeeded tell me the new values',
     },
@@ -140,9 +137,6 @@ async function chatFromVertexAI() {
         functionCallingConfig: {
           mode: FunctionCallingConfigMode.AUTO,
         },
-      },
-      automaticFunctionCalling: {
-        maximumRemoteCalls: 1,
       },
       systemInstruction:
         'You are a helpful assistant. You can control the brightness and color temperature of a room light, once you have succeeded tell me the new values',

@@ -6,33 +6,72 @@
 import {shouldAppendAfcHistory, shouldDisableAfc} from '../../src/_afc.js';
 import * as types from '../../src/types.js';
 
+const callableTool: types.CallableTool = {
+  callTool: async (_functionCalls: types.FunctionCall[]) => {
+    return [{} as types.Part];
+  },
+  tool: async () => {
+    return {} as types.Tool;
+  },
+};
+
 describe('afc_test', () => {
-  it('should default to false when there is no config', () => {
-    expect(shouldDisableAfc(undefined)).toBeFalse();
+  it('should default to true when there is no config', () => {
+    expect(shouldDisableAfc(undefined)).toBeTrue();
   });
-  it('should default to false when there is no automaticFunctionCalling config', () => {
+  it('should default to true when there is no automaticFunctionCalling config and no tools', () => {
     const config: types.GenerateContentConfig = {};
+    expect(shouldDisableAfc(config)).toBeTrue();
+  });
+  it('should default to true when there is no disable config and no tools', () => {
+    const config: types.GenerateContentConfig = {
+      automaticFunctionCalling: {},
+    };
+    expect(shouldDisableAfc(config)).toBeTrue();
+  });
+  it('should default to false when there is no automaticFunctionCalling config and tools', () => {
+    const config: types.GenerateContentConfig = {tools: [callableTool]};
     expect(shouldDisableAfc(config)).toBeFalse();
   });
-  it('should default to false when there is no disable config', () => {
+  it('should default to false when there is no disable config and tools', () => {
     const config: types.GenerateContentConfig = {
+      tools: [callableTool],
       automaticFunctionCalling: {},
     };
     expect(shouldDisableAfc(config)).toBeFalse();
   });
-  it('should be set to false when provided valid maximumRemoteCalls value', () => {
+  it('should be set to true when provided valid maximumRemoteCalls value and no tools', () => {
     const config: types.GenerateContentConfig = {
       automaticFunctionCalling: {
         maximumRemoteCalls: 5,
       },
     };
+    expect(shouldDisableAfc(config)).toBeTrue();
+  });
+  it('should be set to false when provided valid maximumRemoteCalls value and tools', () => {
+    const config: types.GenerateContentConfig = {
+      automaticFunctionCalling: {
+        maximumRemoteCalls: 5,
+      },
+      tools: [callableTool],
+    };
     expect(shouldDisableAfc(config)).toBeFalse();
   });
-  it('should be set to false when provided valid maximumRemoteCalls value integer as float', () => {
+  it('should be set to true when provided valid maximumRemoteCalls value integer as float and no tools', () => {
     const config: types.GenerateContentConfig = {
       automaticFunctionCalling: {
         maximumRemoteCalls: 5.0,
       },
+    };
+    expect(shouldDisableAfc(config)).toBeTrue();
+  });
+
+  it('should be set to false when provided valid maximumRemoteCalls value integer as float and tools', () => {
+    const config: types.GenerateContentConfig = {
+      automaticFunctionCalling: {
+        maximumRemoteCalls: 5.0,
+      },
+      tools: [callableTool],
     };
     expect(shouldDisableAfc(config)).toBeFalse();
   });
@@ -53,11 +92,12 @@ describe('afc_test', () => {
     };
     expect(shouldDisableAfc(config)).toBeTrue();
   });
-  it('should be set to true when provided negative maximumRemoteCalls value', () => {
+  it('should be set to true when provided negative maximumRemoteCalls value and tools', () => {
     const config: types.GenerateContentConfig = {
       automaticFunctionCalling: {
         maximumRemoteCalls: -1,
       },
+      tools: [callableTool],
     };
     expect(shouldDisableAfc(config)).toBeTrue();
   });
@@ -67,6 +107,7 @@ describe('afc_test', () => {
         disable: false,
         maximumRemoteCalls: -1,
       },
+      tools: [callableTool],
     };
     expect(shouldDisableAfc(config)).toBeTrue();
   });
@@ -75,6 +116,7 @@ describe('afc_test', () => {
       automaticFunctionCalling: {
         maximumRemoteCalls: 0,
       },
+      tools: [callableTool],
     };
     expect(shouldDisableAfc(config)).toBeTrue();
   });
@@ -83,6 +125,7 @@ describe('afc_test', () => {
       automaticFunctionCalling: {
         maximumRemoteCalls: 7.2,
       },
+      tools: [callableTool],
     };
     expect(shouldDisableAfc(config)).toBeTrue();
   });

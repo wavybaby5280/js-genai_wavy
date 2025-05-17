@@ -79,9 +79,6 @@ describe('AFC Streaming Tests', () => {
               mode: FunctionCallingConfigMode.AUTO,
             },
           },
-          automaticFunctionCalling: {
-            maximumRemoteCalls: 1,
-          },
         },
         messages: ['Divide 10 by 2 using the customDivide function'],
       },
@@ -95,9 +92,6 @@ describe('AFC Streaming Tests', () => {
             functionCallingConfig: {
               mode: FunctionCallingConfigMode.AUTO,
             },
-          },
-          automaticFunctionCalling: {
-            maximumRemoteCalls: 1,
           },
         },
         messages: ['Divide 10 by 2 using the customDivide function'],
@@ -199,9 +193,6 @@ describe('AFC Streaming Tests', () => {
               mode: FunctionCallingConfigMode.AUTO,
             },
           },
-          automaticFunctionCalling: {
-            maximumRemoteCalls: 10,
-          },
         },
         messages: ['Divide 10 by 2 using the customDivide function', 'Thanks!'],
       },
@@ -215,9 +206,6 @@ describe('AFC Streaming Tests', () => {
             functionCallingConfig: {
               mode: FunctionCallingConfigMode.AUTO,
             },
-          },
-          automaticFunctionCalling: {
-            maximumRemoteCalls: 10,
           },
         },
         messages: ['Divide 10 by 2 using the customDivide function', 'Thanks!'],

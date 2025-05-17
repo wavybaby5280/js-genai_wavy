@@ -16,6 +16,17 @@ export function shouldDisableAfc(
     return true;
   }
 
+  let callableToolsPresent = false;
+  for (const tool of config?.tools ?? []) {
+    if (isCallableTool(tool)) {
+      callableToolsPresent = true;
+      break;
+    }
+  }
+  if (!callableToolsPresent) {
+    return true;
+  }
+
   const maxCalls = config?.automaticFunctionCalling?.maximumRemoteCalls;
   if (
     (maxCalls && (maxCalls < 0 || !Number.isInteger(maxCalls))) ||
@@ -28,6 +39,10 @@ export function shouldDisableAfc(
     return true;
   }
   return false;
+}
+
+export function isCallableTool(tool: types.ToolUnion): boolean {
+  return 'callTool' in tool && typeof tool.callTool === 'function';
 }
 
 /**

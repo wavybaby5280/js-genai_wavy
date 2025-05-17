@@ -8,6 +8,7 @@
 
 import {
   DEFAULT_MAX_REMOTE_CALLS,
+  isCallableTool,
   shouldAppendAfcHistory,
   shouldDisableAfc,
 } from './_afc.js';
@@ -99,7 +100,7 @@ export class Models extends BaseModule {
     const inputTools = params.config?.tools ?? [];
     const convertedTools: types.Tool[] = [];
     for (const tool of inputTools) {
-      if (this.isCallableTool(tool)) {
+      if (isCallableTool(tool)) {
         const callableTool = tool as types.CallableTool;
         convertedTools.push(await callableTool.tool());
       } else {
@@ -127,7 +128,7 @@ export class Models extends BaseModule {
       const responseContent: types.Content = response.candidates![0].content!;
       const functionResponseParts: types.Part[] = [];
       for (const tool of inputTools) {
-        if (this.isCallableTool(tool)) {
+        if (isCallableTool(tool)) {
           const callableTool = tool as types.CallableTool;
           const parts = await callableTool.callTool(response.functionCalls!);
           functionResponseParts.push(...parts);
@@ -213,18 +214,11 @@ export class Models extends BaseModule {
         params.config.httpOptions.headers as Record<string, string>,
       );
     }
-
-    const afcMaxRemoteCalls =
-      params.config?.automaticFunctionCalling?.maximumRemoteCalls;
-    if (
-      afcMaxRemoteCalls &&
-      afcMaxRemoteCalls > 0 &&
-      !params.config?.automaticFunctionCalling?.disable
-    ) {
-      return await this.processAfcStream(params);
-    } else {
+    if (shouldDisableAfc(params.config)) {
       const transformedParams = await this.transformCallableTools(params);
       return await this.generateContentStreamInternal(transformedParams);
+    } else {
+      return await this.processAfcStream(params);
     }
   };
 
@@ -242,7 +236,7 @@ export class Models extends BaseModule {
     }
     const transformedTools = await Promise.all(
       tools.map(async (tool) => {
-        if (this.isCallableTool(tool)) {
+        if (isCallableTool(tool)) {
           const callableTool = tool as types.CallableTool;
           return await callableTool.tool();
         }
@@ -261,16 +255,12 @@ export class Models extends BaseModule {
     return newParams;
   }
 
-  private isCallableTool(tool: types.ToolUnion): boolean {
-    return 'callTool' in tool && typeof tool.callTool === 'function';
-  }
-
   private async initAfcToolsMap(
     params: types.GenerateContentParameters,
   ): Promise<Map<string, types.CallableTool>> {
     const afcTools: Map<string, types.CallableTool> = new Map();
     for (const tool of params.config?.tools ?? []) {
-      if (this.isCallableTool(tool)) {
+      if (isCallableTool(tool)) {
         const callableTool = tool as types.CallableTool;
         const toolDeclaration = await callableTool.tool();
         for (const declaration of toolDeclaration.functionDeclarations ?? []) {
@@ -293,7 +283,8 @@ export class Models extends BaseModule {
     params: types.GenerateContentParameters,
   ): Promise<AsyncGenerator<types.GenerateContentResponse>> {
     const maxRemoteCalls =
-      params.config?.automaticFunctionCalling?.maximumRemoteCalls ?? 0;
+      params.config?.automaticFunctionCalling?.maximumRemoteCalls ??
+      DEFAULT_MAX_REMOTE_CALLS;
     let wereFunctionsCalled = false;
     let remoteCallCount = 0;
     const afcToolsMap = await this.initAfcToolsMap(params);
@@ -322,7 +313,7 @@ export class Models extends BaseModule {
               if (remoteCallCount < maxRemoteCalls && part.functionCall) {
                 if (!part.functionCall.name) {
                   throw new Error(
-                    'Function call was not returned by the model.',
+                    'Function call name was not returned by the model.',
                   );
                 }
                 if (!afcTools.has(part.functionCall.name)) {
