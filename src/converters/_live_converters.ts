@@ -1387,6 +1387,38 @@ export function contextWindowCompressionConfigToVertex(
   return toObject;
 }
 
+export function proactivityConfigToMldev(
+  apiClient: ApiClient,
+  fromObject: types.ProactivityConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromProactiveAudio = common.getValueByPath(fromObject, [
+    'proactiveAudio',
+  ]);
+  if (fromProactiveAudio != null) {
+    common.setValueByPath(toObject, ['proactiveAudio'], fromProactiveAudio);
+  }
+
+  return toObject;
+}
+
+export function proactivityConfigToVertex(
+  apiClient: ApiClient,
+  fromObject: types.ProactivityConfig,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromProactiveAudio = common.getValueByPath(fromObject, [
+    'proactiveAudio',
+  ]);
+  if (fromProactiveAudio != null) {
+    common.setValueByPath(toObject, ['proactiveAudio'], fromProactiveAudio);
+  }
+
+  return toObject;
+}
+
 export function liveConnectConfigToMldev(
   apiClient: ApiClient,
   fromObject: types.LiveConnectConfig,
@@ -1486,6 +1518,17 @@ export function liveConnectConfigToMldev(
     );
   }
 
+  const fromEnableAffectiveDialog = common.getValueByPath(fromObject, [
+    'enableAffectiveDialog',
+  ]);
+  if (parentObject !== undefined && fromEnableAffectiveDialog != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'generationConfig', 'enableAffectiveDialog'],
+      fromEnableAffectiveDialog,
+    );
+  }
+
   const fromSystemInstruction = common.getValueByPath(fromObject, [
     'systemInstruction',
   ]);
@@ -1563,6 +1606,15 @@ export function liveConnectConfigToMldev(
         apiClient,
         fromContextWindowCompression,
       ),
+    );
+  }
+
+  const fromProactivity = common.getValueByPath(fromObject, ['proactivity']);
+  if (parentObject !== undefined && fromProactivity != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'proactivity'],
+      proactivityConfigToMldev(apiClient, fromProactivity),
     );
   }
 
@@ -1668,6 +1720,17 @@ export function liveConnectConfigToVertex(
     );
   }
 
+  const fromEnableAffectiveDialog = common.getValueByPath(fromObject, [
+    'enableAffectiveDialog',
+  ]);
+  if (parentObject !== undefined && fromEnableAffectiveDialog != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'generationConfig', 'enableAffectiveDialog'],
+      fromEnableAffectiveDialog,
+    );
+  }
+
   const fromSystemInstruction = common.getValueByPath(fromObject, [
     'systemInstruction',
   ]);
@@ -1745,6 +1808,15 @@ export function liveConnectConfigToVertex(
         apiClient,
         fromContextWindowCompression,
       ),
+    );
+  }
+
+  const fromProactivity = common.getValueByPath(fromObject, ['proactivity']);
+  if (parentObject !== undefined && fromProactivity != null) {
+    common.setValueByPath(
+      parentObject,
+      ['setup', 'proactivity'],
+      proactivityConfigToVertex(apiClient, fromProactivity),
     );
   }
 
@@ -2036,6 +2108,15 @@ export function liveClientSetupToMldev(
     );
   }
 
+  const fromProactivity = common.getValueByPath(fromObject, ['proactivity']);
+  if (fromProactivity != null) {
+    common.setValueByPath(
+      toObject,
+      ['proactivity'],
+      proactivityConfigToMldev(apiClient, fromProactivity),
+    );
+  }
+
   return toObject;
 }
 
@@ -2134,6 +2215,15 @@ export function liveClientSetupToVertex(
       toObject,
       ['outputAudioTranscription'],
       audioTranscriptionConfigToVertex(),
+    );
+  }
+
+  const fromProactivity = common.getValueByPath(fromObject, ['proactivity']);
+  if (fromProactivity != null) {
+    common.setValueByPath(
+      toObject,
+      ['proactivity'],
+      proactivityConfigToVertex(apiClient, fromProactivity),
     );
   }
 

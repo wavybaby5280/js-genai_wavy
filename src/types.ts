@@ -4257,6 +4257,14 @@ export declare interface ContextWindowCompressionConfig {
 /** The audio transcription configuration in Setup. */
 export declare interface AudioTranscriptionConfig {}
 
+/** Config for proactivity features. */
+export declare interface ProactivityConfig {
+  /** If enabled, the model can reject responding to the last prompt. For
+        example, this allows the model to ignore out of context speech or to stay
+        silent if the user did not make a request, yet. */
+  proactiveAudio?: boolean;
+}
+
 /** Message contains configuration that will apply for the duration of the streaming session. */
 export declare interface LiveClientSetup {
   /** 
@@ -4295,6 +4303,9 @@ export declare interface LiveClientSetup {
       specified for the output audio.
        */
   outputAudioTranscription?: AudioTranscriptionConfig;
+  /** Configures the proactivity of the model. This allows the model to respond proactively to
+    the input and to ignore irrelevant input. */
+  proactivity?: ProactivityConfig;
 }
 
 /** Incremental update of the current conversation delivered from the client.
@@ -4465,6 +4476,8 @@ export declare interface LiveConnectConfig {
   /** The speech generation configuration.
    */
   speechConfig?: SpeechConfig;
+  /** If enabled, the model will detect emotions and adapt its responses accordingly. */
+  enableAffectiveDialog?: boolean;
   /** The user provided system instructions for the model.
       Note: only text should be used in parts and content in each part will be
       in a separate paragraph. */
@@ -4492,6 +4505,9 @@ If included the server will send SessionResumptionUpdate messages. */
 
       If included, server will compress context window to fit into given length. */
   contextWindowCompression?: ContextWindowCompressionConfig;
+  /** Configures the proactivity of the model. This allows the model to respond proactively to
+    the input and to ignore irrelevant input. */
+  proactivity?: ProactivityConfig;
 }
 
 /** Parameters for connecting to the live API. */
