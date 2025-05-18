@@ -31,7 +31,7 @@ function isValidContent(content: types.Content): boolean {
     if (part === undefined || Object.keys(part).length === 0) {
       return false;
     }
-    if (part.text !== undefined && part.text === '') {
+    if (!part.thought && part.text !== undefined && part.text === '') {
       return false;
     }
   }

@@ -823,4 +823,34 @@ describe('getHistory', () => {
 
     expect(fetchedHistory2).toEqual(originalHistory);
   });
+
+  it('empty text thoughts are appended', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const modelsModule = client.models;
+    const mockResponse = buildGenerateContentResponse({
+      parts: [{text: '', thought: true}, {text: 'new model response'}],
+      role: 'model',
+    });
+    spyOn(modelsModule, 'generateContent').and.returnValue(
+      Promise.resolve(mockResponse),
+    );
+    const chat = client.chats.create({
+      model: 'gemini-2.0-flash',
+      history: [existingInputContent, existingOutputContent],
+    });
+
+    await chat.sendMessage({message: 'new user content'});
+
+    const expectedHistory = [
+      existingInputContent,
+      existingOutputContent,
+      {role: 'user', parts: [{text: 'new user content'}]},
+      {
+        role: 'model',
+        parts: [{text: '', thought: true}, {text: 'new model response'}],
+      },
+    ];
+    expect(chat.getHistory()).toEqual(expectedHistory);
+    expect(chat.getHistory(true)).toEqual(expectedHistory);
+  });
 });
