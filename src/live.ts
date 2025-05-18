@@ -128,7 +128,7 @@ export class Live {
     ) {
       setMcpUsageHeader(defaultHeaders);
     }
-    const headers = mapToHeaders(this.apiClient.getDefaultHeaders());
+    const headers = mapToHeaders(defaultHeaders);
     if (this.apiClient.isVertexAI()) {
       url = `${websocketBaseUrl}/ws/google.cloud.aiplatform.${
         apiVersion

@@ -79,7 +79,10 @@ export class Models extends BaseModule {
       hasMcpToolUsage(params.config.tools)
     ) {
       if (!params.config.httpOptions) {
-        params.config.httpOptions = {headers: {}};
+        params.config.httpOptions = {};
+      }
+      if (!params.config.httpOptions.headers) {
+        params.config.httpOptions.headers = this.apiClient.getDefaultHeaders();
       }
       setMcpUsageHeader(
         params.config.httpOptions.headers as Record<string, string>,
@@ -208,7 +211,10 @@ export class Models extends BaseModule {
       hasMcpToolUsage(params.config.tools)
     ) {
       if (!params.config.httpOptions) {
-        params.config.httpOptions = {headers: {}};
+        params.config.httpOptions = {};
+      }
+      if (!params.config.httpOptions.headers) {
+        params.config.httpOptions.headers = this.apiClient.getDefaultHeaders();
       }
       setMcpUsageHeader(
         params.config.httpOptions.headers as Record<string, string>,

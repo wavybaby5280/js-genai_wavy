@@ -651,6 +651,8 @@ describe('live', () => {
     let websocketSpy = spyOn(websocket, 'send').and.callThrough();
     spyOn(websocketFactory, 'create').and.callFake(
       (url, headers, callbacks) => {
+        expect(headers['x-goog-api-client']).toContain('mcp_used/');
+        expect(headers['x-goog-api-client']).toContain('google-genai-sdk/');
         // Update the websocket spy instance with callbacks provided by
         // the websocket factory.
         websocket = new FakeWebSocket(url, headers, callbacks);

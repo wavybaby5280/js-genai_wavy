@@ -346,6 +346,83 @@ describe('generateContent', () => {
     });
   });
   describe('can use the mcp client', () => {
+    it('should append MCP usage header', async () => {
+      const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+      const callableTool = mcpToTool(
+        await spinUpPrintingServer(),
+        await spinUpBeepingServer(),
+      );
+
+      const mockResponses = [
+        Promise.resolve(
+          new Response(
+            JSON.stringify(mockGenerateContentResponseWithFunctionCall),
+            fetchOkOptions,
+          ),
+        ),
+        Promise.resolve(
+          new Response(
+            JSON.stringify(mockGenerateContentResponseWithAnotherFunctionCall),
+            fetchOkOptions,
+          ),
+        ),
+        Promise.resolve(
+          new Response(
+            JSON.stringify(mockGenerateContentResponse),
+            fetchOkOptions,
+          ),
+        ),
+      ];
+      const fetchSpy = spyOn(global, 'fetch').and.returnValues(
+        ...mockResponses,
+      );
+      await client.models.generateContent({
+        model: 'gemini-1.5-flash-exp',
+        contents:
+          'Use the printer to print a simple math question in red and the answer in blue',
+        config: {
+          tools: [callableTool],
+          toolConfig: {
+            functionCallingConfig: {
+              mode: types.FunctionCallingConfigMode.ANY,
+              allowedFunctionNames: ['print', 'beep'],
+            },
+          },
+        },
+      });
+      const allArgs = fetchSpy.calls.allArgs();
+      const headers = allArgs[0][1]?.['headers'] as Headers;
+      expect(headers.get('User-Agent')).toContain('google-genai-sdk/');
+      expect(headers.get('x-goog-api-client')).toContain('google-genai-sdk/');
+      expect(headers.get('x-goog-api-client')).toContain('mcp_used/');
+      expect(headers.get('Content-Type')).toBe('application/json');
+      expect(headers.get('x-goog-api-key')).toBe('fake-api-key');
+      const tools = JSON.parse(allArgs[0][1]?.['body'] as string)[
+        'tools'
+      ] as types.Tool[];
+      expect(
+        tools.includes({
+          functionDeclarations: [
+            {
+              name: 'print',
+              description: 'Print text to the console',
+              parameters: {
+                type: types.Type.OBJECT,
+                properties: {
+                  text: {
+                    type: types.Type.STRING,
+                  },
+                  color: {
+                    type: types.Type.STRING,
+                  },
+                },
+                required: ['text', 'color'],
+              },
+            },
+          ],
+        }),
+      );
+    });
     it('should take multiple mcp clients and conduct AFC', async () => {
       const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
       const callableTool = mcpToTool(
