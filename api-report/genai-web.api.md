@@ -1457,6 +1457,7 @@ export interface LiveClientSetup {
     inputAudioTranscription?: AudioTranscriptionConfig;
     model?: string;
     outputAudioTranscription?: AudioTranscriptionConfig;
+    proactivity?: ProactivityConfig;
     realtimeInputConfig?: RealtimeInputConfig;
     sessionResumption?: SessionResumptionConfig;
     systemInstruction?: ContentUnion;
@@ -1471,11 +1472,13 @@ export class LiveClientToolResponse {
 // @public
 export interface LiveConnectConfig {
     contextWindowCompression?: ContextWindowCompressionConfig;
+    enableAffectiveDialog?: boolean;
     generationConfig?: GenerationConfig;
     inputAudioTranscription?: AudioTranscriptionConfig;
     maxOutputTokens?: number;
     mediaResolution?: MediaResolution;
     outputAudioTranscription?: AudioTranscriptionConfig;
+    proactivity?: ProactivityConfig;
     realtimeInputConfig?: RealtimeInputConfig;
     responseModalities?: Modality[];
     seed?: number;
@@ -1906,6 +1909,11 @@ export enum PersonGeneration {
 // @public
 export interface PrebuiltVoiceConfig {
     voiceName?: string;
+}
+
+// @public
+export interface ProactivityConfig {
+    proactiveAudio?: boolean;
 }
 
 // @public
