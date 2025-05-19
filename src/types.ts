@@ -4438,6 +4438,15 @@ export declare interface LiveClientMessage {
 
 /** Session config for the API connection. */
 export declare interface LiveConnectConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
   /** The generation configuration for the session. */
   generationConfig?: GenerationConfig;
   /** The requested modalities of the response. Represents the set of
@@ -4793,6 +4802,50 @@ export declare interface LiveMusicSetConfigParameters {
 export declare interface LiveMusicSetWeightedPromptsParameters {
   /** A map of text prompts to weights to use for the generation request. */
   weightedPrompts: WeightedPrompt[];
+}
+
+/** Config for LiveEphemeralParameters for Auth Token creation. */
+export declare interface LiveEphemeralParameters {
+  /** ID of the model to configure in the ephemeral token for Live API.
+      For a list of models, see `Gemini models
+      <https://ai.google.dev/gemini-api/docs/models>`. */
+  model?: string;
+  /** Configuration specific to Live API connections created using this token. */
+  config?: LiveConnectConfig;
+}
+
+/** Optional parameters. */
+export declare interface CreateAuthTokenConfig {
+  /** Used to override HTTP request options. */
+  httpOptions?: HttpOptions;
+  /** Abort signal which can be used to cancel the request.
+
+  NOTE: AbortSignal is a client-only operation. Using it to cancel an
+  operation will not cancel the request in the service. You will still
+  be charged usage for any applicable operations.
+       */
+  abortSignal?: AbortSignal;
+  /** An optional time after which, when using the resulting token,
+      messages in Live API sessions will be rejected. (Gemini may
+      preemptively close the session after this time.)
+
+      If not set then this defaults to 30 minutes in the future. If set, this
+      value must be less than 20 hours in the future. */
+  expireTime?: string;
+  /** The time after which new Live API sessions using the token
+      resulting from this request will be rejected.
+
+      If not set this defaults to 60 seconds in the future. If set, this value
+      must be less than 20 hours in the future. */
+  newSessionExpireTime?: string;
+  /** The number of times the token can be used. If this value is zero
+      then no limit is applied. Default is 1. Resuming a Live API session does
+      not count as a use. */
+  uses?: number;
+  /** Configuration specific to Live API connections created using this token. */
+  liveEphemeralParameters?: LiveEphemeralParameters;
+  /** Additional fields to lock in the effective LiveConnectParameters. */
+  lockAdditionalFields?: string[];
 }
 
 /** Parameters for the get method of the operations module. */

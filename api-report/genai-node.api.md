@@ -344,6 +344,17 @@ export class CountTokensResponse {
 }
 
 // @public
+export interface CreateAuthTokenConfig {
+    abortSignal?: AbortSignal;
+    expireTime?: string;
+    httpOptions?: HttpOptions;
+    liveEphemeralParameters?: LiveEphemeralParameters;
+    lockAdditionalFields?: string[];
+    newSessionExpireTime?: string;
+    uses?: number;
+}
+
+// @public
 export interface CreateCachedContentConfig {
     abortSignal?: AbortSignal;
     contents?: ContentListUnion;
@@ -1475,9 +1486,11 @@ export class LiveClientToolResponse {
 
 // @public
 export interface LiveConnectConfig {
+    abortSignal?: AbortSignal;
     contextWindowCompression?: ContextWindowCompressionConfig;
     enableAffectiveDialog?: boolean;
     generationConfig?: GenerationConfig;
+    httpOptions?: HttpOptions;
     inputAudioTranscription?: AudioTranscriptionConfig;
     maxOutputTokens?: number;
     mediaResolution?: MediaResolution;
@@ -1500,6 +1513,12 @@ export interface LiveConnectParameters {
     callbacks: LiveCallbacks;
     config?: LiveConnectConfig;
     model: string;
+}
+
+// @public
+export interface LiveEphemeralParameters {
+    config?: LiveConnectConfig;
+    model?: string;
 }
 
 // @public
