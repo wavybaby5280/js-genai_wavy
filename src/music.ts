@@ -45,8 +45,7 @@ async function handleWebSocketMessage(
 
 /**
    LiveMusic class encapsulates the configuration for live music
-   generation via Lyria Live models. It embeds ApiClient for general API
-   settings.
+   generation via Lyria Live models.
 
    @experimental
   */

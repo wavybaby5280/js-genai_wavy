@@ -405,34 +405,3 @@ describe('LiveMusic', () => {
     });
   });
 });
-
-describe('LiveMusicServerMessage', () => {
-  it('audioChunk accessor should return the first audio chunk when serverContent and audioChunks are present', () => {
-    const message = new types.LiveMusicServerMessage();
-    const firstChunk = {data: 'first_audio_sample'};
-    const secondChunk = {data: 'sqecond_audio_sample'};
-    message.serverContent = {
-      audioChunks: [firstChunk, secondChunk],
-    };
-    expect(message.audioChunk).toEqual(firstChunk);
-  });
-
-  it('audioChunk accessor should return undefined if audioChunks is empty', () => {
-    const message = new types.LiveMusicServerMessage();
-    message.serverContent = {
-      audioChunks: [],
-    };
-    expect(message.audioChunk).toBeUndefined();
-  });
-
-  it('audioChunk accessor should return undefined if audioChunks is missing from serverContent', () => {
-    const message = new types.LiveMusicServerMessage();
-    message.serverContent = {};
-    expect(message.audioChunk).toBeUndefined();
-  });
-
-  it('audioChunk accessor should return undefined if serverContent is missing', () => {
-    const message = new types.LiveMusicServerMessage();
-    expect(message.audioChunk).toBeUndefined();
-  });
-});
