@@ -12,6 +12,7 @@ export {Files} from '../files.js';
 export * from '../live.js';
 export {mcpToTool} from '../mcp/_mcp';
 export {Models} from '../models.js';
+export type {LiveMusicSession} from '../music.js';
 export {Operations} from '../operations.js';
 export {PagedItem, Pager} from '../pagers.js';
 export * from '../types.js';
