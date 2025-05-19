@@ -853,4 +853,107 @@ describe('getHistory', () => {
     expect(chat.getHistory()).toEqual(expectedHistory);
     expect(chat.getHistory(true)).toEqual(expectedHistory);
   });
+  it('test chat history with no prior history and afc', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const sendMessageInputContent = {
+      role: 'user',
+      parts: [{text: 'user input will make model make function call'}],
+    };
+    const functionCall = {
+      role: 'model',
+      parts: [{functionCall: {name: 'foo', args: {'param': 'bar'}}}],
+    };
+    const functionResponse = {
+      role: 'user',
+      parts: [{functionResponse: {response: {'result': 'execution_result'}}}],
+    };
+    const modelFinalReturn = {
+      role: 'model',
+      parts: [{text: 'no momre functioncalls, model output'}],
+    };
+    // This is the response.automaticFunctionCallingHistory for the sendMessage,
+    // afc history will have everything prior to the last model output. This is
+    // tested in models_test.ts
+    const afcHistory = [
+      sendMessageInputContent,
+      functionCall,
+      functionResponse,
+    ];
+    const mockResponse = buildGenerateContentResponse(modelFinalReturn);
+    mockResponse.automaticFunctionCallingHistory = afcHistory;
+
+    spyOn(client.models, 'generateContent').and.returnValue(
+      Promise.resolve(mockResponse),
+    );
+    // The scenario is that the chat has no prior history and the sendMessage
+    // will invoke model to make function call and then return the model output.
+    const chat = client.chats.create({
+      model: 'gemini-2.0-flash',
+    });
+
+    await chat.sendMessage({message: sendMessageInputContent.parts[0].text});
+
+    const expectedHistory = [
+      sendMessageInputContent,
+      functionCall,
+      functionResponse,
+      modelFinalReturn,
+    ];
+
+    expect(chat.getHistory(true)).toEqual(expectedHistory);
+  });
+  it('test chat history with prior history and afc', async () => {
+    const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+    const sendMessageInputContent = {
+      role: 'user',
+      parts: [{text: 'user input will make model make function call'}],
+    };
+    const functionCall = {
+      role: 'model',
+      parts: [{functionCall: {name: 'foo', args: {'param': 'bar'}}}],
+    };
+    const functionResponse = {
+      role: 'user',
+      parts: [{functionResponse: {response: {'result': 'execution_result'}}}],
+    };
+    const modelFinalReturn = {
+      role: 'model',
+      parts: [{text: 'no momre functioncalls, model output'}],
+    };
+    // This is the response.automaticFunctionCallingHistory for the sendMessage,
+    // afc history will have everything prior to the last model output. This is
+    // tested in models_test.ts
+    const afcHistory = [
+      existingInputContent,
+      existingOutputContent,
+      sendMessageInputContent,
+      functionCall,
+      functionResponse,
+    ];
+    const mockResponse = buildGenerateContentResponse(modelFinalReturn);
+    mockResponse.automaticFunctionCallingHistory = afcHistory;
+
+    spyOn(client.models, 'generateContent').and.returnValue(
+      Promise.resolve(mockResponse),
+    );
+    // The scenario is that the chat has prior history and the sendMessage will
+    // invoke model to make function call and then return the model output.
+    const chat = client.chats.create({
+      model: 'gemini-2.0-flash',
+      history: [existingInputContent, existingOutputContent],
+    });
+
+    await chat.sendMessage({message: sendMessageInputContent.parts[0].text});
+
+    const expectedHistory = [
+      existingInputContent,
+      existingOutputContent,
+      sendMessageInputContent,
+      functionCall,
+      functionResponse,
+      modelFinalReturn,
+    ];
+
+    expect(chat.getHistory(true)).toEqual(expectedHistory);
+  });
 });

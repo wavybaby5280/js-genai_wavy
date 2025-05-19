@@ -200,8 +200,26 @@ export class Chat {
     this.sendPromise = (async () => {
       const response = await responsePromise;
       const outputContent = response.candidates?.[0]?.content;
+
+      // Because the AFC input contains the entire curated chat history in
+      // addition to the new user input, we need to truncate the AFC history
+      // to deduplicate the existing chat history.
+      const fullAutomaticFunctionCallingHistory =
+        response.automaticFunctionCallingHistory;
+      const index = this.getHistory(true).length;
+
+      let automaticFunctionCallingHistory: types.Content[] = [];
+      if (fullAutomaticFunctionCallingHistory != null) {
+        automaticFunctionCallingHistory =
+          fullAutomaticFunctionCallingHistory.slice(index) ?? [];
+      }
+
       const modelOutput = outputContent ? [outputContent] : [];
-      this.recordHistory(inputContent, modelOutput);
+      this.recordHistory(
+        inputContent,
+        modelOutput,
+        automaticFunctionCallingHistory,
+      );
       return;
     })();
     await this.sendPromise;
@@ -303,6 +321,7 @@ export class Chat {
   private recordHistory(
     userInput: types.Content,
     modelOutput: types.Content[],
+    automaticFunctionCallingHistory?: types.Content[],
   ) {
     let outputContents: types.Content[] = [];
     if (
@@ -318,7 +337,16 @@ export class Chat {
         parts: [],
       } as types.Content);
     }
-    this.history.push(userInput);
+    if (
+      automaticFunctionCallingHistory &&
+      automaticFunctionCallingHistory.length > 0
+    ) {
+      this.history.push(
+        ...extractCuratedHistory(automaticFunctionCallingHistory!),
+      );
+    } else {
+      this.history.push(userInput);
+    }
     this.history.push(...outputContents);
   }
 }

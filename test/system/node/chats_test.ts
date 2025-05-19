@@ -4,8 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {mcpToTool} from '../../../src/mcp/_mcp.js';
 import {GoogleGenAI} from '../../../src/node/node_client.js';
-import {Tool, Type} from '../../../src/types.js';
+import {FunctionCallingConfigMode, Tool, Type} from '../../../src/types.js';
+import {
+  spinUpBeepingServer,
+  spinUpPrintingServer,
+} from '../../unit/test_mcp_server.js';
 import {setupTestServer, shutdownTestServer} from '../test_server.js';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
@@ -38,6 +43,39 @@ describe('Chats Tests', () => {
 
   afterAll(async () => {
     await shutdownTestServer();
+  });
+
+  describe('chat automatic function calling', () => {
+    it('test chat automatic function calling', async () => {
+      const mcpTools = [
+        mcpToTool(await spinUpPrintingServer(), await spinUpBeepingServer()),
+      ];
+      const client = new GoogleGenAI({vertexai: false, apiKey: GEMINI_API_KEY});
+      const consoleLogSpy = spyOn(console, 'log').and.callThrough();
+      const chat = client.chats.create({
+        model: 'gemini-2.0-flash',
+        config: {
+          tools: mcpTools,
+          toolConfig: {
+            functionCallingConfig: {
+              mode: FunctionCallingConfigMode.AUTO,
+            },
+          },
+        },
+      });
+      await chat.sendMessage({
+        message: 'Use the printer to print a simple word: helloX1 in green',
+      });
+      await chat.sendMessage({
+        message: 'Use the printer to print a simple word: hellox2 in blue',
+      });
+      const allArgs = consoleLogSpy.calls.allArgs();
+      expect(consoleLogSpy).toHaveBeenCalledTimes(4);
+      expect(allArgs[0][0]).toBe('\u001b[32mhelloX1');
+      expect(allArgs[1][0]).toBe('\u001b[0m');
+      expect(allArgs[2][0]).toBe('\x1B[34mhellox2');
+      expect(allArgs[3][0]).toBe('\u001b[0m');
+    });
   });
 
   describe('sendMessage', () => {

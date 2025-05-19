@@ -99,38 +99,27 @@ export class Models extends BaseModule {
       );
     }
 
-    // TODO: b/418261898 - replace with transformCallableTools
-    const inputTools = params.config?.tools ?? [];
-    const convertedTools: types.Tool[] = [];
-    for (const tool of inputTools) {
-      if (isCallableTool(tool)) {
-        const callableTool = tool as types.CallableTool;
-        convertedTools.push(await callableTool.tool());
-      } else {
-        convertedTools.push(tool as types.Tool);
-      }
-    }
-    params.config!.tools = convertedTools;
+    const transformedParams = await this.transformCallableTools(params);
 
     let response: types.GenerateContentResponse;
     let functionResponseContent: types.Content;
     const automaticFunctionCallingHistory: types.Content[] = tContents(
       this.apiClient,
-      params.contents,
+      transformedParams.contents,
     );
     const maxRemoteCalls =
-      params.config?.automaticFunctionCalling?.maximumRemoteCalls ??
+      transformedParams.config?.automaticFunctionCalling?.maximumRemoteCalls ??
       DEFAULT_MAX_REMOTE_CALLS;
     let remoteCalls = 0;
     while (remoteCalls < maxRemoteCalls) {
-      response = await this.generateContentInternal(params);
+      response = await this.generateContentInternal(transformedParams);
       if (!response.functionCalls || response.functionCalls!.length === 0) {
         break;
       }
 
       const responseContent: types.Content = response.candidates![0].content!;
       const functionResponseParts: types.Part[] = [];
-      for (const tool of inputTools) {
+      for (const tool of params.config?.tools ?? []) {
         if (isCallableTool(tool)) {
           const callableTool = tool as types.CallableTool;
           const parts = await callableTool.callTool(response.functionCalls!);
@@ -145,16 +134,21 @@ export class Models extends BaseModule {
         parts: functionResponseParts,
       };
 
-      params.contents = tContents(this.apiClient, params.contents);
-      (params.contents as types.Content[]).push(responseContent);
-      (params.contents as types.Content[]).push(functionResponseContent);
+      transformedParams.contents = tContents(
+        this.apiClient,
+        transformedParams.contents,
+      );
+      (transformedParams.contents as types.Content[]).push(responseContent);
+      (transformedParams.contents as types.Content[]).push(
+        functionResponseContent,
+      );
 
-      if (shouldAppendAfcHistory(params.config)) {
+      if (shouldAppendAfcHistory(transformedParams.config)) {
         automaticFunctionCallingHistory.push(responseContent);
         automaticFunctionCallingHistory.push(functionResponseContent);
       }
     }
-    if (shouldAppendAfcHistory(params.config)) {
+    if (shouldAppendAfcHistory(transformedParams.config)) {
       response!.automaticFunctionCallingHistory =
         automaticFunctionCallingHistory;
     }
