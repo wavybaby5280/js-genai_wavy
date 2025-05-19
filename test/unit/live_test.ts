@@ -5,11 +5,6 @@
  */
 
 import {ApiClient, SDK_VERSION} from '../../src/_api_client.js';
-import {
-  WebSocket,
-  WebSocketCallbacks,
-  WebSocketFactory,
-} from '../../src/_websocket.js';
 import * as converters from '../../src/converters/_live_converters.js';
 import {CrossDownloader} from '../../src/cross/_cross_downloader.js';
 import {CrossUploader} from '../../src/cross/_cross_uploader.js';
@@ -17,35 +12,9 @@ import {Live} from '../../src/live.js';
 import {mcpToTool} from '../../src/mcp/_mcp.js';
 import * as types from '../../src/types.js';
 import {FakeAuth} from '../_fake_auth.js';
+import {FakeWebSocket, FakeWebSocketFactory} from '../_fake_websocket.js';
+
 import {spinUpPrintingServer} from './test_mcp_server.js';
-
-class FakeWebSocketFactory implements WebSocketFactory {
-  create(
-    url: string,
-    headers: Record<string, string>,
-    callbacks: WebSocketCallbacks,
-  ) {
-    return new FakeWebSocket(url, headers, callbacks);
-  }
-}
-
-class FakeWebSocket implements WebSocket {
-  constructor(
-    private readonly url: string,
-    private readonly headers: Record<string, string>,
-    private callbacks: WebSocketCallbacks,
-  ) {}
-
-  connect(): void {
-    this.callbacks.onopen();
-  }
-  send(message: string): void {
-    this.callbacks.onmessage({data: message});
-  }
-  close(): void {
-    this.callbacks.onclose('');
-  }
-}
 
 describe('live', () => {
   it('connect uses default callbacks if not provided', async () => {

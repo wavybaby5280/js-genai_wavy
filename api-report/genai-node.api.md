@@ -1415,6 +1415,10 @@ export class Live {
     // Warning: (ae-forgotten-export) The symbol "WebSocketFactory" needs to be exported by the entry point index.d.ts
     constructor(apiClient: ApiClient, auth: Auth, webSocketFactory: WebSocketFactory);
     connect(params: types.LiveConnectParameters): Promise<Session>;
+    // Warning: (ae-forgotten-export) The symbol "LiveMusic" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    readonly music: LiveMusic;
 }
 
 // @public

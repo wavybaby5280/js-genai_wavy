@@ -20,6 +20,7 @@ import {
   contentToVertex,
 } from './converters/_models_converters.js';
 import {hasMcpToolUsage, setMcpUsageHeader} from './mcp/_mcp.js';
+import {LiveMusic} from './music.js';
 import * as types from './types.js';
 
 const FUNCTION_RESPONSE_REQUIRES_ID =
@@ -68,11 +69,19 @@ async function handleWebSocketMessage(
    @experimental
   */
 export class Live {
+  public readonly music: LiveMusic;
+
   constructor(
     private readonly apiClient: ApiClient,
     private readonly auth: Auth,
     private readonly webSocketFactory: WebSocketFactory,
-  ) {}
+  ) {
+    this.music = new LiveMusic(
+      this.apiClient,
+      this.auth,
+      this.webSocketFactory,
+    );
+  }
 
   /**
      Establishes a connection to the specified model with the given
