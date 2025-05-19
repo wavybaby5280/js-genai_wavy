@@ -15,10 +15,6 @@ and [Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/over
 
 The Google Gen AI SDK is designed to work with Gemini 2.0 features.
 
-> [!NOTE]
-> **SDK Preview:**
-> See: [Preview Launch](#preview-launch).
-
 > [!CAUTION]
 > **API Key Security:** Avoid exposing API keys in client-side code.
 > Use server-side implementations in production environments.
@@ -263,19 +259,6 @@ instance with role 'user'.
 if you are specifying those, you need to explicitly provide the full
 `Content[]` structure making it explicit which Parts are 'spoken' by the model,
 or the user. The SDK will throw an exception if you try this.
-
-## Preview Launch
-
-The SDK is curently in a preview launch stage, per
-[Google's launch stages](https://cloud.google.com/products?hl=en#section-22)
-this means:
-
-> At Preview, products or features are ready for testing by customers.
-> Preview offerings are often publicly announced, but are not necessarily
-> feature-complete, and no SLAs or technical support commitments are provided
-> for these. Unless stated otherwise by Google, Preview offerings are intended
-> for use in test environments only. The average Preview stage lasts about six
-> months.
 
 ## How is this different from the other Google AI SDKs
 This SDK (`@google/genai`) is Google Deepmind’s "vanilla" SDK for its generative
