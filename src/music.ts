@@ -37,7 +37,12 @@ async function handleWebSocketMessage(
 ): Promise<void> {
   const serverMessage: types.LiveMusicServerMessage =
     new types.LiveMusicServerMessage();
-  const data = JSON.parse(event.data) as types.LiveMusicServerMessage;
+  let data: types.LiveMusicServerMessage;
+  if (event.data instanceof Blob) {
+    data = JSON.parse(await event.data.text()) as types.LiveMusicServerMessage;
+  } else {
+    data = JSON.parse(event.data) as types.LiveMusicServerMessage;
+  }
   const response = converters.liveMusicServerMessageFromMldev(apiClient, data);
   Object.assign(serverMessage, response);
   onmessage(serverMessage);
