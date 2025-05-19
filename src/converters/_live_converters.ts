@@ -2650,9 +2650,9 @@ export function weightedPromptToVertex(
   return toObject;
 }
 
-export function liveMusicSetClientContentParametersToMldev(
+export function liveMusicSetWeightedPromptsParametersToMldev(
   apiClient: ApiClient,
-  fromObject: types.LiveMusicSetClientContentParameters,
+  fromObject: types.LiveMusicSetWeightedPromptsParameters,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 
@@ -2672,9 +2672,9 @@ export function liveMusicSetClientContentParametersToMldev(
   return toObject;
 }
 
-export function liveMusicSetClientContentParametersToVertex(
+export function liveMusicSetWeightedPromptsParametersToVertex(
   apiClient: ApiClient,
-  fromObject: types.LiveMusicSetClientContentParameters,
+  fromObject: types.LiveMusicSetWeightedPromptsParameters,
 ): Record<string, unknown> {
   const toObject: Record<string, unknown> = {};
 

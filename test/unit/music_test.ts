@@ -311,7 +311,7 @@ describe('LiveMusic', () => {
       webSocketSendSpy.calls.reset();
     });
 
-    it('setClientContent sends weightedPrompts', async () => {
+    it('setWeightedPrompts sends weightedPrompts', async () => {
       const weightedPrompts: types.WeightedPrompt[] = [
         {
           text: 'minimal',
@@ -319,7 +319,7 @@ describe('LiveMusic', () => {
         },
         {text: 'ambient', weight: 0.6},
       ];
-      await session.setClientContent({weightedPrompts});
+      await session.setWeightedPrompts({weightedPrompts});
 
       expect(webSocketSendSpy).toHaveBeenCalledTimes(1);
       const sentMessage = JSON.parse(webSocketSendSpy.calls.all()[0].args[0]);

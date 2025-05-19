@@ -1582,13 +1582,13 @@ export interface LiveMusicServerSetupComplete {
 }
 
 // @public
-export interface LiveMusicSetClientContentParameters {
-    weightedPrompts: WeightedPrompt[];
+export interface LiveMusicSetConfigParameters {
+    musicGenerationConfig: LiveMusicGenerationConfig;
 }
 
 // @public
-export interface LiveMusicSetConfigParameters {
-    musicGenerationConfig: LiveMusicGenerationConfig;
+export interface LiveMusicSetWeightedPromptsParameters {
+    weightedPrompts: WeightedPrompt[];
 }
 
 // @public

@@ -178,7 +178,9 @@ export class LiveMusicSession {
 
     @experimental
    */
-  async setClientContent(params: types.LiveMusicSetClientContentParameters) {
+  async setWeightedPrompts(
+    params: types.LiveMusicSetWeightedPromptsParameters,
+  ) {
     if (
       !params.weightedPrompts ||
       Object.keys(params.weightedPrompts).length === 0
@@ -187,14 +189,14 @@ export class LiveMusicSession {
         'Weighted prompts must be set and contain at least one entry.',
       );
     }
-    const setClientContentParameters =
-      converters.liveMusicSetClientContentParametersToMldev(
+    const setWeightedPromptsParameters =
+      converters.liveMusicSetWeightedPromptsParametersToMldev(
         this.apiClient,
         params,
       );
     const clientContent = converters.liveMusicClientContentToMldev(
       this.apiClient,
-      setClientContentParameters,
+      setWeightedPromptsParameters,
     );
     this.conn.send(JSON.stringify({clientContent}));
   }

@@ -4783,14 +4783,14 @@ export declare interface LiveMusicConnectParameters {
   callbacks: LiveMusicCallbacks;
 }
 
-/** Parameters for setting config for the live API. */
+/** Parameters for setting config for the live music API. */
 export declare interface LiveMusicSetConfigParameters {
   /** Configuration for music generation. */
   musicGenerationConfig: LiveMusicGenerationConfig;
 }
 
-/** Parameters for setting client content for the live API. */
-export declare interface LiveMusicSetClientContentParameters {
+/** Parameters for setting weighted prompts for the live music API. */
+export declare interface LiveMusicSetWeightedPromptsParameters {
   /** A map of text prompts to weights to use for the generation request. */
   weightedPrompts: WeightedPrompt[];
 }
