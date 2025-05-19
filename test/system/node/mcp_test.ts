@@ -11,12 +11,37 @@ import {z} from 'zod';
 
 import {mcpToTool} from '../../../src/mcp/_mcp.js';
 import {GoogleGenAI} from '../../../src/node/node_client.js';
-import {FunctionCallingConfigMode} from '../../../src/types.js';
+import {
+  FunctionCallingConfigMode,
+  FunctionDeclaration,
+  Type,
+} from '../../../src/types.js';
 import {setupTestServer, shutdownTestServer} from '../test_server.js';
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
 const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
+
+const controlLightFunctionDeclaration: FunctionDeclaration = {
+  name: 'controlLight',
+  parameters: {
+    type: Type.OBJECT,
+    description: 'Set the brightness and color temperature of a room light.',
+    properties: {
+      brightness: {
+        type: Type.NUMBER,
+        description:
+          'Light level from 0 to 100. Zero is off and 100 is full brightness.',
+      },
+      colorTemperature: {
+        type: Type.STRING,
+        description:
+          'Color temperature of the light fixture which can be `daylight`, `cool` or `warm`.',
+      },
+    },
+    required: ['brightness', 'colorTemperature'],
+  },
+};
 
 describe('MCP related client Tests', () => {
   beforeAll(async () => {
@@ -96,6 +121,162 @@ describe('MCP related client Tests', () => {
         },
       });
       expect(consoleLogSpy).toHaveBeenCalledWith('\x1b[31mhello');
+    });
+    it('ML Dev will give FunctionDeclaration back when AFC is disabled', async () => {
+      const ai = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+      const callableTool1 = mcpToTool(await spinUpPrintingServer());
+      const callableTool2 = mcpToTool(await spinUpBeepingServer());
+      const consoleLogSpy = spyOn(console, 'log').and.callThrough();
+      const consoleBeepSpy = spyOn(process.stdout, 'write').and.callThrough();
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.0-flash',
+        contents:
+          'Use the printer to print a simple word: hello in blue, and beep with the beeper',
+        config: {
+          tools: [callableTool1, callableTool2],
+          automaticFunctionCalling: {
+            disable: true,
+          },
+          toolConfig: {
+            functionCallingConfig: {
+              mode: FunctionCallingConfigMode.AUTO,
+            },
+          },
+        },
+      });
+      const expectedFunctionCalls = [
+        {
+          name: 'print',
+          args: {
+            text: 'hello',
+            color: 'blue',
+          },
+        },
+        {
+          name: 'beep',
+          args: {},
+        },
+      ];
+      expect(response.functionCalls).toEqual(expectedFunctionCalls);
+      expect(consoleLogSpy).not.toHaveBeenCalled();
+      expect(consoleBeepSpy).not.toHaveBeenCalled();
+    });
+    it('Vertex AI will give FunctionDeclaration back when AFC is disabled', async () => {
+      const ai = new GoogleGenAI({
+        vertexai: true,
+        project: GOOGLE_CLOUD_PROJECT,
+        location: GOOGLE_CLOUD_LOCATION,
+      });
+      const mcpCallableTool = mcpToTool(await spinUpPrintingServer());
+      const consoleLogSpy = spyOn(console, 'log').and.callThrough();
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.0-flash',
+        contents: 'Use the printer to print a simple word: hello in blue',
+        config: {
+          tools: [mcpCallableTool],
+          automaticFunctionCalling: {
+            disable: true,
+          },
+          toolConfig: {
+            functionCallingConfig: {
+              mode: FunctionCallingConfigMode.AUTO,
+            },
+          },
+        },
+      });
+      const expectedFunctionCalls = [
+        {
+          name: 'print',
+          args: {
+            text: 'hello',
+            color: 'blue',
+          },
+        },
+      ];
+      expect(response.functionCalls).toEqual(expectedFunctionCalls);
+      expect(consoleLogSpy).not.toHaveBeenCalled();
+    });
+    it('ML Dev can take mixed tools when AFC is disabled', async () => {
+      const ai = new GoogleGenAI({vertexai: false, apiKey: GOOGLE_API_KEY});
+      const callableTool1 = mcpToTool(await spinUpPrintingServer());
+      const callableTool2 = mcpToTool(await spinUpBeepingServer());
+      const consoleLogSpy = spyOn(console, 'log').and.callThrough();
+      const consoleBeepSpy = spyOn(process.stdout, 'write').and.callThrough();
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.0-flash',
+        contents:
+          'Use the printer to print a simple word: hello in blue, and beep with the beeper, then control the light to warm, 50',
+        config: {
+          tools: [
+            callableTool1,
+            callableTool2,
+            {functionDeclarations: [controlLightFunctionDeclaration]},
+          ],
+          automaticFunctionCalling: {
+            disable: true,
+          },
+          toolConfig: {
+            functionCallingConfig: {
+              mode: FunctionCallingConfigMode.AUTO,
+            },
+          },
+        },
+      });
+      const expectedFunctionCalls = [
+        {
+          name: 'print',
+          args: {
+            text: 'hello',
+            color: 'blue',
+          },
+        },
+        {
+          name: 'beep',
+          args: {},
+        },
+        {
+          name: 'controlLight',
+          args: {
+            brightness: 50,
+            colorTemperature: 'warm',
+          },
+        },
+      ];
+      expect(response.functionCalls).toEqual(expectedFunctionCalls);
+      expect(consoleLogSpy).not.toHaveBeenCalled();
+      expect(consoleBeepSpy).not.toHaveBeenCalled();
+    });
+    it('Vertex AI can take function declarations when AFC is disabled', async () => {
+      const ai = new GoogleGenAI({
+        vertexai: true,
+        project: GOOGLE_CLOUD_PROJECT,
+        location: GOOGLE_CLOUD_LOCATION,
+      });
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.0-flash',
+        contents: 'control the light to warm, 50',
+        config: {
+          tools: [{functionDeclarations: [controlLightFunctionDeclaration]}],
+          automaticFunctionCalling: {
+            disable: true,
+          },
+          toolConfig: {
+            functionCallingConfig: {
+              mode: FunctionCallingConfigMode.AUTO,
+            },
+          },
+        },
+      });
+      const expectedFunctionCalls = [
+        {
+          name: 'controlLight',
+          args: {
+            brightness: 50,
+            colorTemperature: 'warm',
+          },
+        },
+      ];
+      expect(response.functionCalls).toEqual(expectedFunctionCalls);
     });
   });
 });

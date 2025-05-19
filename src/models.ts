@@ -88,8 +88,9 @@ export class Models extends BaseModule {
         params.config.httpOptions.headers as Record<string, string>,
       );
     }
+    const transformedParams = await this.transformCallableTools(params);
     if (!hasMcpClientTools(params) || shouldDisableAfc(params.config)) {
-      return await this.generateContentInternal(params);
+      return await this.generateContentInternal(transformedParams);
     }
 
     // TODO: b/418266406 - Improve the check for CallableTools and Tools.
@@ -98,8 +99,6 @@ export class Models extends BaseModule {
         'Automatic function calling with CallableTools and Tools is not yet supported.',
       );
     }
-
-    const transformedParams = await this.transformCallableTools(params);
 
     let response: types.GenerateContentResponse;
     let functionResponseContent: types.Content;
