@@ -92,7 +92,7 @@ async function* listAllTools(
  * McpCallableTool can be used for model inference and invoking MCP clients with
  * given function call arguments.
  *
- * @experimental Built-in MCP support is a preview feature, may change in future
+ * @experimental Built-in MCP support is an experimental feature, may change in future
  * versions.
  */
 export class McpCallableTool implements CallableTool {
@@ -196,7 +196,7 @@ function isMcpClient(client: unknown): client is McpClient {
  * arguments. (often for automatic function calling).
  * Use the config to modify tool parameters such as behavior.
  *
- * @experimental Built-in MCP support is a preview feature, may change in future
+ * @experimental Built-in MCP support is an experimental feature, may change in future
  * versions.
  */
 export function mcpToTool(

@@ -87,7 +87,7 @@ export class Live {
      Establishes a connection to the specified model with the given
      configuration and returns a Session object representing that connection.
 
-     @experimental Built-in MCP support is a preview feature, may change in
+     @experimental Built-in MCP support is an experimental feature, may change in
      future versions.
 
      @remarks
