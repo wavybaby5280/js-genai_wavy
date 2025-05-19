@@ -73,22 +73,7 @@ export class Models extends BaseModule {
   generateContent = async (
     params: types.GenerateContentParameters,
   ): Promise<types.GenerateContentResponse> => {
-    if (
-      params.config &&
-      params.config.tools &&
-      hasMcpToolUsage(params.config.tools)
-    ) {
-      if (!params.config.httpOptions) {
-        params.config.httpOptions = {};
-      }
-      if (!params.config.httpOptions.headers) {
-        params.config.httpOptions.headers = this.apiClient.getDefaultHeaders();
-      }
-      setMcpUsageHeader(
-        params.config.httpOptions.headers as Record<string, string>,
-      );
-    }
-    const transformedParams = await this.transformCallableTools(params);
+    const transformedParams = await this.processParamsForMcpUsage(params);
     if (!hasMcpClientTools(params) || shouldDisableAfc(params.config)) {
       return await this.generateContentInternal(transformedParams);
     }
@@ -198,23 +183,8 @@ export class Models extends BaseModule {
   generateContentStream = async (
     params: types.GenerateContentParameters,
   ): Promise<AsyncGenerator<types.GenerateContentResponse>> => {
-    if (
-      params.config &&
-      params.config.tools &&
-      hasMcpToolUsage(params.config.tools)
-    ) {
-      if (!params.config.httpOptions) {
-        params.config.httpOptions = {};
-      }
-      if (!params.config.httpOptions.headers) {
-        params.config.httpOptions.headers = this.apiClient.getDefaultHeaders();
-      }
-      setMcpUsageHeader(
-        params.config.httpOptions.headers as Record<string, string>,
-      );
-    }
     if (shouldDisableAfc(params.config)) {
-      const transformedParams = await this.transformCallableTools(params);
+      const transformedParams = await this.processParamsForMcpUsage(params);
       return await this.generateContentStreamInternal(transformedParams);
     } else {
       return await this.processAfcStream(params);
@@ -224,9 +194,10 @@ export class Models extends BaseModule {
   /**
    * Transforms the CallableTools in the parameters to be simply Tools, it
    * copies the params into a new object and replaces the tools, it does not
-   * modify the original params.
+   * modify the original params. Also sets the MCP usage header if there are
+   * MCP tools in the parameters.
    */
-  private async transformCallableTools(
+  private async processParamsForMcpUsage(
     params: types.GenerateContentParameters,
   ): Promise<types.GenerateContentParameters> {
     const tools = params.config?.tools;
@@ -251,6 +222,23 @@ export class Models extends BaseModule {
       },
     };
     newParams.config!.tools = transformedTools;
+
+    if (
+      params.config &&
+      params.config.tools &&
+      hasMcpToolUsage(params.config.tools)
+    ) {
+      const headers = params.config.httpOptions?.headers ?? {};
+      let newHeaders = {...headers};
+      if (Object.keys(newHeaders).length === 0) {
+        newHeaders = this.apiClient.getDefaultHeaders();
+      }
+      setMcpUsageHeader(newHeaders);
+      newParams.config!.httpOptions = {
+        ...params.config.httpOptions,
+        headers: newHeaders,
+      };
+    }
     return newParams;
   }
 
@@ -297,7 +285,7 @@ export class Models extends BaseModule {
           remoteCallCount++;
           wereFunctionsCalled = false;
         }
-        const transformedParams = await models.transformCallableTools(params);
+        const transformedParams = await models.processParamsForMcpUsage(params);
         const response =
           await models.generateContentStreamInternal(transformedParams);
 
