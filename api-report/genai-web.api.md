@@ -1601,6 +1601,22 @@ export interface LiveMusicServerSetupComplete {
 }
 
 // @public
+export class LiveMusicSession {
+    constructor(conn: WebSocket_2, apiClient: ApiClient);
+    close(): void;
+    // Warning: (ae-forgotten-export) The symbol "WebSocket_2" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    readonly conn: WebSocket_2;
+    pause(): void;
+    play(): void;
+    resetContext(): void;
+    setMusicGenerationConfig(params: types.LiveMusicSetConfigParameters): Promise<void>;
+    setWeightedPrompts(params: types.LiveMusicSetWeightedPromptsParameters): Promise<void>;
+    stop(): void;
+}
+
+// @public
 export interface LiveMusicSetConfigParameters {
     musicGenerationConfig: LiveMusicGenerationConfig;
 }
@@ -2156,8 +2172,6 @@ export interface SendMessageParameters {
 export class Session {
     constructor(conn: WebSocket_2, apiClient: ApiClient);
     close(): void;
-    // Warning: (ae-forgotten-export) The symbol "WebSocket_2" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     readonly conn: WebSocket_2;
     sendClientContent(params: types.LiveSendClientContentParameters): void;

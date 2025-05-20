@@ -56,7 +56,7 @@ async function spinUpPrintingServer(): Promise<Client> {
   };
 
   server.tool(
-    'print',
+    'print_message',
     {
       text: z.string(),
       color: z.string().regex(/red|blue|green|white/),
