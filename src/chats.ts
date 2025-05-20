@@ -222,7 +222,10 @@ export class Chat {
       );
       return;
     })();
-    await this.sendPromise;
+    await this.sendPromise.catch(() => {
+      // Resets sendPromise to avoid subsequent calls failing
+      this.sendPromise = Promise.resolve();
+    });
     return responsePromise;
   }
 
