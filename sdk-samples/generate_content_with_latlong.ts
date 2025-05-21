@@ -3,7 +3,7 @@
  * Copyright 2025 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
-import {DynamicRetrievalConfigMode, GoogleGenAI} from '@google/genai';
+import {GoogleGenAI} from '@google/genai';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
@@ -17,15 +17,7 @@ async function generateContentFromMLDev() {
     model: 'gemini-2.0-flash',
     contents: 'What is the current stock price for GOOGL?',
     config: {
-      tools: [
-        {
-          googleSearchRetrieval: {
-            dynamicRetrievalConfig: {
-              mode: DynamicRetrievalConfigMode.MODE_DYNAMIC,
-            },
-          },
-        },
-      ],
+      tools: [{googleSearch: {}}],
       toolConfig: {
         retrievalConfig: {
           latLng: {latitude: 37.7749, longitude: -122.4194},
@@ -48,15 +40,7 @@ async function generateContentFromVertexAI() {
     model: 'gemini-2.0-flash',
     contents: 'What is the current stock price for GOOGL?',
     config: {
-      tools: [
-        {
-          googleSearchRetrieval: {
-            dynamicRetrievalConfig: {
-              mode: DynamicRetrievalConfigMode.MODE_UNSPECIFIED,
-            },
-          },
-        },
-      ],
+      tools: [{googleSearch: {}}],
       toolConfig: {
         retrievalConfig: {
           latLng: {latitude: 37.7749, longitude: -122.4194},
