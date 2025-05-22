@@ -59,6 +59,29 @@ export function blobToMldev(
   return toObject;
 }
 
+export function fileDataToMldev(
+  apiClient: ApiClient,
+  fromObject: types.FileData,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
+    throw new Error('displayName parameter is not supported in Gemini API.');
+  }
+
+  const fromFileUri = common.getValueByPath(fromObject, ['fileUri']);
+  if (fromFileUri != null) {
+    common.setValueByPath(toObject, ['fileUri'], fromFileUri);
+  }
+
+  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+  if (fromMimeType != null) {
+    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+  }
+
+  return toObject;
+}
+
 export function partToMldev(
   apiClient: ApiClient,
   fromObject: types.Part,
@@ -90,6 +113,15 @@ export function partToMldev(
     );
   }
 
+  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
+  if (fromFileData != null) {
+    common.setValueByPath(
+      toObject,
+      ['fileData'],
+      fileDataToMldev(apiClient, fromFileData),
+    );
+  }
+
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
     'codeExecutionResult',
   ]);
@@ -106,11 +138,6 @@ export function partToMldev(
   ]);
   if (fromExecutableCode != null) {
     common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
-  }
-
-  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
-  if (fromFileData != null) {
-    common.setValueByPath(toObject, ['fileData'], fromFileData);
   }
 
   const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
@@ -153,6 +180,131 @@ export function contentToMldev(
   const fromRole = common.getValueByPath(fromObject, ['role']);
   if (fromRole != null) {
     common.setValueByPath(toObject, ['role'], fromRole);
+  }
+
+  return toObject;
+}
+
+export function schemaToMldev(
+  apiClient: ApiClient,
+  fromObject: types.Schema,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromAnyOf = common.getValueByPath(fromObject, ['anyOf']);
+  if (fromAnyOf != null) {
+    common.setValueByPath(toObject, ['anyOf'], fromAnyOf);
+  }
+
+  const fromDefault = common.getValueByPath(fromObject, ['default']);
+  if (fromDefault != null) {
+    common.setValueByPath(toObject, ['default'], fromDefault);
+  }
+
+  const fromDescription = common.getValueByPath(fromObject, ['description']);
+  if (fromDescription != null) {
+    common.setValueByPath(toObject, ['description'], fromDescription);
+  }
+
+  const fromEnum = common.getValueByPath(fromObject, ['enum']);
+  if (fromEnum != null) {
+    common.setValueByPath(toObject, ['enum'], fromEnum);
+  }
+
+  const fromExample = common.getValueByPath(fromObject, ['example']);
+  if (fromExample != null) {
+    common.setValueByPath(toObject, ['example'], fromExample);
+  }
+
+  const fromFormat = common.getValueByPath(fromObject, ['format']);
+  if (fromFormat != null) {
+    common.setValueByPath(toObject, ['format'], fromFormat);
+  }
+
+  const fromItems = common.getValueByPath(fromObject, ['items']);
+  if (fromItems != null) {
+    common.setValueByPath(toObject, ['items'], fromItems);
+  }
+
+  const fromMaxItems = common.getValueByPath(fromObject, ['maxItems']);
+  if (fromMaxItems != null) {
+    common.setValueByPath(toObject, ['maxItems'], fromMaxItems);
+  }
+
+  const fromMaxLength = common.getValueByPath(fromObject, ['maxLength']);
+  if (fromMaxLength != null) {
+    common.setValueByPath(toObject, ['maxLength'], fromMaxLength);
+  }
+
+  const fromMaxProperties = common.getValueByPath(fromObject, [
+    'maxProperties',
+  ]);
+  if (fromMaxProperties != null) {
+    common.setValueByPath(toObject, ['maxProperties'], fromMaxProperties);
+  }
+
+  const fromMaximum = common.getValueByPath(fromObject, ['maximum']);
+  if (fromMaximum != null) {
+    common.setValueByPath(toObject, ['maximum'], fromMaximum);
+  }
+
+  const fromMinItems = common.getValueByPath(fromObject, ['minItems']);
+  if (fromMinItems != null) {
+    common.setValueByPath(toObject, ['minItems'], fromMinItems);
+  }
+
+  const fromMinLength = common.getValueByPath(fromObject, ['minLength']);
+  if (fromMinLength != null) {
+    common.setValueByPath(toObject, ['minLength'], fromMinLength);
+  }
+
+  const fromMinProperties = common.getValueByPath(fromObject, [
+    'minProperties',
+  ]);
+  if (fromMinProperties != null) {
+    common.setValueByPath(toObject, ['minProperties'], fromMinProperties);
+  }
+
+  const fromMinimum = common.getValueByPath(fromObject, ['minimum']);
+  if (fromMinimum != null) {
+    common.setValueByPath(toObject, ['minimum'], fromMinimum);
+  }
+
+  const fromNullable = common.getValueByPath(fromObject, ['nullable']);
+  if (fromNullable != null) {
+    common.setValueByPath(toObject, ['nullable'], fromNullable);
+  }
+
+  const fromPattern = common.getValueByPath(fromObject, ['pattern']);
+  if (fromPattern != null) {
+    common.setValueByPath(toObject, ['pattern'], fromPattern);
+  }
+
+  const fromProperties = common.getValueByPath(fromObject, ['properties']);
+  if (fromProperties != null) {
+    common.setValueByPath(toObject, ['properties'], fromProperties);
+  }
+
+  const fromPropertyOrdering = common.getValueByPath(fromObject, [
+    'propertyOrdering',
+  ]);
+  if (fromPropertyOrdering != null) {
+    common.setValueByPath(toObject, ['propertyOrdering'], fromPropertyOrdering);
+  }
+
+  const fromRequired = common.getValueByPath(fromObject, ['required']);
+  if (fromRequired != null) {
+    common.setValueByPath(toObject, ['required'], fromRequired);
+  }
+
+  const fromTitle = common.getValueByPath(fromObject, ['title']);
+  if (fromTitle != null) {
+    common.setValueByPath(toObject, ['title'], fromTitle);
+  }
+
+  const fromType = common.getValueByPath(fromObject, ['type']);
+  if (fromType != null) {
+    common.setValueByPath(toObject, ['type'], fromType);
   }
 
   return toObject;
@@ -530,6 +682,11 @@ export function retrievalConfigToMldev(
     );
   }
 
+  const fromLanguageCode = common.getValueByPath(fromObject, ['languageCode']);
+  if (fromLanguageCode != null) {
+    common.setValueByPath(toObject, ['languageCode'], fromLanguageCode);
+  }
+
   return toObject;
 }
 
@@ -799,7 +956,7 @@ export function generateContentConfigToMldev(
     common.setValueByPath(
       toObject,
       ['responseSchema'],
-      t.tSchema(apiClient, fromResponseSchema),
+      schemaToMldev(apiClient, t.tSchema(apiClient, fromResponseSchema)),
     );
   }
 
@@ -1627,6 +1784,30 @@ export function blobToVertex(
   return toObject;
 }
 
+export function fileDataToVertex(
+  apiClient: ApiClient,
+  fromObject: types.FileData,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
+  if (fromDisplayName != null) {
+    common.setValueByPath(toObject, ['displayName'], fromDisplayName);
+  }
+
+  const fromFileUri = common.getValueByPath(fromObject, ['fileUri']);
+  if (fromFileUri != null) {
+    common.setValueByPath(toObject, ['fileUri'], fromFileUri);
+  }
+
+  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+  if (fromMimeType != null) {
+    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+  }
+
+  return toObject;
+}
+
 export function partToVertex(
   apiClient: ApiClient,
   fromObject: types.Part,
@@ -1658,6 +1839,15 @@ export function partToVertex(
     );
   }
 
+  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
+  if (fromFileData != null) {
+    common.setValueByPath(
+      toObject,
+      ['fileData'],
+      fileDataToVertex(apiClient, fromFileData),
+    );
+  }
+
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
     'codeExecutionResult',
   ]);
@@ -1674,11 +1864,6 @@ export function partToVertex(
   ]);
   if (fromExecutableCode != null) {
     common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
-  }
-
-  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
-  if (fromFileData != null) {
-    common.setValueByPath(toObject, ['fileData'], fromFileData);
   }
 
   const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
@@ -1721,6 +1906,131 @@ export function contentToVertex(
   const fromRole = common.getValueByPath(fromObject, ['role']);
   if (fromRole != null) {
     common.setValueByPath(toObject, ['role'], fromRole);
+  }
+
+  return toObject;
+}
+
+export function schemaToVertex(
+  apiClient: ApiClient,
+  fromObject: types.Schema,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromAnyOf = common.getValueByPath(fromObject, ['anyOf']);
+  if (fromAnyOf != null) {
+    common.setValueByPath(toObject, ['anyOf'], fromAnyOf);
+  }
+
+  const fromDefault = common.getValueByPath(fromObject, ['default']);
+  if (fromDefault != null) {
+    common.setValueByPath(toObject, ['default'], fromDefault);
+  }
+
+  const fromDescription = common.getValueByPath(fromObject, ['description']);
+  if (fromDescription != null) {
+    common.setValueByPath(toObject, ['description'], fromDescription);
+  }
+
+  const fromEnum = common.getValueByPath(fromObject, ['enum']);
+  if (fromEnum != null) {
+    common.setValueByPath(toObject, ['enum'], fromEnum);
+  }
+
+  const fromExample = common.getValueByPath(fromObject, ['example']);
+  if (fromExample != null) {
+    common.setValueByPath(toObject, ['example'], fromExample);
+  }
+
+  const fromFormat = common.getValueByPath(fromObject, ['format']);
+  if (fromFormat != null) {
+    common.setValueByPath(toObject, ['format'], fromFormat);
+  }
+
+  const fromItems = common.getValueByPath(fromObject, ['items']);
+  if (fromItems != null) {
+    common.setValueByPath(toObject, ['items'], fromItems);
+  }
+
+  const fromMaxItems = common.getValueByPath(fromObject, ['maxItems']);
+  if (fromMaxItems != null) {
+    common.setValueByPath(toObject, ['maxItems'], fromMaxItems);
+  }
+
+  const fromMaxLength = common.getValueByPath(fromObject, ['maxLength']);
+  if (fromMaxLength != null) {
+    common.setValueByPath(toObject, ['maxLength'], fromMaxLength);
+  }
+
+  const fromMaxProperties = common.getValueByPath(fromObject, [
+    'maxProperties',
+  ]);
+  if (fromMaxProperties != null) {
+    common.setValueByPath(toObject, ['maxProperties'], fromMaxProperties);
+  }
+
+  const fromMaximum = common.getValueByPath(fromObject, ['maximum']);
+  if (fromMaximum != null) {
+    common.setValueByPath(toObject, ['maximum'], fromMaximum);
+  }
+
+  const fromMinItems = common.getValueByPath(fromObject, ['minItems']);
+  if (fromMinItems != null) {
+    common.setValueByPath(toObject, ['minItems'], fromMinItems);
+  }
+
+  const fromMinLength = common.getValueByPath(fromObject, ['minLength']);
+  if (fromMinLength != null) {
+    common.setValueByPath(toObject, ['minLength'], fromMinLength);
+  }
+
+  const fromMinProperties = common.getValueByPath(fromObject, [
+    'minProperties',
+  ]);
+  if (fromMinProperties != null) {
+    common.setValueByPath(toObject, ['minProperties'], fromMinProperties);
+  }
+
+  const fromMinimum = common.getValueByPath(fromObject, ['minimum']);
+  if (fromMinimum != null) {
+    common.setValueByPath(toObject, ['minimum'], fromMinimum);
+  }
+
+  const fromNullable = common.getValueByPath(fromObject, ['nullable']);
+  if (fromNullable != null) {
+    common.setValueByPath(toObject, ['nullable'], fromNullable);
+  }
+
+  const fromPattern = common.getValueByPath(fromObject, ['pattern']);
+  if (fromPattern != null) {
+    common.setValueByPath(toObject, ['pattern'], fromPattern);
+  }
+
+  const fromProperties = common.getValueByPath(fromObject, ['properties']);
+  if (fromProperties != null) {
+    common.setValueByPath(toObject, ['properties'], fromProperties);
+  }
+
+  const fromPropertyOrdering = common.getValueByPath(fromObject, [
+    'propertyOrdering',
+  ]);
+  if (fromPropertyOrdering != null) {
+    common.setValueByPath(toObject, ['propertyOrdering'], fromPropertyOrdering);
+  }
+
+  const fromRequired = common.getValueByPath(fromObject, ['required']);
+  if (fromRequired != null) {
+    common.setValueByPath(toObject, ['required'], fromRequired);
+  }
+
+  const fromTitle = common.getValueByPath(fromObject, ['title']);
+  if (fromTitle != null) {
+    common.setValueByPath(toObject, ['title'], fromTitle);
+  }
+
+  const fromType = common.getValueByPath(fromObject, ['type']);
+  if (fromType != null) {
+    common.setValueByPath(toObject, ['type'], fromType);
   }
 
   return toObject;
@@ -2119,6 +2429,11 @@ export function retrievalConfigToVertex(
     );
   }
 
+  const fromLanguageCode = common.getValueByPath(fromObject, ['languageCode']);
+  if (fromLanguageCode != null) {
+    common.setValueByPath(toObject, ['languageCode'], fromLanguageCode);
+  }
+
   return toObject;
 }
 
@@ -2374,7 +2689,7 @@ export function generateContentConfigToVertex(
     common.setValueByPath(
       toObject,
       ['responseSchema'],
-      t.tSchema(apiClient, fromResponseSchema),
+      schemaToVertex(apiClient, t.tSchema(apiClient, fromResponseSchema)),
     );
   }
 
@@ -3792,6 +4107,25 @@ export function blobFromMldev(
   return toObject;
 }
 
+export function fileDataFromMldev(
+  apiClient: ApiClient,
+  fromObject: types.FileData,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromFileUri = common.getValueByPath(fromObject, ['fileUri']);
+  if (fromFileUri != null) {
+    common.setValueByPath(toObject, ['fileUri'], fromFileUri);
+  }
+
+  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+  if (fromMimeType != null) {
+    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+  }
+
+  return toObject;
+}
+
 export function partFromMldev(
   apiClient: ApiClient,
   fromObject: types.Part,
@@ -3823,6 +4157,15 @@ export function partFromMldev(
     );
   }
 
+  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
+  if (fromFileData != null) {
+    common.setValueByPath(
+      toObject,
+      ['fileData'],
+      fileDataFromMldev(apiClient, fromFileData),
+    );
+  }
+
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
     'codeExecutionResult',
   ]);
@@ -3839,11 +4182,6 @@ export function partFromMldev(
   ]);
   if (fromExecutableCode != null) {
     common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
-  }
-
-  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
-  if (fromFileData != null) {
-    common.setValueByPath(toObject, ['fileData'], fromFileData);
   }
 
   const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
@@ -4590,6 +4928,30 @@ export function blobFromVertex(
   return toObject;
 }
 
+export function fileDataFromVertex(
+  apiClient: ApiClient,
+  fromObject: types.FileData,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
+  if (fromDisplayName != null) {
+    common.setValueByPath(toObject, ['displayName'], fromDisplayName);
+  }
+
+  const fromFileUri = common.getValueByPath(fromObject, ['fileUri']);
+  if (fromFileUri != null) {
+    common.setValueByPath(toObject, ['fileUri'], fromFileUri);
+  }
+
+  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+  if (fromMimeType != null) {
+    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+  }
+
+  return toObject;
+}
+
 export function partFromVertex(
   apiClient: ApiClient,
   fromObject: types.Part,
@@ -4621,6 +4983,15 @@ export function partFromVertex(
     );
   }
 
+  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
+  if (fromFileData != null) {
+    common.setValueByPath(
+      toObject,
+      ['fileData'],
+      fileDataFromVertex(apiClient, fromFileData),
+    );
+  }
+
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
     'codeExecutionResult',
   ]);
@@ -4637,11 +5008,6 @@ export function partFromVertex(
   ]);
   if (fromExecutableCode != null) {
     common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
-  }
-
-  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
-  if (fromFileData != null) {
-    common.setValueByPath(toObject, ['fileData'], fromFileData);
   }
 
   const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);

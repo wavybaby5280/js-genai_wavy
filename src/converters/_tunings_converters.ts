@@ -592,6 +592,13 @@ export function tuningJobFromMldev(
     common.setValueByPath(toObject, ['pipelineJob'], fromPipelineJob);
   }
 
+  const fromServiceAccount = common.getValueByPath(fromObject, [
+    'serviceAccount',
+  ]);
+  if (fromServiceAccount != null) {
+    common.setValueByPath(toObject, ['serviceAccount'], fromServiceAccount);
+  }
+
   const fromTunedModelDisplayName = common.getValueByPath(fromObject, [
     'tunedModelDisplayName',
   ]);
@@ -841,6 +848,13 @@ export function tuningJobFromVertex(
   const fromPipelineJob = common.getValueByPath(fromObject, ['pipelineJob']);
   if (fromPipelineJob != null) {
     common.setValueByPath(toObject, ['pipelineJob'], fromPipelineJob);
+  }
+
+  const fromServiceAccount = common.getValueByPath(fromObject, [
+    'serviceAccount',
+  ]);
+  if (fromServiceAccount != null) {
+    common.setValueByPath(toObject, ['serviceAccount'], fromServiceAccount);
   }
 
   const fromTunedModelDisplayName = common.getValueByPath(fromObject, [

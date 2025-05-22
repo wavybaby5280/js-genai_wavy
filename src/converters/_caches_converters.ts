@@ -58,6 +58,29 @@ export function blobToMldev(
   return toObject;
 }
 
+export function fileDataToMldev(
+  apiClient: ApiClient,
+  fromObject: types.FileData,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  if (common.getValueByPath(fromObject, ['displayName']) !== undefined) {
+    throw new Error('displayName parameter is not supported in Gemini API.');
+  }
+
+  const fromFileUri = common.getValueByPath(fromObject, ['fileUri']);
+  if (fromFileUri != null) {
+    common.setValueByPath(toObject, ['fileUri'], fromFileUri);
+  }
+
+  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+  if (fromMimeType != null) {
+    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+  }
+
+  return toObject;
+}
+
 export function partToMldev(
   apiClient: ApiClient,
   fromObject: types.Part,
@@ -89,6 +112,15 @@ export function partToMldev(
     );
   }
 
+  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
+  if (fromFileData != null) {
+    common.setValueByPath(
+      toObject,
+      ['fileData'],
+      fileDataToMldev(apiClient, fromFileData),
+    );
+  }
+
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
     'codeExecutionResult',
   ]);
@@ -105,11 +137,6 @@ export function partToMldev(
   ]);
   if (fromExecutableCode != null) {
     common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
-  }
-
-  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
-  if (fromFileData != null) {
-    common.setValueByPath(toObject, ['fileData'], fromFileData);
   }
 
   const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
@@ -488,6 +515,11 @@ export function retrievalConfigToMldev(
     );
   }
 
+  const fromLanguageCode = common.getValueByPath(fromObject, ['languageCode']);
+  if (fromLanguageCode != null) {
+    common.setValueByPath(toObject, ['languageCode'], fromLanguageCode);
+  }
+
   return toObject;
 }
 
@@ -799,6 +831,30 @@ export function blobToVertex(
   return toObject;
 }
 
+export function fileDataToVertex(
+  apiClient: ApiClient,
+  fromObject: types.FileData,
+): Record<string, unknown> {
+  const toObject: Record<string, unknown> = {};
+
+  const fromDisplayName = common.getValueByPath(fromObject, ['displayName']);
+  if (fromDisplayName != null) {
+    common.setValueByPath(toObject, ['displayName'], fromDisplayName);
+  }
+
+  const fromFileUri = common.getValueByPath(fromObject, ['fileUri']);
+  if (fromFileUri != null) {
+    common.setValueByPath(toObject, ['fileUri'], fromFileUri);
+  }
+
+  const fromMimeType = common.getValueByPath(fromObject, ['mimeType']);
+  if (fromMimeType != null) {
+    common.setValueByPath(toObject, ['mimeType'], fromMimeType);
+  }
+
+  return toObject;
+}
+
 export function partToVertex(
   apiClient: ApiClient,
   fromObject: types.Part,
@@ -830,6 +886,15 @@ export function partToVertex(
     );
   }
 
+  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
+  if (fromFileData != null) {
+    common.setValueByPath(
+      toObject,
+      ['fileData'],
+      fileDataToVertex(apiClient, fromFileData),
+    );
+  }
+
   const fromCodeExecutionResult = common.getValueByPath(fromObject, [
     'codeExecutionResult',
   ]);
@@ -846,11 +911,6 @@ export function partToVertex(
   ]);
   if (fromExecutableCode != null) {
     common.setValueByPath(toObject, ['executableCode'], fromExecutableCode);
-  }
-
-  const fromFileData = common.getValueByPath(fromObject, ['fileData']);
-  if (fromFileData != null) {
-    common.setValueByPath(toObject, ['fileData'], fromFileData);
   }
 
   const fromFunctionCall = common.getValueByPath(fromObject, ['functionCall']);
@@ -1245,6 +1305,11 @@ export function retrievalConfigToVertex(
       ['latLng'],
       latLngToVertex(apiClient, fromLatLng),
     );
+  }
+
+  const fromLanguageCode = common.getValueByPath(fromObject, ['languageCode']);
+  if (fromLanguageCode != null) {
+    common.setValueByPath(toObject, ['languageCode'], fromLanguageCode);
   }
 
   return toObject;

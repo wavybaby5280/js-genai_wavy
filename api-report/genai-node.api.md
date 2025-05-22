@@ -736,6 +736,7 @@ export { File_2 as File }
 
 // @public
 export interface FileData {
+    displayName?: string;
     fileUri?: string;
     mimeType?: string;
 }
@@ -1016,14 +1017,18 @@ export interface GenerationConfig {
     logprobs?: number;
     maxOutputTokens?: number;
     mediaResolution?: MediaResolution;
+    modelSelectionConfig?: ModelSelectionConfig;
     presencePenalty?: number;
     responseLogprobs?: boolean;
     responseMimeType?: string;
+    responseModalities?: Modality[];
     responseSchema?: Schema;
     routingConfig?: GenerationConfigRoutingConfig;
     seed?: number;
+    speechConfig?: SpeechConfig;
     stopSequences?: string[];
     temperature?: number;
+    thinkingConfig?: GenerationConfigThinkingConfig;
     topK?: number;
     topP?: number;
 }
@@ -1042,6 +1047,12 @@ export interface GenerationConfigRoutingConfigAutoRoutingMode {
 // @public
 export interface GenerationConfigRoutingConfigManualRoutingMode {
     modelName?: string;
+}
+
+// @public
+export interface GenerationConfigThinkingConfig {
+    includeThoughts?: boolean;
+    thinkingBudget?: number;
 }
 
 // @public
@@ -1179,6 +1190,7 @@ export interface GroundingChunk {
 
 // @public
 export interface GroundingChunkRetrievedContext {
+    ragChunk?: RagChunk;
     text?: string;
     title?: string;
     uri?: string;
@@ -1956,6 +1968,18 @@ export interface ProactivityConfig {
 }
 
 // @public
+export interface RagChunk {
+    pageSpan?: RagChunkPageSpan;
+    text?: string;
+}
+
+// @public
+export interface RagChunkPageSpan {
+    firstPage?: number;
+    lastPage?: number;
+}
+
+// @public
 export interface RagRetrievalConfig {
     filter?: RagRetrievalConfigFilter;
     hybridSearch?: RagRetrievalConfigHybridSearch;
@@ -2058,6 +2082,7 @@ export interface Retrieval {
 
 // @public
 export interface RetrievalConfig {
+    languageCode?: string;
     latLng?: LatLng;
 }
 
@@ -2287,6 +2312,7 @@ export interface SupervisedTuningDatasetDistributionDatasetBucket {
 
 // @public
 export interface SupervisedTuningDataStats {
+    droppedExampleReasons?: string[];
     totalBillableCharacterCount?: string;
     totalBillableTokenCount?: string;
     totalTruncatedExampleCount?: string;
@@ -2440,6 +2466,7 @@ export interface TuningJob {
     name?: string;
     partnerModelTuningSpec?: PartnerModelTuningSpec;
     pipelineJob?: string;
+    serviceAccount?: string;
     startTime?: string;
     state?: JobState;
     supervisedTuningSpec?: SupervisedTuningSpec;
@@ -2466,6 +2493,7 @@ export enum Type {
     ARRAY = "ARRAY",
     BOOLEAN = "BOOLEAN",
     INTEGER = "INTEGER",
+    NULL = "NULL",
     NUMBER = "NUMBER",
     OBJECT = "OBJECT",
     STRING = "STRING",
@@ -2584,6 +2612,8 @@ export interface UsageMetadata {
 export interface VertexAISearch {
     datastore?: string;
     engine?: string;
+    filter?: string;
+    maxResults?: number;
 }
 
 // @public
