@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "dist/node/index.js",
+  "main": "dist/node/index.mjs",
   "module": "dist/web/index.mjs",
   "browser": "dist/web/index.mjs",
   "typings": "dist/genai.d.ts",
@@ -16,14 +16,12 @@
       },
       "node": {
         "types": "./dist/node/node.d.ts",
-        "require": "./dist/node/index.js",
         "import": "./dist/node/index.mjs",
-        "default": "./dist/node/index.js"
+        "default": "./dist/node/index.mjs"
       },
       "types": "./dist/genai.d.ts",
-      "require": "./dist/index.js",
       "import": "./dist/index.mjs",
-      "default": "./dist/index.js"
+      "default": "./dist/index.mjs"
     },
     "./web": {
       "types": "./dist/web/web.d.ts",
@@ -32,9 +30,8 @@
     },
     "./node": {
       "types": "./dist/node/node.d.ts",
-      "require": "./dist/node/index.js",
       "import": "./dist/node/index.mjs",
-      "default": "./dist/node/index.js"
+      "default": "./dist/node/index.mjs"
     }
   },
   "scripts": {
@@ -53,21 +50,15 @@
     "lint-fix": "eslint --fix '**/*.ts'"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   },
   "files": [
     "dist/genai.d.ts",
-    "dist/index.js",
-    "dist/index.js.map",
     "dist/index.mjs",
     "dist/index.mjs.map",
-    "dist/node/index.js",
-    "dist/node/index.js.map",
     "dist/node/index.mjs",
     "dist/node/index.mjs.map",
     "dist/node/node.d.ts",
-    "dist/web/index.js",
-    "dist/web/index.js.map",
     "dist/web/index.mjs",
     "dist/web/index.mjs.map",
     "dist/web/web.d.ts",
