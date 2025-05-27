@@ -409,15 +409,6 @@ describe('setMcpUsageHeader', () => {
       'google-genai-sdk/1.0.0 mcp_used/unknown',
     );
   });
-  it('should set the MCP version label from existing MCP header', () => {
-    const headers: Record<string, string> = {
-      'x-goog-api-client': 'google-genai-sdk/1.0.0 mcp_used/unknown',
-    };
-    setMcpUsageHeader(headers);
-    expect(headers['x-goog-api-client']).toEqual(
-      'google-genai-sdk/1.0.0 mcp_used/unknown',
-    );
-  });
 });
 
 describe('mcpToTool', () => {

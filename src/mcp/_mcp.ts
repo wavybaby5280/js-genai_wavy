@@ -39,9 +39,6 @@ export function hasMcpToolUsage(tools: ToolListUnion): boolean {
 // Sets the MCP version label in the Google API client header.
 export function setMcpUsageHeader(headers: Record<string, string>) {
   const existingHeader = headers[GOOGLE_API_CLIENT_HEADER] ?? '';
-  if (existingHeader.includes(MCP_LABEL)) {
-    return;
-  }
   headers[GOOGLE_API_CLIENT_HEADER] = (
     existingHeader + ` ${MCP_LABEL}`
   ).trimStart();
