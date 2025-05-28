@@ -33,7 +33,7 @@ npm install @google/genai
 
 ## Quickstart
 
-The simplest way to get started is to using an API key from
+The simplest way to get started is to use an API key from
 [Google AI Studio](https://aistudio.google.com/apikey):
 
 ```typescript
