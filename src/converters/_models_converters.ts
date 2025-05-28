@@ -1692,6 +1692,10 @@ export function generateVideosConfigToMldev(
     throw new Error('enhancePrompt parameter is not supported in Gemini API.');
   }
 
+  if (common.getValueByPath(fromObject, ['generateAudio']) !== undefined) {
+    throw new Error('generateAudio parameter is not supported in Gemini API.');
+  }
+
   return toObject;
 }
 
@@ -4017,6 +4021,17 @@ export function generateVideosConfigToVertex(
       parentObject,
       ['parameters', 'enhancePrompt'],
       fromEnhancePrompt,
+    );
+  }
+
+  const fromGenerateAudio = common.getValueByPath(fromObject, [
+    'generateAudio',
+  ]);
+  if (parentObject !== undefined && fromGenerateAudio != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'generateAudio'],
+      fromGenerateAudio,
     );
   }
 

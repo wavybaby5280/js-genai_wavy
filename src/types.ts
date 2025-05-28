@@ -2874,6 +2874,8 @@ export declare interface GenerateVideosConfig {
   negativePrompt?: string;
   /** Whether to use the prompt rewriting logic. */
   enhancePrompt?: boolean;
+  /** Whether to generate audio along with the video. */
+  generateAudio?: boolean;
 }
 
 /** Class that represents the parameters for generating an image. */

@@ -975,6 +975,7 @@ export interface GenerateVideosConfig {
     durationSeconds?: number;
     enhancePrompt?: boolean;
     fps?: number;
+    generateAudio?: boolean;
     httpOptions?: HttpOptions;
     negativePrompt?: string;
     numberOfVideos?: number;
