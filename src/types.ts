@@ -345,7 +345,7 @@ export enum Modality {
    */
   IMAGE = 'IMAGE',
   /**
-   * Indicates the model should return images.
+   * Indicates the model should return audio.
    */
   AUDIO = 'AUDIO',
 }
