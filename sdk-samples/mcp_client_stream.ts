@@ -29,10 +29,6 @@ async function mcpSample(ai: GoogleGenAI) {
           mode: FunctionCallingConfigMode.AUTO,
         },
       },
-      automaticFunctionCalling: {
-        // TODO(b/418306338): remove maximumRemoteCalls to make sure the default setting works
-        maximumRemoteCalls: 1,
-      },
     },
   });
 
