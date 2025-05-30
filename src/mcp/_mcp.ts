@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Client as McpClient} from '@modelcontextprotocol/sdk/client/index.js';
-import {Tool as McpTool} from '@modelcontextprotocol/sdk/types.js';
+import type {Client as McpClient} from '@modelcontextprotocol/sdk/client/index.js';
+import type {Tool as McpTool} from '@modelcontextprotocol/sdk/types.js';
 
 import {GOOGLE_API_CLIENT_HEADER} from '../_api_client.js';
 import {mcpToolsToGeminiTool} from '../_transformers.js';
@@ -60,12 +60,10 @@ export function hasNonMcpTools(params: GenerateContentParameters): boolean {
 
 // Returns true if the object is a MCP CallableTool, otherwise false.
 function isMcpCallableTool(object: unknown): boolean {
-  // TODO: b/418266406 - Add a more robust check for the MCP CallableTool.
   return (
     object !== null &&
     typeof object === 'object' &&
-    'tool' in object &&
-    'callTool' in object
+    object instanceof McpCallableTool
   );
 }
 
