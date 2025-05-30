@@ -15,4 +15,5 @@ export {Models} from './models';
 export type {LiveMusicSession} from './music';
 export {Operations} from './operations';
 export {PagedItem, Pager} from './pagers';
+export {Tokens} from './tokens';
 export * from './types';

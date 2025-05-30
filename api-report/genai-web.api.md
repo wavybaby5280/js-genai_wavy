@@ -82,6 +82,11 @@ export interface AuthConfigOidcConfig {
 }
 
 // @public
+export interface AuthToken {
+    name?: string;
+}
+
+// @public
 export enum AuthType {
     API_KEY_AUTH = "API_KEY_AUTH",
     // (undocumented)
@@ -353,6 +358,11 @@ export interface CreateAuthTokenConfig {
     lockAdditionalFields?: string[];
     newSessionExpireTime?: string;
     uses?: number;
+}
+
+// @public
+export interface CreateAuthTokenParameters {
+    config?: CreateAuthTokenConfig;
 }
 
 // @public
@@ -794,7 +804,8 @@ export enum FinishReason {
     RECITATION = "RECITATION",
     SAFETY = "SAFETY",
     SPII = "SPII",
-    STOP = "STOP"
+    STOP = "STOP",
+    UNEXPECTED_TOOL_CALL = "UNEXPECTED_TOOL_CALL"
 }
 
 // @public
@@ -1124,6 +1135,8 @@ export class GoogleGenAI {
     constructor(options: GoogleGenAIOptions);
     // (undocumented)
     protected readonly apiClient: ApiClient;
+    // (undocumented)
+    readonly authTokens: Tokens;
     // (undocumented)
     readonly caches: Caches;
     // (undocumented)
@@ -2356,6 +2369,12 @@ export interface TestTableItem {
 export interface ThinkingConfig {
     includeThoughts?: boolean;
     thinkingBudget?: number;
+}
+
+// @public (undocumented)
+export class Tokens extends BaseModule {
+    constructor(apiClient: ApiClient);
+    create(params: types.CreateAuthTokenParameters): Promise<types.AuthToken>;
 }
 
 // @public
