@@ -147,6 +147,20 @@ const mockGenerateContentResponseWithAnotherFunctionCall: types.GenerateContentR
     types.GenerateContentResponse.prototype,
   );
 
+function createMockReadableStream(chunk: string): ReadableStream<Uint8Array> {
+  const encoder = new TextEncoder();
+
+  return new ReadableStream({
+    start(controller) {
+      function pushChunk() {
+        controller.enqueue(encoder.encode(`data: ${chunk}\n\n`));
+        controller.close();
+      }
+      pushChunk();
+    },
+  });
+}
+
 describe('generateContent', () => {
   describe('can use the results from zodToJsonSchema in responseSchema field', () => {
     it('should process simple zod object', async () => {
@@ -390,6 +404,95 @@ describe('generateContent', () => {
           },
         },
       });
+      const allArgs = fetchSpy.calls.allArgs();
+      const headers = allArgs[0][1]?.['headers'] as Headers;
+      expect(headers.get('User-Agent')).toContain('google-genai-sdk/');
+      expect(headers.get('x-goog-api-client')).toContain('google-genai-sdk/');
+      expect(headers.get('x-goog-api-client')).toContain('mcp_used/');
+      expect(headers.get('Content-Type')).toBe('application/json');
+      expect(headers.get('x-goog-api-key')).toBe('fake-api-key');
+      const tools = JSON.parse(allArgs[0][1]?.['body'] as string)[
+        'tools'
+      ] as types.Tool[];
+      expect(
+        tools.includes({
+          functionDeclarations: [
+            {
+              name: 'print',
+              description: 'Print text to the console',
+              parameters: {
+                type: types.Type.OBJECT,
+                properties: {
+                  text: {
+                    type: types.Type.STRING,
+                  },
+                  color: {
+                    type: types.Type.STRING,
+                  },
+                },
+                required: ['text', 'color'],
+              },
+            },
+          ],
+        }),
+      );
+    });
+    it('should append MCP usage header streaming', async () => {
+      const client = new GoogleGenAI({vertexai: false, apiKey: 'fake-api-key'});
+      const callableTool = mcpToTool(
+        await spinUpPrintingServer(),
+        await spinUpBeepingServer(),
+      );
+
+      const mockStreamingGenerateContentResponseWithFunctionCall =
+        createMockReadableStream(
+          JSON.stringify(mockGenerateContentResponseWithFunctionCall),
+        );
+      const mockStreamingGenerateContentResponseWithAnotherFunctionCall =
+        createMockReadableStream(
+          JSON.stringify(mockGenerateContentResponseWithAnotherFunctionCall),
+        );
+      const mockStreamingGenerateContentResponse = createMockReadableStream(
+        JSON.stringify(mockGenerateContentResponse),
+      );
+
+      const mockResponses = [
+        Promise.resolve(
+          new Response(
+            mockStreamingGenerateContentResponseWithFunctionCall,
+            fetchOkOptions,
+          ),
+        ),
+        Promise.resolve(
+          new Response(
+            mockStreamingGenerateContentResponseWithAnotherFunctionCall,
+            fetchOkOptions,
+          ),
+        ),
+        Promise.resolve(
+          new Response(mockStreamingGenerateContentResponse, fetchOkOptions),
+        ),
+      ];
+      const fetchSpy = spyOn(global, 'fetch').and.returnValues(
+        ...mockResponses,
+      );
+      const response = await client.models.generateContentStream({
+        model: 'gemini-1.5-flash-exp',
+        contents:
+          'Use the printer to print a simple math question in red and the answer in blue',
+        config: {
+          tools: [callableTool],
+          toolConfig: {
+            functionCallingConfig: {
+              mode: types.FunctionCallingConfigMode.ANY,
+              allowedFunctionNames: ['print', 'beep'],
+            },
+          },
+        },
+      });
+      for await (const _chunk of response) {
+        // do nothing
+      }
       const allArgs = fetchSpy.calls.allArgs();
       const headers = allArgs[0][1]?.['headers'] as Headers;
       expect(headers.get('User-Agent')).toContain('google-genai-sdk/');
