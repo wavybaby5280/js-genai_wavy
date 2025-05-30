@@ -15,6 +15,15 @@ export class WebAuth implements Auth {
     if (headers.get(GOOGLE_API_KEY_HEADER) !== null) {
       return;
     }
+
+    if (this.apiKey.startsWith('auth_tokens/')) {
+      throw new Error('Ephemeral tokens are only supported by the live API.');
+    }
+
+    // Check if API key is empty or null
+    if (!this.apiKey) {
+      throw new Error('API key is missing. Please provide a valid API key.');
+    }
     headers.append(GOOGLE_API_KEY_HEADER, this.apiKey);
   }
 }

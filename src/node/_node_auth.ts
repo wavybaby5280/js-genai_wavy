@@ -41,6 +41,9 @@ export class NodeAuth implements Auth {
 
   async addAuthHeaders(headers: Headers): Promise<void> {
     if (this.apiKey !== undefined) {
+      if (this.apiKey.startsWith('auth_tokens/')) {
+        throw new Error('Ephemeral tokens are only supported by the live API.');
+      }
       this.addKeyHeader(headers);
       return;
     }

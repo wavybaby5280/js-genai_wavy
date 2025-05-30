@@ -11,11 +11,6 @@ import {
 } from '@google/genai';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GOOGLE_CLOUD_PROJECT = process.env.GOOGLE_CLOUD_PROJECT;
-const GOOGLE_CLOUD_LOCATION = process.env.GOOGLE_CLOUD_LOCATION;
-const GOOGLE_GENAI_USE_VERTEXAI = process.env.GOOGLE_GENAI_USE_VERTEXAI;
-const GOOGLE_GENAI_MLDEV_USE_EPHEMERAL =
-  process.env.GOOGLE_GENAI_MLDEV_USE_EPHEMERAL;
 
 class AsyncQueue<T> {
   private queue: T[] = [];
@@ -128,68 +123,36 @@ async function live(client: GoogleGenAI, model: string) {
 
   await handleTurn();
 
-  const turns = [
-    'This image is just black, can you see it?',
-    {
-      inlineData: {
-        // 2x2 black PNG, base64 encoded.
-        data: 'iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAAC0lEQVR4nGNgQAYAAA4AAamRc7EAAAAASUVORK5CYII=',
-        mimeType: 'image/png',
-      },
-    },
-  ];
-  console.log('-'.repeat(80));
-  console.log(`Sent: ${turns}`);
-  session.sendClientContent({turns: turns});
-
-  await handleTurn();
-
   session.close();
 }
 
 async function main() {
-  if (GOOGLE_GENAI_USE_VERTEXAI) {
-    const client = new GoogleGenAI({
-      vertexai: true,
-      project: GOOGLE_CLOUD_PROJECT,
-      location: GOOGLE_CLOUD_LOCATION,
-    });
-    const model = 'gemini-2.0-flash-live-preview-04-09';
-    await live(client, model).catch((e) => console.error('got error', e));
-    return;
-  }
-
-  const model = 'gemini-2.0-flash-live-001';
   let client = new GoogleGenAI({
-    vertexai: false,
     apiKey: GEMINI_API_KEY,
+    apiVersion: 'v1alpha',
   });
 
-  if (GOOGLE_GENAI_MLDEV_USE_EPHEMERAL) {
-    // Create the ephemeral token, normally you'd do this on your server
-    // using your API key.
-    const token: AuthToken = await client.authTokens.create({
-      config: {
-        uses: 1, // The default
-        liveConnectConstraints: {
-          model: model,
-          config: {
-            responseModalities: [Modality.TEXT],
-          },
+  const model = 'gemini-2.0-flash-live-001';
+  const token: AuthToken = await client.authTokens.create({
+    config: {
+      uses: 1, // The default
+      liveConnectConstraints: {
+        model: model,
+        config: {
+          responseModalities: [Modality.TEXT],
         },
-        // Ephemeral tokens only work on v1alpha for now.
-        httpOptions: {apiVersion: 'v1alpha'},
       },
-    });
-    console.log('Token:', JSON.stringify(token));
+    },
+  });
+  console.log('Token:', JSON.stringify(token));
 
-    // Use the auth token to create a client
-    // This client can only call live.connect, never sees your api key.
-    client = new GoogleGenAI({
-      apiKey: token.name,
-      apiVersion: 'v1alpha',
-    });
-  }
+  // In a real setup you would create the token on your server after verifying your users.
+  // Then you would send it to the client, so they can connect directly to the live API
+  // instead of proxying through your server.
+  client = client = new GoogleGenAI({
+    apiKey: token.name,
+    apiVersion: 'v1alpha',
+  });
 
   await live(client, model).catch((e) => console.error('got error', e));
 }

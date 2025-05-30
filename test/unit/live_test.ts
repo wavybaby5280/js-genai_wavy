@@ -63,6 +63,66 @@ describe('live', () => {
     expect(session).toBeDefined();
   });
 
+  it('connect should use access_token and BidiGenerateContentConstrained when apiKey starts with auth_tokens/', async () => {
+    const apiClient = new ApiClient({
+      auth: new FakeAuth(),
+      apiKey: 'auth_tokens/test-access-token',
+      uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
+    });
+    const websocketFactory = new FakeWebSocketFactory();
+    const live = new Live(apiClient, new FakeAuth(), websocketFactory);
+
+    const websocketFactorySpy = spyOn(
+      websocketFactory,
+      'create',
+    ).and.callThrough();
+
+    await live.connect({
+      model: 'models/gemini-2.0-flash-live-001',
+      callbacks: {
+        onmessage: function (e: types.LiveServerMessage) {
+          void e;
+        },
+      },
+    });
+
+    const websocketFactorySpyCall = websocketFactorySpy.calls.all()[0];
+    expect(websocketFactorySpyCall.args[0]).toBe(
+      'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContentConstrained?access_token=auth_tokens/test-access-token',
+    );
+  });
+
+  it('connect should use key and BidiGenerateContent when apiKey does not start with auth_tokens/', async () => {
+    const apiClient = new ApiClient({
+      auth: new FakeAuth(),
+      apiKey: 'test-api-key',
+      uploader: new CrossUploader(),
+      downloader: new CrossDownloader(),
+    });
+    const websocketFactory = new FakeWebSocketFactory();
+    const live = new Live(apiClient, new FakeAuth(), websocketFactory);
+
+    const websocketFactorySpy = spyOn(
+      websocketFactory,
+      'create',
+    ).and.callThrough();
+
+    await live.connect({
+      model: 'models/gemini-2.0-flash-live-001',
+      callbacks: {
+        onmessage: function (e: types.LiveServerMessage) {
+          void e;
+        },
+      },
+    });
+
+    const websocketFactorySpyCall = websocketFactorySpy.calls.all()[0];
+    expect(websocketFactorySpyCall.args[0]).toBe(
+      'wss://generativelanguage.googleapis.com//ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=test-api-key',
+    );
+  });
+
   it('connect should rely on provided callbacks', async () => {
     const apiClient = new ApiClient({
       auth: new FakeAuth(),

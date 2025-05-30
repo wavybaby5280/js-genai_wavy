@@ -145,9 +145,20 @@ export class Live {
       await this.auth.addAuthHeaders(headers);
     } else {
       const apiKey = this.apiClient.getApiKey();
+
+      let method = 'BidiGenerateContent';
+      let keyName = 'key';
+      if (apiKey?.startsWith('auth_tokens/')) {
+        console.warn(
+          'Warning: Ephemeral token support is experimental and may change in future versions.',
+        );
+        method = 'BidiGenerateContentConstrained';
+        keyName = 'access_token';
+      }
+
       url = `${websocketBaseUrl}/ws/google.ai.generativelanguage.${
         apiVersion
-      }.GenerativeService.BidiGenerateContent?key=${apiKey}`;
+      }.GenerativeService.${method}?${keyName}=${apiKey}`;
     }
 
     let onopenResolve: (value: unknown) => void = () => {};
