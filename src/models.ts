@@ -78,7 +78,6 @@ export class Models extends BaseModule {
       return await this.generateContentInternal(transformedParams);
     }
 
-    // TODO: b/418266406 - Improve the check for CallableTools and Tools.
     if (hasNonMcpTools(params)) {
       throw new Error(
         'Automatic function calling with CallableTools and Tools is not yet supported.',
