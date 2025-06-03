@@ -679,7 +679,7 @@ export function processJsonSchema(
         // beginning of this function.
         continue;
       }
-      genAISchema['type'] = Object.keys(types.Type).includes(
+      genAISchema['type'] = Object.values(types.Type).includes(
         fieldValue.toUpperCase(),
       )
         ? fieldValue.toUpperCase()
