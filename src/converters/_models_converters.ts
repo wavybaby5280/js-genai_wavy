@@ -1695,8 +1695,15 @@ export function generateVideosConfigToMldev(
     );
   }
 
-  if (common.getValueByPath(fromObject, ['enhancePrompt']) !== undefined) {
-    throw new Error('enhancePrompt parameter is not supported in Gemini API.');
+  const fromEnhancePrompt = common.getValueByPath(fromObject, [
+    'enhancePrompt',
+  ]);
+  if (parentObject !== undefined && fromEnhancePrompt != null) {
+    common.setValueByPath(
+      parentObject,
+      ['parameters', 'enhancePrompt'],
+      fromEnhancePrompt,
+    );
   }
 
   if (common.getValueByPath(fromObject, ['generateAudio']) !== undefined) {
