@@ -102,6 +102,11 @@
   "peerDependencies": {
     "@modelcontextprotocol/sdk": "^1.11.0"
   },
+  "peerDependenciesMeta": {
+    "@modelcontextprotocol/sdk": {
+      "optional": true
+    }
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/googleapis/js-genai.git"
