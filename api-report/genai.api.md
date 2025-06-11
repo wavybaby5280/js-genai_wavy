@@ -2628,9 +2628,16 @@ export interface UsageMetadata {
 // @public
 export interface VertexAISearch {
     datastore?: string;
+    dataStoreSpecs?: VertexAISearchDataStoreSpec[];
     engine?: string;
     filter?: string;
     maxResults?: number;
+}
+
+// @public
+export interface VertexAISearchDataStoreSpec {
+    dataStore?: string;
+    filter?: string;
 }
 
 // @public
