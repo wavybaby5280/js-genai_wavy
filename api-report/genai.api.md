@@ -192,6 +192,7 @@ export interface CallableTool {
 // @public
 export interface CallableToolConfig {
     behavior?: Behavior;
+    timeout?: number;
 }
 
 // @public
@@ -2638,6 +2639,7 @@ export interface VertexRagStore {
     ragResources?: VertexRagStoreRagResource[];
     ragRetrievalConfig?: RagRetrievalConfig;
     similarityTopK?: number;
+    storeContext?: boolean;
     vectorDistanceThreshold?: number;
 }
 

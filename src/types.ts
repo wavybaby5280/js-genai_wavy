@@ -4829,6 +4829,10 @@ export interface CallableToolConfig {
    * Specifies the model's behavior after invoking this tool.
    */
   behavior?: Behavior;
+  /**
+   * Timeout for remote calls in milliseconds. Note this timeout applies only to
+   * tool remote calls, and not making HTTP requests to the API. */
+  timeout?: number;
 }
 
 /** Parameters for connecting to the live API. */

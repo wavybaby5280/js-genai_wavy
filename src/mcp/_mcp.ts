@@ -6,6 +6,7 @@
 
 import type {Client as McpClient} from '@modelcontextprotocol/sdk/client/index.js';
 import type {Tool as McpTool} from '@modelcontextprotocol/sdk/types.js';
+import {CallToolResultSchema} from '@modelcontextprotocol/sdk/types.js';
 
 import {GOOGLE_API_CLIENT_HEADER} from '../_api_client.js';
 import {mcpToolsToGeminiTool} from '../_transformers.js';
@@ -161,9 +162,18 @@ export class McpCallableTool implements CallableTool {
     for (const functionCall of functionCalls) {
       if (functionCall.name! in this.functionNameToMcpClient) {
         const mcpClient = this.functionNameToMcpClient[functionCall.name!];
+        let requestOptions = undefined;
+        // TODO: b/424238654 - Add support for finer grained timeout control.
+        if (this.config.timeout) {
+          requestOptions = {
+            timeout: this.config.timeout,
+          };
+        }
         const callToolResponse = await mcpClient.callTool({
           name: functionCall.name!,
           arguments: functionCall.args,
+          CallToolResultSchema,
+          requestOptions,
         });
         functionCallResponseParts.push({
           functionResponse: {
