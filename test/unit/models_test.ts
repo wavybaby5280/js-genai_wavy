@@ -927,11 +927,7 @@ describe('generateContent', () => {
     });
     expect(fetchSpy).toHaveBeenCalledTimes(expectedNumberOfCalls);
     expect(consoleBeepSpy).toHaveBeenCalledTimes(expectedNumberOfCalls);
-    const parsedCallToolArgs = callToolSpy.calls.allArgs()[0][0] as Record<
-      string,
-      unknown
-    >;
-    const requestOptions = parsedCallToolArgs['requestOptions'] as Record<
+    const requestOptions = callToolSpy.calls.allArgs()[0][2] as Record<
       string,
       unknown
     >;

@@ -6,7 +6,6 @@
 
 import type {Client as McpClient} from '@modelcontextprotocol/sdk/client/index.js';
 import type {Tool as McpTool} from '@modelcontextprotocol/sdk/types.js';
-import {CallToolResultSchema} from '@modelcontextprotocol/sdk/types.js';
 
 import {GOOGLE_API_CLIENT_HEADER} from '../_api_client.js';
 import {mcpToolsToGeminiTool} from '../_transformers.js';
@@ -169,12 +168,16 @@ export class McpCallableTool implements CallableTool {
             timeout: this.config.timeout,
           };
         }
-        const callToolResponse = await mcpClient.callTool({
-          name: functionCall.name!,
-          arguments: functionCall.args,
-          CallToolResultSchema,
+        const callToolResponse = await mcpClient.callTool(
+          {
+            name: functionCall.name!,
+            arguments: functionCall.args,
+          },
+          // Set the result schema to undefined to allow MCP to rely on the
+          // default schema.
+          undefined,
           requestOptions,
-        });
+        );
         functionCallResponseParts.push({
           functionResponse: {
             name: functionCall.name,

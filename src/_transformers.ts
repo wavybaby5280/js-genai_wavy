@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Tool as McpTool} from '@modelcontextprotocol/sdk/types.js';
+import type {Tool as McpTool} from '@modelcontextprotocol/sdk/types.js';
 import {z} from 'zod';
 
 import {ApiClient} from './_api_client.js';
