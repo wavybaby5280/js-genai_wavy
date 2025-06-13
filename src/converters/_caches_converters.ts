@@ -217,9 +217,31 @@ export function functionDeclarationToMldev(
     common.setValueByPath(toObject, ['parameters'], fromParameters);
   }
 
+  const fromParametersJsonSchema = common.getValueByPath(fromObject, [
+    'parametersJsonSchema',
+  ]);
+  if (fromParametersJsonSchema != null) {
+    common.setValueByPath(
+      toObject,
+      ['parametersJsonSchema'],
+      fromParametersJsonSchema,
+    );
+  }
+
   const fromResponse = common.getValueByPath(fromObject, ['response']);
   if (fromResponse != null) {
     common.setValueByPath(toObject, ['response'], fromResponse);
+  }
+
+  const fromResponseJsonSchema = common.getValueByPath(fromObject, [
+    'responseJsonSchema',
+  ]);
+  if (fromResponseJsonSchema != null) {
+    common.setValueByPath(
+      toObject,
+      ['responseJsonSchema'],
+      fromResponseJsonSchema,
+    );
   }
 
   return toObject;
@@ -997,9 +1019,31 @@ export function functionDeclarationToVertex(
     common.setValueByPath(toObject, ['parameters'], fromParameters);
   }
 
+  const fromParametersJsonSchema = common.getValueByPath(fromObject, [
+    'parametersJsonSchema',
+  ]);
+  if (fromParametersJsonSchema != null) {
+    common.setValueByPath(
+      toObject,
+      ['parametersJsonSchema'],
+      fromParametersJsonSchema,
+    );
+  }
+
   const fromResponse = common.getValueByPath(fromObject, ['response']);
   if (fromResponse != null) {
     common.setValueByPath(toObject, ['response'], fromResponse);
+  }
+
+  const fromResponseJsonSchema = common.getValueByPath(fromObject, [
+    'responseJsonSchema',
+  ]);
+  if (fromResponseJsonSchema != null) {
+    common.setValueByPath(
+      toObject,
+      ['responseJsonSchema'],
+      fromResponseJsonSchema,
+    );
   }
 
   return toObject;
